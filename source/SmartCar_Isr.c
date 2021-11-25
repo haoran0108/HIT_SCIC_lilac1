@@ -40,8 +40,8 @@ IFX_INTERRUPT(dma_ch5_isr, 0, ERU_DMA_INT_PRIO)
     }
     if(mt9v034_finish_flag == 1)
     {
-//        image_main();
-//        CTRL_Main();
+        image_main();
+        CTRL_Main();
         mt9v034_finish_flag = 0;
 
     }
@@ -49,13 +49,13 @@ IFX_INTERRUPT(dma_ch5_isr, 0, ERU_DMA_INT_PRIO)
     //else if (1 == camera_type)  ov7725_dma();
 }
 
-//IFX_INTERRUPT(cc60_pit_ch0_isr, 0, CCU6_0_CH0_ISR_PRIORITY)//电机中断
-//{
-//    enableInterrupts();//开启中断嵌套
-//    PIT_CLEAR_FLAG(CCU6_0, PIT_CH0);
-//
-//    CTRL_motor();
-//}
+IFX_INTERRUPT(cc60_pit_ch0_isr, 0, CCU6_0_CH0_ISR_PRIORITY)//电机中断
+{
+    enableInterrupts();//开启中断嵌套
+    PIT_CLEAR_FLAG(CCU6_0, PIT_CH0);
+
+    CTRL_motor();
+}
 
             /*spi有关dma中断*/
 IFX_INTERRUPT(qspi0DmaTxISR, 0, IFX_INTPRIO_DMA_CH1 )

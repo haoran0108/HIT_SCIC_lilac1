@@ -13,13 +13,24 @@
 #include "SmartCar_Pwm.h"
 #include "Image.h"
 #include "menu.h"
+#include "SmartCar_Encoder.h"
+#include "switch.h"
 
+#define PWM_MAX 9500
+#define PWM_MAX_N -8500
 
+extern uint32 servoPwm;
+extern int32 mySpeedL, mySpeedR;
+extern int32 speedL, speedR;
+extern float test_varible[20];
+extern float motorLFKP, motorLFKI, motorRTKP, motorRTKI;
+extern int zebraFlag, zebraCircle;
+extern int flagStop;
 struct error
 {
-    float delta;
-    float currentError;
-    float lastError;
+    int delta;
+    int currentError;
+    int lastError;
 };
 typedef struct error error;
 
@@ -39,7 +50,7 @@ void CTRL_Init();
 //  @since      v1.0
 //  Sample usage:
 //-------------------------------------------------------------------------------------------------------------------
-void CTRL_calculatePID();
+void CTRL_servoPID();
 
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      电机控制
@@ -57,7 +68,34 @@ void CTRL_motor();
 //  @since      v1.0
 //  Sample usage:
 //-------------------------------------------------------------------------------------------------------------------
-void CTRL_Main();
+void CTRL_servoMain();
 
+//-------------------------------------------------------------------------------------------------------------------
+//  @brief      电机控制
+//  @param
+//  @return     void
+//  @since      v1.0
+//  Sample usage:
+//-------------------------------------------------------------------------------------------------------------------
+void CTRL_motorMain();
+
+//-------------------------------------------------------------------------------------------------------------------
+//  @brief      转弯差速
+//  @param
+//  @return     void
+//  @since      v1.0
+//  Sample usage:
+//-------------------------------------------------------------------------------------------------------------------
+void CTRL_motorDiffer();
+
+//-------------------------------------------------------------------------------------------------------------------
+//  @brief      编码器计数获取速度，分左右轮
+//  @param
+//  @return     int16_t
+//  @since      v1.0
+//  Sample usage:
+//-------------------------------------------------------------------------------------------------------------------
+int16_t CTRL_speedGetLeft();
+int16_t CTRL_speedGetRight();
 
 #endif /* SOURCE_SMARTCAR_CTRL_H_ */
