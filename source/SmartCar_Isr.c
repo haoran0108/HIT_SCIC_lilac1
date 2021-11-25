@@ -1,7 +1,7 @@
 #include "SmartCar_Isr.h"
 #include "SmartCar_Eru.h"
 #include "SmartCar_MT9V034.h"
-
+#include "image.h"
 #include "SmartCar_ctrl.h"
 
             /*pwm有关中断*/
@@ -41,7 +41,7 @@ IFX_INTERRUPT(dma_ch5_isr, 0, ERU_DMA_INT_PRIO)
     if(mt9v034_finish_flag == 1)
     {
         image_main();
-        CTRL_Main();
+        CTRL_servoMain();
         mt9v034_finish_flag = 0;
 
     }
@@ -54,7 +54,7 @@ IFX_INTERRUPT(cc60_pit_ch0_isr, 0, CCU6_0_CH0_ISR_PRIORITY)//电机中断
     enableInterrupts();//开启中断嵌套
     PIT_CLEAR_FLAG(CCU6_0, PIT_CH0);
 
-    CTRL_motor();
+    CTRL_motorMain();
 }
 
             /*spi有关dma中断*/

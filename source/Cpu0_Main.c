@@ -44,6 +44,7 @@
 #include "SmartCar_ctrl.h"
 #include "menu.h"
 #include "switch.h"
+#include "SmartCar_GPIO.h"
 
 #pragma section all "cpu0_dsram"
 //IfxCpu_syncEvent g_cpuSyncEvent;

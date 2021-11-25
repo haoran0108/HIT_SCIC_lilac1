@@ -516,10 +516,6 @@ void image_main()
     ordinary_two_line();
     get_mid_line();
 
-    for (int i = NEAR_LINE; i >= FAR_LINE; i--)
-        if (mid_line[i] != MISS)
-            IMG[i][mid_line[i]] = green;
-
     stop();
 }
 

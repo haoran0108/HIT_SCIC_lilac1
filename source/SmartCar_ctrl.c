@@ -18,7 +18,7 @@ uint32 motorPwm;
 int32 expectL, expectR;//预期速度
 int32 speedL, speedR;//实际速度
 int32 mySpeedL = 0, mySpeedR = 0;
-int count = 1, flag = 0;
+
 float motorLFKP, motorLFKI, motorRTKP, motorRTKI;
 void CTRL_Init()
 {
@@ -55,21 +55,6 @@ void CTRL_servoPID()
 void CTRL_motorPID()//expectL和pwm对应关系： 70-2500  80-2800  90-3150
 {
 
-//    count ++;
-//    if(count % 200 == 0 && flag == 0)
-//    {
-//        expectL = presentSpeed.intValue;
-//        flag = 1;
-//    }
-//
-//    else if(count % 200 == 0 && flag == 1)
-//    {
-//        expectL = 0;
-//        flag = 0;
-//    }
-
-
-
 //    expectL = presentSpeed.intValue;
     speedL = CTRL_speedGetLeft();
     errorML.currentError = expectL - speedL;//取偏差
@@ -78,24 +63,12 @@ void CTRL_motorPID()//expectL和pwm对应关系： 70-2500  80-2800  90-3150
     errorML.lastError = errorML.currentError;//更新上一次误差
 
 
-//     expectR = presentSpeed.intValue;
+//    expectR = presentSpeed.intValue;
     speedR = CTRL_speedGetRight();
     errorMR.currentError = expectR + speedR;//取偏差
     errorMR.delta = errorMR.currentError - errorMR.lastError;
     mySpeedR = (int32)(mySpeedR + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
-
-
-    //speedR = (uint32)(presentSpeed.intValue + presentMotorI.floatValue * errorMR.currentError);
-/*增量式P暂时不写*/
-//    errorML.delta = errorML.currentError - errorML.lastError;
-//    errorMR.delta = errorMR.currentError - errorMR.lastError;
-//
-//    errorML.lastError = errorML.currentError;//更新上一次误差
-//    errorMR.lastError = errorMR.currentError;
-//
-//    speedL = (uint32)(presentSpeed.intValue + presentMotorP.floatValue * errorML.delta + presentMotorI.floatValue * errorML.currentError);
-//    speedR = (uint32)(presentSpeed.intValue + presentMotorP.floatValue * errorMR.delta + presentMotorI.floatValue * errorMR.currentError);
 
 }
 
@@ -215,7 +188,7 @@ void CTRL_motorDiffer()
 //    }
 
     /*内减外加*/
-    int kIN, kOUT;
+    float kIN, kOUT;
     if(delta > 0)
     {
         kIN = gap.floatValue * (1.0886 - 0.004 * delta);
