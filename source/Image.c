@@ -5,7 +5,7 @@
  *      Author: windows
  */
 #include "image.h"
-
+//aaaaa
 int f[10 * CAMERA_H];//考察连通域联通性
 int zebraCount = 0, zFlag = 0;
 
