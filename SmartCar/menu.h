@@ -47,7 +47,7 @@ extern node_t presentServoP, presentServoD;
 extern node_t presentMotorP, presentMotorI;
 extern node_t gap;
 extern node_t presentTHRE;
-extern node_t display1, display2, display3, display4, display5, display6;
+extern node_t display1, display2, display3, display4, display5, display6, display7;
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      对文件各参数进行初始化赋值
 //  @param      file 要赋值的文件  类型：node_t

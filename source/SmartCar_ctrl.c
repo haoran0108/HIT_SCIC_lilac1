@@ -9,7 +9,7 @@
 
 int zebraFlag = 0, zebraCircle = 0;
 float test_varible[20] = {1,2,3,4,5,6,7,8,9,10};//发送数据的   //数组
-int flagStop = 0;
+int flagStop = 0, delayStop = 0;
 error servoError = {1, 1, 1};
 error errorML = {1, 1, 1}, errorMR = {1, 1, 1};
 uint32 servoPwm;
@@ -75,23 +75,42 @@ void CTRL_motorPID()//expectL和pwm对应关系： 70-2500  80-2800  90-3150
 
 void CTRL_servoMain()//优化：封装pid计算，电机定时设置pwm，（多级环pid）
 {
+    CTRL_servoPID();
+    test_varible[4] = 790 - (float)(servoPwm);
+
     if(zebraCircle == 1 || flagStop == 1)
     {
-        expectL = 0;
-        expectR = 0;
+        delayStop ++;
+        if(delayStop > 10)
+        {
+            expectL = 0;
+            expectR = 0;
+
+        }
+
     }
     else
     {
-        CTRL_servoPID();
-        CTRL_motorDiffer();
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
+//        if(straightSpeedUp())
+//        {
+//            test_varible[5] = straightSpeedUp();
+//            expectL = (int32)(presentSpeed.intValue * display7.floatValue);
+//            expectR = (int32)(presentSpeed.intValue * display7.floatValue);
+//        }
+//        else
+//        {
+            CTRL_motorDiffer();
+//        }
+
     }
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
 }
 
 
 void CTRL_motor()
 {
+    int pwmL, pwmR;
     if(mySpeedL > PWM_MAX)
     {
         mySpeedL = PWM_MAX;
@@ -108,37 +127,43 @@ void CTRL_motor()
     {
         mySpeedR = PWM_MAX_N;
     }
+    test_varible[5] = mySpeedL;
+    test_varible[6] = mySpeedR;
     if(mySpeedL >= 0 && mySpeedR >= 0)
     {
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, mySpeedR);//B
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, mySpeedL);//D
+        pwmR = mySpeedR;
+        pwmL = mySpeedL;
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, pwmR);//B
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmL);//D
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 0);//A
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, 0);//C
     }
     else if(mySpeedL >= 0 && mySpeedR < 0)
     {
-        mySpeedR = -mySpeedR;
+        pwmR = -mySpeedR;
+        pwmL = mySpeedL;
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 0);//B
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, mySpeedL);//D
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, mySpeedR);//A
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmL);//D
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, pwmR);//A
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, 0);//C
     }
     else if(mySpeedL < 0 && mySpeedR >= 0)
     {
-        mySpeedL = -mySpeedL;
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, mySpeedR);//B
+        pwmL = -mySpeedL;
+        pwmR = mySpeedR;
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, pwmR);//B
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, 0);//D
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 0);//A
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, mySpeedL);//C
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C
     }
     else if(mySpeedL < 0 && mySpeedR < 0)
     {
-        mySpeedL = -mySpeedL;
-        mySpeedR = -mySpeedR;
+        pwmL = -mySpeedL;
+        pwmR = -mySpeedR;
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 0);//B
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, 0);//D
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, mySpeedR);//A
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, mySpeedL);//C
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, pwmR);//A
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C
     }
 
 
@@ -150,8 +175,8 @@ void CTRL_motorMain()
         CTRL_motorPID();
         CTRL_motor();
 
-        test_varible[0] = -expectL;
-        test_varible[1] = expectR;
+        test_varible[0] = -expectR;
+        test_varible[1] = expectL;
 
         test_varible[2] = speedL;
         test_varible[3] = speedR;

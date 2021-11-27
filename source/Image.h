@@ -24,7 +24,9 @@
 #define RIGHT_SIDE 187//图像处理右边界
 #define MISS 255
 #define white_num_MAX 10//每行最多允许白条数
-
+#define MIDLINE_DELTA 8
+#define SPEEDUP_COUNT1 55
+#define SPEEDUP_COUNT2 14
 /////////////////////////////
 #define black 0
 #define white 1
@@ -66,4 +68,5 @@ void stra_cross_left_up(uint8_t j_continue[CAMERA_H]);
 void stra_cross_right_up(uint8_t j_continue[CAMERA_H]);
 int zebraPanduan();
 void stop();
+int straightSpeedUp();
 #endif //

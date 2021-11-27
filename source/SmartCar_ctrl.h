@@ -25,7 +25,7 @@ extern int32 speedL, speedR;
 extern float test_varible[20];
 extern float motorLFKP, motorLFKI, motorRTKP, motorRTKI;
 extern int zebraFlag, zebraCircle;
-extern int flagStop;
+extern int flagStop, delayStop;;
 struct error
 {
     int delta;

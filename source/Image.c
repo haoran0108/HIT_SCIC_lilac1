@@ -629,39 +629,47 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
     float k_of_up_left = calculate_k(left_up_point, 10, my_road[left_up_point].connected[j_continue[left_up_point]].left, my_road[10].connected[j_continue[10]].left);
     float k_of_up_right = calculate_k(right_up_point, 10, my_road[right_up_point].connected[j_continue[right_up_point]].right, my_road[10].connected[j_continue[10]].right);
 
-    for (int m = 0; m < 90; m++) {
+    /*for (int m = 0; m < 90; m++) {
         IMG[right_up_point][180 - m] = red;
-        //IMG[(right_down_point )][180 - m] = green;
+        IMG[(right_down_point )][180 - m] = green;
 
         IMG[left_up_point][20 + m] = red;
-        //IMG[(left_down_point)][20 + m] = green;
+        IMG[(left_down_point)][20 + m] = green;
     }
     for (int m = 0; m < 80; m++) {
-        //IMG[m][my_road[left_down_point].connected[j_continue[left_down_point]].left] = blue;
+        IMG[m][my_road[left_down_point].connected[j_continue[left_down_point]].left] = blue;
         IMG[m][my_road[left_up_point].connected[j_continue[left_up_point]].left] = purple;
-        //IMG[m][my_road[right_down_point].connected[j_continue[right_down_point]].right] = blue;
+        IMG[m][my_road[right_down_point].connected[j_continue[right_down_point]].right] = blue;
         IMG[m][my_road[right_up_point].connected[j_continue[right_up_point]].right] = purple;
-    }
-
-    zebraCount++;
-    if (zebraCount > 250) zebraCount = 250;
-    if (zebraCount % 250 == 0)//5s
+    }*/
+    if(!GPIO_Read(P13, 2))
     {
-
-        zFlag = 1;
-    }
-
-    if (zebraPanduan() == 1 && zFlag == 1)
-    {
-        zebraCircle++;
-        if (zebraCircle >= 2) {
-            zebraCircle = 1;
-        }
         zebraCount = 0;
-        zFlag = 0;
+
+    }
+    else
+    {
+         zebraCount++;
+         if (zebraCount > 250) zebraCount = 250;
+         if (zebraCount % 250 == 0)//5s
+         {
+
+             zFlag = 1;
+         }
+
+         if (zebraPanduan() == 1 && zFlag == 1)
+         {
+             zebraCircle++;
+             if (zebraCircle >= 2) {
+                 zebraCircle = 1;
+             }
+             zebraCount = 0;
+             zFlag = 0;
+         }
     }
 
 
+/*
     //        if(zFlag == 1&&zebraPanduan())
     //        {
     //            zebraCircle++;
@@ -684,7 +692,7 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
     //                }
     //            }
     //        }
-    //        count++;
+    //        count++;*/
             if (zebraPanduan()==1) {
                 for (i = 0; i < 200; i++) {
                     IMG[50][i] = purple;
@@ -716,22 +724,22 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
         //make_unmain_black(j_continue);
         stra_cross_road2(j_continue);
     }
-    /*else if ((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 75 && my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 75) &&
-        ((left_down_point <= 75 && right_down_point > 75 && right_down_point < 80) || (left_down_point - right_down_point <= -15 ))) {
+    else if ((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 75 && my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 75) &&
+        ((left_down_point <= 75 && right_down_point > 75 && right_down_point < 80) || (left_down_point - right_down_point <= -5 ))) {
         stra_cross_left_down(j_continue);
     }
     else if ((my_road[right_down_point - 3].connected[j_continue[right_down_point - 3]].width > 75 && my_road[right_down_point - 4].connected[j_continue[right_down_point - 4]].width > 75) &&
-        ((right_down_point <= 75 && left_down_point > 75 ) || (left_down_point - right_down_point > 15))) {
+        ((right_down_point <= 75 && left_down_point > 75 ) || (left_down_point - right_down_point > 5))) {
         stra_cross_right_down(j_continue);
+    }
+    /*else if (my_road[79].connected[j_continue[79]].width>180 && my_road[78].connected[j_continue[78]].width > 180 &&
+        my_road[30].connected[j_continue[30]].width < 80) {
+        stra_cross_left_up(j_continue);
+    }
+    else if ((my_road[right_up_point + 3].connected[j_continue[right_up_point + 3]].width > 100 && my_road[right_up_point + 4].connected[j_continue[right_up_point + 4]].width > 100) &&
+        (right_up_point >= 20  )) {
+        stra_cross_right_up(j_continue);
     }*/
-    //else if ((my_road[left_up_point + 3].connected[j_continue[left_up_point + 3]].width > 100 && my_road[left_up_point + 4].connected[j_continue[left_up_point + 4]].width > 100) &&
-    //  (left_up_point >= 20 /*&& right_up_point < 20*/)) {
-    //  stra_cross_left_up(j_continue);
-    //}
-    //else if ((my_road[right_up_point + 3].connected[j_continue[right_up_point + 3]].width > 100 && my_road[right_up_point + 4].connected[j_continue[right_up_point + 4]].width > 100) &&
-    //  (right_up_point >= 20 /*&& left_up_point < 20 */ )) {
-    //  stra_cross_right_up(j_continue);
-    //}
     else if (zebraPanduan()) {
         zebra_cross(j_continue);
     }
@@ -807,7 +815,7 @@ float calculate_k(int x1, int x2, int y1, int y2) {
 void stra_cross_road(uint8_t j_continue[CAMERA_H]) {
     uint8_t i_start = NEAR_LINE;
     uint8_t i_end = FAR_LINE;
-    if (right_down_point - left_down_point >= -25 && right_down_point - left_down_point <= 25
+    if (right_down_point - left_down_point >= -30 && right_down_point - left_down_point <= 30
         &&
         right_down_point <= 65
         &&
@@ -840,7 +848,7 @@ void stra_cross_road(uint8_t j_continue[CAMERA_H]) {
 void stra_cross_road2(uint8_t j_continue[CAMERA_H]) {
     uint8_t i_start = NEAR_LINE;
     uint8_t i_end = FAR_LINE;
-    if (right_up_point - left_up_point >= -25 && right_up_point - left_up_point <= 25
+    if (right_up_point - left_up_point >= -30 && right_up_point - left_up_point <= 30
         &&
         right_up_point >= 10
         &&
@@ -1101,7 +1109,7 @@ int zebraPanduan() {
     }
 }
 //111
-/*int straightSpeedUp()
+int straightSpeedUp()
 {
 
     int count1 = 0;
@@ -1124,7 +1132,7 @@ int zebraPanduan() {
     }
     else return 0;
 }
-*/
+
 void stop()
 {
     int count = 0;
