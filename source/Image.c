@@ -581,7 +581,7 @@ void find_point_of_inflection(uint8_t j_continue[CAMERA_H]){
     left_up_point = 0;
     right_down_point = 0;
 
-    for (i = 68; i >= 20; i--) {
+    for (i = 65; i >= 20; i--) {
         if((my_road[i - 1].connected[j_continue[i - 1]].left - my_road[i].connected[j_continue[i]].left <= -3)&&
             //(my_road[i + 1].connected[j_continue[i + 1]].left - my_road[i].connected[j_continue[i]].left >= -3) &&
             //(my_road[i + 1].connected[j_continue[i + 1]].left - my_road[i].connected[j_continue[i]].left <= 3) &&
@@ -594,7 +594,7 @@ void find_point_of_inflection(uint8_t j_continue[CAMERA_H]){
     if (left_down_point == 20) {
         left_down_point = 91;
     }
-    for (i = 68; i >= 20; i--) {
+    for (i = 65; i >= 20; i--) {
         if ((my_road[i - 1].connected[j_continue[i - 1]].right - my_road[i].connected[j_continue[i]].right >= 3) &&
             //(my_road[i + 1].connected[j_continue[i + 1]].right - my_road[i].connected[j_continue[i]].right <= 3)
             //(my_road[i + 1].connected[j_continue[i + 1]].right - my_road[i].connected[j_continue[i]].right >= -3) &&
