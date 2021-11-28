@@ -80,50 +80,50 @@ void THRE()
         }
     }
 
-    uint8_t my_threshold;
-    int i;
-
-    float max_num = 0, num = 0;
-    int k;
-
-    for (k = 0; k <= 255; k++) {
-        map = fullBuffer;
-        int a_less, a_more;
-        float p_less, p_more;
-        int count_less = 0, count_more = 0;
-        int sum_less = 0, sum_more = 0;
-        for (i = 0; i < 86 * 188; i++,map++) {
-            if ((*map) < k) {
-                count_less++;
-                sum_less += (*map);
-            }
-            else {
-                count_more++;
-                sum_more += (*map);
-            }
-        }
-        p_less = (float)count_less / (86 * 188);
-        p_more = (float)count_more / (86 * 188);
-        if (count_less == 0) {
-            a_less = 0;
-        }
-        else {
-            a_less = sum_less / (count_less);
-        }
-        if (count_more == 0) {
-            a_more = 0;
-        }
-        else {
-            a_more = sum_more / (count_more);
-        }
-
-        num = p_less * p_more * (a_less - a_more) * (a_less - a_more);
-        if (num > max_num) {
-            max_num = num;
-            my_threshold = k;
-        }
-    }
-    threshold = my_threshold;
+//    uint8_t my_threshold;
+//    int i;
+//
+//    float max_num = 0, num = 0;
+//    int k;
+//
+//    for (k = 0; k <= 255; k++) {
+//        map = fullBuffer;
+//        int a_less, a_more;
+//        float p_less, p_more;
+//        int count_less = 0, count_more = 0;
+//        int sum_less = 0, sum_more = 0;
+//        for (i = 0; i < 86 * 188; i++,map++) {
+//            if ((*map) < k) {
+//                count_less++;
+//                sum_less += (*map);
+//            }
+//            else {
+//                count_more++;
+//                sum_more += (*map);
+//            }
+//        }
+//        p_less = (float)count_less / (86 * 188);
+//        p_more = (float)count_more / (86 * 188);
+//        if (count_less == 0) {
+//            a_less = 0;
+//        }
+//        else {
+//            a_less = sum_less / (count_less);
+//        }
+//        if (count_more == 0) {
+//            a_more = 0;
+//        }
+//        else {
+//            a_more = sum_more / (count_more);
+//        }
+//
+//        num = p_less * p_more * (a_less - a_more) * (a_less - a_more);
+//        if (num > max_num) {
+//            max_num = num;
+//            my_threshold = k;
+//        }
+//    }
+//    threshold = my_threshold;
     map = fullBuffer;
 
     for (int i = 0; i < 120; i++)
