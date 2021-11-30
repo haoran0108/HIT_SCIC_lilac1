@@ -149,22 +149,22 @@ void THRE()
 void head_clear(void)
 {
     uint8_t* my_map;
-    for (int i = 85; i >= 80; i--)
+    for (int i = 85; i >= 79; i--)
+    {
+        my_map = &IMG[i][0];
+        for (int j = 62; j <= 112; j++)
+        {
+            *(my_map + j) = white;
+        }
+    }
+    /*for (int i = 80; i >= 70; i--)
     {
         my_map = &IMG[i][0];
         for (int j = 37; j <= 150; j++)
         {
             *(my_map + j) = white;
         }
-    }
-    for (int i = 80; i >= 70; i--)
-    {
-        my_map = &IMG[i][0];
-        for (int j = 37; j <= 150; j++)
-        {
-            *(my_map + j) = white;
-        }
-    }
+    }*/
 }
 
 ////////////////////////////////////////////
@@ -675,46 +675,37 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
     float k_of_up_right = calculate_k(right_up_point, 10, my_road[right_up_point].connected[j_continue[right_up_point]].right, my_road[10].connected[j_continue[10]].right);
 
     /*for (int m = 0; m < 90; m++) {
-        IMG[right_up_point][180 - m] = red;
+        //IMG[right_up_point][180 - m] = red;
         IMG[(right_down_point )][180 - m] = green;
-
-        IMG[left_up_point][20 + m] = red;
-        IMG[(left_down_point)][20 + m] = green;
+        //IMG[left_up_point][20 + m] = red;
+        IMG[(left_down_point)][20 + m] = red;
     }
     for (int m = 0; m < 80; m++) {
-        IMG[m][my_road[left_down_point].connected[j_continue[left_down_point]].left] = blue;
-        IMG[m][my_road[left_up_point].connected[j_continue[left_up_point]].left] = purple;
+        IMG[m][my_road[left_down_point].connected[j_continue[left_down_point]].left] = purple;
+        //IMG[m][my_road[left_up_point].connected[j_continue[left_up_point]].left] = purple;
         IMG[m][my_road[right_down_point].connected[j_continue[right_down_point]].right] = blue;
-        IMG[m][my_road[right_up_point].connected[j_continue[right_up_point]].right] = purple;
+        //IMG[m][my_road[right_up_point].connected[j_continue[right_up_point]].right] = purple;
     }*/
-    if(!GPIO_Read(P13, 2))
+
+    /*zebraCount++;
+    if (zebraCount > 250) zebraCount = 250;
+    if (zebraCount % 250 == 0)//5s
     {
+
+        zFlag = 1;
+    }
+
+    if (zebraPanduan() == 1 && zFlag == 1)
+    {
+        zebraCircle++;
+        if (zebraCircle >= 2) {
+            zebraCircle = 1;
+        }
         zebraCount = 0;
-
-    }
-    else
-    {
-         zebraCount++;
-         if (zebraCount > 250) zebraCount = 250;
-         if (zebraCount % 250 == 0)//5s
-         {
-
-             zFlag = 1;
-         }
-
-         if (zebraPanduan() == 1 && zFlag == 1)
-         {
-             zebraCircle++;
-             if (zebraCircle >= 2) {
-                 zebraCircle = 1;
-             }
-             zebraCount = 0;
-             zFlag = 0;
-         }
+        zFlag = 0;
     }
 
 
-/*
     //        if(zFlag == 1&&zebraPanduan())
     //        {
     //            zebraCircle++;
@@ -753,7 +744,7 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
 
     if (((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 95 && my_road[right_down_point - 3].connected[j_continue[right_down_point - 3]].width > 95) ||
         (my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 95 && my_road[right_down_point - 4].connected[j_continue[right_down_point - 4]].width > 95))&&
-        (left_down_point <= 65 && right_down_point <= 65)
+        (left_down_point <= 70 && right_down_point <= 70)
         //k_of_down_left * k_of_down_right <= 0 && left_down_point <= 70 && right_down_point <= 70 &&
         //c_of_letf <= 0.4 && c_of_letf >= -0.4 && c_of_right <= 0.4 && c_of_right >= -0.4 &&
         /*(my_road[left_down_point - 5].connected[j_continue[left_down_point - 5]].width > 100 || my_road[right_down_point - 5].connected[j_continue[right_down_point - 5]].width > 100) */ ) {
@@ -770,11 +761,13 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
         stra_cross_road2(j_continue);
     }
     else if ((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 75 && my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 75) &&
-        ((left_down_point <= 75 && right_down_point > 75 && right_down_point < 80) || (left_down_point - right_down_point <= -5 ))) {
+        ((IMG[left_down_point + 7][my_road[left_down_point].connected[j_continue[left_down_point]].left] != black)&& IMG[left_down_point + 8][my_road[left_down_point].connected[j_continue[left_down_point]].left] != black)&&
+        ((left_down_point <= 70 && right_down_point > 70 && (right_down_point < 80 || right_down_point < 0))||(left_down_point-right_down_point < -10))) {
         stra_cross_left_down(j_continue);
     }
     else if ((my_road[right_down_point - 3].connected[j_continue[right_down_point - 3]].width > 75 && my_road[right_down_point - 4].connected[j_continue[right_down_point - 4]].width > 75) &&
-        ((right_down_point <= 75 && left_down_point > 75 ) || (left_down_point - right_down_point > 5))) {
+        ((IMG[right_down_point + 7][my_road[right_down_point].connected[j_continue[left_down_point]].right] != black)&&(IMG[right_down_point + 8][my_road[right_down_point].connected[j_continue[right_down_point]].right] != black))&&
+        ((right_down_point <= 70 && (left_down_point > 70 || left_down_point < 0))||(left_down_point-right_down_point>10))) {
         stra_cross_right_down(j_continue);
     }
     /*else if (my_road[79].connected[j_continue[79]].width>180 && my_road[78].connected[j_continue[78]].width > 180 &&
@@ -860,22 +853,22 @@ float calculate_k(int x1, int x2, int y1, int y2) {
 void stra_cross_road(uint8_t j_continue[CAMERA_H]) {
     uint8_t i_start = NEAR_LINE;
     uint8_t i_end = FAR_LINE;
-    if (right_down_point - left_down_point >= -30 && right_down_point - left_down_point <= 30
+    if (right_down_point - left_down_point >= -50 && right_down_point - left_down_point <= 50
         &&
-        right_down_point <= 65
+        right_down_point <= 70
         &&
-        left_down_point <= 65
+        left_down_point <= 70
         )
     {
-        int t1 = my_road[left_down_point].connected[j_continue[left_down_point]].left - my_road[68].connected[j_continue[68]].left;
-        int t2 = (-1) * my_road[right_down_point].connected[j_continue[right_down_point]].right + my_road[68].connected[j_continue[68]].right;
+        int t1 = my_road[left_down_point].connected[j_continue[left_down_point]].left - my_road[78].connected[j_continue[78]].left;
+        int t2 = (-1) * my_road[right_down_point].connected[j_continue[right_down_point]].right + my_road[78].connected[j_continue[78]].right;
         for (int j = left_down_point - 1; j > i_end; j--)
         {
-            left_line[j] = my_road[left_down_point].connected[j_continue[left_down_point]].left + (left_down_point - j) * t1 / (68 - left_down_point);
+            left_line[j] = my_road[left_down_point].connected[j_continue[left_down_point]].left + (left_down_point - j) * t1 / (78 - left_down_point);
         }
         for (int j = right_down_point - 1; j > i_end; j--)
         {
-            right_line[j] = my_road[right_down_point].connected[j_continue[right_down_point]].right - (right_down_point - j) * t2 / (68 - right_down_point);
+            right_line[j] = my_road[right_down_point].connected[j_continue[right_down_point]].right - (right_down_point - j) * t2 / (78 - right_down_point);
         }
     }
     for (int i = i_start; i > i_end; i--)
@@ -893,7 +886,7 @@ void stra_cross_road(uint8_t j_continue[CAMERA_H]) {
 void stra_cross_road2(uint8_t j_continue[CAMERA_H]) {
     uint8_t i_start = NEAR_LINE;
     uint8_t i_end = FAR_LINE;
-    if (right_up_point - left_up_point >= -30 && right_up_point - left_up_point <= 30
+    if (right_up_point - left_up_point >= -50 && right_up_point - left_up_point <= 50
         &&
         right_up_point >= 10
         &&
@@ -928,9 +921,9 @@ void stra_cross_left_down(uint8_t j_continue[CAMERA_H]) {
     uint8_t i_start = 65;
     uint8_t i_end = 10;
 
-    int t1 = my_road[left_down_point].connected[j_continue[left_down_point]].left - my_road[85].connected[j_continue[85]].left;
+    int t1 = my_road[left_down_point].connected[j_continue[left_down_point]].left - my_road[80].connected[j_continue[80]].left;
     for (int j = left_down_point - 1; j > i_end; j--){
-        left_line[j] = my_road[left_down_point].connected[j_continue[left_down_point]].left + (left_down_point - j) * t1 / (85 - left_down_point);
+        left_line[j] = my_road[left_down_point].connected[j_continue[left_down_point]].left + (left_down_point - j) * t1 / (80 - left_down_point);
     }
     for (int i = i_start; i > i_end; i--)
     {
@@ -948,10 +941,10 @@ void stra_cross_left_down(uint8_t j_continue[CAMERA_H]) {
 void stra_cross_right_down(uint8_t j_continue[CAMERA_H]) {
     uint8_t i_start = 65;
     uint8_t i_end = 10;
-    int t2 = (-1) * my_road[right_down_point].connected[j_continue[right_down_point]].right + my_road[85].connected[j_continue[85]].right;
+    int t2 = (-1) * my_road[right_down_point].connected[j_continue[right_down_point]].right + my_road[80].connected[j_continue[80]].right;
     for (int j = right_down_point - 1; j > i_end; j--)
     {
-        right_line[j] = my_road[right_down_point].connected[j_continue[right_down_point]].right - (right_down_point - j) * t2 / (85 - right_down_point);
+        right_line[j] = my_road[right_down_point].connected[j_continue[right_down_point]].right - (right_down_point - j) * t2 / (80 - right_down_point);
     }
     for (int i = i_start; i > i_end; i--)
     {
