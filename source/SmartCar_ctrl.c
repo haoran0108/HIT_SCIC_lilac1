@@ -78,10 +78,10 @@ void CTRL_servoMain()//优化：封装pid计算，电机定时设置pwm，（多级环pid）
     CTRL_servoPID();
     test_varible[4] = 790 - (float)(servoPwm);
 
-    if(zebraCircle == 1 || flagStop == 1)
+    if(zebraCircle == display6.intValue || flagStop == 1)
     {
         delayStop ++;
-        if(delayStop > 10)
+        if(delayStop > display5.intValue)
         {
             expectL = 0;
             expectR = 0;

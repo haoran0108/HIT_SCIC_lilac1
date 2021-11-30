@@ -703,8 +703,8 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
     if (zebraPanduan() == 1 && zFlag == 1)
     {
         zebraCircle++;
-        if (zebraCircle >= 2) {
-            zebraCircle = 1;
+        if (zebraCircle > display6.intValue) {
+            zebraCircle = display6.intValue;
         }
         zebraCount = 0;
         zFlag = 0;
