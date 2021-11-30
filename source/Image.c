@@ -61,24 +61,24 @@ void THRE()
 {
     uint8_t* map;
     uint8_t* my_map;
-    int count = 0;
-    for (int i = 40; i < 50; i++)
-    {
-        for (int j = 148; j <= 155; j++)
-        {
-            count = 0;
-            for (int y = i - 2; y <= i + 2; y++)
-            {
-                for (int x = j - 2; x <= j + 2; x++)
-                {
-                    map = fullBuffer + 188 * y + x - 1;
-                    count = count + (*map);
-                }
-            }
-            map = fullBuffer + 188 * i + j - 1;
-            (*map) = count / 25;
-        }
-    }
+//    int count = 0;
+//    for (int i = 40; i < 50; i++)
+//    {
+//        for (int j = 148; j <= 155; j++)
+//        {
+//            count = 0;
+//            for (int y = i - 2; y <= i + 2; y++)
+//            {
+//                for (int x = j - 2; x <= j + 2; x++)
+//                {
+//                    map = fullBuffer + 188 * y + x - 1;
+//                    count = count + (*map);
+//                }
+//            }
+//            map = fullBuffer + 188 * i + j - 1;
+//            (*map) = count / 25;
+//        }
+//    }
 
 //    uint8_t my_threshold;
 //    int i;
@@ -561,6 +561,11 @@ void image_main()
     ordinary_two_line();
     get_mid_line();
 
+    for(int i = NEAR_LINE; i >= FAR_LINE; i--){
+        if(mid_line[i] != MISS){
+            IMG[i][mid_line[i]] = green;
+        }
+    }
     stop();
 }
 
@@ -687,7 +692,7 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
         //IMG[m][my_road[right_up_point].connected[j_continue[right_up_point]].right] = purple;
     }*/
 
-    /*zebraCount++;
+    zebraCount++;
     if (zebraCount > 250) zebraCount = 250;
     if (zebraCount % 250 == 0)//5s
     {
@@ -1147,29 +1152,29 @@ int zebraPanduan() {
     }
 }
 //111
-int straightSpeedUp()
-{
-
-    int count1 = 0;
-    int count2 = 0;
-    for (int i = 0; i <= 4; i++)
-    {
-        for (int j = 88; j <= 100; j++)
-        {
-            if (IMG[i][j] == white) count1++;
-        }
-    }
-    for (int i = 15; i <= 30; i++)
-    {
-        if (abs(mid_line[i] - 94) < MIDLINE_DELTA) count2++;
-    }
-    if (calculate_k(30, 60, left_line[30], left_line[60]) * calculate_k(30, 60, right_line[30], right_line[60]) < 0 &&
-        count1 > SPEEDUP_COUNT1 && count2 > SPEEDUP_COUNT2)
-    {
-        return 1;
-    }
-    else return 0;
-}
+//int straightSpeedUp()
+//{
+//
+//    int count1 = 0;
+//    int count2 = 0;
+//    for (int i = 0; i <= 4; i++)
+//    {
+//        for (int j = 88; j <= 100; j++)
+//        {
+//            if (IMG[i][j] == white) count1++;
+//        }
+//    }
+//    for (int i = 15; i <= 30; i++)
+//    {
+//        if (abs(mid_line[i] - 94) < MIDLINE_DELTA) count2++;
+//    }
+//    if (calculate_k(30, 60, left_line[30], left_line[60]) * calculate_k(30, 60, right_line[30], right_line[60]) < 0 &&
+//        count1 > SPEEDUP_COUNT1 && count2 > SPEEDUP_COUNT2)
+//    {
+//        return 1;
+//    }
+//    else return 0;
+//}
 
 void stop()
 {
