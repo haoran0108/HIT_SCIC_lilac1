@@ -190,55 +190,55 @@ void CTRL_motorDiffer()
     delta = 790 - servoPwm;
 
     /*内轮减速*/
-//    int k;
-//    if(delta > 0)
-//    {
-//        k = gap.floatValue * (1.1209 - 0.0061 * delta);
-//        if(k > 1) k = 1;
-//        expectL = (int32)(presentSpeed.intValue);
-//        expectR = (int32)(presentSpeed.intValue * k);
-//    }
-//    else if(delta < 0)
-//    {
-//        k = gap.floatValue * (1.1209 + 0.0061 * delta);
-//        if(k > 1) k = 1;
-//        expectL = (int32)(presentSpeed.intValue * k);
-//        expectR = (int32)(presentSpeed.intValue);
-//    }
-//    else if(delta == 0)
-//    {
-//
-//        expectL = (int32)(presentSpeed.intValue);
-//        expectR = (int32)(presentSpeed.intValue);
-//    }
-
-    /*内减外加*/
-    float kIN, kOUT;
+    float k;
     if(delta > 0)
     {
-        kIN = gap.floatValue * (1.0886 - 0.004 * delta);
-        kOUT = gap.floatValue * (0.9114 + 0.004 * delta);
-        if(kIN > 1) kIN = 1;
-        if(kOUT < 1) kOUT = 1;
-
-        expectL = (int32)(presentSpeed.intValue * kOUT);
-        expectR = (int32)(presentSpeed.intValue * kIN);
+        k = gap.floatValue * (1.1209 - 0.0061 * delta);
+        if(k > 1) k = 1;
+        expectL = (int32)(presentSpeed.intValue);
+        expectR = (int32)(presentSpeed.intValue * k);
     }
     else if(delta < 0)
     {
-        kIN = gap.floatValue * (1.0886 + 0.004 * delta);
-        kOUT = gap.floatValue * (0.9114 - 0.004 * delta);
-        if(kIN > 1) kIN = 1;
-        if(kOUT < 1) kOUT = 1;
-
-        expectL = (int32)(presentSpeed.intValue * kIN);
-        expectR = (int32)(presentSpeed.intValue * kOUT);
+        k = gap.floatValue * (1.1209 + 0.0061 * delta);
+        if(k > 1) k = 1;
+        expectL = (int32)(presentSpeed.intValue * k);
+        expectR = (int32)(presentSpeed.intValue);
     }
     else if(delta == 0)
     {
+
         expectL = (int32)(presentSpeed.intValue);
         expectR = (int32)(presentSpeed.intValue);
     }
+
+    /*内减外加*/
+//    float kIN, kOUT;
+//    if(delta > 0)
+//    {
+//        kIN = gap.floatValue * (1.0886 - 0.004 * delta);
+//        kOUT = gap.floatValue * (0.9114 + 0.004 * delta);
+//        if(kIN > 1) kIN = 1;
+//        if(kOUT < 1) kOUT = 1;
+//
+//        expectL = (int32)(presentSpeed.intValue * kOUT);
+//        expectR = (int32)(presentSpeed.intValue * kIN);
+//    }
+//    else if(delta < 0)
+//    {
+//        kIN = gap.floatValue * (1.0886 + 0.004 * delta);
+//        kOUT = gap.floatValue * (0.9114 - 0.004 * delta);
+//        if(kIN > 1) kIN = 1;
+//        if(kOUT < 1) kOUT = 1;
+//
+//        expectL = (int32)(presentSpeed.intValue * kIN);
+//        expectR = (int32)(presentSpeed.intValue * kOUT);
+//    }
+//    else if(delta == 0)
+//    {
+//        expectL = (int32)(presentSpeed.intValue);
+//        expectR = (int32)(presentSpeed.intValue);
+//    }
 }
 
 int16_t CTRL_speedGetRight()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚21.6和21.7对应T5

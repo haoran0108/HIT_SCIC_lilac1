@@ -561,6 +561,9 @@ void image_main()
     ordinary_two_line();
     get_mid_line();
 
+    for (int i = NEAR_LINE; i >= FAR_LINE; i--)
+        if (mid_line[i] != MISS)
+            IMG[i][mid_line[i]] = red;
     stop();
 }
 
@@ -700,6 +703,9 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
          {
 
              zFlag = 1;
+
+
+
          }
 
          if (zebraPanduan() == 1 && zFlag == 1)
@@ -710,6 +716,7 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
              }
              zebraCount = 0;
              zFlag = 0;
+
          }
     }
 

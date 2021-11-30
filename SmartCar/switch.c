@@ -22,6 +22,7 @@ void SW_readSwitch()
         flagStop = 0;
         delayFlag = 0;
         zebraCount = 0;
+        zFlag = 0;
         delayStop = 0;
     }
     else
