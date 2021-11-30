@@ -131,7 +131,7 @@ void THRE()
         my_map = &IMG[i][0];
         for (int j = 0; j < 188; j++)
         {
-            if ((*map) > threshold)
+            if ((*map) > presentTHRE.intValue)
                 (*my_map) = 1;
             else (*my_map) = 0;
             map++;
