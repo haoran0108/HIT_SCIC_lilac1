@@ -1034,6 +1034,9 @@ void zebra_cross(uint8_t j_continue[CAMERA_H]) {
         IMG[i][left_line[i]] = red;
         IMG[i][right_line[i]] = blue;
     }
+    for(int k = 0; k<200; k++){
+        IMG[75][k] = blue;
+    }
 }
 
 ////////////////////////////////////////////
