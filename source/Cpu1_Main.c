@@ -63,8 +63,8 @@ int core1_main(void)
     while(1)
     {
         test_varible[7] = zebraCount ;
-             test_varible[8] = zFlag;
-             test_varible[9] = zebraCircle;
+        test_varible[8] = zFlag;
+        test_varible[9] = mid_line[presentVision.intValue];
 
         SmartCar_VarUpload(test_varible, transport_num);
 

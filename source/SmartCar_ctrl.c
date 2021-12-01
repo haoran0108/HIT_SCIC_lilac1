@@ -42,7 +42,7 @@ void CTRL_Init()
 void CTRL_servoPID()
 {
 
-    servoError.currentError = 94 - mid_line[presentVision.intValue];
+    servoError.currentError = 88 - mid_line[presentVision.intValue];
     servoError.delta = servoError.currentError - servoError.lastError;
     servoPwm = (uint32)(790 + presentServoD.floatValue * servoError.delta + presentServoP.floatValue * servoError.currentError);
     if(servoPwm > 865)

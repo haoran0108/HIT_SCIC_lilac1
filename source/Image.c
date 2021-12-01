@@ -749,7 +749,7 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
 
     if (((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 95 && my_road[right_down_point - 3].connected[j_continue[right_down_point - 3]].width > 95) ||
         (my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 95 && my_road[right_down_point - 4].connected[j_continue[right_down_point - 4]].width > 95))&&
-        (left_down_point <= 70 && right_down_point <= 70)
+        (left_down_point <= 65 && right_down_point <= 65)
         //k_of_down_left * k_of_down_right <= 0 && left_down_point <= 70 && right_down_point <= 70 &&
         //c_of_letf <= 0.4 && c_of_letf >= -0.4 && c_of_right <= 0.4 && c_of_right >= -0.4 &&
         /*(my_road[left_down_point - 5].connected[j_continue[left_down_point - 5]].width > 100 || my_road[right_down_point - 5].connected[j_continue[right_down_point - 5]].width > 100) */ ) {
@@ -765,14 +765,15 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
         //make_unmain_black(j_continue);
         stra_cross_road2(j_continue);
     }
-    else if ((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 75 && my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 75) &&
-        ((IMG[left_down_point + 7][my_road[left_down_point].connected[j_continue[left_down_point]].left] != black)&& IMG[left_down_point + 8][my_road[left_down_point].connected[j_continue[left_down_point]].left] != black)&&
-        ((left_down_point <= 70 && right_down_point > 70 && (right_down_point < 80 || right_down_point < 0))||(left_down_point-right_down_point < -10))) {
+    else if ((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 80 && my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 80) &&
+        ((IMG[left_down_point + 7][my_road[left_down_point].connected[j_continue[left_down_point]].left] == white)&& IMG[left_down_point + 8][my_road[left_down_point].connected[j_continue[left_down_point]].left] == white &&
+          IMG[left_down_point + 6][my_road[left_down_point].connected[j_continue[left_down_point]].left] == white    )&&
+        ((left_down_point <= 65 &&  (right_down_point > 70 || right_down_point < 0))||(left_down_point-right_down_point < -10))) {
         stra_cross_left_down(j_continue);
     }
     else if ((my_road[right_down_point - 3].connected[j_continue[right_down_point - 3]].width > 75 && my_road[right_down_point - 4].connected[j_continue[right_down_point - 4]].width > 75) &&
         ((IMG[right_down_point + 7][my_road[right_down_point].connected[j_continue[left_down_point]].right] != black)&&(IMG[right_down_point + 8][my_road[right_down_point].connected[j_continue[right_down_point]].right] != black))&&
-        ((right_down_point <= 70 && (left_down_point > 70 || left_down_point < 0))||(left_down_point-right_down_point>10))) {
+        ((right_down_point <= 65 && (left_down_point > 70 || left_down_point < 0))||(left_down_point-right_down_point>10))) {
         stra_cross_right_down(j_continue);
     }
     /*else if (my_road[79].connected[j_continue[79]].width>180 && my_road[78].connected[j_continue[78]].width > 180 &&
