@@ -18,7 +18,7 @@ uint32 motorPwm;
 int32 expectL, expectR;//预期速度
 int32 speedL, speedR;//实际速度
 int32 mySpeedL = 0, mySpeedR = 0;
-
+int lastMidLine = 88;
 float motorLFKP, motorLFKI, motorRTKP, motorRTKI;
 void CTRL_Init()
 {
@@ -41,8 +41,15 @@ void CTRL_Init()
 
 void CTRL_servoPID()
 {
-
-    servoError.currentError = 88 - mid_line[presentVision.intValue];
+    if(mid_line[presentVision.intValue] != MISS)
+    {
+        servoError.currentError = 88 - mid_line[presentVision.intValue];
+        lastMidLine = mid_line[presentVision.intValue];
+    }
+    else if(mid_line[presentVision.intValue] == MISS)
+    {
+        servoError.currentError = 88 - lastMidLine;
+    }
     servoError.delta = servoError.currentError - servoError.lastError;
     servoPwm = (uint32)(790 + presentServoD.floatValue * servoError.delta + presentServoP.floatValue * servoError.currentError);
     if(servoPwm > 865)

@@ -42,13 +42,15 @@ extern uint8_t image_Buffer_0[CAMERA_H][CAMERA_W];
 extern uint8_t* fullBuffer;//指向灰度图的首地址
 extern uint8_t mid_line[CAMERA_H];
 extern int zebraCount, zFlag;
+extern int flag3;
+
 void head_clear(void);
 void THRE(void);
 int find_f(int a);
 void search_white_range();
 void find_all_connect();
 void find_road();
-uint8_t find_continue(uint8_t i_start, uint8_t j_start, uint8_t mid);
+uint8_t find_continue(uint8_t i_start, uint8_t j_start);
 void ordinary_two_line(void);
 void image_main();
 void get_mid_line(void);
@@ -74,6 +76,6 @@ void stra_cross_left3(uint8_t j_continue[CAMERA_H]);
 void stra_cross_right1(uint8_t j_continue[CAMERA_H]);
 void stra_cross_right2(uint8_t j_continue[CAMERA_H]);
 void stra_cross_right3(uint8_t j_continue[CAMERA_H]);
-
+void stop();
 void quasilinear(uint8_t x[], int n1, uint8_t y[], int n2, int n);
 #endif //

@@ -339,7 +339,7 @@ void find_road()
 //输出：白条标号
 //备注：认为下一行与本行赛道重叠部分对多的白条为选定赛道
 ///////////////////////////////////////////
-uint8_t find_continue(uint8_t i_start, uint8_t j_start, uint8_t mid)
+uint8_t find_continue(uint8_t i_start, uint8_t j_start)
 {
 
     uint8_t j_return;
@@ -381,9 +381,9 @@ uint8_t find_continue(uint8_t i_start, uint8_t j_start, uint8_t mid)
             //
             width[j] = width_new;
             upmidline[j] = (uleft + uright) / 2;
-            if (abs(upmidline[j] - mid) < midD_value_min)
+            if (abs(upmidline[j] - 94) < midD_value_min)
             {
-                midD_value_min = abs(upmidline[j] - mid);
+                midD_value_min = abs(upmidline[j] - 94);
                 t = j;
             }
             //
@@ -400,7 +400,7 @@ uint8_t find_continue(uint8_t i_start, uint8_t j_start, uint8_t mid)
         j_return = t;
     }
     return j_return;
-    /*
+/*
     uint8_t j_return;
     uint8_t j;
     uint8_t width_max = 0;
@@ -473,8 +473,8 @@ void ordinary_two_line(void)
         }
     }
     j_continue[i_start] = j_start;
-    int mid = 0;
-    mid = (my_road[NEAR_LINE].connected[j_start].left + my_road[NEAR_LINE].connected[j_start].right) / 2;
+//    int mid = 0;
+//    mid = (my_road[NEAR_LINE].connected[j_start].left + my_road[NEAR_LINE].connected[j_start].right) / 2;
     //printf("%d", mid);
     //记录连贯区域编号
     for (i = i_start; i > i_end; i--)
@@ -486,7 +486,7 @@ void ordinary_two_line(void)
         }
         else
         {
-            j_continue[i - 1] = find_continue(i, j_continue[i], mid);
+            j_continue[i - 1] = find_continue(i, j_continue[i]);
         }
 
     }
@@ -613,7 +613,7 @@ void image_main()
             IMG[i][mid_line[i]] = green;
         }
     }
-    //stop();
+    stop();
 }
 
 ////////////////////////////////////////////
