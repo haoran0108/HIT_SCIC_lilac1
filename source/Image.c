@@ -4,12 +4,13 @@
  *  Created on: 2021年10月28日
  *      Author: windows
  */
+
 #include "image.h"
 //aaaaa
 int f[10 * CAMERA_H];//考察连通域联通性
 int zebraCount = 0, zFlag = 0;
 
-uint8_t *fullBuffer = &mt9v034_image[0][0];
+uint8_t* fullBuffer = &mt9v034_image[0][0];
 //每个白条子属性
 typedef struct {
     uint8_t   left;//左边界
@@ -43,14 +44,15 @@ uint8_t left_line[CAMERA_H], right_line[CAMERA_H];//赛道的左右边界
 uint8_t mid_line[CAMERA_H];
 int all_connect_num = 0;//所有白条子数
 uint8_t top_road;//赛道最高处所在行数
-uint8_t threshold = 160;//阈值
+uint8_t threshold = 140;//阈值
 
 uint8_t left_down_point;//寻找左下角的拐点的行数
 uint8_t left_up_point;//寻找左上角的拐点的行数
 uint8_t right_down_point;//寻找右下角的拐点的行数
 uint8_t right_up_point;//寻找右下角的拐点的行数
-
-
+int flag3;
+float quasilinear_a;
+float quasilinear_b;
 ////////////////////////////////////////////
 //功能：二值化
 //输入：灰度图片
@@ -61,69 +63,69 @@ void THRE()
 {
     uint8_t* map;
     uint8_t* my_map;
-//    int count = 0;
-//    for (int i = 40; i < 50; i++)
-//    {
-//        for (int j = 148; j <= 155; j++)
-//        {
-//            count = 0;
-//            for (int y = i - 2; y <= i + 2; y++)
-//            {
-//                for (int x = j - 2; x <= j + 2; x++)
-//                {
-//                    map = fullBuffer + 188 * y + x - 1;
-//                    count = count + (*map);
-//                }
-//            }
-//            map = fullBuffer + 188 * i + j - 1;
-//            (*map) = count / 25;
-//        }
-//    }
+    //    int count = 0;
+    //    for (int i = 40; i < 50; i++)
+    //    {
+    //        for (int j = 148; j <= 155; j++)
+    //        {
+    //            count = 0;
+    //            for (int y = i - 2; y <= i + 2; y++)
+    //            {
+    //                for (int x = j - 2; x <= j + 2; x++)
+    //                {
+    //                    map = fullBuffer + 188 * y + x - 1;
+    //                    count = count + (*map);
+    //                }
+    //            }
+    //            map = fullBuffer + 188 * i + j - 1;
+    //            (*map) = count / 25;
+    //        }
+    //    }
 
-//    uint8_t my_threshold;
-//    int i;
-//
-//    float max_num = 0, num = 0;
-//    int k;
-//
-//    for (k = 0; k <= 255; k++) {
-//        map = fullBuffer;
-//        int a_less, a_more;
-//        float p_less, p_more;
-//        int count_less = 0, count_more = 0;
-//        int sum_less = 0, sum_more = 0;
-//        for (i = 0; i < 86 * 188; i++,map++) {
-//            if ((*map) < k) {
-//                count_less++;
-//                sum_less += (*map);
-//            }
-//            else {
-//                count_more++;
-//                sum_more += (*map);
-//            }
-//        }
-//        p_less = (float)count_less / (86 * 188);
-//        p_more = (float)count_more / (86 * 188);
-//        if (count_less == 0) {
-//            a_less = 0;
-//        }
-//        else {
-//            a_less = sum_less / (count_less);
-//        }
-//        if (count_more == 0) {
-//            a_more = 0;
-//        }
-//        else {
-//            a_more = sum_more / (count_more);
-//        }
-//
-//        num = p_less * p_more * (a_less - a_more) * (a_less - a_more);
-//        if (num > max_num) {
-//            max_num = num;
-//            my_threshold = k;
-//        }
-//    }
-//    threshold = my_threshold;
+    //    uint8_t my_threshold;
+    //    int i;
+    //
+    //    float max_num = 0, num = 0;
+    //    int k;
+    //
+    //    for (k = 0; k <= 255; k++) {
+    //        map = fullBuffer;
+    //        int a_less, a_more;
+    //        float p_less, p_more;
+    //        int count_less = 0, count_more = 0;
+    //        int sum_less = 0, sum_more = 0;
+    //        for (i = 0; i < 86 * 188; i++,map++) {
+    //            if ((*map) < k) {
+    //                count_less++;
+    //                sum_less += (*map);
+    //            }
+    //            else {
+    //                count_more++;
+    //                sum_more += (*map);
+    //            }
+    //        }
+    //        p_less = (float)count_less / (86 * 188);
+    //        p_more = (float)count_more / (86 * 188);
+    //        if (count_less == 0) {
+    //            a_less = 0;
+    //        }
+    //        else {
+    //            a_less = sum_less / (count_less);
+    //        }
+    //        if (count_more == 0) {
+    //            a_more = 0;
+    //        }
+    //        else {
+    //            a_more = sum_more / (count_more);
+    //        }
+    //
+    //        num = p_less * p_more * (a_less - a_more) * (a_less - a_more);
+    //        if (num > max_num) {
+    //            max_num = num;
+    //            my_threshold = k;
+    //        }
+    //    }
+    //    threshold = my_threshold;
     map = fullBuffer;
 
     for (int i = 0; i < 120; i++)
@@ -152,7 +154,7 @@ void head_clear(void)
     for (int i = 85; i >= 79; i--)
     {
         my_map = &IMG[i][0];
-        for (int j = 62; j <= 112; j++)
+        for (int j = 62; j <= 122; j++)
         {
             *(my_map + j) = white;
         }
@@ -337,8 +339,9 @@ void find_road()
 //输出：白条标号
 //备注：认为下一行与本行赛道重叠部分对多的白条为选定赛道
 ///////////////////////////////////////////
-uint8_t find_continue(uint8_t i_start, uint8_t j_start)
+uint8_t find_continue(uint8_t i_start, uint8_t j_start, uint8_t mid)
 {
+
     uint8_t j_return;
     uint8_t j;
     uint8_t width_max = 0;
@@ -378,9 +381,9 @@ uint8_t find_continue(uint8_t i_start, uint8_t j_start)
             //
             width[j] = width_new;
             upmidline[j] = (uleft + uright) / 2;
-            if (abs(upmidline[j] - 94) < midD_value_min)
+            if (abs(upmidline[j] - mid) < midD_value_min)
             {
-                midD_value_min = abs(upmidline[j] - 94);
+                midD_value_min = abs(upmidline[j] - mid);
                 t = j;
             }
             //
@@ -397,7 +400,8 @@ uint8_t find_continue(uint8_t i_start, uint8_t j_start)
         j_return = t;
     }
     return j_return;
-    /*uint8_t j_return;
+    /*
+    uint8_t j_return;
     uint8_t j;
     uint8_t width_max = 0;
     uint8_t width_new = 0;
@@ -469,7 +473,9 @@ void ordinary_two_line(void)
         }
     }
     j_continue[i_start] = j_start;
-
+    int mid = 0;
+    mid = (my_road[NEAR_LINE].connected[j_start].left + my_road[NEAR_LINE].connected[j_start].right) / 2;
+    //printf("%d", mid);
     //记录连贯区域编号
     for (i = i_start; i > i_end; i--)
     {
@@ -480,7 +486,7 @@ void ordinary_two_line(void)
         }
         else
         {
-            j_continue[i - 1] = find_continue(i, j_continue[i]);
+            j_continue[i - 1] = find_continue(i, j_continue[i], mid);
         }
 
     }
@@ -505,7 +511,48 @@ void ordinary_two_line(void)
             right_line[i] = MISS;
         }
     }
+    /*
+    int count1 = 0;
+    int count2 = 0;
+    int count3 = 0;
+    int flag;
+
+    int left_min = 187;
+    int left_min_y = 0;
+    int right_max = 0;
+    int right_max_y = 0;
+    for (int i = 0;i <= 6;i++)
+    {
+        for (int j = 30;j <= 157;j++)
+        {
+            if (IMG[i][j] == black) count1++;
+        }
+    }
+    for (int i = 0;i <= 85;i++)
+    {
+        if (my_road[i].connected[j_continue[i]].left <= 30 ) count2++;
+        if (my_road[i].connected[j_continue[i]].right >= 155) count3++;
+
+        if (my_road[i].connected[j_continue[i]].left < left_min)
+        {
+            left_min = my_road[i].connected[j_continue[i]].left;
+            left_min_y = i;
+        }
+        if (my_road[i].connected[j_continue[i]].right > right_max)
+        {
+            right_max = my_road[i].connected[j_continue[i]].right;
+            right_max_y = i;
+        }
+    }
+    if (count1 <= 7 * 128 - 10 && count2 >= 5 && count3 >=5)
+    {
+        find_point_of_inflection(j_continue);
+        flag = 1;
+    }
+    else flag = 0;
+    printf("%d", flag);*/
     find_point_of_inflection(j_continue);
+    find_type_road(j_continue);
 }
 
 ////////////////////////////////////////////
@@ -533,7 +580,7 @@ void my_memset(uint8_t* ptr, uint8_t num, uint8_t size)
 void get_mid_line(void)
 {
     my_memset(mid_line, MISS, CAMERA_H);
-    for(int i = NEAR_LINE;i >= FAR_LINE;i--)
+    for (int i = NEAR_LINE;i >= FAR_LINE;i--)
         if (left_line[i] != MISS)
         {
             mid_line[i] = (left_line[i] + right_line[i]) / 2;
@@ -561,12 +608,12 @@ void image_main()
     ordinary_two_line();
     get_mid_line();
 
-    for(int i = NEAR_LINE; i >= FAR_LINE; i--){
-        if(mid_line[i] != MISS){
+    for (int i = NEAR_LINE; i >= FAR_LINE; i--) {
+        if (mid_line[i] != MISS) {
             IMG[i][mid_line[i]] = green;
         }
     }
-    stop();
+    //stop();
 }
 
 ////////////////////////////////////////////
@@ -575,7 +622,7 @@ void image_main()
 //输出：
 //备注：
 ///////////////////////////////////////////
-void find_point_of_inflection(uint8_t j_continue[CAMERA_H]){
+void find_point_of_inflection(uint8_t j_continue[CAMERA_H]) {
     int i;
     int j;
 
@@ -584,42 +631,215 @@ void find_point_of_inflection(uint8_t j_continue[CAMERA_H]){
     left_down_point = 100;
     right_down_point = 100;
     left_up_point = 0;
-    right_down_point = 0;
+    right_up_point = 0;
 
-    for (i = 65; i >= 20; i--) {
-        if((my_road[i - 1].connected[j_continue[i - 1]].left - my_road[i].connected[j_continue[i]].left <= -3)&&
+    for (i = 65; i >= 15; i--)
+    {
+        if ((my_road[i - 1].connected[j_continue[i - 1]].left - my_road[i].connected[j_continue[i]].left <= -5) &&
             //(my_road[i + 1].connected[j_continue[i + 1]].left - my_road[i].connected[j_continue[i]].left >= -3) &&
             //(my_road[i + 1].connected[j_continue[i + 1]].left - my_road[i].connected[j_continue[i]].left <= 3) &&
-           (my_road[i - 2].connected[j_continue[i - 2]].left - my_road[i].connected[j_continue[i]].left <= -3)
-            ){
-            left_down_point = i;
+            (my_road[i - 2].connected[j_continue[i - 2]].left - my_road[i].connected[j_continue[i]].left <= -5) &&
+            (my_road[i - 1].connected[j_continue[i - 1]].left >= my_road[i - 2].connected[j_continue[i - 2]].left))
+        {
+            for (int i = 65;i >= 15;i--)
+            {
+                if ((my_road[i - 1].connected[j_continue[i - 1]].left - my_road[i].connected[j_continue[i]].left <= 0) &&
+                    (my_road[i - 2].connected[j_continue[i - 2]].left - my_road[i].connected[j_continue[i]].left <= 0) &&
+                    (my_road[i - 3].connected[j_continue[i - 3]].left - my_road[i].connected[j_continue[i]].left <= 0) &&
+                    (my_road[i - 1].connected[j_continue[i - 1]].left >= my_road[i - 2].connected[j_continue[i - 2]].left)/*&&
+                    abs(calculate_k(i,i-4, my_road[i].connected[j_continue[i]].left, my_road[i - 4].connected[j_continue[i - 4]].left)
+                      - calculate_k(i, i + 4, my_road[i].connected[j_continue[i]].left, my_road[i + 4].connected[j_continue[i + 4]].left))>=0.1*/
+                    )
+                {
+                    left_down_point = i;
+                    //for (int j = 0;j <= 187;j++)
+                    //{
+                    //    IMG[i][j] = red;
+                    //}
+                    break;
+                }
+            }
             break;
         }
     }
-    if (left_down_point == 20) {
+    if (left_down_point == 15) {
         left_down_point = 91;
     }
-    for (i = 65; i >= 20; i--) {
-        if ((my_road[i - 1].connected[j_continue[i - 1]].right - my_road[i].connected[j_continue[i]].right >= 3) &&
+    for (i = 65; i >= 15; i--) {
+        if ((my_road[i - 1].connected[j_continue[i - 1]].right - my_road[i].connected[j_continue[i]].right >= 4) &&
             //(my_road[i + 1].connected[j_continue[i + 1]].right - my_road[i].connected[j_continue[i]].right <= 3)
             //(my_road[i + 1].connected[j_continue[i + 1]].right - my_road[i].connected[j_continue[i]].right >= -3) &&
-            (my_road[i - 2].connected[j_continue[i - 2]].right - my_road[i].connected[j_continue[i]].right >= 3)
-            ) {
-            right_down_point = i;
+            (my_road[i - 2].connected[j_continue[i - 2]].right - my_road[i].connected[j_continue[i]].right >= 4) &&
+            (my_road[i - 1].connected[j_continue[i - 1]].right <= my_road[i - 2].connected[j_continue[i - 2]].right))
+        {
+            for (int i = 65;i >= 15;i--)
+            {
+                if ((my_road[i - 1].connected[j_continue[i - 1]].right - my_road[i].connected[j_continue[i]].right >= 0) &&
+                    (my_road[i - 2].connected[j_continue[i - 2]].right - my_road[i].connected[j_continue[i]].right >= 0) &&
+                    (my_road[i - 3].connected[j_continue[i - 3]].right - my_road[i].connected[j_continue[i]].right >= 0) &&
+                    (my_road[i - 1].connected[j_continue[i - 1]].right <= my_road[i - 2].connected[j_continue[i - 2]].right) /* &&
+                   abs(calculate_k(i, i - 4, my_road[i].connected[j_continue[i]].left, my_road[i - 4].connected[j_continue[i - 4]].left)
+                        - calculate_k(i, i + 4, my_road[i].connected[j_continue[i]].left, my_road[i + 4].connected[j_continue[i + 4]].left)) >= 0.1*/)
+                {
+                    right_down_point = i;
+                    //for (int j = 0;j <= 187;j++)
+                    //{
+                    //    IMG[i][j] = green;
+                    //}
+                    break;
+                }
+            }
             break;
         }
     }
-    if (right_down_point == 20) {
+    if (right_down_point == 15) {
         right_down_point = 91;
     }
 
-    for (i = 15; i <=65; i++) {
+    int count1 = 0;
+    int count2 = 0;
+    int count3 = 0;
+    int flag1 = 0;
+    for (int i = 0;i <= 6;i++)
+    {
+        for (int j = 30;j <= 157;j++)
+        {
+            if (IMG[i][j] == black) count1++;
+        }
+    }
+    for (int i = 0;i <= 85;i++)
+    {
+        if (my_road[i].connected[j_continue[i]].left <= 30) count2++;
+        if (my_road[i].connected[j_continue[i]].right >= 155) count3++;
+    }
+    if (count1 <= 7 * 128 - 10 && count2 >= 5 && count3 >= 5 && right_down_point != 100 && left_down_point != 100)
+    {
+        flag1 = 1;
+    }
+    else flag1 = 0;
+
+    int count4 = 0;
+    int count5 = 0;
+
+    int flag2 = 0;
+
+    /*
+    int n0 = 0;
+    int count15 = 0;
+    int flag4 = 0;
+    int mid1[100] = { 0 };
+    int flag6 = 0;
+    if (right_down_point != 100 || left_down_point != 100)
+    {
+        for (int i = 1;i <= 10;i++)
+        {
+            mid1[n0] = (my_road[i].connected[j_continue[i]].left + my_road[i].connected[j_continue[i]].right) / 2;
+            n0++;
+        }
+        for (int i = 0;i < n0;i++)
+        {
+            if (abs(mid1[i] - 94) <= 60) count15++;
+        }
+        int n1 = 0;
+        int mid[100] = { 0 };
+        int point = 0;
+        int count10 = 0;
+        int count11 = 0;
+        int flag5 = 0;
+        if (right_down_point != 100)  point = right_down_point;
+        else if (left_down_point != 100)  point = left_down_point;
+        int mid1 = (my_road[point].connected[j_continue[point]].left + my_road[point].connected[j_continue[point]].right) / 2;
+        for (int i = point;i >= 15;i--)
+        {
+            mid[n1] = (my_road[i].connected[j_continue[i]].left + my_road[i].connected[j_continue[i]].right) / 2;
+            n1++;
+        }
+        for (int i = point;i >= 15;i--)
+        {
+            if (mid[i] - mid1 >= 0) count10++;
+            if (mid[i] - mid1 <= 0) count11++;
+        }
+        if (count10 > n1 - 4 || count11 > n1 - 4) flag5 = 0;
+        else flag5 = 1;
+        if (count15 >= 6)flag4 = 1;
+        else flag4 = 0;
+        if (flag4 == 1 && flag5 == 1) flag6 == 1;
+        else flag6 = 0;
+    }*/
+    //int flag4 = 0;
+    //int n1 = 0;
+    //int n2 = 0;
+    //int x[100] = { 0 };
+    //int y[100] = { 0 };
+    //int x1=  0;
+    //int y1 = 0;
+    /*
+    int n1 = 0;
+    int mid[100] = { 0 };
+    int point = 0;
+    int count10 = 0;
+    int count11 = 0;
+    int flag5 = 0;
+    if (right_down_point != 100)  point = right_down_point;
+    else if (left_down_point != 100)  point = left_down_point;
+    int mid1 = (my_road[point].connected[j_continue[point]].left + my_road[point].connected[j_continue[point]].right) / 2;
+    for (int i = point;i>=15;i--)
+    {
+        mid[n1] = (my_road[i].connected[j_continue[i]].left + my_road[i].connected[j_continue[i]].right) / 2;
+        n1++;
+    }
+    for (int i = point;i >= 15;i--)
+    {
+        if (mid[i] - mid1 >= 0) count10++;
+        if (mid[i] - mid1 <= 0) count11++;
+    }
+    if (count10 > n1 - 4 || count11 > n1 - 4) flag5 = 0;
+    else flag5 = 1;*/
+    for (int i = 15;i <= 65;i++)
+    {
+        if (my_road[i].connected[j_continue[i]].left <= 10)
+        {
+            count4++;
+            //x[n1] = my_road[i].connected[j_continue[i]].left;
+            //n1++;
+        }
+        if (my_road[i].connected[j_continue[i]].right >= 175)
+        {
+            count5++;
+            //y[n2] = my_road[i].connected[j_continue[i]].right;
+            //n2++;
+        }
+    }
+    //for (int i = 0;i < n1;i++)
+    //{
+    //    x1 = x1 + x[i];
+    //}
+    //for (int i = 0;i < n2;i++)
+    //{
+    //    y1 = y1 + y[i];
+    //}
+    //if (abs(x1 / (n1+1) - y1 / (n2+1)) <= 30) flag4 = 1;
+    //else flag4 = 0;
+    if (count4 >= 5 && count5 >= 5) flag2 = 1;
+    else flag2 = 0;
+
+    if (flag1 == 1 || flag2 == 1) flag3 = 1;
+    else flag3 = 0;
+
+    for (i = 15; i <= 65; i++) {
         if ((//my_road[i + 1].connected[j_continue[i + 1]].left - my_road[i].connected[j_continue[i]].left >= 3 ||
-            my_road[i + 1].connected[j_continue[i + 1]].left - my_road[i].connected[j_continue[i]].left <= -3)&&
+            my_road[i + 1].connected[j_continue[i + 1]].left - my_road[i].connected[j_continue[i]].left <= -3) &&
             (//my_road[i + 2].connected[j_continue[i + 2]].left - my_road[i].connected[j_continue[i]].left >= 3 ||
-            my_road[i + 2].connected[j_continue[i + 2]].left - my_road[i].connected[j_continue[i]].left <= -3)
-            ) {
-            left_up_point = i-1;
+                my_road[i + 2].connected[j_continue[i + 2]].left - my_road[i].connected[j_continue[i]].left <= -3
+                &&
+                my_road[i].connected[j_continue[i]].left >= 25)
+            )
+        {
+            left_up_point = i - 1;
+            //for (int j = 0;j <= 187;j++)
+            //{
+            //    IMG[i - 1][j] = red;
+            //}
             break;
         }
     }
@@ -630,10 +850,15 @@ void find_point_of_inflection(uint8_t j_continue[CAMERA_H]){
     for (i = 15; i <= 65; i++) {
         if ((my_road[i + 1].connected[j_continue[i + 1]].right - my_road[i].connected[j_continue[i]].right >= 3 /* ||
             my_road[i + 1].connected[j_continue[i + 1]].right - my_road[i].connected[j_continue[i]].right <= -3*/) &&
-            (my_road[i + 2].connected[j_continue[i + 2]].right - my_road[i].connected[j_continue[i]].right >= 3 /*||
-                my_road[i + 2].connected[j_continue[i + 2]].right - my_road[i].connected[j_continue[i]].right <= -3*/)
-            ) {
-            right_up_point = i-1;
+            (my_road[i + 2].connected[j_continue[i + 2]].right - my_road[i].connected[j_continue[i]].right >= 3) /*||
+                my_road[i + 2].connected[j_continue[i + 2]].right - my_road[i].connected[j_continue[i]].right <= -3*/ &&
+            my_road[i].connected[j_continue[i]].right <= 150)
+        {
+            right_up_point = i - 1;
+            //for (int j = 0;j <= 187;j++)
+            //{
+            //    IMG[i - 1][j] = green;
+            //}
             break;
         }
 
@@ -641,8 +866,7 @@ void find_point_of_inflection(uint8_t j_continue[CAMERA_H]){
     if (left_up_point == 65) {
         left_down_point = -5;
     }
-
-    find_type_road(j_continue);
+    //printf("%d,%d,%d,%d\n", left_down_point, right_down_point, left_up_point, right_up_point);
 }
 
 ////////////////////////////////////////////
@@ -663,7 +887,7 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
     int count;
     int count_black_number;
 
-
+    /*
     float c_of_letf = calculate_curvature(left_down_point, 80, (left_down_point + 80) / 2,
         my_road[left_down_point].connected[j_continue[left_down_point]].left,
         my_road[80].connected[j_continue[80]].left,
@@ -675,10 +899,10 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
         my_road[(right_down_point + 80) / 2].connected[j_continue[(right_down_point + 80) / 2]].right);
 
     float k_of_down_left = calculate_k(left_down_point, 68, my_road[left_down_point].connected[j_continue[left_down_point]].left, my_road[68].connected[j_continue[68]].left);
-    float k_of_down_right= calculate_k(right_down_point, 68, my_road[right_down_point].connected[j_continue[right_down_point]].right, my_road[68].connected[j_continue[68]].right);
+    float k_of_down_right = calculate_k(right_down_point, 68, my_road[right_down_point].connected[j_continue[right_down_point]].right, my_road[68].connected[j_continue[68]].right);
     float k_of_up_left = calculate_k(left_up_point, 10, my_road[left_up_point].connected[j_continue[left_up_point]].left, my_road[10].connected[j_continue[10]].left);
     float k_of_up_right = calculate_k(right_up_point, 10, my_road[right_up_point].connected[j_continue[right_up_point]].right, my_road[10].connected[j_continue[10]].right);
-
+    */
     /*for (int m = 0; m < 90; m++) {
         //IMG[right_up_point][180 - m] = red;
         IMG[(right_down_point )][180 - m] = green;
@@ -734,48 +958,48 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
     //            }
     //        }
     //        count++;*/
-            if (zebraPanduan()==1) {
-                for (i = 0; i < 200; i++) {
-                    IMG[50][i] = purple;
-                }
-                left_down_point = -1;
-                right_down_point = -1;
-                left_up_point = -5;
-                right_up_point = -5;
+    if (zebraPanduan() == 1) {
+        for (i = 0; i < 200; i++) {
+            IMG[50][i] = purple;
+        }
 
-            }
+        left_down_point = -1;
+        right_down_point = -1;
+        left_up_point = -5;
+        right_up_point = -5;
+
+    }
 
 
 
-    if (((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 95 && my_road[right_down_point - 3].connected[j_continue[right_down_point - 3]].width > 95) ||
-        (my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 95 && my_road[right_down_point - 4].connected[j_continue[right_down_point - 4]].width > 95))&&
-        (left_down_point <= 65 && right_down_point <= 65)
-        //k_of_down_left * k_of_down_right <= 0 && left_down_point <= 70 && right_down_point <= 70 &&
-        //c_of_letf <= 0.4 && c_of_letf >= -0.4 && c_of_right <= 0.4 && c_of_right >= -0.4 &&
-        /*(my_road[left_down_point - 5].connected[j_continue[left_down_point - 5]].width > 100 || my_road[right_down_point - 5].connected[j_continue[right_down_point - 5]].width > 100) */ ) {
-        //make_unmain_black(j_continue);
-        stra_cross_road(j_continue);
-    }
-    else if (((my_road[left_up_point + 3].connected[j_continue[left_up_point + 3]].width > 95 && my_road[right_up_point + 3].connected[j_continue[right_up_point + 3]].width > 95)||
-        (my_road[left_up_point + 4].connected[j_continue[left_up_point + 4]].width > 95 && my_road[right_up_point + 4].connected[j_continue[right_up_point + 4]].width > 95))&&
-        (left_up_point >= 10 && right_up_point >= 10)
-        /*k_of_up_left * k_of_up_right <= 0 && left_up_point >= 10 && right_up_point >= 10 &&
-        //c_of_letf<=0.4 &&c_of_letf>=-0.4 && c_of_right<=0.4 && c_of_right>=-0.4&&
-        (my_road[left_up_point + 5].connected[j_continue[left_up_point + 5]].width > 100 || my_road[right_up_point + 5].connected[j_continue[right_up_point + 5]].width > 100)*/) {
-        //make_unmain_black(j_continue);
-        stra_cross_road2(j_continue);
-    }
-    else if ((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 80 && my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 80) &&
-        ((IMG[left_down_point + 7][my_road[left_down_point].connected[j_continue[left_down_point]].left] == white)&& IMG[left_down_point + 8][my_road[left_down_point].connected[j_continue[left_down_point]].left] == white &&
-          IMG[left_down_point + 6][my_road[left_down_point].connected[j_continue[left_down_point]].left] == white    )&&
-        ((left_down_point <= 65 &&  (right_down_point > 70 || right_down_point < 0))||(left_down_point-right_down_point < -10))) {
-        stra_cross_left_down(j_continue);
-    }
-    else if ((my_road[right_down_point - 3].connected[j_continue[right_down_point - 3]].width > 75 && my_road[right_down_point - 4].connected[j_continue[right_down_point - 4]].width > 75) &&
-        ((IMG[right_down_point + 7][my_road[right_down_point].connected[j_continue[left_down_point]].right] != black)&&(IMG[right_down_point + 8][my_road[right_down_point].connected[j_continue[right_down_point]].right] != black))&&
-        ((right_down_point <= 65 && (left_down_point > 70 || left_down_point < 0))||(left_down_point-right_down_point>10))) {
-        stra_cross_right_down(j_continue);
-    }
+    //if (((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 95 && my_road[right_down_point - 3].connected[j_continue[right_down_point - 3]].width > 95) ||
+    //    (my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 95 && my_road[right_down_point - 4].connected[j_continue[right_down_point - 4]].width > 95)) &&
+    //    (left_down_point <= 70 && right_down_point <= 70)
+    //    //k_of_down_left * k_of_down_right <= 0 && left_down_point <= 70 && right_down_point <= 70 &&
+    //    //c_of_letf <= 0.4 && c_of_letf >= -0.4 && c_of_right <= 0.4 && c_of_right >= -0.4 &&
+    //    /*(my_road[left_down_point - 5].connected[j_continue[left_down_point - 5]].width > 100 || my_road[right_down_point - 5].connected[j_continue[right_down_point - 5]].width > 100) */) {
+    //    //make_unmain_black(j_continue);
+    //    stra_cross_road(j_continue);
+    //}
+    //else if (((my_road[left_up_point + 3].connected[j_continue[left_up_point + 3]].width > 95 && my_road[right_up_point + 3].connected[j_continue[right_up_point + 3]].width > 95) ||
+    //    (my_road[left_up_point + 4].connected[j_continue[left_up_point + 4]].width > 95 && my_road[right_up_point + 4].connected[j_continue[right_up_point + 4]].width > 95)) &&
+    //    (left_up_point >= 10 && right_up_point >= 10)
+    //    /*k_of_up_left * k_of_up_right <= 0 && left_up_point >= 10 && right_up_point >= 10 &&
+    //    //c_of_letf<=0.4 &&c_of_letf>=-0.4 && c_of_right<=0.4 && c_of_right>=-0.4&&
+    //    (my_road[left_up_point + 5].connected[j_continue[left_up_point + 5]].width > 100 || my_road[right_up_point + 5].connected[j_continue[right_up_point + 5]].width > 100)*/) {
+    //    //make_unmain_black(j_continue);
+    //    stra_cross_road2(j_continue);
+    //}
+    //else if ((my_road[left_down_point - 3].connected[j_continue[left_down_point - 3]].width > 75 && my_road[left_down_point - 4].connected[j_continue[left_down_point - 4]].width > 75) &&
+    //    ((IMG[left_down_point + 7][my_road[left_down_point].connected[j_continue[left_down_point]].left] != black) && IMG[left_down_point + 8][my_road[left_down_point].connected[j_continue[left_down_point]].left] != black) &&
+    //    ((left_down_point <= 70 && right_down_point > 70 && (right_down_point < 80 || right_down_point < 0)) || (left_down_point - right_down_point < -10))) {
+    //    stra_cross_left_down(j_continue);
+    //}
+    //else if ((my_road[right_down_point - 3].connected[j_continue[right_down_point - 3]].width > 75 && my_road[right_down_point - 4].connected[j_continue[right_down_point - 4]].width > 75) &&
+    //    ((IMG[right_down_point + 7][my_road[right_down_point].connected[j_continue[left_down_point]].right] != black) && (IMG[right_down_point + 8][my_road[right_down_point].connected[j_continue[right_down_point]].right] != black)) &&
+    //    ((right_down_point <= 70 && (left_down_point > 70 || left_down_point < 0)) || (left_down_point - right_down_point > 10))) {
+    //    stra_cross_right_down(j_continue);
+    //}
     /*else if (my_road[79].connected[j_continue[79]].width>180 && my_road[78].connected[j_continue[78]].width > 180 &&
         my_road[30].connected[j_continue[30]].width < 80) {
         stra_cross_left_up(j_continue);
@@ -784,6 +1008,21 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
         (right_up_point >= 20  )) {
         stra_cross_right_up(j_continue);
     }*/
+    if (flag3 == 1)
+    {
+        if (left_down_point == 100 && left_up_point >= 10) stra_cross_left1(j_continue);
+        else if (left_down_point <= 65 && left_up_point >= 10) stra_cross_left2(j_continue);
+        else if (left_down_point <= 65 && left_up_point == 0) stra_cross_left3(j_continue);
+        if (right_down_point == 100 && right_up_point >= 10) stra_cross_right1(j_continue);
+        else if (right_down_point <= 65 && right_up_point >= 10) stra_cross_right2(j_continue);
+        else if (right_down_point <= 65 && right_up_point == 0) stra_cross_right3(j_continue);
+        for (int i = i_start; i > i_end; i--)
+        {
+            IMG[i][left_line[i]] = blue;
+            IMG[i][right_line[i]] = gray;
+        }
+    }
+
     else if (zebraPanduan()) {
         zebra_cross(j_continue);
     }
@@ -807,7 +1046,7 @@ void find_type_road(uint8_t j_continue[CAMERA_H]) {
     }
 
 }
-
+/*
 ////////////////////////////////////////////
 //功能：曲率计算
 //输入：
@@ -821,7 +1060,7 @@ float calculate_curvature(int xa, int xb, int xc, int ya, int yb, int yc) {
 
     s_of_abc = ((xb - xa) * (yc - ya) - (xc - xa) * (yb - ya)) / 2;
 
-    mid = (xb - xa) * (xb - xa) + (yb - ya)*(yb-ya);
+    mid = (xb - xa) * (xb - xa) + (yb - ya) * (yb - ya);
     float l_ab = sqrt(mid);
     mid = (xc - xa) * (xc - xa) + (yc - ya) * (yc - ya);
     float l_ac = sqrt(mid);
@@ -837,7 +1076,7 @@ float calculate_curvature(int xa, int xb, int xc, int ya, int yb, int yc) {
 
     return k;
 }
-
+*/
 ////////////////////////////////////////////
 //功能：斜率计算
 //输入：
@@ -846,7 +1085,7 @@ float calculate_curvature(int xa, int xb, int xc, int ya, int yb, int yc) {
 ///////////////////////////////////////////
 float calculate_k(int x1, int x2, int y1, int y2) {
 
-    float k = (float)(x1 - x2) / (y1 - y2);
+    float k = (float)(y1 - y2) / (x1 - x2);
     return k;
 }
 
@@ -856,66 +1095,70 @@ float calculate_k(int x1, int x2, int y1, int y2) {
 //输出：
 //备注：从下往上延伸
 ///////////////////////////////////////////
-void stra_cross_road(uint8_t j_continue[CAMERA_H]) {
-    uint8_t i_start = NEAR_LINE;
-    uint8_t i_end = FAR_LINE;
-    if (right_down_point - left_down_point >= -50 && right_down_point - left_down_point <= 50
-        &&
-        right_down_point <= 70
-        &&
-        left_down_point <= 70
-        )
-    {
-        int t1 = my_road[left_down_point].connected[j_continue[left_down_point]].left - my_road[78].connected[j_continue[78]].left;
-        int t2 = (-1) * my_road[right_down_point].connected[j_continue[right_down_point]].right + my_road[78].connected[j_continue[78]].right;
-        for (int j = left_down_point - 1; j > i_end; j--)
-        {
-            left_line[j] = my_road[left_down_point].connected[j_continue[left_down_point]].left + (left_down_point - j) * t1 / (78 - left_down_point);
-        }
-        for (int j = right_down_point - 1; j > i_end; j--)
-        {
-            right_line[j] = my_road[right_down_point].connected[j_continue[right_down_point]].right - (right_down_point - j) * t2 / (78 - right_down_point);
-        }
-    }
-    for (int i = i_start; i > i_end; i--)
-    {
-        IMG[i][left_line[i]] = purple;
-        IMG[i][right_line[i]] = red;
-    }
-}
+//void stra_cross_road(uint8_t j_continue[CAMERA_H]) {
+//    uint8_t i_start = NEAR_LINE;
+//    uint8_t i_end = FAR_LINE;
+//    if (right_down_point - left_down_point >= -50 && right_down_point - left_down_point <= 50
+//        &&
+//        right_down_point <= 70
+//        &&
+//        left_down_point <= 70
+//        )
+//    {
+//        //for (int i = left_down_point;i < 85;i--)
+//        //{
+//        //    if(my_road[i].connected[j_continue[i]].left-)
+//       // }
+//        int t1 = my_road[left_down_point].connected[j_continue[left_down_point]].left - my_road[78].connected[j_continue[78]].left;
+//        int t2 = (-1) * my_road[right_down_point].connected[j_continue[right_down_point]].right + my_road[78].connected[j_continue[78]].right;
+//        for (int j = left_down_point - 1; j > i_end; j--)
+//        {
+//            left_line[j] = my_road[left_down_point].connected[j_continue[left_down_point]].left + (left_down_point - j) * t1 / (78 - left_down_point);
+//        }
+//        for (int j = right_down_point - 1; j > i_end; j--)
+//        {
+//            right_line[j] = my_road[right_down_point].connected[j_continue[right_down_point]].right - (right_down_point - j) * t2 / (78 - right_down_point);
+//        }
+//    }
+//    for (int i = i_start; i > i_end; i--)
+//    {
+//        IMG[i][left_line[i]] = purple;
+//        IMG[i][right_line[i]] = red;
+//    }
+//}
 ////////////////////////////////////////////
 //功能：直十字路口补全路线
 //输入：
 //输出：
 //备注：从上往下延伸
 ///////////////////////////////////////////
-void stra_cross_road2(uint8_t j_continue[CAMERA_H]) {
-    uint8_t i_start = NEAR_LINE;
-    uint8_t i_end = FAR_LINE;
-    if (right_up_point - left_up_point >= -50 && right_up_point - left_up_point <= 50
-        &&
-        right_up_point >= 10
-        &&
-        left_up_point >= 10
-        )
-    {
-        int t3 = (-1) * my_road[left_up_point].connected[j_continue[left_up_point]].left + my_road[10].connected[j_continue[10]].left;
-        int t4 = my_road[right_up_point].connected[j_continue[right_up_point]].right - my_road[10].connected[j_continue[10]].right;
-        for (int j = left_up_point + 1; j < i_start; j++)
-        {
-            left_line[j] = my_road[left_up_point].connected[j_continue[left_up_point]].left - (j - left_up_point) * t3 / (left_up_point - 10);
-        }
-        for (int j = right_up_point + 1; j < i_start; j++)
-        {
-            right_line[j] = my_road[right_up_point].connected[j_continue[right_up_point]].right + (j - right_up_point) * t4 / (right_up_point - 10);
-        }
-    }
-    for (int i = i_start; i > i_end; i--)
-    {
-        IMG[i][left_line[i]] = blue;
-        IMG[i][right_line[i]] = purple;
-    }
-}
+//void stra_cross_road2(uint8_t j_continue[CAMERA_H]) {
+//    uint8_t i_start = NEAR_LINE;
+//    uint8_t i_end = FAR_LINE;
+//    if (right_up_point - left_up_point >= -50 && right_up_point - left_up_point <= 50
+//        &&
+//        right_up_point >= 10
+//        &&
+//        left_up_point >= 10
+//        )
+//    {
+//        int t3 = (-1) * my_road[left_up_point].connected[j_continue[left_up_point]].left + my_road[10].connected[j_continue[10]].left;
+//        int t4 = my_road[right_up_point].connected[j_continue[right_up_point]].right - my_road[10].connected[j_continue[10]].right;
+//        for (int j = left_up_point + 1; j < i_start; j++)
+//        {
+//            left_line[j] = my_road[left_up_point].connected[j_continue[left_up_point]].left - (j - left_up_point) * t3 / (left_up_point - 10);
+//        }
+//        for (int j = right_up_point + 1; j < i_start; j++)
+//        {
+//            right_line[j] = my_road[right_up_point].connected[j_continue[right_up_point]].right + (j - right_up_point) * t4 / (right_up_point - 10);
+//        }
+//    }
+//    for (int i = i_start; i > i_end; i--)
+//    {
+//        IMG[i][left_line[i]] = blue;
+//        IMG[i][right_line[i]] = purple;
+//    }
+//}
 
 ////////////////////////////////////////////
 //功能：直十字路口补全路线
@@ -923,20 +1166,20 @@ void stra_cross_road2(uint8_t j_continue[CAMERA_H]) {
 //输出：
 //备注：左下从上往下延伸
 ///////////////////////////////////////////
-void stra_cross_left_down(uint8_t j_continue[CAMERA_H]) {
-    uint8_t i_start = 65;
-    uint8_t i_end = 10;
-
-    int t1 = my_road[left_down_point].connected[j_continue[left_down_point]].left - my_road[80].connected[j_continue[80]].left;
-    for (int j = left_down_point - 1; j > i_end; j--){
-        left_line[j] = my_road[left_down_point].connected[j_continue[left_down_point]].left + (left_down_point - j) * t1 / (80 - left_down_point);
-    }
-    for (int i = i_start; i > i_end; i--)
-    {
-        IMG[i][left_line[i]] = blue;
-        IMG[i][right_line[i]] = gray;
-    }
-}
+//void stra_cross_left_down(uint8_t j_continue[CAMERA_H]) {
+//    uint8_t i_start = 65;
+//    uint8_t i_end = 10;
+//
+//    int t1 = my_road[left_down_point].connected[j_continue[left_down_point]].left - my_road[80].connected[j_continue[80]].left;
+//    for (int j = left_down_point - 1; j > i_end; j--) {
+//        left_line[j] = my_road[left_down_point].connected[j_continue[left_down_point]].left + (left_down_point - j) * t1 / (80 - left_down_point);
+//    }
+//    for (int i = i_start; i > i_end; i--)
+//    {
+//        IMG[i][left_line[i]] = blue;
+//        IMG[i][right_line[i]] = gray;
+//    }
+//}
 
 ////////////////////////////////////////////
 //功能：直十字路口补全路线
@@ -944,20 +1187,20 @@ void stra_cross_left_down(uint8_t j_continue[CAMERA_H]) {
 //输出：
 //备注：右下从上往下延伸
 ///////////////////////////////////////////
-void stra_cross_right_down(uint8_t j_continue[CAMERA_H]) {
-    uint8_t i_start = 65;
-    uint8_t i_end = 10;
-    int t2 = (-1) * my_road[right_down_point].connected[j_continue[right_down_point]].right + my_road[80].connected[j_continue[80]].right;
-    for (int j = right_down_point - 1; j > i_end; j--)
-    {
-        right_line[j] = my_road[right_down_point].connected[j_continue[right_down_point]].right - (right_down_point - j) * t2 / (80 - right_down_point);
-    }
-    for (int i = i_start; i > i_end; i--)
-    {
-        IMG[i][left_line[i]] = gray;
-        IMG[i][right_line[i]] = red;
-    }
-}
+//void stra_cross_right_down(uint8_t j_continue[CAMERA_H]) {
+//    uint8_t i_start = 65;
+//    uint8_t i_end = 10;
+//    int t2 = (-1) * my_road[right_down_point].connected[j_continue[right_down_point]].right + my_road[80].connected[j_continue[80]].right;
+//    for (int j = right_down_point - 1; j > i_end; j--)
+//    {
+//        right_line[j] = my_road[right_down_point].connected[j_continue[right_down_point]].right - (right_down_point - j) * t2 / (80 - right_down_point);
+//    }
+//    for (int i = i_start; i > i_end; i--)
+//    {
+//        IMG[i][left_line[i]] = gray;
+//        IMG[i][right_line[i]] = red;
+//    }
+//}
 
 ////////////////////////////////////////////
 //功能：直十字路口补全路线
@@ -965,20 +1208,20 @@ void stra_cross_right_down(uint8_t j_continue[CAMERA_H]) {
 //输出：
 //备注：左下从上往下延伸
 ///////////////////////////////////////////
-void stra_cross_left_up(uint8_t j_continue[CAMERA_H]) {
-    uint8_t i_start = NEAR_LINE;
-    uint8_t i_end = FAR_LINE;
-        int t3 = (-1) * my_road[left_up_point].connected[j_continue[left_up_point]].left + my_road[10].connected[j_continue[10]].left;
-        for (int j = left_up_point + 1; j < i_start; j++)
-        {
-            left_line[j] = my_road[left_up_point].connected[j_continue[left_up_point]].left - (j - left_up_point) * t3 / (left_up_point - 10);
-        }
-    for (int i = i_start; i > i_end; i--)
-    {
-        IMG[i][left_line[i]] = blue;
-        IMG[i][right_line[i]] = gray;
-    }
-}
+//void stra_cross_left_up(uint8_t j_continue[CAMERA_H]) {
+//    uint8_t i_start = NEAR_LINE;
+//    uint8_t i_end = FAR_LINE;
+//    int t3 = (-1) * my_road[left_up_point].connected[j_continue[left_up_point]].left + my_road[10].connected[j_continue[10]].left;
+//    for (int j = left_up_point + 1; j < i_start; j++)
+//    {
+//        left_line[j] = my_road[left_up_point].connected[j_continue[left_up_point]].left - (j - left_up_point) * t3 / (left_up_point - 10);
+//    }
+//    for (int i = i_start; i > i_end; i--)
+//    {
+//        IMG[i][left_line[i]] = blue;
+//        IMG[i][right_line[i]] = gray;
+//    }
+//}
 
 ////////////////////////////////////////////
 //功能：直十字路口补全路线
@@ -986,21 +1229,21 @@ void stra_cross_left_up(uint8_t j_continue[CAMERA_H]) {
 //输出：
 //备注：左下从上往下延伸
 ///////////////////////////////////////////
-void stra_cross_right_up(uint8_t j_continue[CAMERA_H]) {
-    uint8_t i_start = NEAR_LINE;
-    uint8_t i_end = FAR_LINE;
-        int t3 = (-1) * my_road[left_up_point].connected[j_continue[left_up_point]].left + my_road[10].connected[j_continue[10]].left;
-
-        for (int j = left_up_point + 1; j < i_start; j++)
-        {
-            left_line[j] = my_road[left_up_point].connected[j_continue[left_up_point]].left - (j - left_up_point) * t3 / (left_up_point - 10);
-        }
-    for (int i = i_start; i > i_end; i--)
-    {
-        IMG[i][left_line[i]] = red;
-        IMG[i][right_line[i]] = gray;
-    }
-}
+//void stra_cross_right_up(uint8_t j_continue[CAMERA_H]) {
+//    uint8_t i_start = NEAR_LINE;
+//    uint8_t i_end = FAR_LINE;
+//    int t3 = (-1) * my_road[left_up_point].connected[j_continue[left_up_point]].left + my_road[10].connected[j_continue[10]].left;
+//
+//    for (int j = left_up_point + 1; j < i_start; j++)
+//    {
+//        left_line[j] = my_road[left_up_point].connected[j_continue[left_up_point]].left - (j - left_up_point) * t3 / (left_up_point - 10);
+//    }
+//    for (int i = i_start; i > i_end; i--)
+//    {
+//        IMG[i][left_line[i]] = red;
+//        IMG[i][right_line[i]] = gray;
+//    }
+//}
 
 ////////////////////////////////////////////
 //功能：斑马线
@@ -1011,8 +1254,8 @@ void stra_cross_right_up(uint8_t j_continue[CAMERA_H]) {
 void zebra_cross(uint8_t j_continue[CAMERA_H]) {
     uint8_t i_start = NEAR_LINE;
     uint8_t i_end = FAR_LINE;
-    int leftside=0;
-    int rightside=0;
+    int leftside = 0;
+    int rightside = 0;
     int leftflag = 1;
     int rightflag = 1;
     for (int i = 65; i >= 10; i--) {
@@ -1031,12 +1274,9 @@ void zebra_cross(uint8_t j_continue[CAMERA_H]) {
             }
         }
     }
-    for (int i = i_start; i > i_end; i--){
+    for (int i = i_start; i > i_end; i--) {
         IMG[i][left_line[i]] = red;
         IMG[i][right_line[i]] = blue;
-    }
-    for(int k = 0; k<200; k++){
-        IMG[75][k] = blue;
     }
 }
 
@@ -1194,4 +1434,195 @@ void stop()
 
 }
 
+void stra_cross_left1(uint8_t j_continue[CAMERA_H])
+{
+    uint8_t i_start = NEAR_LINE;
+    uint8_t i_end = FAR_LINE;
+    int n = 0;
+    uint8_t x[200] = { 0 };
+    uint8_t y[200] = { 0 };
+    int k = 5;
+    for (int i = left_up_point;i > 5;i--)
+    {
+        if (my_road[i + 1].connected[j_continue[i + 1]].left - my_road[i].connected[j_continue[i]].left > 0)
+        {
+            k = i;
+            break;
+        }
+    }
+    for (int i = left_up_point;i >= k;i--)
+    {
+        x[n] = my_road[i].connected[j_continue[i]].left;
+        y[n] = i;
+        IMG[i][x[n]] = gray;
+        n++;
+    }
+    quasilinear(x, n, y, n, n);
+    for (int j = left_up_point + 1; j < i_start; j++)
+    {
+        left_line[j] = (uint8_t)(((float)j - quasilinear_b) / quasilinear_a);
+    }
+}
+void stra_cross_left2(uint8_t j_continue[CAMERA_H])
+{
+    uint8_t i_start = NEAR_LINE;
+    uint8_t i_end = FAR_LINE;
+    int n = 0;
+    uint8_t x[200] = { 0 };
+    uint8_t y[200] = { 0 };
+    int k = 5;
+    for (int i = left_up_point;i > 5;i--)
+    {
+        if (my_road[i + 1].connected[j_continue[i + 1]].left - my_road[i].connected[j_continue[i]].left > 0)
+        {
+            k = i;
+            break;
+        }
+    }
+    for (int i = 80;i >= left_down_point;i--)
+    {
+        x[n] = my_road[i].connected[j_continue[i]].left;
+        y[n] = i;
+        n++;
+    }
+    for (int i = left_up_point;i >= k;i--)
+    {
+        x[n] = my_road[i].connected[j_continue[i]].left;
+        y[n] = i;
+        IMG[i][x[n]] = gray;
+        n++;
+    }
+    quasilinear(x, n, y, n, n);
+    for (int j = left_down_point; j > i_end; j--)
+    {
+        left_line[j] = (uint8_t)(((float)j - quasilinear_b) / quasilinear_a);
+    }
+}
+void stra_cross_left3(uint8_t j_continue[CAMERA_H])
+{
+    uint8_t i_start = NEAR_LINE;
+    uint8_t i_end = FAR_LINE;
+    int n = 0;
+    uint8_t x[200] = { 0 };
+    uint8_t y[200] = { 0 };
+    for (int i = left_down_point;i <= 80; i++)
+    {
 
+        x[n] = my_road[i].connected[j_continue[i]].left;
+        y[n] = i;
+        IMG[i][x[n]] = gray;
+        n++;
+
+    }
+    quasilinear(x, n, y, n, n);
+    for (int j = left_down_point; j > i_end; j--)
+    {
+        left_line[j] = (uint8_t)(((float)j - quasilinear_b) / quasilinear_a);
+    }
+
+}
+void stra_cross_right1(uint8_t j_continue[CAMERA_H])
+{
+    uint8_t i_start = NEAR_LINE;
+    uint8_t i_end = FAR_LINE;
+    int n = 0;
+    uint8_t x[200] = { 0 };
+    uint8_t y[200] = { 0 };
+    int k = 5;
+    for (int i = right_up_point;i > 5;i--)
+    {
+        if (my_road[i + 1].connected[j_continue[i + 1]].right - my_road[i].connected[j_continue[i]].right < 0)
+        {
+            k = i;
+            break;
+        }
+
+    }
+    for (int i = right_up_point;i >= k;i--)
+    {
+        x[n] = my_road[i].connected[j_continue[i]].right;
+        y[n] = i;
+        IMG[i][x[n]] = gray;
+        n++;
+    }
+    quasilinear(x, n, y, n, n);
+    for (int j = right_up_point + 1; j < i_start; j++)
+    {
+        right_line[j] = (uint8_t)(((float)j - quasilinear_b) / quasilinear_a);
+    }
+}
+void stra_cross_right2(uint8_t j_continue[CAMERA_H])
+{
+    uint8_t i_start = NEAR_LINE;
+    uint8_t i_end = FAR_LINE;
+    int n = 0;
+    uint8_t x[200] = { 0 };
+    uint8_t y[200] = { 0 };
+    int k = 5;
+    for (int i = right_up_point;i > 5;i--)
+    {
+        if (my_road[i + 1].connected[j_continue[i + 1]].right - my_road[i].connected[j_continue[i]].right < 0)
+        {
+            k = i;
+            break;
+        }
+    }
+    for (int i = 80;i >= right_down_point;i--)
+    {
+        x[n] = my_road[i].connected[j_continue[i]].right;
+        y[n] = i;
+        n++;
+    }
+    for (int i = right_up_point;i >= k;i--)
+    {
+        x[n] = my_road[i].connected[j_continue[i]].right;
+        y[n] = i;
+        IMG[i][x[n]] = gray;
+        n++;
+    }
+    quasilinear(x, n, y, n, n);
+    for (int j = right_down_point; j > i_end; j--)
+    {
+        right_line[j] = (uint8_t)(((float)j - quasilinear_b) / quasilinear_a);
+    }
+}
+void stra_cross_right3(uint8_t j_continue[CAMERA_H])
+{
+    uint8_t i_start = NEAR_LINE;
+    uint8_t i_end = FAR_LINE;
+    int n = 0;
+    uint8_t x[200] = { 0 };
+    uint8_t y[200] = { 0 };
+    for (int i = right_down_point;i <= 80; i++)
+    {
+        x[n] = my_road[i].connected[j_continue[i]].right;
+        y[n] = i;
+        IMG[i][x[n]] = gray;
+        n++;
+    }
+    quasilinear(x, n, y, n, n);
+    for (int j = right_down_point; j > i_end; j--)
+    {
+        right_line[j] = (uint8_t)(((float)j - quasilinear_b) / quasilinear_a);
+    }
+}
+void quasilinear(uint8_t x[], int n1, uint8_t y[], int n2, int n)
+{
+    quasilinear_a = 0;
+    quasilinear_b = 0;
+    int sum_xy, sum_x, sum_y, sum_x_2;
+    sum_xy = 0;
+    sum_x = 0;
+    sum_y = 0;
+    sum_x_2 = 0;
+    for (int i = 0;i < n;i++)
+    {
+        sum_xy = sum_xy + x[i] * y[i];
+        sum_x = sum_x + x[i];
+        sum_y = sum_y + y[i];
+        sum_x_2 = sum_x_2 + x[i] * x[i];
+    }
+    quasilinear_a = (float)((float)n * (float)sum_xy - (float)sum_x * (float)sum_y) / (float)((float)n * (float)sum_x_2 - (float)sum_x * (float)sum_x);
+    quasilinear_b = (float)((float)sum_y * (float)sum_x_2 - (float)sum_x * (float)sum_xy) / (float)((float)n * (float)sum_x_2 - (float)sum_x * (float)sum_x);
+
+}
