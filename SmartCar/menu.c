@@ -9,14 +9,17 @@
 
 node_t file1;
 node_t file2, file3;
-node_t gear1, g1_Data1, g1_Data2, g1_Data3, g1_Data4;
-node_t gear2, g2_Data1, g2_Data2, g2_Data3, g2_Data4;
-node_t gear3;
+node_t gear1, g1_Data1, g1_Data2, g1_Data3, g1_Data4, g1_Data5, g1_Data6, g1_Data7;
+node_t gear2, g2_Data1, g2_Data2, g2_Data3, g2_Data4, g2_Data5, g2_Data6, g2_Data7;
+node_t gear3, g3_Data1, g3_Data2, g3_Data3, g3_Data4, g3_Data5, g3_Data6, g3_Data7;
+
 node_t dataEnd;//最后一个数据指向dataEnd
-node_t preGear1, preGear2;
-node_t presentSpeedL, presentSpeedR, presentVision, present4;//现在的档位参数
+node_t preGear1, preGear2, preGear3;
+/*现在的档位参数,bottomData为最后一个数据，无实际意义，为了倒数第二个数据能附上值*/
+node_t presentSpeed, presentTHRE, presentVision, presentServoP, presentServoD, presentMotorP, presentMotorI, bottomData;
+node_t gap;//差速要乘的倍数
 node_t display, display1, display2, display3, display4, display5, display6, display7, display8, display9;//展示翻页效果
-node_t fileSave, saveGear1, saveGear2;//用于写入flash
+node_t fileSave, saveGear1, saveGear2, saveGear3;//用于写入flash
 node_t image;//显示摄像头图像
 node_t list;
 nodeptr_t filePrint;
@@ -44,45 +47,68 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 {
     //利用函数fileInit()初始化文件参数
     file1 = MENU_fileInit(file1, 1, 1.0, "GEAR", 2, none, NULL, &file2, NULL, &gear1);
-    file2 = MENU_fileInit(file2, 1, 1.0, "PRESENT", 3, none, &file1, &display, NULL, &presentSpeedL);
+    file2 = MENU_fileInit(file2, 1, 1.0, "PRESENT", 3, none, &file1, &display, NULL, &presentSpeed);
     //file3 = MENU_fileInit(file3, 1, 1.0, "CONTROL", 4, none, &file2, &display, NULL, NULL);
 
     gear1 = MENU_fileInit(gear1, 1, 1.0, "GearSlow", 2, none, NULL, &gear2, &file1, &g1_Data1);//慢速档，含g1四个数据
-    g1_Data1 = MENU_fileInit(g1_Data1, 1800, 32.3, "speed-L1", 2, dataint, NULL, &g1_Data2, &gear1, NULL);
-    g1_Data2 = MENU_fileInit(g1_Data2, 1800, 70.22, "speed-R1", 3, dataint, &g1_Data1, &g1_Data3, NULL, NULL);
-    g1_Data3 = MENU_fileInit(g1_Data3, 55, 42.09, "Vision1", 4, dataint, &g1_Data2, &g1_Data4, NULL, NULL);
-    g1_Data4 = MENU_fileInit(g1_Data4, 19, 28.16, "data4", 5, dataint, &g1_Data3, &preGear1, NULL, NULL);
+    g1_Data1 = MENU_fileInit(g1_Data1, 75, 32.3, "speed1", 2, dataint, NULL, &g1_Data2, &gear1, NULL);
+    g1_Data2 = MENU_fileInit(g1_Data2, 140, 70.22, "THRE1", 3, dataint, &g1_Data1, &g1_Data3, NULL, NULL);
+    g1_Data3 = MENU_fileInit(g1_Data3, 31, 42.09, "Vision1", 4, dataint, &g1_Data2, &g1_Data4, NULL, NULL);
+    g1_Data4 = MENU_fileInit(g1_Data4, 1, 1.8, "servo-P", 5, datafloat, &g1_Data3, &g1_Data5, NULL, NULL);
+    g1_Data5 = MENU_fileInit(g1_Data5, 1, 6.0, "servo-D", 6, datafloat, &g1_Data4, &g1_Data6, NULL, NULL);
+    g1_Data6 = MENU_fileInit(g1_Data6, 1, 0.9, "GAP1", 7, datafloat, &g1_Data5, &g1_Data7, NULL, NULL);
+    g1_Data7 = MENU_fileInit(g1_Data7, 1, 1.3, "motor-I", 2, datafloat, &g1_Data6, &preGear1, NULL, NULL);
 
-    gear2 = MENU_fileInit(gear2, 1, 1.0, "GearFast", 3, none, &gear1, NULL, NULL, &g2_Data1);//快速档，含g2四个数据
-    g2_Data1 = MENU_fileInit(g2_Data1, 2300, 38.27, "speed-L2", 2, datafloat, NULL, &g2_Data2, &gear2, NULL);
-    g2_Data2 = MENU_fileInit(g2_Data2, 2300, 75.32, "speed-R2", 3, dataint, &g2_Data1, &g2_Data3, NULL, NULL);
-    g2_Data3 = MENU_fileInit(g2_Data3, 45, 11.62, "Vision2", 4, datafloat, &g2_Data2, &g2_Data4, NULL, NULL);
-    g2_Data4 = MENU_fileInit(g2_Data4, 119, 48.01, "data4", 5, dataint, &g2_Data3, &preGear2, NULL, NULL);
+
+    gear2 = MENU_fileInit(gear2, 1, 1.0, "GearFast", 3, none, &gear1, &gear3, NULL, &g2_Data1);//快速档，含g2四个数据
+    g2_Data1 = MENU_fileInit(g2_Data1, 85, 38.27, "speed2", 2, dataint, NULL, &g2_Data2, &gear2, NULL);
+    g2_Data2 = MENU_fileInit(g2_Data2, 140, 75.32, "THRE2", 3, dataint, &g2_Data1, &g2_Data3, NULL, NULL);
+    g2_Data3 = MENU_fileInit(g2_Data3, 30, 11.62, "Vision2", 4, dataint, &g2_Data2, &g2_Data4, NULL, NULL);
+    g2_Data4 = MENU_fileInit(g2_Data4, 119, 1.9, "servo-P", 5, datafloat, &g2_Data3, &g2_Data5, NULL, NULL);
+    g2_Data5 = MENU_fileInit(g2_Data5, 119, 6.0, "servo-D", 6, datafloat, &g2_Data4, &g2_Data6, NULL, NULL);
+    g2_Data6 = MENU_fileInit(g2_Data6, 119, 0.9, "GAP2", 7, datafloat, &g2_Data5, &g2_Data7, NULL, NULL);
+    g2_Data7 = MENU_fileInit(g2_Data7, 119, 1.1, "motor-I", 2, datafloat, &g2_Data6, &preGear2, NULL, NULL);
+
+    gear3 = MENU_fileInit(gear3, 1, 1.0, "GearFast2", 4, none, &gear2, NULL, NULL, &g3_Data1);//快速档，含g2四个数据
+    g3_Data1 = MENU_fileInit(g3_Data1, 90, 38.27, "speed3", 2, dataint, NULL, &g3_Data2, &gear3, NULL);
+    g3_Data2 = MENU_fileInit(g3_Data2, 140, 75.32, "THRE3", 3, dataint, &g3_Data1, &g3_Data3, NULL, NULL);
+    g3_Data3 = MENU_fileInit(g3_Data3, 29, 11.62, "Vision3", 4, dataint, &g3_Data2, &g3_Data4, NULL, NULL);
+    g3_Data4 = MENU_fileInit(g3_Data4, 119, 1.9, "servo-P", 5, datafloat, &g3_Data3, &g3_Data5, NULL, NULL);
+    g3_Data5 = MENU_fileInit(g3_Data5, 119, 6.8, "servo-D", 6, datafloat, &g3_Data4, &g3_Data6, NULL, NULL);
+    g3_Data6 = MENU_fileInit(g3_Data6, 119, 0.9, "GAP3", 7, datafloat, &g3_Data5, &g3_Data7, NULL, NULL);
+    g3_Data7 = MENU_fileInit(g3_Data7, 119, 1.1, "motor-I", 2, datafloat, &g3_Data6, &preGear3, NULL, NULL);
 
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
-    presentSpeedL = MENU_fileInit(presentSpeedL, 3000, 1.1, "speed-L", 2, dataint, NULL, &presentSpeedR, &file2, NULL);
-    presentSpeedR = MENU_fileInit(presentSpeedR, 3000, 2.2, "speed-R", 3, dataint, &presentSpeedL, &presentVision, NULL, NULL);
-    presentVision = MENU_fileInit(presentVision, 50, 3.3, "VISION", 4, dataint, &presentSpeedR, &present4, NULL, NULL);
-    present4 = MENU_fileInit(present4, 4, 4.4, "preData4", 5, dataint, &presentVision, NULL, NULL, NULL);
-    preGear1 = MENU_fileInit(preGear1, 1, 1.0, "Present1", 6, none, &g1_Data4, NULL, NULL, &presentSpeedL);
-    preGear2 = MENU_fileInit(preGear2, 1, 1.0, "Present2", 6, none, &g2_Data4, NULL, NULL, &presentSpeedL);
+    presentSpeed = MENU_fileInit(presentSpeed, 60, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
+    presentTHRE = MENU_fileInit(presentTHRE, 140, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
+    presentVision = MENU_fileInit(presentVision, 37, 3.3, "VISION", 4, dataint, &presentTHRE, &presentServoP, NULL, NULL);
+    presentServoP = MENU_fileInit(presentServoP, 1, 1.8, "preServoP", 5, datafloat, &presentVision, &presentServoD, NULL, NULL);
+    presentServoD = MENU_fileInit(presentServoD, 1, 6.0, "preServoD", 6, datafloat, &presentServoP, &gap, NULL, NULL);
+    gap = MENU_fileInit(presentMotorP, 1, 0.9, "GAP", 7, datafloat, &presentServoD, &presentMotorI, NULL, NULL);
+    presentMotorI = MENU_fileInit(presentMotorI, 1, 190.0, "preMotorI", 2, datafloat, &gap, &bottomData, NULL, NULL);
+//    presentMotorP = MENU_fileInit(gap, 8, 250, "preMotorP", 3, datafloat, &presentMotorI, &bottomData, NULL, NULL);
+    bottomData = MENU_fileInit(bottomData, 1, 1.0, "bottom", 4, none, &presentMotorI, NULL, NULL, NULL);
+    preGear1 = MENU_fileInit(preGear1, 1, 1.0, "Present1", 3, none, &g1_Data7, NULL, NULL, &presentSpeed);
+    preGear2 = MENU_fileInit(preGear2, 1, 1.0, "Present2", 3, none, &g2_Data7, NULL, NULL, &presentSpeed);
+    preGear3 = MENU_fileInit(preGear3, 1, 1.0, "Present3", 3, none, &g3_Data7, NULL, NULL, &presentSpeed);
 
     /*展示翻页效果*/
     display = MENU_fileInit(display, 1, 1.0, "DISPLAY", 4, none, &file2, &fileSave, NULL, &display1);
-    display1 = MENU_fileInit(display1, 91, 133.03, "display1", 2, dataint, NULL, &display2, &display, NULL);
-    display2 = MENU_fileInit(display2, 210, 33.71, "display2", 3, datafloat, &display1, &display3, NULL, NULL);
-    display3 = MENU_fileInit(display3, 25, 37.11, "display3", 4, datafloat, &display2, &display4, NULL, NULL);
-    display4 = MENU_fileInit(display4, 20, 63.29, "display4", 5, dataint, &display3, &display5, NULL, NULL);
-    display5 = MENU_fileInit(display5, 87, 2.701, "display5", 6, datafloat, &display4, &display6, NULL, NULL);
-    display6 = MENU_fileInit(display6, 261, 91.881, "display6", 7, datafloat, &display5, &display7, NULL, NULL);
-    display7 = MENU_fileInit(display7, 22, 33.71, "display7", 2, dataint, &display6, &display8, NULL, NULL);
+    display1 = MENU_fileInit(display1, 50, 133.03, "LFKP", 2, dataint, NULL, &display2, &display, NULL);
+    display2 = MENU_fileInit(display2, 40, 33.71, "LFKI", 3, dataint, &display1, &display3, NULL, NULL);
+    display3 = MENU_fileInit(display3, 60, 37.11, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
+    display4 = MENU_fileInit(display4, 50, 63.29, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
+    display5 = MENU_fileInit(display5, 5, 2.701, "delaytime", 6, dataint, &display4, &display6, NULL, NULL);
+    display6 = MENU_fileInit(display6, 1, 91.881, "round", 7, dataint, &display5, &display7, NULL, NULL);
+    display7 = MENU_fileInit(display7, 750, 1.1, "SPEEDUP", 2, dataint, &display6, &display8, NULL, NULL);
     display8 = MENU_fileInit(display8, 8, 7.91, "display8", 3, datafloat, &display7, &display9, NULL, NULL);
     display9 = MENU_fileInit(display9, 120, 9.02, "display9", 4, dataint, &display8, NULL, NULL, NULL);
 
     //数据写入flash
     fileSave = MENU_fileInit(fileSave, 1, 1.0, "SAVE", 5, none, &display, &image, NULL, &saveGear1);
     saveGear1 = MENU_fileInit(saveGear1, 1, 1.0, "SaveGear1", 2, none, NULL, &saveGear2, &fileSave, &g1_Data1);
-    saveGear2 = MENU_fileInit(saveGear2, 1, 1.0, "SaveGear2", 3, none, &saveGear1, NULL, NULL, &g2_Data1);
+    saveGear2 = MENU_fileInit(saveGear2, 1, 1.0, "SaveGear2", 3, none, &saveGear1, &saveGear3, NULL, &g2_Data1);
+    saveGear3 = MENU_fileInit(saveGear3, 1, 1.0, "SaveGear3", 4, none, &saveGear2, NULL, NULL, &g3_Data1);
 
     //摄像头显示在oled上
     image = MENU_fileInit(image, 1, 1.0, "IMAGE", 6, none, &fileSave, NULL, NULL, NULL);
@@ -112,7 +138,7 @@ void MENU_namePrintf(nodeptr_t printFile)
     }
     if(y > 6 && y < 11)
     {
-        flag = 5;
+        flag = 6;
         while((flag--) && (printFile->next != NULL))
         {
             printFile = printFile->next;
@@ -147,13 +173,13 @@ void MENU_valuePrintf(nodeptr_t temp)
     }
     if(y > 6 && y < 11)
     {
-        flag1 = 5;
+        flag1 = 6;
         while((flag1--) && (temp->next != NULL))
         {
             temp = temp->next;
         }
     }
-    uint32 count1=0;
+    uint32 count1 = 0;
     do
     {
         if(temp->i == dataint)
@@ -257,6 +283,10 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
         else if((strcmp(temp->name, "SaveGear2")) == 0)//在"SaveGear2"处按扇区（sector1）写入数据
         {
             MENU_sectorSave(1, temp->forward);
+        }
+        else if((strcmp(temp->name, "SaveGear3")) == 0)//在"SaveGear3"处按扇区（sector2）写入数据
+        {
+            MENU_sectorSave(2, temp->forward);
         }
         else if((strcmp(temp->name, "IMAGE")) == 0)
         {
@@ -404,7 +434,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
         else if(temp->i == none)
                 {
                     int page = 0;
-                    if((strcmp(temp->name, "Gear1")) == 0)/*读取flash中gear1的数据*/
+                    if((strcmp(temp->name, "GearSlow")) == 0)/*读取flash中gear1的数据*/
                     {
                         dataRead = temp;
                         dataRead = dataRead->forward;
@@ -424,7 +454,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         }while(dataRead->next != NULL);
                         //page = 0;
                     }
-                    else if((strcmp(temp->name, "Gear2")) == 0)
+                    else if((strcmp(temp->name, "GearFast")) == 0)
                     {
                         page = 0;
                         dataRead = temp;
@@ -438,6 +468,28 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                             else if(dataRead->i == dataint)
                             {
                                 dataRead->intValue = Page_Read(1, page, uint32);
+                            }
+
+                            page ++;
+                            dataRead = dataRead->next;
+                        }while(dataRead->next != NULL);
+                        //page = 0;
+                    }
+
+                    else if((strcmp(temp->name, "GearFast2")) == 0)
+                    {
+                        page = 0;
+                        dataRead = temp;
+                        dataRead = dataRead->forward;
+                        do
+                        {
+                            if(dataRead->i == datafloat)
+                            {
+                                dataRead->floatValue = Page_Read(2, page, float);
+                            }
+                            else if(dataRead->i == dataint)
+                            {
+                                dataRead->intValue = Page_Read(2, page, uint32);
                             }
 
                             page ++;
@@ -486,6 +538,27 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                             dataRead = dataRead->next;
                         }
                        // page = 0;
+                    }
+
+                    else if((strcmp(temp->name, "Present3")) == 0)
+                    {
+                        dataRead = temp;
+                        dataRead = dataRead->forward;
+                        while(dataRead->next != NULL)
+                        {
+                            if(dataRead->i == datafloat)
+                            {
+                                dataRead->floatValue = Page_Read(2, page, float);
+                            }
+                            else if(dataRead->i == dataint)
+                            {
+                                dataRead->intValue = Page_Read(2, page, uint32);
+                            }
+
+                            page ++;
+                            dataRead = dataRead->next;
+                        }
+                        // page = 0;
                     }
 
                 }

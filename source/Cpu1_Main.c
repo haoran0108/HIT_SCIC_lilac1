@@ -32,8 +32,11 @@
 #include "SmartCar_PIT.h"
 #include "SmartCar_ADC.h"
 #include "common.h"
-
+#include "menu.h"
+#include "SmartCar_ctrl.h"
 #pragma section all "cpu1_dsram"
+
+
 
 
 
@@ -55,11 +58,15 @@ int core1_main(void)
     /* Wait for CPU sync event */
     IfxCpu_emitEvent(&g_cpuSyncEvent);
     IfxCpu_waitEvent(&g_cpuSyncEvent, 1);
-    
-
+    SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,921600,3);
+    char transport_num = 10;
     while(1)
     {
+        test_varible[7] = zebraCount ;
+        test_varible[8] = zFlag;
+        test_varible[9] = mid_line[presentVision.intValue];
 
+        SmartCar_VarUpload(test_varible, transport_num);
 
     }
     return (1);
