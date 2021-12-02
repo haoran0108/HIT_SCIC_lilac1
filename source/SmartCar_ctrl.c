@@ -98,16 +98,16 @@ void CTRL_servoMain()//优化：封装pid计算，电机定时设置pwm，（多级环pid）
     }
     else
     {
-//        if(straightSpeedUp())
-//        {
-//            test_varible[5] = straightSpeedUp();
-//            expectL = (int32)(presentSpeed.intValue * display7.floatValue);
-//            expectR = (int32)(presentSpeed.intValue * display7.floatValue);
-//        }
-//        else
-//        {
+        if(straightSpeedUp())
+        {
+            test_varible[5] = straightSpeedUp();
+            expectL = (int32)(display7.intValue);
+            expectR = (int32)(display7.intValue);
+        }
+        else
+        {
             CTRL_motorDiffer();
-//        }
+        }
 
     }
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制

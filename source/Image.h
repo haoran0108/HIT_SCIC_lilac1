@@ -69,7 +69,7 @@ void make_unmain_black(uint8_t j_continue[CAMERA_H]);
 //void stra_cross_right_up(uint8_t j_continue[CAMERA_H]);
 int zebraPanduan();
 void my_memset(uint8_t* ptr, uint8_t num, uint8_t size);
-
+int straightSpeedUp();
 void stra_cross_left1(uint8_t j_continue[CAMERA_H]);
 void stra_cross_left2(uint8_t j_continue[CAMERA_H]);
 void stra_cross_left3(uint8_t j_continue[CAMERA_H]);
