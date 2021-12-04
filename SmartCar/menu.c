@@ -99,8 +99,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display3 = MENU_fileInit(display3, 60, 37.11, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
     display4 = MENU_fileInit(display4, 50, 63.29, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
     display5 = MENU_fileInit(display5, 5, 2.701, "delaytime", 6, dataint, &display4, &display6, NULL, NULL);
-    display6 = MENU_fileInit(display6, 1, 91.881, "round", 7, dataint, &display5, &display7, NULL, NULL);
-    display7 = MENU_fileInit(display7, 750, 1.1, "SPEEDUP", 2, dataint, &display6, &display8, NULL, NULL);
+    display6 = MENU_fileInit(display6, 2, 91.881, "round", 7, dataint, &display5, &display7, NULL, NULL);
+    display7 = MENU_fileInit(display7, 100, 1.1, "SPEEDUP", 2, dataint, &display6, &display8, NULL, NULL);
     display8 = MENU_fileInit(display8, 8, 7.91, "display8", 3, datafloat, &display7, &display9, NULL, NULL);
     display9 = MENU_fileInit(display9, 120, 9.02, "display9", 4, dataint, &display8, NULL, NULL, NULL);
 

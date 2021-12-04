@@ -42,7 +42,7 @@ void CTRL_Init()
 void CTRL_servoPID()
 {
 
-    servoError.currentError = 94 - mid_line[presentVision.intValue];
+    servoError.currentError = 88 - mid_line[presentVision.intValue];
     servoError.delta = servoError.currentError - servoError.lastError;
     servoPwm = (uint32)(790 + presentServoD.floatValue * servoError.delta + presentServoP.floatValue * servoError.currentError);
     if(servoPwm > 865)
@@ -89,18 +89,17 @@ void CTRL_servoMain()//优化：封装pid计算，电机定时设置pwm，（多级环pid）
         }
 
     }
+    else if(straightSpeedUp())
+    {
+//
+
+            test_varible[5] = straightSpeedUp();
+            expectL = (int32)(display7.intValue);
+            expectR = (int32)(display7.intValue);
+    }
     else
     {
-//        if(straightSpeedUp())
-//        {
-//            test_varible[5] = straightSpeedUp();
-//            expectL = (int32)(presentSpeed.intValue * display7.floatValue);
-//            expectR = (int32)(presentSpeed.intValue * display7.floatValue);
-//        }
-//        else
-//        {
-            CTRL_motorDiffer();
-//        }
+        CTRL_motorDiffer();
 
     }
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制

@@ -1152,29 +1152,29 @@ int zebraPanduan() {
     }
 }
 //111
-//int straightSpeedUp()
-//{
-//
-//    int count1 = 0;
-//    int count2 = 0;
-//    for (int i = 0; i <= 4; i++)
-//    {
-//        for (int j = 88; j <= 100; j++)
-//        {
-//            if (IMG[i][j] == white) count1++;
-//        }
-//    }
-//    for (int i = 15; i <= 30; i++)
-//    {
-//        if (abs(mid_line[i] - 94) < MIDLINE_DELTA) count2++;
-//    }
-//    if (calculate_k(30, 60, left_line[30], left_line[60]) * calculate_k(30, 60, right_line[30], right_line[60]) < 0 &&
-//        count1 > SPEEDUP_COUNT1 && count2 > SPEEDUP_COUNT2)
-//    {
-//        return 1;
-//    }
-//    else return 0;
-//}
+int straightSpeedUp()
+{
+
+    int count1 = 0;
+    int count2 = 0;
+    for (int i = 0; i <= 4; i++)
+    {
+        for (int j = 88; j <= 100; j++)
+        {
+            if (IMG[i][j] == white) count1++;
+        }
+    }
+    for (int i = 15; i <= 30; i++)
+    {
+        if (abs(mid_line[i] - 94) < MIDLINE_DELTA) count2++;
+    }
+    if (calculate_k(30, 60, left_line[30], left_line[60]) * calculate_k(30, 60, right_line[30], right_line[60]) < 0 &&
+        count1 > SPEEDUP_COUNT1 && count2 > SPEEDUP_COUNT2)
+    {
+        return 1;
+    }
+    else return 0;
+}
 
 void stop()
 {
