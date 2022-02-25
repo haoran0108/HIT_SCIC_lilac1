@@ -75,6 +75,7 @@ int core0_main(void)
     CTRL_Init();//控制初始化
     SmartCar_MT9V034_Init();//摄像头初始化，没连摄像头时不能初始化，不然oled就停留在队标页面
 
+//    SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,1152000,3);
 
     Delay_ms(STM0, 1000);
     SmartCar_OLED_Fill(0);
@@ -105,7 +106,7 @@ int core0_main(void)
     while(TRUE)
         {
             SmartCar_OLED_Printf6x8(110, 0, "%d", onPower);
-            if (!GPIO_Read(P11, 6) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
+            if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
                     !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
                 {
                     Delay_ms(STM0,100);
@@ -117,11 +118,11 @@ int core0_main(void)
 //                Delay_ms(STM0,100);
 //                SW_readSwitch();
 //            }
-
+//
             SW_readSwitch();//发车键
 
 //        SmartCar_ImgUpload(fullBuffer,120,188);//传图像给电脑，和uart一起用
-
+//
         }
 
 }

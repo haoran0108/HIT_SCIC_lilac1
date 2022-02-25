@@ -9,14 +9,16 @@
 
 node_t file1;
 node_t file2, file3;
+node_t neihuanK, gyroP, gyroD, gyrodatabottom;
 node_t gear1, g1_Data1, g1_Data2, g1_Data3, g1_Data4, g1_Data5, g1_Data6, g1_Data7;
 node_t gear2, g2_Data1, g2_Data2, g2_Data3, g2_Data4, g2_Data5, g2_Data6, g2_Data7;
 node_t gear3, g3_Data1, g3_Data2, g3_Data3, g3_Data4, g3_Data5, g3_Data6, g3_Data7;
+node_t currentK, currentRTKP, currentRTKI, currentLFKP, currentLFKI, expectC;
 
 node_t dataEnd;//最后一个数据指向dataEnd
 node_t preGear1, preGear2, preGear3;
 /*现在的档位参数,bottomData为最后一个数据，无实际意义，为了倒数第二个数据能附上值*/
-node_t presentSpeed, presentTHRE, presentVision, presentServoP, presentServoD, presentMotorP, presentMotorI, bottomData;
+node_t presentSpeed, presentTHRE, presentVision, fuzzyPB, fuzzyPM, fuzzyPS, fuzzyZO, fuzzyNS, fuzzyNM, fuzzyNB, presentServoD, presentMotorP, presentMotorI, bottomData;
 node_t gap;//差速要乘的倍数
 node_t display, display1, display2, display3, display4, display5, display6, display7, display8, display9;//展示翻页效果
 node_t fileSave, saveGear1, saveGear2, saveGear3;//用于写入flash
@@ -27,8 +29,9 @@ nodeptr_t tempFile;
 
 uint32 y = 1;
 uint32 pageNum = 1;
-node_t MENU_fileInit(node_t file, int intVal, float floatVal, char name[10], uint8 pos,data i,
-                struct node* prior,struct node* next,struct node* backward,struct node* forward)
+
+node_t MENU_fileInit(node_t file, int intVal, float floatVal, char name[10],int pos,menuData i,
+        struct menuNode* prior,struct menuNode* next,struct menuNode* backward,struct menuNode* forward)
 {
     file.floatValue = floatVal;
     file.intValue = intVal;
@@ -47,10 +50,14 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 {
     //利用函数fileInit()初始化文件参数
     file1 = MENU_fileInit(file1, 1, 1.0, "GEAR", 2, none, NULL, &file2, NULL, &gear1);
-    file2 = MENU_fileInit(file2, 1, 1.0, "PRESENT", 3, none, &file1, &display, NULL, &presentSpeed);
-    //file3 = MENU_fileInit(file3, 1, 1.0, "CONTROL", 4, none, &file2, &display, NULL, NULL);
+    file2 = MENU_fileInit(file2, 1, 1.0, "PRESENT", 3, none, &file1, &file3, NULL, &presentSpeed);
+    file3 = MENU_fileInit(file3, 1, 1.0, "Gyro1", 4, dataint, &file2, &display, NULL, &neihuanK);
+    neihuanK = MENU_fileInit(neihuanK, 1, 0.5, "K", 2, datafloat, NULL, &gyroP, &file3, NULL);
+    gyroP = MENU_fileInit(gyroP, 1, 0.5, "GyroKP", 3, datafloat, &neihuanK, &gyroD, NULL, NULL);
+    gyroD = MENU_fileInit(gyroD, 1, 0, "GyroKD", 4, datafloat, &gyroP, &gyrodatabottom, NULL, NULL);
+    gyrodatabottom = MENU_fileInit(gyrodatabottom, 1, 1.0, "bottom", 5, datafloat, &gyroD, NULL, NULL, NULL);
 
-    gear1 = MENU_fileInit(gear1, 1, 1.0, "GearSlow", 2, none, NULL, &gear2, &file1, &g1_Data1);//慢速档，含g1四个数据
+    gear1 = MENU_fileInit(gear1, 1, 1.0, "GearSlow", 2, none, NULL, &gear2, &file1, &g1_Data1);//慢速档
     g1_Data1 = MENU_fileInit(g1_Data1, 75, 32.3, "speed1", 2, dataint, NULL, &g1_Data2, &gear1, NULL);
     g1_Data2 = MENU_fileInit(g1_Data2, 140, 70.22, "THRE1", 3, dataint, &g1_Data1, &g1_Data3, NULL, NULL);
     g1_Data3 = MENU_fileInit(g1_Data3, 31, 42.09, "Vision1", 4, dataint, &g1_Data2, &g1_Data4, NULL, NULL);
@@ -59,8 +66,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     g1_Data6 = MENU_fileInit(g1_Data6, 1, 0.9, "GAP1", 7, datafloat, &g1_Data5, &g1_Data7, NULL, NULL);
     g1_Data7 = MENU_fileInit(g1_Data7, 1, 1.3, "motor-I", 2, datafloat, &g1_Data6, &preGear1, NULL, NULL);
 
-
-    gear2 = MENU_fileInit(gear2, 1, 1.0, "GearFast", 3, none, &gear1, &gear3, NULL, &g2_Data1);//快速档，含g2四个数据
+    gear2 = MENU_fileInit(gear2, 1, 1.0, "GearFast", 3, none, &gear1, &gear3, NULL, &g2_Data1);//快速档
     g2_Data1 = MENU_fileInit(g2_Data1, 85, 38.27, "speed2", 2, dataint, NULL, &g2_Data2, &gear2, NULL);
     g2_Data2 = MENU_fileInit(g2_Data2, 140, 75.32, "THRE2", 3, dataint, &g2_Data1, &g2_Data3, NULL, NULL);
     g2_Data3 = MENU_fileInit(g2_Data3, 30, 11.62, "Vision2", 4, dataint, &g2_Data2, &g2_Data4, NULL, NULL);
@@ -69,7 +75,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     g2_Data6 = MENU_fileInit(g2_Data6, 119, 0.9, "GAP2", 7, datafloat, &g2_Data5, &g2_Data7, NULL, NULL);
     g2_Data7 = MENU_fileInit(g2_Data7, 119, 1.1, "motor-I", 2, datafloat, &g2_Data6, &preGear2, NULL, NULL);
 
-    gear3 = MENU_fileInit(gear3, 1, 1.0, "GearFast2", 4, none, &gear2, NULL, NULL, &g3_Data1);//快速档，含g2四个数据
+    gear3 = MENU_fileInit(gear3, 1, 1.0, "GearFast2", 4, none, &gear2, &currentK, NULL, &g3_Data1);//快速档，含g2四个数据
     g3_Data1 = MENU_fileInit(g3_Data1, 90, 38.27, "speed3", 2, dataint, NULL, &g3_Data2, &gear3, NULL);
     g3_Data2 = MENU_fileInit(g3_Data2, 140, 75.32, "THRE3", 3, dataint, &g3_Data1, &g3_Data3, NULL, NULL);
     g3_Data3 = MENU_fileInit(g3_Data3, 29, 11.62, "Vision3", 4, dataint, &g3_Data2, &g3_Data4, NULL, NULL);
@@ -78,40 +84,54 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     g3_Data6 = MENU_fileInit(g3_Data6, 119, 0.9, "GAP3", 7, datafloat, &g3_Data5, &g3_Data7, NULL, NULL);
     g3_Data7 = MENU_fileInit(g3_Data7, 119, 1.1, "motor-I", 2, datafloat, &g3_Data6, &preGear3, NULL, NULL);
 
+    currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 5, none, &gear3, NULL, NULL, &currentRTKP);
+    currentRTKP = MENU_fileInit(currentRTKP, 3, 4.0, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentK, NULL);
+    currentRTKI = MENU_fileInit(currentRTKI, 2, 2.0, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
+    currentLFKP = MENU_fileInit(currentLFKP, 3, 4.0, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
+    currentLFKI = MENU_fileInit(currentLFKI, 2, 2.0, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
+//    currentKD = MENU_fileInit(currentKD, 2, 3.0, "motorKD", 4, datafloat, &currentRTKI, &expectC, NULL, NULL);
+    expectC = MENU_fileInit(expectC, 2200, 9.5, "expect", 6, dataint, &currentLFKI, NULL, NULL, NULL);
+
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
-    presentSpeed = MENU_fileInit(presentSpeed, 60, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
-    presentTHRE = MENU_fileInit(presentTHRE, 140, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
-    presentVision = MENU_fileInit(presentVision, 37, 3.3, "VISION", 4, dataint, &presentTHRE, &presentServoP, NULL, NULL);
-    presentServoP = MENU_fileInit(presentServoP, 1, 1.8, "preServoP", 5, datafloat, &presentVision, &presentServoD, NULL, NULL);
-    presentServoD = MENU_fileInit(presentServoD, 1, 6.0, "preServoD", 6, datafloat, &presentServoP, &gap, NULL, NULL);
-    gap = MENU_fileInit(presentMotorP, 1, 0.9, "GAP", 7, datafloat, &presentServoD, &presentMotorI, NULL, NULL);
-    presentMotorI = MENU_fileInit(presentMotorI, 1, 190.0, "preMotorI", 2, datafloat, &gap, &bottomData, NULL, NULL);
+    presentSpeed = MENU_fileInit(presentSpeed, 30, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
+    presentTHRE = MENU_fileInit(presentTHRE, 160, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
+    presentVision = MENU_fileInit(presentVision, 80, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
+    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 2.0, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
+    fuzzyPM = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
+    fuzzyPS = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
+    fuzzyZO = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
+    fuzzyNS = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
+    fuzzyNM = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
+    fuzzyNB = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
+    presentServoD = MENU_fileInit(presentServoD, 1, 3.1, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
+    gap = MENU_fileInit(presentMotorP, 1, 0.9, "GAP", 7, datafloat, &presentServoD, &bottomData, NULL, NULL);
+//    presentMotorI = MENU_fileInit(presentMotorI, 1, 190.0, "preMotorI", 2, datafloat, &gap, &bottomData, NULL, NULL);
 //    presentMotorP = MENU_fileInit(gap, 8, 250, "preMotorP", 3, datafloat, &presentMotorI, &bottomData, NULL, NULL);
-    bottomData = MENU_fileInit(bottomData, 1, 1.0, "bottom", 4, none, &presentMotorI, NULL, NULL, NULL);
+    bottomData = MENU_fileInit(bottomData, 1, 1.0, "bottom", 2, none, &gap, NULL, NULL, NULL);
     preGear1 = MENU_fileInit(preGear1, 1, 1.0, "Present1", 3, none, &g1_Data7, NULL, NULL, &presentSpeed);
     preGear2 = MENU_fileInit(preGear2, 1, 1.0, "Present2", 3, none, &g2_Data7, NULL, NULL, &presentSpeed);
     preGear3 = MENU_fileInit(preGear3, 1, 1.0, "Present3", 3, none, &g3_Data7, NULL, NULL, &presentSpeed);
 
     /*展示翻页效果*/
-    display = MENU_fileInit(display, 1, 1.0, "DISPLAY", 4, none, &file2, &fileSave, NULL, &display1);
+    display = MENU_fileInit(display, 1, 1.0, "DISPLAY", 5, none, &file3, &fileSave, NULL, &display1);
     display1 = MENU_fileInit(display1, 50, 133.03, "LFKP", 2, dataint, NULL, &display2, &display, NULL);
     display2 = MENU_fileInit(display2, 40, 33.71, "LFKI", 3, dataint, &display1, &display3, NULL, NULL);
-    display3 = MENU_fileInit(display3, 60, 37.11, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
-    display4 = MENU_fileInit(display4, 50, 63.29, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
+    display3 = MENU_fileInit(display3, 60, 2, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
+    display4 = MENU_fileInit(display4, 50, 1, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
     display5 = MENU_fileInit(display5, 5, 2.701, "delaytime", 6, dataint, &display4, &display6, NULL, NULL);
     display6 = MENU_fileInit(display6, 2, 91.881, "round", 7, dataint, &display5, &display7, NULL, NULL);
     display7 = MENU_fileInit(display7, 100, 1.1, "SPEEDUP", 2, dataint, &display6, &display8, NULL, NULL);
-    display8 = MENU_fileInit(display8, 8, 7.91, "display8", 3, datafloat, &display7, &display9, NULL, NULL);
-    display9 = MENU_fileInit(display9, 120, 9.02, "display9", 4, dataint, &display8, NULL, NULL, NULL);
+    display8 = MENU_fileInit(display8, 55, 7.91, "count1", 3, dataint, &display7, &display9, NULL, NULL);
+    display9 = MENU_fileInit(display9, 14, 9.02, "count2", 4, dataint, &display8, NULL, NULL, NULL);
 
     //数据写入flash
-    fileSave = MENU_fileInit(fileSave, 1, 1.0, "SAVE", 5, none, &display, &image, NULL, &saveGear1);
+    fileSave = MENU_fileInit(fileSave, 1, 1.0, "SAVE", 6, none, &display, &image, NULL, &saveGear1);
     saveGear1 = MENU_fileInit(saveGear1, 1, 1.0, "SaveGear1", 2, none, NULL, &saveGear2, &fileSave, &g1_Data1);
     saveGear2 = MENU_fileInit(saveGear2, 1, 1.0, "SaveGear2", 3, none, &saveGear1, &saveGear3, NULL, &g2_Data1);
     saveGear3 = MENU_fileInit(saveGear3, 1, 1.0, "SaveGear3", 4, none, &saveGear2, NULL, NULL, &g3_Data1);
 
     //摄像头显示在oled上
-    image = MENU_fileInit(image, 1, 1.0, "IMAGE", 6, none, &fileSave, NULL, NULL, NULL);
+    image = MENU_fileInit(image, 1, 1.0, "IMAGE", 7, none, &fileSave, NULL, NULL, NULL);
    // list = MENU_fileInit(list, 1, 1.0, "list", 2, none, &image, NULL, NULL, NULL);
 }
 
@@ -136,7 +156,7 @@ void MENU_namePrintf(nodeptr_t printFile)
         printFile = printFile->prior;
         //num--;
     }
-    if(y > 6 && y < 11)
+    if(y > 6 && y < 13)
     {
         flag = 6;
         while((flag--) && (printFile->next != NULL))
@@ -171,7 +191,7 @@ void MENU_valuePrintf(nodeptr_t temp)
     {
         temp = temp->prior;
     }
-    if(y > 6 && y < 11)
+    if(y > 6 && y < 13)
     {
         flag1 = 6;
         while((flag1--) && (temp->next != NULL))
@@ -216,7 +236,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
     nodeptr_t printTemp;
     nodeptr_t dataRead;
 
-    if (!GPIO_Read(P11, 12))//上
+    if (!GPIO_Read(P11, 2))//上
     {
         SmartCar_OLED_Fill(0);
 
@@ -310,7 +330,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
     }
 
 
-    else if (!GPIO_Read(P11, 6))//ok
+    else if (!GPIO_Read(P11, 12))//ok
     {
         float times = 1;//改变数值的倍数
 
@@ -326,7 +346,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
 
             while(TRUE)
             {
-                if (!GPIO_Read(P11, 6) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
+                if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
                                    !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12))
                 {
                     Delay_ms(STM0,100);
@@ -334,7 +354,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                     if(temp->i == dataint)/*改变整型数据*/
                     {
 
-                        if(!GPIO_Read(P11, 12))//值增加 上
+                        if(!GPIO_Read(P11, 2))//值增加 上
                         {
                             SmartCar_OLED_Fill(0);
                             temp->intValue += 1 * times;
@@ -367,7 +387,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                             SmartCar_OLED_Printf6x8(55, 3, "%2d", temp->intValue);
 
                         }
-                        else if(!GPIO_Read(P11, 6))//确认 ok并回到上一级
+                        else if(!GPIO_Read(P11, 12))//确认 ok并回到上一级
                         {
                             SmartCar_OLED_Fill(0);
                             printTemp = temp;
@@ -384,7 +404,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                     else if(temp->i == datafloat)
                     {
 
-                        if(!GPIO_Read(P11, 12))//值增加 上
+                        if(!GPIO_Read(P11, 2))//值增加 上
                         {
                             SmartCar_OLED_Fill(0);
                             temp->floatValue += 0.1 * times;
@@ -412,7 +432,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                             SmartCar_OLED_Printf6x8(40, 3, "%0.3f", temp->floatValue);
 
                         }
-                        else if(!GPIO_Read(P11, 6))//确认 ok并回到上一级
+                        else if(!GPIO_Read(P11, 12))//确认 ok并回到上一级
                         {
                             SmartCar_OLED_Fill(0);
                             printTemp = temp;
@@ -622,8 +642,8 @@ void MENU_showIMG()
 #endif
 #endif
         }
-        if (!GPIO_Read(P11, 6) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
-                     !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
+        if (!GPIO_Read(P11, 12) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
+                     !GPIO_Read(P11, 11) || !GPIO_Read(P11, 2) )
         {
             if(!GPIO_Read(P11, 10))
             {

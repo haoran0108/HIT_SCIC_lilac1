@@ -21,33 +21,35 @@ typedef enum data//列举
     none,
     dataint,
     datafloat
-}data;
+}menuData;
 
-struct node
+struct menuNode
 {
     int intValue;
     float floatValue;
     char name[10];//文件名
     int pos;//文件的位置（出现在屏幕的第几行）
-    data i;//数据类型标志
-    struct node* prior; //同一文件下的上一个文件
-    struct node* next;//同一个文件下的下一个文件
-    struct node* backward;//父文件
-    struct node* forward;//子文件
+    menuData i;//数据类型标志
+    struct menuNode* prior; //同一文件下的上一个文件
+    struct menuNode* next;//同一个文件下的下一个文件
+    struct menuNode* backward;//父文件
+    struct menuNode* forward;//子文件
 };
-typedef struct node node_t;
-typedef struct node* nodeptr_t;
+typedef struct menuNode node_t;
+typedef struct menuNode* nodeptr_t;
 
 extern nodeptr_t tempFile;
-extern node_t file1;
+extern node_t file1, file3;
 extern uint32 leftSpeed;
 extern uint32 rightSpeed;
 extern node_t presentSpeed, presentTHRE, presentVision;
-extern node_t presentServoP, presentServoD;
+extern node_t fuzzyPB, fuzzyPM, fuzzyPS, fuzzyZO, fuzzyNS, fuzzyNM, fuzzyNB, presentServoD;
 extern node_t presentMotorP, presentMotorI;
 extern node_t gap;
 extern node_t presentTHRE;
-extern node_t display1, display2, display3, display4, display5, display6, display7;
+extern node_t display1, display2, display3, display4, display5, display6, display7, display8, display9;
+extern node_t neihuanK, gyroP, gyroD;
+extern node_t currentRTKP, currentRTKI, currentLFKP, currentLFKI, expectC;
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      对文件各参数进行初始化赋值
 //  @param      file 要赋值的文件  类型：node_t
@@ -64,7 +66,7 @@ extern node_t display1, display2, display3, display4, display5, display6, displa
 //  @since      v1.0
 //  Sample usage:
 //-------------------------------------------------------------------------------------------------------------------
-node_t MENU_fileInit(node_t file, int intVal, float floatVal, char name[10], uint8 pos,data i,struct node* prior,struct node* next,struct node* backward,struct node* forward);
+node_t MENU_fileInit(node_t file, int intVal, float floatVal, char name[10], int pos,menuData i,struct menuNode* prior,struct menuNode* next,struct menuNode* backward,struct menuNode* forward);
 
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      实际创建文件
