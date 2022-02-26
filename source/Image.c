@@ -1030,6 +1030,8 @@ void image_main()
     for (int i = NEAR_LINE; i >= FAR_LINE; i--)
         if (mid_line[i] != MISS)
             IMG[i][mid_line[i]] = green;
+
+    test_varible[12] = state;
 }
 
 ////////////////////////////////////////////
@@ -1168,6 +1170,7 @@ void judge_type_road() {
 
     //printf("@@state=%d@@\n", state);
 
+    //³µ¿â
     if(state == stateStart){
         park_in();
     }

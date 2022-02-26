@@ -40,7 +40,10 @@ IFX_INTERRUPT(dma_ch5_isr, 0, ERU_DMA_INT_PRIO)
     }
     if(mt9v034_finish_flag == 1)
     {
-        image_main();
+        if((GPIO_Read(P13, 2) || GPIO_Read(P11, 3)) && parkStart == 0){
+            image_main();
+        }
+
         CTRL_servoMain();
         mt9v034_finish_flag = 0;
 

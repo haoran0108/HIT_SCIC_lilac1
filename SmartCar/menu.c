@@ -113,7 +113,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     preGear3 = MENU_fileInit(preGear3, 1, 1.0, "Present3", 3, none, &g3_Data7, NULL, NULL, &presentSpeed);
 
     /*展示翻页效果*/
-    display = MENU_fileInit(display, 1, 1.0, "DISPLAY", 5, none, &file3, &fileSave, NULL, &display1);
+    display = MENU_fileInit(display, 1, 1.0, "motor", 5, none, &file3, &fileSave, NULL, &display1);
     display1 = MENU_fileInit(display1, 50, 133.03, "LFKP", 2, dataint, NULL, &display2, &display, NULL);
     display2 = MENU_fileInit(display2, 40, 33.71, "LFKI", 3, dataint, &display1, &display3, NULL, NULL);
     display3 = MENU_fileInit(display3, 60, 2, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
@@ -125,13 +125,13 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display9 = MENU_fileInit(display9, 14, 9.02, "count2", 4, dataint, &display8, NULL, NULL, NULL);
 
     //数据写入flash
-    fileSave = MENU_fileInit(fileSave, 1, 1.0, "SAVE", 6, none, &display, &image, NULL, &saveGear1);
+    fileSave = MENU_fileInit(fileSave, 1, 1.0, "SAVE", 6, none, &display, NULL, NULL, &saveGear1);
     saveGear1 = MENU_fileInit(saveGear1, 1, 1.0, "SaveGear1", 2, none, NULL, &saveGear2, &fileSave, &g1_Data1);
     saveGear2 = MENU_fileInit(saveGear2, 1, 1.0, "SaveGear2", 3, none, &saveGear1, &saveGear3, NULL, &g2_Data1);
     saveGear3 = MENU_fileInit(saveGear3, 1, 1.0, "SaveGear3", 4, none, &saveGear2, NULL, NULL, &g3_Data1);
 
     //摄像头显示在oled上
-    image = MENU_fileInit(image, 1, 1.0, "IMAGE", 7, none, &fileSave, NULL, NULL, NULL);
+//    image = MENU_fileInit(image, 1, 1.0, "IMAGE", 7, none, &fileSave, NULL, NULL, NULL);
    // list = MENU_fileInit(list, 1, 1.0, "list", 2, none, &image, NULL, NULL, NULL);
 }
 
@@ -236,6 +236,12 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
     nodeptr_t printTemp;
     nodeptr_t dataRead;
 
+    if(GPIO_Read(P11, 3))
+    {
+        SmartCar_OLED_Fill(0);
+        MENU_showIMG();
+    }
+    else if(!GPIO_Read(P11, 3)){
     if (!GPIO_Read(P11, 2))//上
     {
         SmartCar_OLED_Fill(0);
@@ -308,11 +314,11 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
         {
             MENU_sectorSave(2, temp->forward);
         }
-        else if((strcmp(temp->name, "IMAGE")) == 0)
-        {
-            SmartCar_OLED_Fill(0);
-            MENU_showIMG();
-        }
+//        else if((strcmp(temp->name, "IMAGE")) == 0)
+//        {
+//            SmartCar_OLED_Fill(0);
+//            MENU_showIMG();
+//        }
         else if(temp->forward != NULL)
         {
             y = 1;
@@ -584,7 +590,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                 }
 
     }
-
+    }
     return temp;
 }
 

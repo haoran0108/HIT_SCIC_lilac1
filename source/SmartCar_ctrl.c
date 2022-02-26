@@ -268,6 +268,7 @@ void CTRL_servoPID()
     else if(servoPwm < 750)
         servoPwm = 750;
     servoError.lastError = servoError.currentError;
+    test_varible[11] = servoPwm;
 }
 
 float CTRL_FuzzyMemberShip(int midError)
@@ -380,6 +381,11 @@ void CTRL_servoMain()
         CTRL_servoPID();
     }
 
+    if(flagStop == 1)
+    {
+        CTRL_ParkStartServo(currentGyro);
+
+    }
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
 //    if(zebraCircle == display6.intValue || flagStop == 1)
@@ -479,29 +485,44 @@ void CTRL_motorMain()
         CTRL_gyroUpdate();
         CTRL_directionAngleGet();
 
-
-        if(currentGyro < -75)
-        {
-            parkStart = 0;
-        }
-//        if(currentGyro > 75)
+//
+//        if(currentGyro < -75)//正为左转 负为右转
 //        {
 //            parkStart = 0;
 //        }
+        if(currentGyro > 75)
+        {
+            parkStart = 0;
+        }
     }
 
-    CTRL_speedLoopPID();
-    CTRL_curLoopPID();
-//    CTRL_motorPID();
-    CTRL_motor();
+    if(flagStop == 1)
+    {
+        CTRL_gyroUpdate();
+        CTRL_directionAngleGet();
+        if(currentGyro > 75)
+        {
+             expectL = 0;
+             expectR = 0;
+        }
+
+    }
+    else if(flagStop == 0)
+    {
+        CTRL_speedLoopPID();
+        CTRL_curLoopPID();
+//       CTRL_motorPID();
+        CTRL_motor();
+    }
+
 
 
 }
 
 void CTRL_ParkStartServo(float gyro)
 {
-    servoPwm = (uint32)(gyro * (-0.8) + 760);
-//    servoPwm = (uint32)(gyro * (-0.8) + 880);
+//    servoPwm = (uint32)(gyro * (-0.8) + 760);
+    servoPwm = (uint32)(gyro * (-0.8) + 880);
 
     if(servoPwm > 890)
         servoPwm = 890;
