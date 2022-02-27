@@ -193,7 +193,7 @@ void design_cross_circle_in();
 void cross_circle_ing();
 
 //хК©Б
-void park_in();
+void carPark_in();
 //иообфб
 
 #endif //

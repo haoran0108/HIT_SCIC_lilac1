@@ -31,6 +31,8 @@ void SW_readSwitch()
         delayStop = 0;
         currentGyro = 0;
         parkStart = 1;
+        flagStop = 0;
+        parkStart = 1;
 //        CTRL_directionAngleClean();
     }
     else

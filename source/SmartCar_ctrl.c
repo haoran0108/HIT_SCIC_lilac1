@@ -176,7 +176,12 @@ void CTRL_gyroCircle()
 
 void CTRL_speedLoopPID()
 {
-    expectL = presentSpeed.intValue;//左轮
+    if(flagStop == 0)
+    {
+        expectL = presentSpeed.intValue;//左轮
+        expectR = presentSpeed.intValue;//右轮
+    }
+
     speedL = CTRL_speedGetLeft();
     test_varible[6] = speedL;
     errorML.currentError = expectL + speedL;//取偏差
@@ -190,7 +195,7 @@ void CTRL_speedLoopPID()
     if(currentExpectLF < 1000) currentExpectLF = 1000;
     else if(currentExpectLF > 3000) currentExpectLF = 3000;
 
-    expectR = presentSpeed.intValue;//右轮
+
     speedR = CTRL_speedGetRight();
     test_varible[5] = speedR;
     errorMR.currentError = expectR - speedR;//取偏差
@@ -376,7 +381,7 @@ void CTRL_servoMain()
         CTRL_ParkStartServo(currentGyro);
 
     }
-    else if(GPIO_Read(P13, 2) && parkStart == 0)
+    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
     {
         CTRL_servoPID();
     }
@@ -480,42 +485,16 @@ void CTRL_motorMain()
 //        expectR = (int32)(display7.intValue);
 //    }
 
-    if(GPIO_Read(P13, 2) && parkStart == 1)
-    {
-        CTRL_gyroUpdate();
-        CTRL_directionAngleGet();
+    CTRL_CarParkStart();
+    CTRL_CarParkStop();
 
-//
-//        if(currentGyro < -75)//正为左转 负为右转
-//        {
-//            parkStart = 0;
-//        }
-        if(currentGyro > 75)
-        {
-            parkStart = 0;
-        }
-    }
-
-    if(flagStop == 1)
-    {
-        CTRL_gyroUpdate();
-        CTRL_directionAngleGet();
-        if(currentGyro > 75)
-        {
-             expectL = 0;
-             expectR = 0;
-        }
-
-    }
-    else if(flagStop == 0)
-    {
+//    if(flagStop == 0)
+//    {
         CTRL_speedLoopPID();
         CTRL_curLoopPID();
 //       CTRL_motorPID();
         CTRL_motor();
-    }
-
-
+//    }
 
 }
 
@@ -588,6 +567,54 @@ void CTRL_motorDiffer()
 //        expectL = (int32)(presentSpeed.intValue);
 //        expectR = (int32)(presentSpeed.intValue);
 //    }
+}
+
+void CTRL_CarParkStart()
+{
+    if(GPIO_Read(P13, 2) && parkStart == 1)
+    {
+        CTRL_gyroUpdate();
+        CTRL_directionAngleGet();
+
+    //
+    //        if(currentGyro < -75)//正为左转 负为右转
+    //        {
+    //            parkStart = 0;
+    //        }
+        if(currentGyro > 75)
+        {
+            parkStart = 0;
+            currentGyro = 0;
+        }
+    }
+}
+
+void CTRL_CarParkStop()
+{
+    delayStop++;
+    if(flagStop == 1 && delayStop >= 100)
+    {
+        if(currentGyro > 75)
+        {
+            expectL = 0;
+            expectR = 0;
+//            currentGyro = 80;
+        }
+
+        else if(currentGyro <= 75)
+        {
+            expectL = presentSpeed.intValue;
+            expectR = presentSpeed.intValue;
+
+            CTRL_gyroUpdate();
+            CTRL_directionAngleGet();
+        }
+   //        CTRL_speedLoopPID();
+   //        CTRL_curLoopPID();
+   //       CTRL_motorPID();
+   //        CTRL_motor();
+
+    }
 }
 
 int16_t CTRL_speedGetRight()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚21.6和21.7对应T5
