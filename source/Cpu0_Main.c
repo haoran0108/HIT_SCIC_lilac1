@@ -1,11 +1,11 @@
 /**********************************************************************************************************************
  * \file Cpu0_Main.c
  * \copyright Copyright (C) Infineon Technologies AG 2019
- * 
- * Use of this file is subject to the terms of use agreed between (i) you or the company in which ordinary course of 
+ *
+ * Use of this file is subject to the terms of use agreed between (i) you or the company in which ordinary course of
  * business you are acting and (ii) Infineon Technologies AG or its licensees. If and as long as no such terms of use
  * are agreed, use of this file is subject to following:
- * 
+ *
  * Boost Software License - Version 1.0 - August 17th, 2003
  * 
  * Permission is hereby granted, free of charge, to any person or organization obtaining a copy of the software and 

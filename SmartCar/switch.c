@@ -30,9 +30,11 @@ void SW_readSwitch()
 //        zFlag = 0;
         delayStop = 0;
         currentGyro = 0;
-        parkStart = 1;
-        flagStop = 0;
-        parkStart = 1;
+//        parkStart = 1;
+//        flagStop = 0;
+        parkPosition = 0;
+        parkStart = 0;
+        state = 0;
 //        CTRL_directionAngleClean();
     }
     else

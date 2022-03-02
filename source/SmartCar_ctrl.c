@@ -33,7 +33,7 @@ float position = 0; positionX = 0, positionY = 0;
 float expectGyro = 0;
 float gyroK = 20;
 float dx = 0, dy = 0;
-int parkStart = 1;//陀螺仪进出车库
+int parkStart = 0;//陀螺仪进出车库
 //float currentAngle;
 
 /*电流环参数*/
@@ -243,7 +243,7 @@ void CTRL_Init()
 //    presentSpeedR.intValue = 1800;
 
     Pit_Init_ms(CCU6_0, PIT_CH0, 5);//定时器中断，给电机使用（0模块0通道）
-    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 820);//舵机
+    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 720);//舵机
     /*B、D给pwm，左右轮正转，AB右轮，CD左轮*/
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 20000, 2500);//B右正
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, 20000, 0);//D左正
@@ -270,8 +270,8 @@ void CTRL_servoPID()
     servoPwm = (uint32)(820 + presentServoD.floatValue * servoError.delta + fuzzyPB.floatValue * servoError.currentError);
     if(servoPwm > 890)
         servoPwm = 890;
-    else if(servoPwm < 750)
-        servoPwm = 750;
+    else if(servoPwm < 720)
+        servoPwm = 720;
     servoError.lastError = servoError.currentError;
     test_varible[11] = servoPwm;
 }
@@ -388,8 +388,17 @@ void CTRL_servoMain()
 
     if(flagStop == 1)
     {
-        CTRL_ParkStartServo(currentGyro);
+//        CTRL_ParkStartServo(currentGyro);
 
+        if(parkPosition == leftPark)
+        {
+            servoPwm = 890;
+        }
+        else if(parkPosition == rightPark)
+        {
+            servoPwm = 750;
+        }
+        else CTRL_servoPID();
     }
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
@@ -484,17 +493,17 @@ void CTRL_motorMain()
 //        expectL = (int32)(display7.intValue);
 //        expectR = (int32)(display7.intValue);
 //    }
+//
 
     CTRL_CarParkStart();
     CTRL_CarParkStop();
 
-//    if(flagStop == 0)
-//    {
-        CTRL_speedLoopPID();
-        CTRL_curLoopPID();
-//       CTRL_motorPID();
-        CTRL_motor();
-//    }
+
+    CTRL_speedLoopPID();
+    CTRL_curLoopPID();
+//         CTRL_motorPID();
+    CTRL_motor();
+
 
 }
 
@@ -591,17 +600,17 @@ void CTRL_CarParkStart()
 
 void CTRL_CarParkStop()
 {
-    delayStop++;
-    if(flagStop == 1 && delayStop >= 100)
+//    delayStop++;
+    if(flagStop == 1)
     {
-        if(currentGyro > 75)
+        if(currentGyro > 50 || currentGyro < -50)
         {
             expectL = 0;
             expectR = 0;
 //            currentGyro = 80;
         }
 
-        else if(currentGyro <= 75)
+        else if(currentGyro <= 50 && currentGyro >= -50)
         {
             expectL = presentSpeed.intValue;
             expectR = presentSpeed.intValue;
