@@ -84,13 +84,20 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     g3_Data6 = MENU_fileInit(g3_Data6, 119, 0.9, "GAP3", 7, datafloat, &g3_Data5, &g3_Data7, NULL, NULL);
     g3_Data7 = MENU_fileInit(g3_Data7, 119, 1.1, "motor-I", 2, datafloat, &g3_Data6, &preGear3, NULL, NULL);
 
-    currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 5, none, &gear3, NULL, NULL, &currentRTKP);
+//    currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 5, none, &gear3, &threshold, NULL, &currentRTKP);
     currentRTKP = MENU_fileInit(currentRTKP, 3, 4.0, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentK, NULL);
     currentRTKI = MENU_fileInit(currentRTKI, 2, 2.0, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
     currentLFKP = MENU_fileInit(currentLFKP, 3, 4.0, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
     currentLFKI = MENU_fileInit(currentLFKI, 2, 2.0, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
 //    currentKD = MENU_fileInit(currentKD, 2, 3.0, "motorKD", 4, datafloat, &currentRTKI, &expectC, NULL, NULL);
     expectC = MENU_fileInit(expectC, 2200, 9.5, "expect", 6, dataint, &currentLFKI, NULL, NULL, NULL);
+
+//    threshold = MENU_fileInit(threshold, 1, 1.0, "THRE", 6, none, &currentK, NULL, NULL, &wayThre);
+//    wayThre = MENU_fileInit(wayThre, 1, 1.0, "THREway", 2, dataint, NULL, &OTSU, &threshold, &OTSU_Klow);
+//    OTSU = MENU_fileInit(OTSU, 1, 1.0, "OTSU", 3, none, &wayThre, &partOTSU, NULL, &OTSU_Klow);
+//    OTSU_Klow = MENU_fileInit(OTSU_Klow, 1, 1.0, "K-low", 2, none, NULL, &OTSUKhigh, NULL, &OTSU_Klow);
+//
+//    partOtsu = MENU_fileInit(partOTSU, 1, 1.0, "partOTSU", 4, none, NULL, &OTSU, NULL, &part_Klow1);
 
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
     presentSpeed = MENU_fileInit(presentSpeed, 30, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
