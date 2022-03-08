@@ -3874,3 +3874,139 @@ void folk_road_out() {
         lastTwoState[5] = 0;
     }
 }
+
+////////////////////////////////////////////
+//功能： 三叉与十字的区分
+//输入：
+//输出：
+//备注：
+///////////////////////////////////////////
+void folk_or_cross() {
+
+    int flag1 = 1;
+    int flag2 = 1;
+    uint8_t ch = NEAR_LINE;
+    int dirction = 0;
+    for (int i = NEAR_LINE - 2; i > 20; i--) {
+        if (abs(my_road[i].connected[j_continue[i]].width - my_road[i + 1].connected[j_continue[i + 1]].width) < 4
+            && (my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width) > 4) {
+            ch = i;
+            if (abs(left_line[i - 1] - left_line[i]) < abs(right_line[i - 1] - right_line[i])) {
+                dirction = RIGHT;
+            }
+            else {
+                dirction = LEFT;
+            }
+            break;
+        }
+    }
+    uint8_t max = ch;
+    double cosmax = 1;
+    if (dirction == LEFT) {
+        cosmax = cos_angle(ch - 5, ch, ch + 5, right_line[ch - 5], right_line[ch], right_line[ch + 5]);
+        for (int i = ch; i >= ch - 30; i--) {
+            //printf("%d=%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]));
+            if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
+                && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) < 0
+                && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) > -0.8) {
+                cosmax = cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]);
+                max = i;
+            }
+        }
+    }
+    else if (dirction == RIGHT) {
+        cosmax = cos_angle(ch - 10, ch - 5, ch, left_line[ch - 10], left_line[ch - 5], left_line[ch]);
+        for (int i = ch; i >= ch - 30; i--) {
+            //printf("%d=%f\n", i, cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]));
+            if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
+                && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) < 0
+                && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) > -0.8) {
+                cosmax = cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]);
+                max = i;
+            }
+        }
+    }
+
+    if (dirction == RIGHT) {
+        double kl = calculate_slope(max, 105, LEFT);
+        double kr = calculate_slope(ch, 105, RIGHT);
+
+        if (fabs(kr) < 0.15) {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = ch;
+        }
+        else {
+            leftDownJumpPoint = max;
+            rightDownJumpPoint = ch;
+        }
+    }
+    else if (dirction == LEFT) {
+        double kl = calculate_slope(ch, 105, LEFT);
+        double kr = calculate_slope(max, 105, RIGHT);
+        if (fabs(kl) < 0.15) {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = ch;
+        }
+        else {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = max;
+        }
+    }
+
+    uint8_t leftSide[CAMERA_H];
+    uint8_t rightSide[CAMERA_H];
+
+    double kl = calculate_slope(leftDownJumpPoint, 105, LEFT);
+    double kr = calculate_slope(rightDownJumpPoint, 105, RIGHT);
+    uint8_t xl = left_line[105];
+    uint8_t xr = right_line[105];
+
+    for (int i = 105; i >= 10; i--) {
+        leftSide[i] = kl * (i - 105) + xl;
+        rightSide[i] = kr * (i - 105) + xr;
+    }
+
+    if (75 <= leftDownJumpPoint
+        && 75 <= rightDownJumpPoint) {
+        int sumC = 0;
+        for (int i = 5; i < 15; i++) {
+            for (int j = 1; j <= my_road[i].white_num; j++) {
+                if (abs(my_road[i].connected[j].left - leftSide[i]) <= 2
+                    && abs(my_road[i].connected[j].right - rightSide[i]) <= 2) {
+                    sumC++;
+                }
+            }
+        }
+        double pC = (double)sumC / 10;
+
+        if (pC < 0.7) {
+            flag2 = 0;
+        }
+        else {
+            flag2 = 0;
+        }
+    }
+
+    if (flag2 == 1) {
+        folk_road_in();
+    }
+    else if (flag1 == 1) {
+        if (flag1 == 1) {
+            //printf("state=%d,laststate=%d", state, lastState);
+            if (lastState[1] == 0) {
+                lastState[1] = 1;
+            }
+
+            else if (lastState[1] == 1) {
+                state = stateOutCrossStraight;
+                lastTwoState[1] = 0;
+                lastState[1] = 0;
+            }
+            else {
+                lastState[1] = 0;
+                lastTwoState[1] = 0;
+            }
+        }
+    }
+
+}
