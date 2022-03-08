@@ -43,6 +43,7 @@ int currentFlag = 0, currentTime = 0;
 uint16 currentLF = 0, currentRT = 0;
 int currentExpectLF = 2110, currentExpectRT = 2110;
 
+int testFlag = 0;
 
 void CTRL_gyroInit()
 {
@@ -367,10 +368,22 @@ void CTRL_motorPID()
 //    currentRT = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//ÓÒÂÖ
 //    currentLF = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//×óÂÖ
 
-
-    expectL = presentSpeed.intValue;//×óÂÖ
-    expectR = presentSpeed.intValue;//ÓÒÂÖ
-
+//    if(testFlag < 400)
+//    {
+//           expectL = presentSpeed.intValue;//×óÂÖ
+//           expectR = presentSpeed.intValue;//ÓÒÂÖ
+//    }
+//
+//    else if(testFlag >= 400)
+//    {
+//        expectL = 0;
+//        expectR = 0;
+//    }
+    if(stopFlag == 0 && flagStop == 0)
+    {
+        expectL = presentSpeed.intValue;//×óÂÖ
+        expectR = presentSpeed.intValue;//ÓÒÂÖ
+    }
 
     speedL = CTRL_speedGetLeft();
 
@@ -528,10 +541,11 @@ void CTRL_motorMain()
 //        expectR = (int32)(display7.intValue);
 //    }
 //
+//    testFlag++;
     if(stopFlag == 0 && flagStop == 0)
     {
-        CTRL_CarParkStart();
-        CTRL_CarParkStop();
+//        CTRL_CarParkStart();
+//        CTRL_CarParkStop();
 
 //
 //        CTRL_speedLoopPID();
