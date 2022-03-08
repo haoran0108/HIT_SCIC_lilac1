@@ -121,8 +121,8 @@
 #define stateCrossCircleIng 13
 
 #define stateCarPark 14
-#define leftPark 2
-#define rightPark -2
+#define leftPark -3
+#define rightPark 3
 /////////////////////////////
 
 extern uint8_t IMG[CAMERA_H][CAMERA_W];//二值化后图像数组
@@ -132,6 +132,7 @@ extern uint8_t* fullBuffer;//指向灰度图的首地址
 extern uint8_t mid_line[CAMERA_H];
 extern int state;
 extern int parkPosition;
+extern int stopFlag;
 typedef struct {
     int x;
     int y;
@@ -193,17 +194,17 @@ void image_main();
 void get_mid_line(void);
 void sharpen();
 void IPM_map();
-//void distortion();
+void distortion();
 //void show_dis(cv::Mat image_undisor);
 void my_memset(uint8_t* ptr, uint8_t num, uint8_t size);
 
 void transform();
-
+void orinary_two_line_history();
 //道路规划
 void find_part_jumppoint(int yStart, int yEnd, int type);
 double calculate_slope(int start, int end, int type);
 double calculate_slope_two_point(int yStart, int startType, int yEnd, int endType);
-int find_jump_point();
+void find_jump_point();
 void judge_type_road();
 int circle_360();
 
@@ -223,12 +224,12 @@ void design_island_start(int type);
 void design_island_in(int type);
 void island_ing(int type);
 void design_island_ing(int type);
-void island_turn(int type);
+void islandOrcross_circle(int type);
 void design_island_turn(int type);
-void island_out(int type);
+void island_turn(int type);
 void design_island_out(int type);
-void island_out_turn(int type);
-void design_island_out_turn(int type);
+//void island_out_turn(int type);
+//void design_island_out_turn(int type);
 void island_out_straight(int type);
 void design_island_final(int type);
 void island_straight(int type);
@@ -238,16 +239,20 @@ void island_straight(int type);
 void folk_road_in();
 void design_folkroad_in();
 void folk_road_out();
-
+double cos_angle(int x1,int x2,int x3,int y1,int y2,int y3);
 //十字回环
-void cross_circle_in();
-void design_cross_circle_in();
-void cross_circle_ing();
+//void cross_circle_in();
+//void design_cross_circle_in();
+void cross_circle_out();
+
+//上下坡
 
 //入库
 int carPark_in();
 void searchParkLine();
 
+//停车
+void protection();
 //上下坡
 
 #endif //

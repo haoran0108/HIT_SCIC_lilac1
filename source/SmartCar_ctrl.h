@@ -20,9 +20,13 @@
 #include "math.h"
 #include "SmartCar_ADC.h"
 
-#define PWM_MAX 5000
-#define PWM_MAX_N -6000
+#define PWM_MAX 4000
+#define PWM_MAX_N -8000
 #define pi 3.1415927
+
+/*圆形前瞻*/
+#define center_x 94
+#define center_y 106
 
 /*模糊PID*/
 #define PB 90
@@ -32,7 +36,6 @@
 #define NS -30
 #define NM -60
 #define NB -90
-#define fuzzyWidth 30
 
 extern uint32 servoPwm;
 extern int32 mySpeedL, mySpeedR;
@@ -44,11 +47,13 @@ extern int zebraFlag, zebraCircle;
 extern int flagStop, delayStop;
 extern float currentGyro;
 extern int parkStart;
+extern int flagCircleForsee;
+
 struct error
 {
-    int delta;
-    int currentError;
-    int lastError;
+    double delta;
+    double currentError;
+    double lastError;
 };
 typedef struct error error;
 
@@ -81,6 +86,8 @@ void CTRL_speedLoopPID();
 //  Sample usage:
 //-------------------------------------------------------------------------------------------------------------------
 void CTRL_servoPID();
+
+/*模糊PID*/
 float CTRL_FuzzyMemberShip(int midError);
 void CTRL_fuzzyPID();
 //-------------------------------------------------------------------------------------------------------------------
@@ -123,6 +130,9 @@ void CTRL_motorDiffer();
 void CTRL_CarParkStart();
 void CTRL_CarParkStop();
 
+/*圆形前瞻*/
+void CTRL_CircleForsee(int radius);
+void CTRL_CircleServoPID();
 
 
 //-------------------------------------------------------------------------------------------------------------------

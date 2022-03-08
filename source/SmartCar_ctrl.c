@@ -25,6 +25,8 @@ int32 speedL, speedR;//实际速度
 int32 mySpeedL = 0, mySpeedR = 0;
 float motorLFKP, motorLFKI, motorLFKD, motorRTKP, motorRTKI, motorRTKD;
 float currentKP_L, currentKI_L, currentKP_R, currentKI_R;
+double my_sin;//圆形前瞻
+int flagCircleForsee = 1;
 
 /*陀螺仪相关*/
 float deltaGyro = 0, currentGyro = 0, directionAngle = 0, lastGyro = 0;
@@ -54,14 +56,13 @@ void CTRL_gyroUpdate()
 {
     INV_ImuUpdate();
     deltaGyro = inv_gyro[2] * 0.05;
-    test_varible[9] = inv_gyro[2];
 
 }
 
 void CTRL_directionAngleGet()
 {
     currentGyro += deltaGyro * 0.1;
-    test_varible[10] = currentGyro;
+
 //    if(currentGyro > 180) currentGyro -= 360;
 //    else if(currentGyro < -180) currentGyro += 360;
 }
@@ -176,37 +177,39 @@ void CTRL_gyroCircle()
 
 void CTRL_speedLoopPID()
 {
-    if(flagStop == 0)
+    if(flagStop == 0 || stopFlag == 0)
     {
         expectL = presentSpeed.intValue;//左轮
         expectR = presentSpeed.intValue;//右轮
     }
 
     speedL = CTRL_speedGetLeft();
-    test_varible[6] = speedL;
     errorML.currentError = expectL + speedL;//取偏差
     sumErrorLF += errorML.currentError;
     errorML.delta = errorML.currentError - errorML.lastError;
     currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
 //    currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
-//    if(currentExpectLF < 0) currentExpectLF = -currentExpectLF;
-    test_varible[7] = (float)(currentExpectLF);
     errorML.lastError = errorML.currentError;//更新上一次误差
     if(currentExpectLF < 1000) currentExpectLF = 1000;
-    else if(currentExpectLF > 3000) currentExpectLF = 3000;
+    else if(currentExpectLF > 4000) currentExpectLF = 4000;
 
 
     speedR = CTRL_speedGetRight();
-    test_varible[5] = speedR;
     errorMR.currentError = expectR - speedR;//取偏差
     sumErrorRT += errorMR.currentError;
     errorMR.delta = errorMR.currentError - errorMR.lastError;
-//    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * sumErrorRT + motorRTKD * errorMR.delta);
-    currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
+    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
+//    currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
-    test_varible[4] = currentExpectRT;
     if(currentExpectRT < 1000) currentExpectRT = 1000;
-    else if(currentExpectRT > 3000) currentExpectRT = 3000;
+    else if(currentExpectRT > 4000) currentExpectRT = 4000;
+
+    test_varible[0] = speedL;
+    test_varible[1] = speedR;
+
+    test_varible[4] = currentExpectLF;
+    test_varible[5] = currentExpectRT;
+
 
 }
 
@@ -218,8 +221,10 @@ void CTRL_curLoopPID()
     currentRT = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//右轮
     currentLF = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//左轮
 
-    test_varible[0] = (float)(currentRT);
-    test_varible[1] = (float)(currentLF);
+    test_varible[2] = currentLF;
+    test_varible[3] = currentRT;
+
+
     currentLF_real = 4420 - currentLF;
 
     currentErrorR.currentError = currentExpectRT - currentRT;
@@ -243,13 +248,13 @@ void CTRL_Init()
 //    presentSpeedR.intValue = 1800;
 
     Pit_Init_ms(CCU6_0, PIT_CH0, 5);//定时器中断，给电机使用（0模块0通道）
-    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 720);//舵机
+    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 700);//舵机
     /*B、D给pwm，左右轮正转，AB右轮，CD左轮*/
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 20000, 2500);//B右正
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, 20000, 0);//D左正
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 20000, 0);//A右反
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, 20000, 2500);//C左负
-
+//
     SmartCar_Encoder_Init(GPT12_T5,IfxGpt120_T5INA_P21_7_IN,IfxGpt120_T5EUDA_P21_6_IN);
     SmartCar_Encoder_Init(GPT12_T6,IfxGpt120_T6INA_P20_3_IN,IfxGpt120_T6EUDA_P20_0_IN);
 
@@ -265,23 +270,22 @@ void CTRL_Init()
 void CTRL_servoPID()
 {
 
-    servoError.currentError = 88 - mid_line[presentVision.intValue];
+    servoError.currentError = 91 - mid_line[presentVision.intValue];
     servoError.delta = servoError.currentError - servoError.lastError;
-    servoPwm = (uint32)(820 + presentServoD.floatValue * servoError.delta + fuzzyPB.floatValue * servoError.currentError);
-    if(servoPwm > 890)
-        servoPwm = 890;
-    else if(servoPwm < 720)
-        servoPwm = 720;
+    servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + fuzzyPB.floatValue * servoError.currentError);
+    if(servoPwm > 780)
+        servoPwm = 780;
+    else if(servoPwm < 620)
+        servoPwm = 620;
     servoError.lastError = servoError.currentError;
-    test_varible[11] = servoPwm;
 }
 
 float CTRL_FuzzyMemberShip(int midError)
 {
     float membership[2] = {1, 0};
     float servoKP = 0;
-
-
+    float fuzzyWidth = 30;
+    test_varible[6] = midError;
 
     if(midError < PB && midError > PM)
     {
@@ -325,6 +329,12 @@ float CTRL_FuzzyMemberShip(int midError)
 
         servoKP = fuzzyNM.floatValue * membership[0] + fuzzyNB.floatValue * membership[1];
     }
+    membership[0] = fabs(membership[0]);
+    membership[1] = fabs(membership[1]);
+
+    test_varible[7] = membership[0];
+    test_varible[8] = membership[1];
+    test_varible[9] = servoKP;
 
     return servoKP;
 }
@@ -332,13 +342,20 @@ float CTRL_FuzzyMemberShip(int midError)
 void CTRL_fuzzyPID()
 {
     float fuzzyKP = 1;
-    servoError.currentError = 88 - mid_line[presentVision.intValue];
+    int servo_error = 0;
+    servoError.currentError = 90 - mid_line[presentVision.intValue];
     servoError.delta = servoError.currentError - servoError.lastError;
-
+//    servo_error = servoError.currentError;
+    test_varible[12] = servo_error;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
-    servoPwm = (uint32)(780 + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
+    test_varible[11] = fuzzyKP;
+    servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + 3.2 * servoError.currentError);
+    if(servoPwm > 780)
+        servoPwm = 780;
+    else if(servoPwm < 620)
+        servoPwm = 620;
 
-
+    test_varible[10] = servoPwm;
     servoError.lastError = servoError.currentError;
 
 }
@@ -347,15 +364,15 @@ void CTRL_fuzzyPID()
 void CTRL_motorPID()
 {
 
-    currentRT = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//右轮
-    currentLF = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//左轮
+//    currentRT = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//右轮
+//    currentLF = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//左轮
 
-    test_varible[0] = currentRT;
-    test_varible[1] = currentLF;
 
     expectL = presentSpeed.intValue;//左轮
+    expectR = presentSpeed.intValue;//右轮
+
+
     speedL = CTRL_speedGetLeft();
-    test_varible[8] = speedL;
 
     errorML.currentError = expectL + speedL;//取偏差
     errorML.delta = errorML.currentError - errorML.lastError;
@@ -363,43 +380,62 @@ void CTRL_motorPID()
     errorML.lastError = errorML.currentError;//更新上一次误差
 
 
-    expectR = presentSpeed.intValue;//右轮
     speedR = CTRL_speedGetRight();
-//    test_varible[3] = speedR;
     errorMR.currentError = expectR - speedR;//取偏差
     errorMR.delta = errorMR.currentError - errorMR.lastError;
     mySpeedR = (int32)(mySpeedR + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
 
+    test_varible[0] = speedL;
+    test_varible[1] = speedR;
+
+    test_varible[14] = mySpeedL;
+    test_varible[15] = mySpeedR;
 }
 
 
 void CTRL_servoMain()
 {
-    if(GPIO_Read(P13, 2) && parkStart == 1)
-    {
-        CTRL_ParkStartServo(currentGyro);
-
-    }
-    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
-    {
-        CTRL_servoPID();
-    }
-
-    if(flagStop == 1)
-    {
+//    if(GPIO_Read(P13, 2) && parkStart == 1)
+//    {
 //        CTRL_ParkStartServo(currentGyro);
+//
+//    }
+//    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
+//    {
+//        CTRL_servoPID();
+//    }
+////
+//    if(flagStop == 1)
+//    {
+////        CTRL_ParkStartServo(currentGyro);
+//
+//        if(parkPosition == -1)
+//        {
+//            servoPwm = 780;
+//        }
+//        else if(parkPosition == 1)
+//        {
+//            servoPwm = 620;
+//        }
+//        else CTRL_servoPID();
+//    }
 
-        if(parkPosition == leftPark)
-        {
-            servoPwm = 890;
-        }
-        else if(parkPosition == rightPark)
-        {
-            servoPwm = 750;
-        }
-        else CTRL_servoPID();
-    }
+
+//    CTRL_CircleForsee(presentVision.intValue);
+//    if(flagCircleForsee == 0)
+//    {
+//        CTRL_servoPID();
+
+//        flagCircleForsee = 1;
+//
+//    }
+//    else{
+//        CTRL_CircleServoPID();
+
+//    }
+
+    CTRL_fuzzyPID();
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
 //    if(zebraCircle == display6.intValue || flagStop == 1)
@@ -422,7 +458,6 @@ void CTRL_servoMain()
 
 
 }
-
 
 void CTRL_motor()
 {
@@ -481,8 +516,7 @@ void CTRL_motor()
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C
     }
 
-    test_varible[2] = pwmR;
-    test_varible[3] = pwmL;
+
 }
 
 
@@ -494,15 +528,27 @@ void CTRL_motorMain()
 //        expectR = (int32)(display7.intValue);
 //    }
 //
+    if(stopFlag == 0 && flagStop == 0)
+    {
+        CTRL_CarParkStart();
+        CTRL_CarParkStop();
 
-    CTRL_CarParkStart();
-    CTRL_CarParkStop();
+//
+//        CTRL_speedLoopPID();
+//        CTRL_curLoopPID();
+        CTRL_motorPID();
+        CTRL_motor();
+    }
+    else
+    {
+        expectL = 0;
+        expectR= 0;
+//        CTRL_speedLoopPID();
+//        CTRL_curLoopPID();
+        CTRL_motorPID();
+        CTRL_motor();
+    }
 
-
-    CTRL_speedLoopPID();
-    CTRL_curLoopPID();
-//         CTRL_motorPID();
-    CTRL_motor();
 
 
 }
@@ -510,13 +556,12 @@ void CTRL_motorMain()
 void CTRL_ParkStartServo(float gyro)
 {
 //    servoPwm = (uint32)(gyro * (-0.8) + 760);
-    servoPwm = (uint32)(gyro * (-0.8) + 880);
+    servoPwm = (uint32)(gyro * (-0.8) + 780);
 
-    if(servoPwm > 890)
-        servoPwm = 890;
-    else if(servoPwm < 750)
-        servoPwm = 750;
-    test_varible[11] = servoPwm;
+    if(servoPwm > 780)
+        servoPwm = 780;
+    else if(servoPwm < 620)
+        servoPwm = 620;
 
 }
 
@@ -624,6 +669,44 @@ void CTRL_CarParkStop()
    //        CTRL_motor();
 
     }
+}
+
+void CTRL_CircleForsee(int radius)
+{
+    uint32 radius_square;
+    uint32 bigger_radius_square;
+    uint32 distance;
+    double delta_x;
+    radius_square = radius * radius;
+    bigger_radius_square = (radius + 1) * (radius + 1);
+    for(int forsee = 85; forsee > 20; forsee--)
+    {
+        distance = (center_x - mid_line[forsee]) * (center_x - mid_line[forsee]) + (center_y - forsee) * (center_y - forsee);
+        if(distance >= radius_square && distance <= bigger_radius_square)
+        {
+            delta_x = (double)(center_x - mid_line[forsee]);
+            my_sin = delta_x / radius;
+
+            break;
+
+        }
+    }
+//    flagCircleForsee = 0;
+
+
+}
+
+void CTRL_CircleServoPID()
+{
+
+    servoError.currentError = my_sin;
+    servoError.delta = servoError.lastError - servoError.currentError;
+    servoPwm = (uint32)(740 + presentServoD.floatValue * servoError.delta + fuzzyPB.floatValue * servoError.currentError);
+    if(servoPwm > 820)
+        servoPwm = 820;
+    else if(servoPwm < 670)
+        servoPwm = 670;
+    servoError.lastError = servoError.currentError;
 }
 
 int16_t CTRL_speedGetRight()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚21.6和21.7对应T5

@@ -14,6 +14,7 @@ node_t gear1, g1_Data1, g1_Data2, g1_Data3, g1_Data4, g1_Data5, g1_Data6, g1_Dat
 node_t gear2, g2_Data1, g2_Data2, g2_Data3, g2_Data4, g2_Data5, g2_Data6, g2_Data7;
 node_t gear3, g3_Data1, g3_Data2, g3_Data3, g3_Data4, g3_Data5, g3_Data6, g3_Data7;
 node_t currentK, currentRTKP, currentRTKI, currentLFKP, currentLFKI, expectC;
+node_t Threshold, wayThre, OTSU1, OTSU_Klow, OTSU_Khigh, partOTSU, part_klow1, part_khigh1, part_klow2, part_khigh2;
 
 node_t dataEnd;//最后一个数据指向dataEnd
 node_t preGear1, preGear2, preGear3;
@@ -84,7 +85,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     g3_Data6 = MENU_fileInit(g3_Data6, 119, 0.9, "GAP3", 7, datafloat, &g3_Data5, &g3_Data7, NULL, NULL);
     g3_Data7 = MENU_fileInit(g3_Data7, 119, 1.1, "motor-I", 2, datafloat, &g3_Data6, &preGear3, NULL, NULL);
 
-//    currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 5, none, &gear3, &threshold, NULL, &currentRTKP);
+    currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 5, none, &gear3, &Threshold, NULL, &currentRTKP);
     currentRTKP = MENU_fileInit(currentRTKP, 3, 4.0, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentK, NULL);
     currentRTKI = MENU_fileInit(currentRTKI, 2, 2.0, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
     currentLFKP = MENU_fileInit(currentLFKP, 3, 4.0, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
@@ -92,25 +93,31 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    currentKD = MENU_fileInit(currentKD, 2, 3.0, "motorKD", 4, datafloat, &currentRTKI, &expectC, NULL, NULL);
     expectC = MENU_fileInit(expectC, 2200, 9.5, "expect", 6, dataint, &currentLFKI, NULL, NULL, NULL);
 
-//    threshold = MENU_fileInit(threshold, 1, 1.0, "THRE", 6, none, &currentK, NULL, NULL, &wayThre);
-//    wayThre = MENU_fileInit(wayThre, 1, 1.0, "THREway", 2, dataint, NULL, &OTSU, &threshold, &OTSU_Klow);
-//    OTSU = MENU_fileInit(OTSU, 1, 1.0, "OTSU", 3, none, &wayThre, &partOTSU, NULL, &OTSU_Klow);
-//    OTSU_Klow = MENU_fileInit(OTSU_Klow, 1, 1.0, "K-low", 2, none, NULL, &OTSUKhigh, NULL, &OTSU_Klow);
-//
-//    partOtsu = MENU_fileInit(partOTSU, 1, 1.0, "partOTSU", 4, none, NULL, &OTSU, NULL, &part_Klow1);
+    Threshold = MENU_fileInit(Threshold, 1, 1.0, "THRE", 6, none, &currentK, NULL, NULL, &wayThre);//上下左右
+    wayThre = MENU_fileInit(wayThre, 1, 1.0, "THREway", 2, dataint, NULL, &OTSU1, &Threshold, NULL);
+    OTSU1 = MENU_fileInit(OTSU1, 1, 1.0, "OTSU", 3, none, &wayThre, &partOTSU, NULL, &OTSU_Klow);
+    OTSU_Klow = MENU_fileInit(OTSU_Klow, 1, 1.0, "K-low", 2, dataint, NULL, &OTSU_Khigh, &OTSU1, NULL);
+    OTSU_Khigh = MENU_fileInit(OTSU_Khigh, 1, 1.0, "K-higt", 3, dataint, &OTSU_Klow, NULL, NULL, NULL);
+
+    partOTSU = MENU_fileInit(partOTSU, 1, 1.0, "partOTSU", 4, none, &OTSU1, NULL, NULL, &part_klow1);
+    part_klow1 = MENU_fileInit(part_klow1, 1, 1.0, "partlow1", 2, dataint, NULL, &part_khigh1, &partOTSU, NULL);
+    part_khigh1 = MENU_fileInit(part_khigh1, 1, 1.0, "parthigh1", 3, dataint, &part_klow1, &part_klow2, NULL, NULL);
+    part_klow2 = MENU_fileInit(part_klow2, 1, 1.0, "partlow2", 4, dataint, &part_khigh1, &part_khigh2, NULL, NULL);
+    part_khigh2 = MENU_fileInit(part_khigh2, 1, 1.0, "parthigh2", 5, dataint, &part_khigh2, NULL, NULL, NULL);
+
 
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
-    presentSpeed = MENU_fileInit(presentSpeed, 30, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
+    presentSpeed = MENU_fileInit(presentSpeed, 40, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
     presentTHRE = MENU_fileInit(presentTHRE, 160, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
-    presentVision = MENU_fileInit(presentVision, 70, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
-    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 2.4, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
-    fuzzyPM = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
-    fuzzyPS = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
-    fuzzyZO = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
-    fuzzyNS = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
-    fuzzyNM = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
-    fuzzyNB = MENU_fileInit(fuzzyPB, 1, 1.8, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
-    presentServoD = MENU_fileInit(presentServoD, 1, 4.7, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
+    presentVision = MENU_fileInit(presentVision, 74, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
+    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 3.2, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
+    fuzzyPM = MENU_fileInit(fuzzyPB, 1, 3.0, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
+    fuzzyPS = MENU_fileInit(fuzzyPB, 1, 2.7, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
+    fuzzyZO = MENU_fileInit(fuzzyPB, 1, 2.5, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
+    fuzzyNS = MENU_fileInit(fuzzyPB, 1, 2.7, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
+    fuzzyNM = MENU_fileInit(fuzzyPB, 1, 3.0, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
+    fuzzyNB = MENU_fileInit(fuzzyPB, 1, 3.2, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
+    presentServoD = MENU_fileInit(presentServoD, 1, 5.8, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
     gap = MENU_fileInit(presentMotorP, 1, 0.9, "GAP", 7, datafloat, &presentServoD, &bottomData, NULL, NULL);
 //    presentMotorI = MENU_fileInit(presentMotorI, 1, 190.0, "preMotorI", 2, datafloat, &gap, &bottomData, NULL, NULL);
 //    presentMotorP = MENU_fileInit(gap, 8, 250, "preMotorP", 3, datafloat, &presentMotorI, &bottomData, NULL, NULL);

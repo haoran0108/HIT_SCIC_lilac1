@@ -55,13 +55,13 @@ int core1_main(void)
     /* !!WATCHDOG1 IS DISABLED HERE!!
      * Enable the watchdog and service it periodically if it is required
      */
-    IfxScuWdt_disableCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
+//    IfxScuWdt_disableCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
 
     /* Wait for CPU sync event */
     IfxCpu_emitEvent(&g_cpuSyncEvent);
     IfxCpu_waitEvent(&g_cpuSyncEvent, 1);
     SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,921600,3);
-    char transport_num = 20;
+    char transport_num = 16;
 
     while(1)
     {
