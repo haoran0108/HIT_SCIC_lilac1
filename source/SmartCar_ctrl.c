@@ -43,6 +43,7 @@ int currentFlag = 0, currentTime = 0;
 uint16 currentLF = 0, currentRT = 0;
 int currentExpectLF = 2110, currentExpectRT = 2110;
 
+int testFlag = 0;
 
 void CTRL_gyroInit()
 {
@@ -367,9 +368,17 @@ void CTRL_motorPID()
 //    currentRT = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//ÓÒÂÖ
 //    currentLF = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//×óÂÖ
 
+    if(testFlag < 400)
+    {
+           expectL = presentSpeed.intValue;//×óÂÖ
+           expectR = presentSpeed.intValue;//ÓÒÂÖ
+    }
 
-    expectL = presentSpeed.intValue;//×óÂÖ
-    expectR = presentSpeed.intValue;//ÓÒÂÖ
+    else if(testFlag >= 400)
+    {
+        expectL = 0;
+        expectR = 0;
+    }
 
 
     speedL = CTRL_speedGetLeft();
@@ -528,26 +537,27 @@ void CTRL_motorMain()
 //        expectR = (int32)(display7.intValue);
 //    }
 //
-    if(stopFlag == 0 && flagStop == 0)
-    {
-        CTRL_CarParkStart();
-        CTRL_CarParkStop();
+    testFlag++;
+//    if(stopFlag == 0 && flagStop == 0)
+//    {
+//        CTRL_CarParkStart();
+//        CTRL_CarParkStop();
 
 //
 //        CTRL_speedLoopPID();
 //        CTRL_curLoopPID();
         CTRL_motorPID();
         CTRL_motor();
-    }
-    else
-    {
-        expectL = 0;
-        expectR= 0;
-//        CTRL_speedLoopPID();
-//        CTRL_curLoopPID();
-        CTRL_motorPID();
-        CTRL_motor();
-    }
+//    }
+//    else
+//    {
+//        expectL = 0;
+//        expectR= 0;
+////        CTRL_speedLoopPID();
+////        CTRL_curLoopPID();
+//        CTRL_motorPID();
+//        CTRL_motor();
+//    }
 
 
 

@@ -48,7 +48,7 @@ extern int flagStop, delayStop;
 extern float currentGyro;
 extern int parkStart;
 extern int flagCircleForsee;
-
+extern int testFlag;
 struct error
 {
     double delta;
