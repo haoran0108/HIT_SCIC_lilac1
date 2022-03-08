@@ -207,6 +207,7 @@ double calculate_slope_two_point(int yStart, int startType, int yEnd, int endTyp
 void find_jump_point();
 void judge_type_road();
 int circle_360();
+double cos_angle();
 
 //Ê®×Ö
 void cross_in();
@@ -216,6 +217,8 @@ void design_cross_in();
 void design_cross_out();
 void design_straight_route(int y_start, int y_end, int type);
 double variance(int y_start, int y_end, int type);
+void folk_or_cross();
+
 
 //»·µº
 void decide_miss();
