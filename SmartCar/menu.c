@@ -9,12 +9,16 @@
 
 node_t file1;
 node_t file2, file3;
-node_t neihuanK, gyroP, gyroD, gyrodatabottom;
+node_t CrossPD, CrossCircle, IslandPD, FolkPD;
 node_t gear1, g1_Data1, g1_Data2, g1_Data3, g1_Data4, g1_Data5, g1_Data6, g1_Data7;
 node_t gear2, g2_Data1, g2_Data2, g2_Data3, g2_Data4, g2_Data5, g2_Data6, g2_Data7;
 node_t gear3, g3_Data1, g3_Data2, g3_Data3, g3_Data4, g3_Data5, g3_Data6, g3_Data7;
 node_t currentK, currentRTKP, currentRTKI, currentLFKP, currentLFKI, expectC;
 node_t Threshold, wayThre, OTSU1, OTSU_Klow, OTSU_Khigh, partOTSU, part_klow1, part_khigh1, part_klow2, part_khigh2;
+node_t Cross_PB, Cross_PM, Cross_PS, Cross_ZO, Cross_NS, Cross_NM, Cross_NB, Cross_DS, Cross_DB;
+node_t circle_PB, circle_PM, circle_PS, circle_ZO, circle_NS, circle_NM, circle_NB, circle_DS, circle_DB;
+node_t Island_PB, Island_PM, Island_PS, Island_ZO, Island_NS, Island_NM, Island_NB, Island_DS, Island_DB;
+node_t Folk_PB, Folk_PM, Folk_PS, Folk_ZO, Folk_NS, Folk_NM, Folk_NB, Folk_DS, Folk_DB;
 
 node_t dataEnd;//最后一个数据指向dataEnd
 node_t preGear1, preGear2, preGear3;
@@ -52,11 +56,56 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     //利用函数fileInit()初始化文件参数
     file1 = MENU_fileInit(file1, 1, 1.0, "GEAR", 2, none, NULL, &file2, NULL, &gear1);
     file2 = MENU_fileInit(file2, 1, 1.0, "PRESENT", 3, none, &file1, &file3, NULL, &presentSpeed);
-    file3 = MENU_fileInit(file3, 1, 1.0, "Gyro1", 4, dataint, &file2, &display, NULL, &neihuanK);
-    neihuanK = MENU_fileInit(neihuanK, 1, 0.5, "K", 2, datafloat, NULL, &gyroP, &file3, NULL);
-    gyroP = MENU_fileInit(gyroP, 1, 0.5, "GyroKP", 3, datafloat, &neihuanK, &gyroD, NULL, NULL);
-    gyroD = MENU_fileInit(gyroD, 1, 0, "GyroKD", 4, datafloat, &gyroP, &gyrodatabottom, NULL, NULL);
-    gyrodatabottom = MENU_fileInit(gyrodatabottom, 1, 1.0, "bottom", 5, datafloat, &gyroD, NULL, NULL, NULL);
+    file3 = MENU_fileInit(file3, 1, 1.0, "SERVO-PD", 4, none, &file2, &display, NULL, &CrossPD);
+    CrossPD = MENU_fileInit(CrossPD, 1, 0.5, "cross", 2, none, NULL, &CrossCircle, &file3, &Cross_PB);
+    CrossCircle = MENU_fileInit(CrossCircle, 1, 0.5, "crs-circle", 3, none, &CrossPD, &IslandPD, NULL, &circle_PB);
+    IslandPD = MENU_fileInit(IslandPD, 1, 0, "island", 4, none, &CrossCircle, &FolkPD, NULL, &Island_PB);
+    FolkPD = MENU_fileInit(FolkPD, 1, 1.0, "folk", 5, none, &IslandPD, NULL, NULL, &Folk_PB);
+
+    Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
+    Cross_PM = MENU_fileInit(Cross_PM, 1, 0.5, "crossPM", 3, datafloat, &Cross_PB, &Cross_PS, NULL, NULL);
+    Cross_PS = MENU_fileInit(Cross_PS, 1, 0.5, "crossPS", 4, datafloat, &Cross_PM, &Cross_ZO, NULL, NULL);
+    Cross_ZO = MENU_fileInit(Cross_ZO, 1, 0.5, "crossZO", 5, datafloat, &Cross_PS, &Cross_NS, NULL, NULL);
+    Cross_NS = MENU_fileInit(Cross_NS, 1, 0.5, "crossNS", 6, datafloat, &Cross_ZO, &Cross_NM, NULL, NULL);
+    Cross_NM = MENU_fileInit(Cross_NM, 1, 0.5, "crossNM", 7, datafloat, &Cross_NS, &Cross_NB, NULL, NULL);
+    Cross_NB = MENU_fileInit(Cross_NB, 1, 0.5, "crossNB", 2, datafloat, &Cross_NM, &Cross_DS, NULL, NULL);
+    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
+    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
+
+    circle_PB = MENU_fileInit(circle_PB, 1, 0.5, "circlePB", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
+    circle_PM = MENU_fileInit(circle_PM, 1, 0.5, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
+    circle_PS = MENU_fileInit(circle_PS, 1, 0.5, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
+    circle_ZO = MENU_fileInit(circle_ZO, 1, 0.5, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
+    circle_NS = MENU_fileInit(circle_NS, 1, 0.5, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
+    circle_NM = MENU_fileInit(circle_NM, 1, 0.5, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
+    circle_NB = MENU_fileInit(circle_NB, 1, 0.5, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
+    circle_DS = MENU_fileInit(circle_DS, 1, 0.5, "D-SMALL", 3, datafloat, &circle_NB, &circle_DB, NULL, NULL);
+    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
+
+    Island_PB = MENU_fileInit(Island_PB, 1, 0.5, "IslandPB", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
+    Island_PM = MENU_fileInit(Island_PM, 1, 0.5, "IslandPM", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
+    Island_PS = MENU_fileInit(Island_PS, 1, 0.5, "IslandPS", 4, datafloat, &Island_PM, &Island_ZO, NULL, NULL);
+    Island_ZO = MENU_fileInit(Island_ZO, 1, 0.5, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
+    Island_NS = MENU_fileInit(Island_NS, 1, 0.5, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
+    Island_NM = MENU_fileInit(Island_NM, 1, 0.5, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
+    Island_NB = MENU_fileInit(Island_NB, 1, 0.5, "IslandNB", 2, datafloat, &Island_NM, &Island_DS, NULL, NULL);
+    Island_DS = MENU_fileInit(Island_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Island_NB, &Island_DB, NULL, NULL);
+    Island_DB = MENU_fileInit(Island_DB, 1, 0.5, "D-BIG", 4, datafloat, &Island_DS, NULL, NULL, NULL);
+
+    Folk_PB = MENU_fileInit(Folk_PB, 1, 0.5, "FolkPB", 2, datafloat, NULL, &Folk_PM, &FolkPD, NULL);
+    Folk_PM = MENU_fileInit(Folk_PM, 1, 0.5, "FolkPM", 3, datafloat, &Folk_PB, &Folk_PS, NULL, NULL);
+    Folk_PS = MENU_fileInit(Folk_PS, 1, 0.5, "FolkPS", 4, datafloat, &Folk_PM, &Folk_ZO, NULL, NULL);
+    Folk_ZO = MENU_fileInit(Folk_ZO, 1, 0.5, "FolkZO", 5, datafloat, &Folk_PS, &Folk_NS, NULL, NULL);
+    Folk_NS = MENU_fileInit(Folk_NS, 1, 0.5, "FolkNS", 6, datafloat, &Folk_ZO, &Folk_NM, NULL, NULL);
+    Folk_NM = MENU_fileInit(Folk_NM, 1, 0.5, "FolkNM", 7, datafloat, &Folk_NS, &Folk_NB, NULL, NULL);
+    Folk_NB = MENU_fileInit(Folk_NB, 1, 0.5, "FolkNB", 2, datafloat, &Folk_NM, &Folk_DS, NULL, NULL);
+    Folk_DS = MENU_fileInit(Folk_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Folk_NB, &Folk_DB, NULL, NULL);
+    Folk_DB = MENU_fileInit(Folk_DB, 1, 0.5, "D-BIG", 4, datafloat, &Folk_DS, NULL, NULL, NULL);
+
+
+
+
+
 
     gear1 = MENU_fileInit(gear1, 1, 1.0, "GearSlow", 2, none, NULL, &gear2, &file1, &g1_Data1);//慢速档
     g1_Data1 = MENU_fileInit(g1_Data1, 75, 32.3, "speed1", 2, dataint, NULL, &g1_Data2, &gear1, NULL);
