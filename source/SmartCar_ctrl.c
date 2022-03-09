@@ -28,6 +28,8 @@ float currentKP_L, currentKI_L, currentKP_R, currentKI_R;
 double my_sin;//圆形前瞻
 int flagCircleForsee = 1;
 
+float fuzzy_PB = 3.2, fuzzy_PM = 3.0, fuzzy_PS = 2.9, fuzzy_ZO = 2.7, fuzzy_NS = 2.9, fuzzy_NM = 3.0, fuzzy_NB = 3.2, fuzzy_Dbig = 6.6, fuzzy_Dsmall = 5.8;
+
 /*陀螺仪相关*/
 float deltaGyro = 0, currentGyro = 0, directionAngle = 0, lastGyro = 0;
 float averageSpeed = 0;
@@ -114,13 +116,13 @@ void CTRL_circleControl(int direction, float r)
     {
         expectGyro = directionAngle - 90;
 
-        expectGyro += delta * neihuanK.floatValue;
+//        expectGyro += delta * neihuanK.floatValue;
     }
     else//0为逆时针
     {
         expectGyro = directionAngle + 90;
 
-        expectGyro -= delta * neihuanK.floatValue;
+//        expectGyro -= delta * neihuanK.floatValue;
     }
 
 
@@ -128,14 +130,14 @@ void CTRL_circleControl(int direction, float r)
 
 void CTRL_waihuan()
 {
-    servoError.currentError = expectGyro - currentGyro;
-    servoError.delta = servoError.currentError - servoError.lastError;
-    servoPwm = (uint32)(675 + gyroD.floatValue * servoError.delta + gyroP.floatValue * servoError.currentError);
-    if(servoPwm > 750)
-        servoPwm = 750;
-    else if(servoPwm < 600)
-        servoPwm = 600;
-    servoError.lastError = servoError.currentError;
+//    servoError.currentError = expectGyro - currentGyro;
+//    servoError.delta = servoError.currentError - servoError.lastError;
+//    servoPwm = (uint32)(675 + IslandPD.floatValue * servoError.delta + CrossCircle.floatValue * servoError.currentError);
+//    if(servoPwm > 750)
+//        servoPwm = 750;
+//    else if(servoPwm < 600)
+//        servoPwm = 600;
+//    servoError.lastError = servoError.currentError;
 }
 
 void CTRL_directionAngleClean()
@@ -721,6 +723,79 @@ void CTRL_CircleServoPID()
     else if(servoPwm < 670)
         servoPwm = 670;
     servoError.lastError = servoError.currentError;
+}
+
+void CTRL_ServoPID_Determine()
+{
+    if(state == stateStart)
+    {
+        fuzzy_PB = fuzzyPB.floatValue;
+        fuzzy_PM = fuzzyPM.floatValue;
+        fuzzy_PS = fuzzyPS.floatValue;
+        fuzzy_ZO = fuzzyZO.floatValue;
+        fuzzy_NS = fuzzyNS.floatValue;
+        fuzzy_NM = fuzzyNM.floatValue;
+        fuzzy_NB = fuzzyNB.floatValue;
+        fuzzy_Dsmall = presentServoD.floatValue;
+        fuzzy_Dbig = presentServoD.floatValue;
+
+    }
+
+    else if(state == 1 || state == 2)//cross
+    {
+        fuzzy_PB = Cross_PB.floatValue;
+        fuzzy_PM = Cross_PM.floatValue;
+        fuzzy_PS = Cross_PS.floatValue;
+        fuzzy_ZO = Cross_ZO.floatValue;
+        fuzzy_NS = Cross_NS.floatValue;
+        fuzzy_NM = Cross_NM.floatValue;
+        fuzzy_NB = Cross_NB.floatValue;
+        fuzzy_Dsmall = Cross_DS.floatValue;
+        fuzzy_Dbig = Cross_DB.floatValue;
+
+    }
+
+    else if(state == 4 || state == 5)//crossCircle
+    {
+        fuzzy_PB = circle_PB.floatValue;
+        fuzzy_PM = circle_PM.floatValue;
+        fuzzy_PS = circle_PS.floatValue;
+        fuzzy_ZO = circle_ZO.floatValue;
+        fuzzy_NS = circle_NS.floatValue;
+        fuzzy_NM = circle_NM.floatValue;
+        fuzzy_NB = circle_NB.floatValue;
+        fuzzy_Dsmall = circle_DS.floatValue;
+        fuzzy_Dbig = circle_DB.floatValue;
+
+    }
+
+    else if(state == 4)//island-45678
+    {
+        fuzzy_PB = Island_PB.floatValue;
+        fuzzy_PM = Island_PM.floatValue;
+        fuzzy_PS = Island_PS.floatValue;
+        fuzzy_ZO = Island_ZO.floatValue;
+        fuzzy_NS = Island_NS.floatValue;
+        fuzzy_NM = Island_NM.floatValue;
+        fuzzy_NB = Island_NB.floatValue;
+        fuzzy_Dsmall = Island_DS.floatValue;
+        fuzzy_Dbig = Island_DB.floatValue;
+
+    }
+
+    else if(state == 11)//folk
+    {
+        fuzzy_PB = Folk_PB.floatValue;
+        fuzzy_PM = Folk_PM.floatValue;
+        fuzzy_PS = Folk_PS.floatValue;
+        fuzzy_ZO = Folk_ZO.floatValue;
+        fuzzy_NS = Folk_NS.floatValue;
+        fuzzy_NM = Folk_NM.floatValue;
+        fuzzy_NB = Folk_NB.floatValue;
+        fuzzy_Dsmall = Folk_DS.floatValue;
+        fuzzy_Dbig = Folk_DB.floatValue;
+
+    }
 }
 
 int16_t CTRL_speedGetRight()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚21.6和21.7对应T5

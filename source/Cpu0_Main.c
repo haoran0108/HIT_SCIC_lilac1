@@ -118,7 +118,7 @@ int core0_main(void)
 //                Delay_ms(STM0,100);
 //                SW_readSwitch();
 //            }
-//
+
             SW_readSwitch();//发车键
 
 //        SmartCar_ImgUpload(fullBuffer,120,188);//传图像给电脑，和uart一起用
