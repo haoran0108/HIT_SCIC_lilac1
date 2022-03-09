@@ -2744,6 +2744,16 @@ void cross_over() {
         flag = 1;
     }
 
+    int sumB=0;
+    for(int i=1;i<=10;i++){
+        if(my_road[i].white_num==0){
+            sumB++;
+        }
+    }
+
+    if(sumB>=9){
+        flag=1;
+    }
 
     if (flag == 1) {
         if (lastTwoState[1] == 0 && lastState[1] == 0) {
@@ -2753,6 +2763,9 @@ void cross_over() {
             lastState[1] = 1;
         }
         else if (lastState[1] == 1 && lastTwoState[1] == 1) {
+            if(sumB>=9){
+
+            }
             state = 0;
             lastState[1] = 0;
             lastTwoState[1] = 0;
