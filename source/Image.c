@@ -1459,7 +1459,7 @@ void judge_type_road() {
     }
     //Èý²æ
     if (state == stateStart) {
-        //folk_road_in();
+        folk_road_in();
     }
     if (state == stateFolkRoadIn) {
         folk_road_out();
@@ -3117,7 +3117,7 @@ void  islandOrcross_circle(int type) {
     rightSide[106] = right_line[106];
 
     //road_range straightRoad[CAMERA_H];
-    islandtype = RIGHT;
+    //islandtype = RIGHT;
         if (islandtype == RIGHT) {
             int flag1 = 1;
             int flag2 = 1;
@@ -3633,7 +3633,7 @@ void design_island_out(int type) {
                 if (rightSide[i] < right_line[i]) {
                     right_line[i] = rightSide[i];
                 }
-                if (right_line[i] + d > left_line[i]) {
+                if (right_line[i] + d < left_line[i]) {
                     left_line[i] = right_line[i] + d;
                 }
             }
@@ -4382,8 +4382,8 @@ void folk_or_cross() {
         rightSide[i] = kr * (i - 105) + xr;
     }
 
-    if (75 <= leftDownJumpPoint
-        && 75 <= rightDownJumpPoint) {
+    if (95 <= leftDownJumpPoint
+        && 95 <= rightDownJumpPoint) {
         int sumC = 0;
         for (int i = 5; i < 15; i++) {
             for (int j = 1; j <= my_road[i].white_num; j++) {
@@ -4404,7 +4404,7 @@ void folk_or_cross() {
     }
 
     if (flag2 == 1) {
-        folk_road_in();
+//        folk_road_in();
     }
     else if (flag1 == 1) {
         if (flag1 == 1) {
