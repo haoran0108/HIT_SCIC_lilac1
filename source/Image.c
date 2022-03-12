@@ -2902,7 +2902,7 @@ void island_start(int type) {
     }
     else if (islandtype == LEFT) {
 
-        if (fabs(calculate_slope(5, 25, RIGHT) - calculate_slope(85, 105, LEFT)) > 0.1) {
+        if (fabs(calculate_slope(5, 25, RIGHT) - calculate_slope(85, 105, RIGHT)) > 0.1) {
             flag = 0;
         }
 
@@ -2934,7 +2934,7 @@ void island_start(int type) {
                 break;
             }
         }
-        if (pointC > 104 || pointC < 30) {
+        if (pointC > 104 || pointC < 50) {
             flag = 0;
         }
         //////////printf("flag=%d\n", flag);
@@ -3174,7 +3174,7 @@ void  islandOrcross_circle(int type) {
             uint8_t j_str[CAMERA_H];
             //自己寻找赛道
             for (int i = 105; i > 0; i--) {
-                if (abs(leftSide[i] - leftSide[i + 1]) > 5) {
+                if (abs(leftSide[i] - left_line[i]) > 5) {
                     for (int j = 1; j <= my_road[i].white_num; j++) {
                         if (abs(my_road[i].connected[j].left - leftSide[i + 1]) <= 5) {
                             leftSide[i] = my_road[i].connected[j].left;
@@ -3258,7 +3258,7 @@ void  islandOrcross_circle(int type) {
                     sumk++;
                 }
             }
-            if ((double)(sumk) / 5 > 0.6) {
+            if ((double)(sumk) / 5 > 0.8) {
                 flag1 = 1;
             }
 
@@ -3324,7 +3324,7 @@ void  islandOrcross_circle(int type) {
             //自己寻找赛道
             uint8_t j_str[CAMERA_H];
             for (int i = 105; i > 0; i--) {
-                if (abs(rightSide[i] - rightSide[i + 1]) > 5) {
+                if (abs(rightSide[i] - right_line[i]) > 5) {
                     for (int j = 1; j <= my_road[i].white_num; j++) {
                         if (abs(my_road[i].connected[j].right - rightSide[i + 1]) <= 5) {
                             rightSide[i] = my_road[i].connected[j].right;
@@ -3337,7 +3337,7 @@ void  islandOrcross_circle(int type) {
                     rightSide[i] = right_line[i];
                     j_str[i] = j_continue[i];
                 }
-
+                leftSide[i]=my_road[i].connected[j_str[i]].left;
             }
 
             double kd;
@@ -3390,8 +3390,8 @@ void  islandOrcross_circle(int type) {
                 flag2 = 0;
             }
 
-            double kl = calculate_slope(70, 90, LEFT);
-            double kr = calculate_slope(70, 90, RIGHT);
+            double kl = calculate_slope(50, 70, LEFT);
+            double kr = calculate_slope(50, 70, RIGHT);
 
             if (fabs(kl - kr) < 0.3) {
                 flag2 = 0;
@@ -3401,11 +3401,27 @@ void  islandOrcross_circle(int type) {
             }
 
             uint8_t sumk = 0;
-            for (int i = 1; i < 5; i++) {
-                if (my_road[i].white_num == 0) {
-                    flag1 = 1;
-                }
-            }
+                        for (int i = 1; i < 5; i++) {
+                            if (my_road[i].white_num == 0) {
+                                sumk++;
+                            }
+                        }
+                        if ((double)(sumk) / 5 > 0.8) {
+                            flag1 = 1;
+                        }
+
+//                        if (fabs(ku - kd) <= 0.1) {
+//                            flag1 = 0;
+//                        }
+//                        else {
+//                            flag2 = 0;
+//                        }
+
+                        for (int i = 1; i < 5; i++) {
+                                        if (my_road[i].white_num == 0) {
+                                            flag1 = 1;
+                                        }
+                                    }
             if (flag1 == 1) {
                 if (lastTwoState[3] == 0 && lastState[3] == 0) {
                     lastTwoState[3] = 1;
@@ -3506,13 +3522,13 @@ void design_island_turn(int type) {
         }
         //////////////printf("k=%f", k);
     }
-    else if (type == LEFT) {
+    else if (islandtype == LEFT) {
         double k = calculate_slope(70, 90, RIGHT);
         int x = right_line[106];
         for (int i = 104; i > 5; i--) {
             leftSide[i] = k * (i - 106) + x;
         }
-        if (k > -0.2 && k <= 0.5) {
+        if (k > -0.2 && k <= 0.1) {
             uint8_t min[CAMERA_H];
             for (int i = 70; i > 5; i--) {
                 min[i] = abs(right_line[i] - leftSide[i]);
@@ -3709,8 +3725,7 @@ void design_island_out(int type) {
                 top = i;
                 lOr = RIGHT;
                 break;
-            }
-            if (left_line[i] > right_line[105] && left_line[i + 1] <= right_line[105]) {
+            }else if (left_line[i] > right_line[105] && left_line[i + 1] <= right_line[105]) {
                 top = i;
                 lOr = LEFT;
                 break;
@@ -3735,7 +3750,10 @@ void design_island_out(int type) {
         }
         else {
             uint8_t leftSide[CAMERA_H];
-            double k = calculate_slope(100,105,LEFT);
+            double k = calculate_slope(85,95,LEFT);
+            if(k<0){
+                k=-k;
+            }
             int x = left_line[100];
             int d = right_line[100] - left_line[100];
             for (int i = 100; i > 10; i--) {
@@ -3760,8 +3778,7 @@ void design_island_out(int type) {
                 top = i;
                 lOr = LEFT;
                 break;
-            }
-            if (right_line[i] < left_line[105] && right_line[i + 1] >= left_line[105]) {
+            }else if(right_line[i] < left_line[105] && right_line[i + 1] >= left_line[105]) {
                 top = i;
                 lOr = RIGHT;
                 break;
@@ -3786,7 +3803,10 @@ void design_island_out(int type) {
         }
         else {
             uint8_t rightSide[CAMERA_H];
-            double k = calculate_slope(100, 105, RIGHT);
+            double k = calculate_slope(85, 95, RIGHT);
+            if(k>0){
+                k=-k;
+            }
             int x = right_line[100];
             int d = left_line[100] - right_line[100];
             for (int i = 100; i > 10; i--) {
@@ -4496,7 +4516,7 @@ void folk_road_in() {
                     sumW++;
                 }
             }
-            if (sumW <= 23) {
+            if (sumW <= 20) {
                 flag = 0;
             }
 
@@ -4505,7 +4525,7 @@ void folk_road_in() {
                 flag = 0;
             }
 
-            if (minL < 30 || minR < 30 || minL>98 || minR>98) {
+            if (minL < 30 || minR < 30 || minL>102 || minR>102) {
                 flag = 0;
             }
             if (calculate_slope(minL - 10, minL, LEFT) * calculate_slope(minR - 5, minR, RIGHT) > 0) {
