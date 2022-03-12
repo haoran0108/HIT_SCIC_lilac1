@@ -37,7 +37,7 @@ float position = 0; positionX = 0, positionY = 0;
 float expectGyro = 0;
 float gyroK = 20;
 float dx = 0, dy = 0;
-int parkStart = 0;//陀螺仪进出车库
+int parkStart = 1;//陀螺仪进出车库
 //float currentAngle;
 
 /*电流环参数*/
@@ -349,7 +349,7 @@ void CTRL_fuzzyPID()
     servoError.currentError = 90 - mid_line[presentVision.intValue];
     servoError.delta = servoError.currentError - servoError.lastError;
 //    servo_error = servoError.currentError;
-    test_varible[12] = servo_error;
+//    test_varible[12] = servo_error;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
     test_varible[11] = fuzzyKP;
     servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + 3.2 * servoError.currentError);
@@ -402,40 +402,41 @@ void CTRL_motorPID()
     errorMR.lastError = errorMR.currentError;//更新上一次误差
 
     test_varible[0] = speedL;
-    test_varible[1] = speedR;
+//    test_varible[1] = speedR;
 
-    test_varible[14] = mySpeedL;
-    test_varible[15] = mySpeedR;
+//    test_varible[14] = mySpeedL;
+//    test_varible[15] = mySpeedR;
 }
 
 
 void CTRL_servoMain()
 {
-//    if(GPIO_Read(P13, 2) && parkStart == 1)
-//    {
-//        CTRL_ParkStartServo(currentGyro);
-//
-//    }
-//    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
-//    {
-//        CTRL_servoPID();
-//    }
+    if(GPIO_Read(P13, 2) && parkStart == 1)
+    {
+        CTRL_ParkStartServo(currentGyro);
+
+    }
+    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
+    {
+        CTRL_servoPID();
+    }
 ////
-    if(flagStop == 1)
+    else if(flagStop == 1)
     {
 //        CTRL_ParkStartServo(currentGyro);
 
-        if(parkPosition == 1)
-        {
+//        if(parkPosition == 1)
+//        {
+//            servoPwm = 780;
+//        }
+//        else if(parkPosition == 2)
+//        {
             servoPwm = 780;
-        }
-        else if(parkPosition == 2)
-        {
-            servoPwm = 620;
-        }
+//        }
 
     }
-    else CTRL_fuzzyPID();
+//    else CTRL_fuzzyPID();
+//    else CTRL_servoPID();
 
 //    CTRL_CircleForsee(presentVision.intValue);
 //    if(flagCircleForsee == 0)
@@ -547,7 +548,6 @@ void CTRL_motorMain()
     if(stopFlag == 0 && flagStop == 0)
     {
         CTRL_CarParkStart();
-        CTRL_CarParkStop();
 
 //
 //        CTRL_speedLoopPID();
@@ -557,6 +557,8 @@ void CTRL_motorMain()
     }
     else
     {
+        CTRL_CarParkStop();
+
         expectL = 0;
         expectR= 0;
 //        CTRL_speedLoopPID();
@@ -664,6 +666,7 @@ void CTRL_CarParkStop()
 //    delayStop++;
     if(flagStop == 1)
     {
+//        test_varible[12] = ;
         if(currentGyro > 50 || currentGyro < -50)
         {
             expectL = 0;

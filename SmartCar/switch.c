@@ -37,6 +37,8 @@ void SW_readSwitch()
         state = 0;
         flagCircleForsee = 1;
         stopFlag = 0;
+        carParkTimes = 0;
+        carParkDelay = 0;
 //        CTRL_directionAngleClean();
     }
     else

@@ -66,6 +66,7 @@ int core1_main(void)
     while(1)
     {
 
+        test_varible[1] = currentGyro;
 
         SmartCar_VarUpload(test_varible, transport_num);
 

@@ -14,7 +14,9 @@ int lastState[10]={0};
 int featureLeft;
 int featureRight;
 int islandtype;
-
+int carParkX;
+int carParkTimes = 0;
+int carParkDelay = 0;
 
 jump_point partJumpPoint[CAMERA_H];
 all_range white_range[CAMERA_H];//所有白条子
@@ -51,7 +53,7 @@ int rightSharpPoint = 119;
 
 //车库
 int parkPosition = 0;
-
+int leftPark = 0,rightPark = 0;
 uint8_t missLeft[CAMERA_H];
 uint8_t missRight[CAMERA_H];
 
@@ -1370,6 +1372,8 @@ void image_main()
 
     judge_type_road();
     test_varible[13] = state;
+    test_varible[14] = carParkTimes;
+    test_varible[15] = carParkDelay;
 //    }
 
     for (int i = NEAR_LINE; i > FAR_LINE; i--)
@@ -1396,7 +1400,7 @@ void judge_type_road() {
 
     //十字
     if (state == stateStart) {
-        cross_in();
+//        cross_in();
     }
     if (state == stateInCrossStraight) {
        // cross_out();
@@ -1465,16 +1469,31 @@ void judge_type_road() {
         folk_road_out();
         design_folkroad_in();
     }
-//
-//    if(state == stateStart)
-//    {
-//        parkPosition = carPark_in();
-//
-//    }
-//    if(state == stateCarPark)
-//    {
-//        searchParkLine();
-//    }
+
+    if(state == stateStart)
+    {
+        carPark_in();
+
+    }
+    if(state == stateCarPark)
+    {
+
+        if(carParkTimes < 2)
+        {
+            design_park();
+            carParkDelay += 1;
+
+            if(carParkDelay > 100)
+            {
+                state = 0;
+            }
+        }
+        else if(carParkTimes == 2)
+        {
+            searchParkLine();
+
+        }
+    }
     ////////////////printf("@@state=%d@@\n", state);
 }
 
@@ -2815,7 +2834,7 @@ void island_start(int type) {
 //  ////////printf("right=%d,", rightUpJumpPoint);
 //  一边是直线是个非常重要的事情，直线可以展示以下几个性质：
 //  拐弯的方向，小车与道路之间的关系
-//
+
     //寻找直线
 
 
@@ -2839,7 +2858,7 @@ void island_start(int type) {
         //单边直线
 
 
-        if (fabs(calculate_slope(20, 30, LEFT) - calculate_slope(90, 100, LEFT)) > 0.1) {
+        if (fabs(calculate_slope(5, 25, LEFT) - calculate_slope(85, 105, LEFT)) > 0.1) {
             flag = 0;
         }
 
@@ -2878,7 +2897,7 @@ void island_start(int type) {
     }
     else if (islandtype == LEFT) {
 
-        if (fabs(calculate_slope(20, 30, RIGHT) - calculate_slope(90, 100, LEFT)) > 0.1) {
+        if (fabs(calculate_slope(5, 25, RIGHT) - calculate_slope(85, 105, LEFT)) > 0.1) {
             flag = 0;
         }
 
@@ -3031,8 +3050,8 @@ void island_ing(int type) {
 
     if (islandtype == RIGHT) {
         int sum = 0;
-        for (int i = 95; i > 75; i--) {
-            if (right_line[i] - left_line[i] > 45) {
+        for (int i = 65; i > 45; i--) {
+            if (right_line[i] - left_line[i] < 45) {
                 sum++;
             }
         }
@@ -3043,8 +3062,8 @@ void island_ing(int type) {
     }
     else if (islandtype == LEFT) {
         int sum = 0;
-        for (int i = 95; i > 75; i--) {
-            if (right_line[i] - left_line[i] > 45) {
+        for (int i = 65; i > 45; i--) {
+            if (right_line[i] - left_line[i] < 45) {
                 sum++;
             }
         }
@@ -3254,7 +3273,7 @@ void  islandOrcross_circle(int type) {
                     lastState[3] = 1;
                 }
                 else if (lastState[3] == 1 && lastTwoState[3] == 1) {
-                    state = stateCrossCircleIn;
+                    state = 0;
                     lastState[3] = 0;
                     lastTwoState[3] = 0;
                 }
@@ -3390,7 +3409,7 @@ void  islandOrcross_circle(int type) {
                     lastState[3] = 1;
                 }
                 else if (lastState[3] == 1 && lastTwoState[3] == 1) {
-                    state = stateCrossCircleIn;
+                    state = 0;
                     lastState[3] = 0;
                     lastTwoState[3] = 0;
                 }
@@ -3841,36 +3860,66 @@ void cross_circle_out() {
 }
 
 
-int carPark_in()
+//int carPark_in()
+//{
+//
+//    int gapNumber = 0;
+//    for (int i = 30; i < 80; i++)
+//    {
+//
+//        if (my_road[i].white_num > 3 && (my_road[i].connected[my_road[i].white_num].width > 15 || my_road[i].connected[1].width > 15))
+//        {
+//            for (int gap = 1; gap < j_continue[i]; gap++)
+//            {
+//                if (my_road[i].connected[gap].width <= 6)
+//                {
+//                    gapNumber++;
+//                }
+//                if (gapNumber >= 4)
+//                {
+//                    state = 14;
+////                    flagStop = 1;
+//
+//                    if(my_road[i].connected[my_road[i].white_num].width > 15)
+//                    {
+//                        return 1;
+//                    }
+////                    else if(my_road[i].connected[j_continue[i]].width > 15)
+////                    {
+////                        return leftPark;
+////                    }
+//                    else return -1;
+//                    //////////////////////printf("white_num=%d", my_road[i].white_num);
+//                    break;
+//                }
+//            }
+//
+//        }
+//
+//    }
+//}
+
+
+void carPark_in()
 {
-
+    int flag=0;
     int gapNumber = 0;
-    for (int i = 30; i < 80; i++)
+    for (carParkX = 15; carParkX < 100; carParkX++)
     {
-
-        if (my_road[i].white_num > 3 && (my_road[i].connected[my_road[i].white_num].width > 15 || my_road[i].connected[1].width > 15))
+        if (my_road[carParkX].white_num > 4 && (my_road[carParkX].connected[my_road[carParkX].white_num].width > 20 || my_road[carParkX].connected[1].width > 20))
         {
-            for (int gap = 1; gap < j_continue[i]; gap++)
+
+            for (int gap = 1; gap < my_road[carParkX].white_num; gap++)
             {
-                if (my_road[i].connected[gap].width <= 6)
+                if (my_road[carParkX].connected[gap].width <= 6)
                 {
                     gapNumber++;
                 }
                 if (gapNumber >= 4)
                 {
-                    state = 14;
-//                    flagStop = 1;
+                    flag = 1;
+                    //flagStop = 1;
 
-                    if(my_road[i].connected[my_road[i].white_num].width > 15)
-                    {
-                        return 1;
-                    }
-//                    else if(my_road[i].connected[j_continue[i]].width > 15)
-//                    {
-//                        return leftPark;
-//                    }
-                    else return -1;
-                    //////////////////////printf("white_num=%d", my_road[i].white_num);
                     break;
                 }
             }
@@ -3878,14 +3927,34 @@ int carPark_in()
         }
 
     }
+    if (flag == 1) {
+            if (lastState[6] == 0) {
+                lastState[6] = 1;
+            }
+
+            else if (lastState[6] == 1) {
+                state = 14;
+                carParkTimes += 1;
+                lastTwoState[6] = 0;
+                lastState[6] = 0;
+            }
+            else {
+                lastState[6] = 0;
+                lastTwoState[6] = 0;
+            }
+        }
+        else if (flag == 0) {
+            lastState[6] = 0;
+            lastTwoState[6] = 0;
+        }
 }
+
 
 void searchParkLine()
 {
     int gapNumber = 0;
-    if(parkPosition == -1)
-    {
-        for(int i = 70; i < 100; i++)
+
+        for(int i = 65; i < 100; i++)
         {
             if (my_road[i].white_num > 3 && (my_road[i].connected[my_road[i].white_num].width > 15 || my_road[i].connected[1].width > 15))
             {
@@ -3894,23 +3963,152 @@ void searchParkLine()
                     break;
             }
         }
+
+
+//    else if(parkPosition == 1)
+//    {
+//        for(int i = 55; i < 100; i++)
+//        {
+//            if (my_road[i].white_num > 3 && (my_road[i].connected[my_road[i].white_num].width > 15 || my_road[i].connected[1].width > 15))
+//            {
+//                flagStop = 1;
+//
+//                break;
+//            }
+//        }
+//    }
+
+
+}
+
+//
+void design_park()
+{
+    int down_delta = 3, up_delta = 3;
+    int down_jump_point, up_jump_point;
+    float slope, k_left, k_right;
+    float kLeftUp, kRightUp;
+    int i, j;
+    int right_side[105];
+    int connected = 0;
+
+    for (int fixLine = 5; fixLine < 95; fixLine++)
+    {
+        if (rightPark == 1)
+        {
+            left_line[fixLine] = my_road[fixLine].connected[1].left;
+
+        }
+        else if (leftPark == 1)
+        {
+            right_line[fixLine] = my_road[fixLine].connected[my_road[fixLine].white_num].right;
+        }
     }
 
-    else if(parkPosition == 1)
+    for (i = 105; i > 10; i--)
     {
-        for(int i = 55; i < 100; i++)
-        {
-            if (my_road[i].white_num > 3 && (my_road[i].connected[my_road[i].white_num].width > 15 || my_road[i].connected[1].width > 15))
-            {
-                flagStop = 1;
 
-                break;
+        if (left_line[i] - left_line[i - 5] > down_delta)
+        {
+            down_jump_point = left_line[i];
+            IMG[i][left_line[i] + 1] = purple;
+
+            if (leftPark == 0 && rightPark == 0)
+            {
+                leftPark = 1;
+                rightPark = 0;
             }
+
+            break;
+        }
+        else if (right_line[i - 5] - right_line[i] > down_delta)
+        {
+            down_jump_point = right_line[i];
+
+            if (leftPark == 0 && rightPark == 0)
+            {
+                rightPark = 1;
+                leftPark = 0;
+            }
+
+            break;
+
+        }
+        if (i == 11)
+        {
+            down_jump_point = MISS;
+        }
+    }
+
+    //printf("leftpark = %d, rightpark = %d/n",leftPark, rightPark);
+
+    for (j = 5; j < 75; j++)
+    {
+        if (left_line[j] - left_line[j + 1] > up_delta && leftPark == 1 && carParkX > 75)
+        {
+            up_jump_point = left_line[j];
+            leftPark = 1;
+            break;
+        }
+        else if (right_line[j + 1] - right_line[j] > up_delta && rightPark == 1 && carParkX > 75)
+        {
+            up_jump_point = right_line[j];
+            rightPark = 1;
+            IMG[j][right_line[j] - 1] = purple;
+
+            break;
+        }
+        if (j == 74)
+        {
+            up_jump_point = MISS;
         }
     }
 
 
+
+    for (int miss_x = 5; miss_x < 95; miss_x++)
+    {
+
+        if (rightPark == 1)
+        {
+
+            if (carParkX < 50)
+            {
+                k_left = calculate_slope(65, 85, LEFT);
+
+                right_line[miss_x] = k_left * (miss_x - 90) + left_line[90] + 43;
+
+            }
+            else if(carParkX >= 50)
+            {
+                k_left = calculate_slope(15, 35, LEFT);
+                right_line[miss_x] = k_left * (miss_x - 15) + left_line[15] + 43;
+
+            }
+
+        }
+        else if (leftPark == 1)
+        {
+            if (carParkX < 50)
+            {
+                k_right = calculate_slope(65, 85, RIGHT);
+
+                left_line[miss_x] = k_right * (miss_x - 90) + right_line[90] - 43;
+
+            }
+            else if (carParkX >= 50)
+            {
+                k_right = calculate_slope(15, 35, RIGHT);
+                left_line[miss_x] = k_right * (miss_x - 15) + right_line[15] - 43;
+
+            }
+        }
+
+    }
+
+
 }
+
 
 void protection() {
 //    /oid stop()

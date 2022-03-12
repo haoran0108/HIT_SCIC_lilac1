@@ -121,8 +121,7 @@
 #define stateCrossCircleIng 13
 
 #define stateCarPark 14
-#define leftPark -3
-#define rightPark 3
+
 /////////////////////////////
 
 extern uint8_t IMG[CAMERA_H][CAMERA_W];//二值化后图像数组
@@ -133,6 +132,8 @@ extern uint8_t mid_line[CAMERA_H];
 extern int state;
 extern int parkPosition;
 extern int stopFlag;
+extern int carParkTimes;
+extern int carParkDelay;
 typedef struct {
     int x;
     int y;
@@ -252,8 +253,9 @@ void cross_circle_out();
 //上下坡
 
 //入库
-int carPark_in();
+void carPark_in();
 void searchParkLine();
+void design_park();
 
 //停车
 void protection();
