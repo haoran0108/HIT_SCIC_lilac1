@@ -387,6 +387,11 @@ void CTRL_motorPID()
         expectR = presentSpeed.intValue;//ÓÒÂÖ
     }
 
+    else
+    {
+        expectL = 0;
+        expectR = 0;
+    }
     speedL = CTRL_speedGetLeft();
 
     errorML.currentError = expectL + speedL;//È¡Æ«²î
@@ -413,8 +418,8 @@ void CTRL_servoMain()
 {
     if(GPIO_Read(P13, 2) && parkStart == 1)
     {
-        CTRL_ParkStartServo(currentGyro);
-
+//        CTRL_ParkStartServo(currentGyro);
+        servoPwm = 780;
     }
     else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
     {
@@ -549,11 +554,6 @@ void CTRL_motorMain()
     {
         CTRL_CarParkStart();
 
-//
-//        CTRL_speedLoopPID();
-//        CTRL_curLoopPID();
-        CTRL_motorPID();
-        CTRL_motor();
     }
     else
     {
@@ -563,10 +563,11 @@ void CTRL_motorMain()
         expectR= 0;
 //        CTRL_speedLoopPID();
 //        CTRL_curLoopPID();
-        CTRL_motorPID();
-        CTRL_motor();
+
     }
 
+    CTRL_motorPID();
+    CTRL_motor();
 
 
 }

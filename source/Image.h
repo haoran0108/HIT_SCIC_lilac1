@@ -249,7 +249,8 @@ double cos_angle(int x1,int x2,int x3,int y1,int y2,int y3);
 //void cross_circle_in();
 //void design_cross_circle_in();
 void cross_circle_out();
-
+void cross_circle_out_patch();
+void design_cross_circle_out();
 //ÉÏÏÂÆÂ
 
 //Èë¿â
