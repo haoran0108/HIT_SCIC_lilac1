@@ -156,17 +156,17 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
-    presentSpeed = MENU_fileInit(presentSpeed, 40, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
+    presentSpeed = MENU_fileInit(presentSpeed, 55, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
     presentTHRE = MENU_fileInit(presentTHRE, 160, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
-    presentVision = MENU_fileInit(presentVision, 74, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
-    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 3.2, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
+    presentVision = MENU_fileInit(presentVision, 70, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
+    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 3.1, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
     fuzzyPM = MENU_fileInit(fuzzyPB, 1, 3.0, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
     fuzzyPS = MENU_fileInit(fuzzyPB, 1, 2.7, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
     fuzzyZO = MENU_fileInit(fuzzyPB, 1, 2.5, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
     fuzzyNS = MENU_fileInit(fuzzyPB, 1, 2.7, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
     fuzzyNM = MENU_fileInit(fuzzyPB, 1, 3.0, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
     fuzzyNB = MENU_fileInit(fuzzyPB, 1, 3.2, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
-    presentServoD = MENU_fileInit(presentServoD, 1, 5.8, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
+    presentServoD = MENU_fileInit(presentServoD, 1, 6.0, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
     gap = MENU_fileInit(presentMotorP, 1, 0.9, "GAP", 7, datafloat, &presentServoD, &bottomData, NULL, NULL);
 //    presentMotorI = MENU_fileInit(presentMotorI, 1, 190.0, "preMotorI", 2, datafloat, &gap, &bottomData, NULL, NULL);
 //    presentMotorP = MENU_fileInit(gap, 8, 250, "preMotorP", 3, datafloat, &presentMotorI, &bottomData, NULL, NULL);
@@ -181,7 +181,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display2 = MENU_fileInit(display2, 40, 33.71, "LFKI", 3, dataint, &display1, &display3, NULL, NULL);
     display3 = MENU_fileInit(display3, 60, 2, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
     display4 = MENU_fileInit(display4, 50, 1, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
-    display5 = MENU_fileInit(display5, 5, 2.701, "delaytime", 6, dataint, &display4, &display6, NULL, NULL);
+    display5 = MENU_fileInit(display5, 80, 2.701, "ParkDelay", 6, dataint, &display4, &display6, NULL, NULL);
     display6 = MENU_fileInit(display6, 2, 91.881, "round", 7, dataint, &display5, &display7, NULL, NULL);
     display7 = MENU_fileInit(display7, 100, 1.1, "SPEEDUP", 2, dataint, &display6, &display8, NULL, NULL);
     display8 = MENU_fileInit(display8, 55, 7.91, "count1", 3, dataint, &display7, &display9, NULL, NULL);

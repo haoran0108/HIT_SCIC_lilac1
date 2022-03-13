@@ -1458,6 +1458,7 @@ void judge_type_road() {
 
     //////////////////printf("@@state=%d@@\n", state);
 
+    test_varible[1] = islandtype;
 
 
 
@@ -1488,8 +1489,9 @@ void judge_type_road() {
             design_park();
             carParkDelay += 1;
 
-            if(carParkDelay > 100)
+            if(carParkDelay > display5.intValue)
             {
+                carParkDelay = 0;
                 state = 0;
             }
         }
@@ -2982,7 +2984,7 @@ void design_island_start(int type) {
                     }
                 }
 
-                double k = calculate_slope(30, 90, LEFT);
+                double k = calculate_slope(85, 100, LEFT);
 
                 for (int i = 100; i >= 10; i--) {
                     right_line[i] = k * (i - yMin) + xMin;
@@ -2997,7 +2999,7 @@ void design_island_start(int type) {
                     }
                 }
 
-                double k = calculate_slope(30, 90, RIGHT);
+                double k = calculate_slope(85, 100, RIGHT);
 
                 for (int i = 100; i >= 10; i--) {
                     left_line[i] = k * (i - yMin) + xMin;
@@ -3021,7 +3023,7 @@ void design_island_in(int type) {
                 }
             }
 
-            double k = calculate_slope(30, 90, LEFT);
+            double k = calculate_slope(85, 100, LEFT);
 
             for (int i = 100; i >= 10; i--) {
                 right_line[i] = k * (i - yMin) + xMin;
@@ -3036,7 +3038,7 @@ void design_island_in(int type) {
                 }
             }
 
-            double k = calculate_slope(30, 90, RIGHT);
+            double k = calculate_slope(85, 100, RIGHT);
 
             for (int i = 100; i >= 10; i--) {
                 left_line[i] = k * (i - yMin) + xMin;
@@ -3117,7 +3119,7 @@ void design_island_ing(int type) {
             }
         }
 
-        double k = calculate_slope(30, 90, LEFT);
+        double k = calculate_slope(85, 100, LEFT);
 
         for (int i = 100; i >= 10; i--) {
             right_line[i] = k * (i - yMin) + xMin;
@@ -3132,7 +3134,7 @@ void design_island_ing(int type) {
             }
         }
 
-        double k = calculate_slope(30, 90, RIGHT);
+        double k = calculate_slope(85, 100, RIGHT);
 
         for (int i = 100; i >= 10; i--) {
             left_line[i] = k * (i - yMin) + xMin;
@@ -3524,7 +3526,7 @@ void design_island_turn(int type) {
     }
     else if (islandtype == LEFT) {
         double k = calculate_slope(70, 90, RIGHT);
-        int x = right_line[106];
+        int x = left_line[106];
         for (int i = 104; i > 5; i--) {
             leftSide[i] = k * (i - 106) + x;
         }
@@ -3533,8 +3535,8 @@ void design_island_turn(int type) {
             for (int i = 70; i > 5; i--) {
                 min[i] = abs(right_line[i] - leftSide[i]);
                 for (int j = 1; j <= my_road[i].white_num; j++) {
-                    if (abs(my_road[i].connected[j].left - leftSide[i]) < min[i]) {
-                        min[i] = abs(my_road[i].connected[j].left - leftSide[i]);
+                    if (abs(my_road[i].connected[j].right - leftSide[i]) < min[i]) {
+                        min[i] = abs(my_road[i].connected[j].right - leftSide[i]);
                         break;
                     }
                 }
@@ -3968,10 +3970,10 @@ void cross_circle_out() {
     double k2 = calculate_slope(90, 105, RIGHT);
     double k3;
     if (islandtype == RIGHT) {
-        k3 = calculate_slope(15, 30, LEFT);
+        k3 = calculate_slope(10, 25, LEFT);
     }
     else {
-        k3 = calculate_slope(15, 30, RIGHT);
+        k3 = calculate_slope(10, 25, RIGHT);
     }
     if (fabs(k1 - k2) >= 0.2 ) {
         flag = 0;
@@ -4512,11 +4514,11 @@ void folk_road_in() {
             }
             int sumW = 0;
             for (int i = FAR_LINE; i <= 25; i++) {
-                if (whiteNum[i] <= 25) {
+                if (whiteNum[i] <= 22) {
                     sumW++;
                 }
             }
-            if (sumW <= 20) {
+            if (sumW < 20) {
                 flag = 0;
             }
 

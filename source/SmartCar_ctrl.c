@@ -37,7 +37,7 @@ float position = 0; positionX = 0, positionY = 0;
 float expectGyro = 0;
 float gyroK = 20;
 float dx = 0, dy = 0;
-int parkStart = 1;//陀螺仪进出车库
+int parkStart = 0;//陀螺仪进出车库
 //float currentAngle;
 
 /*电流环参数*/
@@ -251,7 +251,7 @@ void CTRL_Init()
 //    presentSpeedR.intValue = 1800;
 
     Pit_Init_ms(CCU6_0, PIT_CH0, 5);//定时器中断，给电机使用（0模块0通道）
-    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 700);//舵机
+    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 630);//舵机
     /*B、D给pwm，左右轮正转，AB右轮，CD左轮*/
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 20000, 2500);//B右正
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, 20000, 0);//D左正
@@ -367,9 +367,6 @@ void CTRL_fuzzyPID()
 void CTRL_motorPID()
 {
 
-//    currentRT = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//右轮
-//    currentLF = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//左轮
-
 //    if(testFlag < 400)
 //    {
 //           expectL = presentSpeed.intValue;//左轮
@@ -387,11 +384,6 @@ void CTRL_motorPID()
         expectR = presentSpeed.intValue;//右轮
     }
 
-    else
-    {
-        expectL = 0;
-        expectR = 0;
-    }
     speedL = CTRL_speedGetLeft();
 
     errorML.currentError = expectL + speedL;//取偏差
@@ -419,7 +411,7 @@ void CTRL_servoMain()
     if(GPIO_Read(P13, 2) && parkStart == 1)
     {
 //        CTRL_ParkStartServo(currentGyro);
-        servoPwm = 780;
+        servoPwm = 620;
     }
     else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
     {
@@ -436,7 +428,7 @@ void CTRL_servoMain()
 //        }
 //        else if(parkPosition == 2)
 //        {
-            servoPwm = 780;
+            servoPwm = 620;
 //        }
 
     }
@@ -457,6 +449,7 @@ void CTRL_servoMain()
 //    }
 
 //    CTRL_fuzzyPID();
+    test_varible[10] = servoPwm;
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
 //    if(zebraCircle == display6.intValue || flagStop == 1)
@@ -550,20 +543,25 @@ void CTRL_motorMain()
 //    }
 //
 //    testFlag++;
-    if(stopFlag == 0 && flagStop == 0)
+    if(stopFlag == 0 && flagStop == 0)//flagStop=1为车库停车，stopFlag=1为出赛道停车
     {
         CTRL_CarParkStart();
 
     }
-    else
+    else if(flagStop == 1)
     {
         CTRL_CarParkStop();
 
-        expectL = 0;
-        expectR= 0;
+//        expectL = 0;
+//        expectR= 0;
 //        CTRL_speedLoopPID();
 //        CTRL_curLoopPID();
 
+    }
+    else if(stopFlag == 1)
+    {
+        expectL = 0;
+        expectR = 0;
     }
 
     CTRL_motorPID();

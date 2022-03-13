@@ -39,6 +39,7 @@ void SW_readSwitch()
         stopFlag = 0;
         carParkTimes = 0;
         carParkDelay = 0;
+        servoPwm = 625;
 //        CTRL_directionAngleClean();
     }
     else
