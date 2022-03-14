@@ -1347,7 +1347,7 @@ void get_mid_line(void)
 void image_main()
 {
     int wayThreshold = 0;
-    protection();
+//    protection();
 
     switch (wayThreshold) {
     case 0:break;

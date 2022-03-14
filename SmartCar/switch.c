@@ -10,7 +10,7 @@ int delayFlag = 0;
 void SW_readSwitch()
 {
 
-    if(!GPIO_Read(P13, 2))
+    if(GPIO_Read(P11, 3))
     {
         motorLFKI = 0;
         motorLFKP = 0;

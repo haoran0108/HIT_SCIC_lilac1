@@ -253,9 +253,12 @@ void CTRL_Init()
     Pit_Init_ms(CCU6_0, PIT_CH0, 5);//定时器中断，给电机使用（0模块0通道）
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 630);//舵机
     /*B、D给pwm，左右轮正转，AB右轮，CD左轮*/
-    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 20000, 2500);//B右正
-    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, 20000, 0);//D左正
-    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 20000, 0);//A右反
+    GPIO_Init(P33, 9,PUSHPULL, 0);//左正
+    GPIO_Init(P33, 11,PUSHPULL, 1);//右正
+
+//    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 20000, 2500);//B右正
+    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, 20000, 2500);//D左正
+//    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 20000, 0);//A右反
     SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, 20000, 2500);//C左负
 //
     SmartCar_Encoder_Init(GPT12_T5,IfxGpt120_T5INA_P21_7_IN,IfxGpt120_T5EUDA_P21_6_IN);
@@ -264,7 +267,7 @@ void CTRL_Init()
     ADC_Init(ADC_0, ADC0_CH5_A5);
     ADC_Init(ADC_0, ADC0_CH7_A7);
 
-    CTRL_gyroInit();
+//    CTRL_gyroInit();
 
 
 }
@@ -408,30 +411,30 @@ void CTRL_motorPID()
 
 void CTRL_servoMain()
 {
-    if(GPIO_Read(P13, 2) && parkStart == 1)
-    {
-//        CTRL_ParkStartServo(currentGyro);
-        servoPwm = 620;
-    }
-    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
-    {
+//    if(GPIO_Read(P13, 2) && parkStart == 1)
+//    {
+////        CTRL_ParkStartServo(currentGyro);
+//        servoPwm = 620;
+//    }
+//    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
+//    {
         CTRL_servoPID();
-    }
-////
-    else if(flagStop == 1)
-    {
-//        CTRL_ParkStartServo(currentGyro);
-
-//        if(parkPosition == 1)
-//        {
-//            servoPwm = 780;
-//        }
-//        else if(parkPosition == 2)
-//        {
-            servoPwm = 620;
-//        }
-
-    }
+//    }
+//////
+//    else if(flagStop == 1)
+//    {
+////        CTRL_ParkStartServo(currentGyro);
+//
+////        if(parkPosition == 1)
+////        {
+////            servoPwm = 780;
+////        }
+////        else if(parkPosition == 2)
+////        {
+//            servoPwm = 620;
+////        }
+//
+//    }
 //    else CTRL_fuzzyPID();
 //    else CTRL_servoPID();
 
@@ -497,36 +500,44 @@ void CTRL_motor()
     {
         pwmR = mySpeedR;
         pwmL = mySpeedL;
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, pwmR);//B右正
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmL);//D左正
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 0);//A右负
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, 0);//C左负
+        GPIO_Init(P33, 9,PUSHPULL, 0);//左正
+        GPIO_Init(P33, 11,PUSHPULL, 1);//右正
+//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, pwmR);//B右正
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D左正
+//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 0);//A右负
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C左负
     }
     else if(mySpeedL >= 0 && mySpeedR < 0)
     {
         pwmR = -mySpeedR;
         pwmL = mySpeedL;
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 0);//B
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmL);//D
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, pwmR);//A
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, 0);//C
+        GPIO_Init(P33, 9,PUSHPULL, 0);//左正
+        GPIO_Init(P33, 11,PUSHPULL, 0);//右正
+//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 0);//B
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D
+//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, pwmR);//A
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C
     }
     else if(mySpeedL < 0 && mySpeedR >= 0)
     {
         pwmL = -mySpeedL;
         pwmR = mySpeedR;
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, pwmR);//B
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, 0);//D
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 0);//A
+        GPIO_Init(P33, 9,PUSHPULL, 1);//左正
+        GPIO_Init(P33, 11,PUSHPULL, 1);//右正
+//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, pwmR);//B
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D
+//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 0);//A
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C
     }
     else if(mySpeedL < 0 && mySpeedR < 0)
     {
         pwmL = -mySpeedL;
         pwmR = -mySpeedR;
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 0);//B
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, 0);//D
-        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, pwmR);//A
+        GPIO_Init(P33, 9,PUSHPULL, 1);//左正
+        GPIO_Init(P33, 11,PUSHPULL, 0);//右正
+//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 0);//B
+        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D
+//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, pwmR);//A
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C
     }
 
