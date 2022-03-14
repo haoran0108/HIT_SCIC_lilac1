@@ -239,6 +239,7 @@ void design_island_final(int type);
 void island_straight(int type);
 //int check_state();
 void folk_or_cross();
+void island_out(int type);
 
 //Èý²æ
 void folk_road_in();

@@ -17,6 +17,9 @@ int islandtype;
 int carParkX;
 int carParkTimes = 0;
 int carParkDelay = 0;
+int lastJumpPoint;
+int lastK_up, lastK_jump;
+int myIslandFlag = 0;
 
 jump_point partJumpPoint[CAMERA_H];
 all_range white_range[CAMERA_H];//所有白条子
@@ -335,11 +338,11 @@ void transform()
 //    for (int i = 0; i < 120; i++) {
 //        for (int j = 0; j < 188; j++) {
 //            o[i][j] = *fullBuffer;
-//        //  //////////////////printf("%d,",o[i][j]);
+//        //  ////////////////////printf("%d,",o[i][j]);
 //            fullBuffer++;
 //        }
 //    }
-////    //////////////////printf("\n");
+////    ////////////////////printf("\n");
 
     uint8_t *map;
 
@@ -489,7 +492,7 @@ void OTSU() {
         map++;
     }
     threshold = my_threshold;
-    ////////////////////////printf("OTSU_threshold=%d\n", threshold);
+    //////////////////////////printf("OTSU_threshold=%d\n", threshold);
 
 }
 
@@ -549,7 +552,7 @@ void part_OUST() {
         map++;
     }
     thresholdUp = my_threshold;
-    ////////////////////////printf("threUp=%d,", thresholdUp);
+    //////////////////////////printf("threUp=%d,", thresholdUp);
 
     map = mapLine;
     my_threshold = 0;
@@ -597,7 +600,7 @@ void part_OUST() {
         map++;
     }
     thresholdDown = my_threshold;
-    ////////////////////////printf("threDown=%d\n", thresholdDown);
+    //////////////////////////printf("threDown=%d\n", thresholdDown);
 
 }
 
@@ -624,7 +627,7 @@ void iteration() {
         map++;
     }
     threshold_origin = (img_max + img_min) / 2;
-    //////////////////////printf("threshold_origin=%d\n", threshold);
+    ////////////////////////printf("threshold_origin=%d\n", threshold);
 
     float my_threshold = threshold_origin;
 
@@ -653,12 +656,12 @@ void iteration() {
             threshold1 = (float)img_sum1 / img_num1;
             threshold2 = (float)img_sum2 / img_num2;
             my_threshold = ((float)(threshold1 + threshold2)) / 2;
-            //////////////////////printf("threshold_origin=%d@@threshold1=%d@@threshold2=%d\n", threshold_origin, threshold1, threshold2);
+            ////////////////////////printf("threshold_origin=%d@@threshold1=%d@@threshold2=%d\n", threshold_origin, threshold1, threshold2);
         }
 
     } while (threshold_origin - my_threshold != 0);
     threshold = threshold_origin;
-    //////////////////////printf("threshold=%d", threshold);
+    ////////////////////////printf("threshold=%d", threshold);
 }
 
 ////////////////////////////////////////////
@@ -708,7 +711,7 @@ void distortion() {
             y_distorted = y2 * fy + cy;
 
             if (x_distorted >= 0 && y_distorted >= 0 && ((int)x_distorted) < 188 && ((int)y_distorted) < 120) {
-                ////////////////////////printf("%d,%d,%lf,%lf\n",y, x, y_distorted, x_distorted);
+                //////////////////////////printf("%d,%d,%lf,%lf\n",y, x, y_distorted, x_distorted);
 //                image_undisor.at<char>(y, x) = image.at<char>((int)y_distorted,(int)x_distorted);
                 image_undis[y][x] = image_dis[(int)y_distorted][(int)x_distorted];
             }
@@ -840,7 +843,7 @@ void THRE(int num)
 ////                }
 ////            }
 //        }
-//        ////////////////////////printf("thr=%f\n", threshold);
+//        //////////////////////////printf("thr=%f\n", threshold);
 //    }
 ////    for (int m = 0; m < 120; m++) {
 ////        for (int n = 0; n < 188; n++) {
@@ -1149,7 +1152,7 @@ void ordinary_two_line(void)
 
     for (j = 1; j <= my_road[i_start].white_num; j++)
     {
-        //////////////////////printf("n=%d", my_road[j].white_num);
+        ////////////////////////printf("n=%d", my_road[j].white_num);
         if (my_road[i_start].connected[j].width > width_max)
         {
             width_max = my_road[i_start].connected[j].width;
@@ -1234,7 +1237,7 @@ void orinary_two_line_history() {
         if (mid_line[i] == 0) {
             mid_line[i] = 94;
         }
-        //////////printf("%d=%d\n", i, mid_line[i]);
+        ////////////printf("%d=%d\n", i, mid_line[i]);
         for (int j = 1; j <= my_road[i].white_num; j++) {
             midComb[j] = (my_road[i].connected[j].left + my_road[i].connected[j].right) / 2;
 
@@ -1250,7 +1253,7 @@ void orinary_two_line_history() {
 
         }
         j_continue[i] = min;
-        //////////printf("j=%d", j_continue[i]);
+        ////////////printf("j=%d", j_continue[i]);
     }
 
     //记录连贯区域编号
@@ -1324,7 +1327,7 @@ void get_mid_line(void)
         }
         else if(my_road[i].white_num == 0)
         {
-            ////////////////////////printf("miss=%d\n", i);
+            //////////////////////////printf("miss=%d\n", i);
             double k=(double)(mid_line[i+1]-mid_line[i+10])/(10);
 
             mid_line[i] = k+mid_line[i+1];
@@ -1357,7 +1360,7 @@ void image_main()
     }
     //distortion();
 //    THRE(wayThreshold);
-    ////////////////////////printf("threshold=%d", threshold);
+    //////////////////////////printf("threshold=%d", threshold);
     //IPM_map();
     //decide_miss();
     //head_clear();
@@ -1382,6 +1385,18 @@ void image_main()
 
     for (int i = NEAR_LINE; i > FAR_LINE; i--)
     {
+        if(left_line[i]<=left_side[i]){
+            left_line[i]=left_side[i];
+        }
+        if(left_line[i]>=right_side[i]){
+                    left_line[i]=right_side[i];
+                }
+        if(right_line[i]<=left_side[i]){
+                    right_line[i]=left_side[i];
+                }
+        if(right_line[i]>=right_side[i]){
+                    right_line[i]=right_side[i];
+                }
         IMG[i][left_line[i]] = red;
         IMG[i][right_line[i]] = blue;
     }
@@ -1400,7 +1415,7 @@ void image_main()
 ///////////////////////////////////////////
 void judge_type_road() {
 
-    ////////////////printf("@@state=%d@@\n", state);
+    //////////////////printf("@@state=%d@@\n", state);
 
     //十字
     if (state == stateStart) {
@@ -1432,7 +1447,7 @@ void judge_type_road() {
         island_ing(islandtype);
         design_island_start(islandtype);
     }
-//    //  ////////////////printf("state=%d\n", state);
+//    //  //////////////////printf("state=%d\n", state);
     if (state == stateIsland1
         ) {
         islandOrcross_circle(0);
@@ -1445,6 +1460,9 @@ void judge_type_road() {
         design_island_turn(0);
     }
 
+    if (state == stateIsland5) {
+           island_out(islandtype);
+       }
     //出环岛
     if (state == stateIsland3) {
         island_out_straight(islandtype);
@@ -1456,9 +1474,9 @@ void judge_type_road() {
         design_island_final(islandtype);
     }
 
-    //////////////////printf("@@state=%d@@\n", state);
+    ////////////////////printf("@@state=%d@@\n", state);
 
-    test_varible[1] = islandtype;
+//    test_varible[1] = islandtype;
 
 
 
@@ -1501,7 +1519,7 @@ void judge_type_road() {
 
         }
     }
-    ////////////////printf("@@state=%d@@\n", state);
+    //////////////////printf("@@state=%d@@\n", state);
 }
 
 ////////////////////////////////////////////
@@ -1903,9 +1921,9 @@ void find_jump_point() {
 
     /*for (int i = 100; i > 40; i--) {
         double n = calculate_slope(i, 106, LEFT) - calculate_slope(i - 10, i, LEFT);
-        ////////////////printf("i=%d,n=%f\n", i, n);
+        //////////////////printf("i=%d,n=%f\n", i, n);
     }*/
-    //////////////////printf("lu=%d,ru=%d,ld=%d,rd=%d", leftUpJumpPoint, rightUpJumpPoint, leftDownJumpPoint, rightDownJumpPoint);
+    ////////////////////printf("lu=%d,ru=%d,ld=%d,rd=%d", leftUpJumpPoint, rightUpJumpPoint, leftDownJumpPoint, rightDownJumpPoint);
 }
 
 ////////////////////////////////////////////
@@ -1968,7 +1986,7 @@ int circle_360() {
     if (p > 0.1) {
         flag = 0;
     }
-    ////////////////printf("f1=%d\n", flag);
+    //////////////////printf("f1=%d\n", flag);
     //判据二：往一个方向拐
     if (turnWhere == RIGHT) {
         for (int i = 108; i >= topRoad; i--) {
@@ -1984,10 +2002,10 @@ int circle_360() {
             }
         }
     }
-    ////////////////printf("f2=%d\n", flag);
+    //////////////////printf("f2=%d\n", flag);
     //判据三：没有拐点
     find_jump_point();
-    ////////////////printf("ru=%d,rd=%d\n", rightUpJumpPoint, rightDownJumpPoint);
+    //////////////////printf("ru=%d,rd=%d\n", rightUpJumpPoint, rightDownJumpPoint);
     //判据三：一边miss（并不一定）
 
 
@@ -2002,205 +2020,205 @@ int circle_360() {
 ///////////////////////////////////////////
 void cross_in() {
     //find_jump_point();
-        //////printf("lu=%d,ld=%d,ru=%d,rd=%d\n", leftUpJumpPoint, leftDownJumpPoint, rightUpJumpPoint, rightDownJumpPoint);
-        int flag = 1;
+        ////////printf("lu=%d,ld=%d,ru=%d,rd=%d\n", leftUpJumpPoint, leftDownJumpPoint, rightUpJumpPoint, rightDownJumpPoint);
+    int flag = 1;
 
-        uint8_t ch=NEAR_LINE;
-        int dirction = 0;
-        for (int i = NEAR_LINE - 2; i > 20; i--) {
-            if (abs(my_road[i].connected[j_continue[i]].width - my_road[i + 1].connected[j_continue[i + 1]].width) < 4
-                && (my_road[i-1].connected[j_continue[i-1]].width - my_road[i].connected[j_continue[i]].width)>4 ) {
-                ch = i;
-                if (abs(left_line[i - 1] - left_line[i]) < abs(right_line[i - 1] - right_line[i])) {
-                    dirction = RIGHT;
-                }
-                else {
-                    dirction = LEFT;
-                }
-                break;
-            }
-        }
-
-        uint8_t max = ch ;
-        double cosmax=1;
-        if (dirction == LEFT) {
-            cosmax = -1;
-            uint8_t i = ch;
-            while (right_line[i - 5] < right_side[i - 5] - 1 || i <= 5) {
-            ////printf("%d=%f,%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]), cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])-cosmax);
-                if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
-                    && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) < -0.1
-                    && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) > -0.8) {
-                    cosmax = cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]);
-                    max = i;
-                    ////printf("?????????????max=%d", max);
-                }
-                i--;
-            }
-            if (calculate_slope(max - 10, max, RIGHT) * calculate_slope(max, max + 10, RIGHT) >= 0) {
-                flag = 0;
-            }
-
-        }
-        else if (dirction == RIGHT) {
-            uint8_t i = ch;
-            cosmax = -1;
-            while (left_line[i - 5] > left_side[i - 5] || i<=5) {
-            //printf("%d,cos=%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]));
-                if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
-                    && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) < 0
-                    && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) > -0.8) {
-                    cosmax = cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]);
-                    max = i;
-                //  //printf("??????????????????%d\n", max);
-                }
-                i--;
-                ////printf("max=%d", max);
-            }
-            if (calculate_slope(max - 10, max, LEFT) * calculate_slope(max, max + 10, LEFT) >= 0) {
-                flag = 0;
-            }
-        }
-
-
-
-
-        if (dirction == RIGHT) {
-            double kl = calculate_slope(max, max + 10, LEFT);
-            double kr = calculate_slope(ch, ch + 10, RIGHT);
-
-            if (fabs(kr) < 0.15) {
-                leftDownJumpPoint = ch;
-                rightDownJumpPoint = ch;
+    uint8_t ch = NEAR_LINE;
+    int dirction = 0;
+    for (int i = NEAR_LINE - 2; i > 20; i--) {
+        if (abs(my_road[i].connected[j_continue[i]].width - my_road[i + 1].connected[j_continue[i + 1]].width) < 4
+            && (my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width) > 4) {
+            ch = i;
+            if (abs(left_line[i - 1] - left_line[i]) < abs(right_line[i - 1] - right_line[i])) {
+                dirction = RIGHT;
             }
             else {
-                leftDownJumpPoint = max;
-                rightDownJumpPoint = ch;
+                dirction = LEFT;
             }
+            break;
         }
-        else if (dirction == LEFT) {
-            double kl = calculate_slope(ch, 105, LEFT);
-            double kr = calculate_slope(max, 105, RIGHT);
-            if (fabs(kl) < 0.15) {
-                leftDownJumpPoint = ch;
-                rightDownJumpPoint = ch;
-            }
-            else {
-                leftDownJumpPoint = ch;
-                rightDownJumpPoint = max;
-            }
-        }
-        //printf("ld=%d,rd=%d\n", leftDownJumpPoint, rightDownJumpPoint);
-        for (int i = rightDownJumpPoint; i >= rightDownJumpPoint - 10; i--) {
-            if (IMG[i][right_line[rightDownJumpPoint]] == black) {
-                flag = 0;
-            }
-        }
-        for (int i = leftDownJumpPoint; i >= leftDownJumpPoint - 10; i--) {
-            if (IMG[i][left_line[leftDownJumpPoint]] == black) {
-                flag = 0;
-            }
-        }
-        int leftSide[CAMERA_H];
-        int rightSide[CAMERA_H];
+    }
 
-        double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 20, LEFT);
-        double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 20, RIGHT);
-        uint8_t xl = left_line[leftDownJumpPoint ];
-        uint8_t xr = right_line[rightDownJumpPoint ];
-
-        for (int i = 100; i >= 2; i--) {
-            leftSide[i] = kl * (i - leftDownJumpPoint) + xl;
-            rightSide[i] = kr * (i - rightDownJumpPoint) + xr;
-            if (leftSide[i] <= left_side[i]) {
-                leftSide[i] = left_side[i];
+    uint8_t max = ch;
+    double cosmax = 1;
+    if (dirction == LEFT) {
+        cosmax = -1;
+        uint8_t i = ch;
+        while (right_line[i - 5] < right_side[i - 5] - 1 || i <= 5) {
+            //////printf("%d=%f,%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]), cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])-cosmax);
+            if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
+                && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) < -0.1
+                && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) > -0.8) {
+                cosmax = cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]);
+                max = i;
+                //////printf("?????????????max=%d", max);
             }
-            if (rightSide[i] >= right_side[i]) {
-                rightSide[i] = right_side[i];
-            }
+            i--;
         }
-
-
-        if (10 > leftDownJumpPoint || leftDownJumpPoint > 80
-            ||( 10 > rightDownJumpPoint || rightDownJumpPoint > 80)) {
-            flag = 0;
-        }
-        //printf("flag=%d\n", flag);
-        int whiteNum[CAMERA_H] = { 0 };
-        for (int i = 2; i <= 26; i++) {
-            for (int j = leftSide[i]; j <= rightSide[i]; j++) {
-                if (IMG[i][j] == white) {
-                    whiteNum[i]++;
-                }
-            }
-            //printf("%d,ls=%d,rs=%d,white=%d\n", i, leftSide[i], rightSide[i], whiteNum[i]);
-            if (whiteNum[i] < 30) {
-                flag = 0;
-            }
-        }
-
-        //printf("flag=%d", flag);
-        uint8_t minL[CAMERA_H];
-        uint8_t minR[CAMERA_H];
-        for (int i = 2; i < leftDownJumpPoint; i++) {
-            minL[i] = j_continue[i];
-            minR[i] = j_continue[i];
-            for (int j = 1; j < my_road[i].white_num; j++) {
-                if (abs(my_road[i].connected[j].left - leftSide[i]) < abs(my_road[i].connected[minL[i]].left - leftSide[i])) {
-                    minL[i] = j;
-                }
-            }
-        }
-        for(int i = 2; i < rightDownJumpPoint; i++){
-            for (int j = 1; j < my_road[i].white_num; j++) {
-                if (abs(my_road[i].connected[j].right - rightSide[i]) < abs(my_road[i].connected[minR[i]].left - rightSide[i])) {
-                    minR[i] = j;
-                }
-            }
-        }
-
-        if (30 > rightDownJumpPoint || rightDownJumpPoint > 100
-            || 30 > leftDownJumpPoint || leftDownJumpPoint > 100) {
+        if (calculate_slope(max - 10, max, RIGHT) * calculate_slope(max, max + 10, RIGHT) >= 0) {
             flag = 0;
         }
 
-        if (dirction == RIGHT) {
-
+    }
+    else if (dirction == RIGHT) {
+        uint8_t i = ch;
+        cosmax = -1;
+        while (left_line[i - 5] > left_side[i - 5] || i <= 5) {
+            ////printf("%d,cos=%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]));
+            if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
+                && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) < 0
+                && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) > -0.8) {
+                cosmax = cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]);
+                max = i;
+                //  ////printf("??????????????????%d\n", max);
+            }
+            i--;
+            //////printf("max=%d", max);
         }
-        else if(dirction==LEFT){
-            //double ku=calculate_slope()
+        if (calculate_slope(max - 10, max, LEFT) * calculate_slope(max, max + 10, LEFT) >= 0) {
+            flag = 0;
         }
+    }
 
-        ////printf("lu=%d,ru=%d", leftUpJumpPoint, rightUpJumpPoint);
 
 
-        if (flag == 1) {
-            //////printf("(0)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
-            if (lastTwoState[1] == 0 && lastState[1] == 0) {
-                lastTwoState[1] = 1;
-                //////printf("(1)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
-            }
-            else if (lastTwoState[1] == 1 && lastState[1] == 0) {
-                lastState[1] = 1;
-                //////printf("(2)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
-            }
-            else if (lastState[1] == 1 && lastTwoState[1] == 1) {
-                state =  stateInCrossStraight;
-                lastState[1] = 0;
-                lastTwoState[1] = 0;
-                //////printf("(3)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
-            }
-            else {
-                lastState[1] = 0;
-                lastTwoState[1] = 0;
-                //////printf("(4)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
+
+    if (dirction == RIGHT) {
+        double kl = calculate_slope(max, max + 10, LEFT);
+        double kr = calculate_slope(ch, ch + 10, RIGHT);
+
+        if (fabs(kr) < 0.15) {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = ch;
+        }
+        else {
+            leftDownJumpPoint = max;
+            rightDownJumpPoint = ch;
+        }
+    }
+    else if (dirction == LEFT) {
+        double kl = calculate_slope(ch, 105, LEFT);
+        double kr = calculate_slope(max, 105, RIGHT);
+        if (fabs(kl) < 0.15) {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = ch;
+        }
+        else {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = max;
+        }
+    }
+    ////printf("ld=%d,rd=%d\n", leftDownJumpPoint, rightDownJumpPoint);
+    for (int i = rightDownJumpPoint; i >= rightDownJumpPoint - 10; i--) {
+        if (IMG[i][right_line[rightDownJumpPoint]] == black) {
+            flag = 0;
+        }
+    }
+    for (int i = leftDownJumpPoint; i >= leftDownJumpPoint - 10; i--) {
+        if (IMG[i][left_line[leftDownJumpPoint]] == black) {
+            flag = 0;
+        }
+    }
+    int leftSide[CAMERA_H];
+    int rightSide[CAMERA_H];
+
+    double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 20, LEFT);
+    double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 20, RIGHT);
+    uint8_t xl = left_line[leftDownJumpPoint];
+    uint8_t xr = right_line[rightDownJumpPoint];
+
+    for (int i = 100; i >= 2; i--) {
+        leftSide[i] = kl * (i - leftDownJumpPoint) + xl;
+        rightSide[i] = kr * (i - rightDownJumpPoint) + xr;
+        if (leftSide[i] <= left_side[i]) {
+            leftSide[i] = left_side[i];
+        }
+        if (rightSide[i] >= right_side[i]) {
+            rightSide[i] = right_side[i];
+        }
+    }
+
+
+    if (10 > leftDownJumpPoint || leftDownJumpPoint > 80
+        || (10 > rightDownJumpPoint || rightDownJumpPoint > 80)) {
+        flag = 0;
+    }
+    ////printf("flag=%d\n", flag);
+    int whiteNum[CAMERA_H] = { 0 };
+    for (int i = 2; i <= 26; i++) {
+        for (int j = leftSide[i]; j <= rightSide[i]; j++) {
+            if (IMG[i][j] == white) {
+                whiteNum[i]++;
             }
         }
-        else if (flag == 0) {
-            lastState[1]= 0;
+        ////printf("%d,ls=%d,rs=%d,white=%d\n", i, leftSide[i], rightSide[i], whiteNum[i]);
+        if (whiteNum[i] < 30) {
+            flag = 0;
+        }
+    }
+
+    ////printf("flag=%d", flag);
+    uint8_t minL[CAMERA_H];
+    uint8_t minR[CAMERA_H];
+    for (int i = 2; i < leftDownJumpPoint; i++) {
+        minL[i] = j_continue[i];
+        minR[i] = j_continue[i];
+        for (int j = 1; j < my_road[i].white_num; j++) {
+            if (abs(my_road[i].connected[j].left - leftSide[i]) < abs(my_road[i].connected[minL[i]].left - leftSide[i])) {
+                minL[i] = j;
+            }
+        }
+    }
+    for (int i = 2; i < rightDownJumpPoint; i++) {
+        for (int j = 1; j < my_road[i].white_num; j++) {
+            if (abs(my_road[i].connected[j].right - rightSide[i]) < abs(my_road[i].connected[minR[i]].left - rightSide[i])) {
+                minR[i] = j;
+            }
+        }
+    }
+
+    if (30 > rightDownJumpPoint || rightDownJumpPoint > 100
+        || 30 > leftDownJumpPoint || leftDownJumpPoint > 100) {
+        flag = 0;
+    }
+
+    if (dirction == RIGHT) {
+
+    }
+    else if (dirction == LEFT) {
+        //double ku=calculate_slope()
+    }
+
+    //////printf("lu=%d,ru=%d", leftUpJumpPoint, rightUpJumpPoint);
+
+
+    if (flag == 1) {
+        ////////printf("(0)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
+        if (lastTwoState[1] == 0 && lastState[1] == 0) {
+            lastTwoState[1] = 1;
+            ////////printf("(1)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
+        }
+        else if (lastTwoState[1] == 1 && lastState[1] == 0) {
+            lastState[1] = 1;
+            ////////printf("(2)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
+        }
+        else if (lastState[1] == 1 && lastTwoState[1] == 1) {
+            state = stateInCrossStraight;
+            lastState[1] = 0;
             lastTwoState[1] = 0;
-            //////printf("(5)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
+            ////////printf("(3)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
         }
+        else {
+            lastState[1] = 0;
+            lastTwoState[1] = 0;
+            ////////printf("(4)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
+        }
+    }
+    else if (flag == 0) {
+        lastState[1] = 0;
+        lastTwoState[1] = 0;
+        ////////printf("(5)lts=%d,ls=%d,s=%d\n", lastTwoState, lastState, state);
+    }
 
 
 
@@ -2217,97 +2235,233 @@ void cross_in() {
 ///////////////////////////////////////////
 void design_cross_in() {
     uint8_t ch = NEAR_LINE;
-        int dirction = 0;
-        for (int i = NEAR_LINE - 2; i > 20; i--) {
-            if (abs(my_road[i].connected[j_continue[i]].width - my_road[i + 1].connected[j_continue[i + 1]].width) < 4
-                && (my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width) > 4) {
-                ch = i;
-                if (abs(left_line[i - 1] - left_line[i]) < abs(right_line[i - 1] - right_line[i])) {
-                    dirction = RIGHT;
-                }
-                else {
-                    dirction = LEFT;
-                }
-                break;
-            }
-        }
-
-        uint8_t max = ch;
-        double cosmax = 1;
-        if (dirction == LEFT) {
-            cosmax = -1;
-            uint8_t i = ch;
-            while (right_line[i - 5] < right_side[i - 5] - 1 && ch - i <= 35) {
-                ////printf("%d=%f,%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]), cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])-cosmax);
-                if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
-                    && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) < -0.1
-                    && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) > -0.8
-                    && calculate_slope(i - 5, i, RIGHT) * calculate_slope(i, i + 5, RIGHT) < 0
-                    ) {
-                    cosmax = cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]);
-                    max = i;
-                    ////printf("?????????????max=%d", max);
-                }
-                i--;
-            }
-        }
-        else if (dirction == RIGHT) {
-            uint8_t i = ch;
-            cosmax = -1;
-            while (left_line[i - 5] > left_side[i - 5] && ch - i <= 35) {
-                //printf("%d,cos=%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]));
-                if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
-                    && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) < 0
-                    && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) > -0.8
-                    && calculate_slope(i - 5, i, LEFT) * calculate_slope(i, i + 5, LEFT) < 0
-                    ) {
-                    cosmax = cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]);
-                    max = i;
-                    //  //printf("??????????????????%d\n", max);
-                }
-                i--;
-                ////printf("max=%d", max);
-            }
-        }
-
-        if (dirction == RIGHT) {
-            double kl = calculate_slope(max, max + 10, LEFT);
-            double kr = calculate_slope(ch, ch + 10, RIGHT);
-
-            if (fabs(kr) < 0.15) {
-                leftDownJumpPoint = ch;
-                rightDownJumpPoint = ch;
+    int dirction = 0;
+    for (int i = NEAR_LINE - 2; i > 20; i--) {
+        if (abs(my_road[i].connected[j_continue[i]].width - my_road[i + 1].connected[j_continue[i + 1]].width) < 4
+            && (my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width) > 4) {
+            ch = i;
+            if (abs(left_line[i - 1] - left_line[i]) < abs(right_line[i - 1] - right_line[i])) {
+                dirction = RIGHT;
             }
             else {
-                leftDownJumpPoint = max;
-                rightDownJumpPoint = ch;
+                dirction = LEFT;
             }
+            break;
         }
-        else if (dirction == LEFT) {
-            double kl = calculate_slope(ch, 105, LEFT);
-            double kr = calculate_slope(max, 105, RIGHT);
-            if (fabs(kl) < 0.15) {
-                leftDownJumpPoint = ch;
-                rightDownJumpPoint = ch;
+    }
+
+    uint8_t max = ch;
+    double cosmax = 1;
+    if (dirction == LEFT) {
+        cosmax = -1;
+        uint8_t i = ch;
+        while (right_line[i - 5] < right_side[i - 5] - 1 && ch - i <= 35) {
+            //////printf("%d=%f,%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]), cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])-cosmax);
+            if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
+                && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) < -0.1
+                && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) > -0.8
+                && calculate_slope(i - 5, i, RIGHT) * calculate_slope(i, i + 5, RIGHT) < 0
+                ) {
+                cosmax = cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]);
+                max = i;
+                //////printf("?????????????max=%d", max);
+            }
+            i--;
+        }
+    }
+    else if (dirction == RIGHT) {
+        uint8_t i = ch;
+        cosmax = -1;
+        while (left_line[i - 5] > left_side[i - 5] && ch - i <= 35) {
+            ////printf("%d,cos=%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]));
+            if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
+                && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) < 0
+                && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) > -0.8
+                && calculate_slope(i - 5, i, LEFT) * calculate_slope(i, i + 5, LEFT) < 0
+                ) {
+                cosmax = cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]);
+                max = i;
+                //  ////printf("??????????????????%d\n", max);
+            }
+            i--;
+            //////printf("max=%d", max);
+        }
+    }
+
+    if (dirction == RIGHT) {
+        double kl = calculate_slope(max, max + 10, LEFT);
+        double kr = calculate_slope(ch, ch + 10, RIGHT);
+
+        if (fabs(kr) < 0.15) {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = ch;
+        }
+        else {
+            leftDownJumpPoint = max;
+            rightDownJumpPoint = ch;
+        }
+    }
+    else if (dirction == LEFT) {
+        double kl = calculate_slope(ch, 105, LEFT);
+        double kr = calculate_slope(max, 105, RIGHT);
+        if (fabs(kl) < 0.15) {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = ch;
+        }
+        else {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = max;
+        }
+    }
+    ////printf("ld=%d,rd=%d\n", leftDownJumpPoint, rightDownJumpPoint);
+
+    double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 10, LEFT);
+    double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 10, RIGHT);
+
+    uint8_t xl = left_line[leftDownJumpPoint];
+    uint8_t xr = right_line[rightDownJumpPoint];
+
+    for (int i = 105; i >= 10; i--) {
+        left_line[i] = kl * (i - leftDownJumpPoint) + xl;
+        right_line[i] = kr * (i - rightDownJumpPoint) + xr;
+        ////////printf("%d=%d,%d\n", i, leftSide[i], rightSide[i]);
+    }
+
+}
+
+////////////////////////////////////////////
+//功能： 三叉与十字的区分
+//输入：
+//输出：
+//备注：
+///////////////////////////////////////////
+void folk_or_cross() {
+
+    int flag = 0;
+    uint8_t ch = NEAR_LINE;
+    int dirction = 0;
+    for (int i = NEAR_LINE - 2; i > 20; i--) {
+        if (abs(my_road[i].connected[j_continue[i]].width - my_road[i + 1].connected[j_continue[i + 1]].width) < 4
+            && (my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width) > 4) {
+            ch = i;
+            if (abs(left_line[i - 1] - left_line[i]) < abs(right_line[i - 1] - right_line[i])) {
+                dirction = RIGHT;
             }
             else {
-                leftDownJumpPoint = ch;
-                rightDownJumpPoint = max;
+                dirction = LEFT;
+            }
+            break;
+        }
+    }
+
+    uint8_t max = ch;
+    double cosmax = 1;
+    if (dirction == LEFT) {
+        cosmax = -1;
+        uint8_t i = ch;
+        while (right_line[i - 5] < right_side[i - 5] - 1 && ch - i <= 35) {
+            //////printf("%d=%f,%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]), cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])-cosmax);
+            if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
+                && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) < -0.1
+                && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) > -0.8) {
+                cosmax = cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]);
+                max = i;
+                //////printf("?????????????max=%d", max);
+            }
+            i--;
+        }
+    }
+    else if (dirction == RIGHT) {
+        uint8_t i = ch;
+        cosmax = -1;
+        while (left_line[i - 5] > left_side[i - 5] && ch - i <= 35) {
+            ////printf("%d,cos=%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]));
+            if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
+                && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) < 0
+                && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) > -0.8) {
+                cosmax = cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]);
+                max = i;
+                //  ////printf("??????????????????%d\n", max);
+            }
+            i--;
+            //////printf("max=%d", max);
+        }
+    }
+
+    if (dirction == RIGHT) {
+        double kl = calculate_slope(max, max + 10, LEFT);
+        double kr = calculate_slope(ch, ch + 10, RIGHT);
+        //printf("k=%f\n", kr);
+        if (fabs(kr) < 0.15) {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = ch;
+        }
+        else {
+            leftDownJumpPoint = max;
+            rightDownJumpPoint = ch;
+        }
+    }
+    else if (dirction == LEFT) {
+
+        double kl = calculate_slope(ch, 105, LEFT);
+        double kr = calculate_slope(max, 105, RIGHT);
+        //printf("k=%f\n", kl);
+        if (fabs(kl) < 0.15) {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = ch;
+        }
+        else {
+            leftDownJumpPoint = ch;
+            rightDownJumpPoint = max;
+        }
+    }
+
+    //printf("ld=%d,rd=%d", leftDownJumpPoint, rightDownJumpPoint);
+    int leftSide[CAMERA_H];
+    int rightSide[CAMERA_H];
+
+    double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 20, LEFT);
+    double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 20, RIGHT);
+    uint8_t xl = left_line[leftDownJumpPoint];
+    uint8_t xr = right_line[rightDownJumpPoint];
+
+    for (int i = 100; i >= 2; i--) {
+        leftSide[i] = kl * (i - leftDownJumpPoint) + xl;
+        rightSide[i] = kr * (i - rightDownJumpPoint) + xr;
+        if (leftSide[i] <= left_side[i]) {
+            leftSide[i] = left_side[i];
+        }
+        if (rightSide[i] >= right_side[i]) {
+            rightSide[i] = right_side[i];
+        }
+    }
+
+    if (85 <= leftDownJumpPoint
+        && 85 <= rightDownJumpPoint) {
+        flag = 1;
+    }
+
+
+
+
+    if (flag == 1) {
+        if (flag == 1) {
+            ////////printf("state=%d,laststate=%d", state, lastState);
+            if (lastState[1] == 0) {
+                lastState[1] = 1;
+            }
+
+            else if (lastState[1] == 1) {
+                state = stateOutCrossStraight;
+                lastTwoState[1] = 0;
+                lastState[1] = 0;
+            }
+            else {
+                lastState[1] = 0;
+                lastTwoState[1] = 0;
             }
         }
-        //printf("ld=%d,rd=%d\n", leftDownJumpPoint, rightDownJumpPoint);
-
-        double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 10, LEFT);
-        double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 10, RIGHT);
-
-        uint8_t xl = left_line[leftDownJumpPoint];
-        uint8_t xr = right_line[rightDownJumpPoint];
-
-        for (int i = 105; i >= 10; i--) {
-            left_line[i] = kl * (i - leftDownJumpPoint) + xl;
-            right_line[i] = kr * (i - rightDownJumpPoint) + xr;
-            //////printf("%d=%d,%d\n", i, leftSide[i], rightSide[i]);
-        }
+    }
 
 }
 
@@ -2318,7 +2472,7 @@ void design_cross_in() {
 //备注：
 ///////////////////////////////////////////
 void cross_out() {
-    int flag;
+    int flag=0;
 
 
     if (flag == 1) {
@@ -2353,7 +2507,6 @@ void cross_out() {
 ///////////////////////////////////////////
 void design_cross_out() {
 
-
     int sumN = 0;
     for (int i = NEAR_LINE - 20; i > NEAR_LINE - 30; i--) {
         if (abs(left_line[i] - left_side[i]) <= 1
@@ -2362,7 +2515,24 @@ void design_cross_out() {
             sumN++;
         }
     }
-    if (sumN < 9) {
+    int QWhere = 0;
+    uint8_t lastLine = 119;
+    for (int i = NEAR_LINE - 1; i >= 30; i--) {
+        if (left_line[i] == left_side[i] && left_line[i - 1] == left_side[i]
+            && right_line[i] < right_side[i] && right_line[i - 1] < right_side[i - 1]) {
+            QWhere = LEFT;
+            lastLine = i;
+            break;
+        }
+       if(right_line[i] == right_side[i] && right_line[i - 1] == right_side[i]
+           && left_line[i] > left_side[i] && left_line[i - 1] > left_side[i - 1]){
+            QWhere = RIGHT;
+            lastLine = i;
+            break;
+        }
+    }
+    //printf("Qwhere=%d,lastline=%d\n", QWhere, lastLine);
+    if (lastLine<=88) {
         uint8_t ch = NEAR_LINE;
         int dirction = 0;
         for (int i = NEAR_LINE - 2; i > 20; i--) {
@@ -2410,7 +2580,7 @@ void design_cross_out() {
         if (dirction == RIGHT) {
             double kl = calculate_slope(max, 105, LEFT);
             double kr = calculate_slope(ch, 105, RIGHT);
-            ////////printf("kl=%f,kr=%f", kl, kr);
+            //////////printf("kl=%f,kr=%f", kl, kr);
             if (fabs(kr) < 0.15) {
                 leftDownJumpPoint = ch;
                 rightDownJumpPoint = ch;
@@ -2423,8 +2593,8 @@ void design_cross_out() {
         else if (dirction == LEFT) {
             double kl = calculate_slope(ch, 105, LEFT);
             double kr = calculate_slope(max, 105, RIGHT);
-            ////////printf("kl=%f,kr=%f", kl, kr);
-            if (fabs(kl) < 0.15) {
+            //////////printf("kl=%f,kr=%f", kl, kr);
+            if (fabs(kl) < 0.1) {
                 leftDownJumpPoint = ch;
                 rightDownJumpPoint = ch;
             }
@@ -2434,16 +2604,12 @@ void design_cross_out() {
             }
         }
 
-
-
         double kl = calculate_slope(leftDownJumpPoint, 105, LEFT);
         double kr = calculate_slope(rightDownJumpPoint, 105, RIGHT);
-        //////printf("ld=%d,rd=%d", leftDownJumpPoint, rightDownJumpPoint);
-
+        ////////printf("ld=%d,rd=%d", leftDownJumpPoint, rightDownJumpPoint);
 
         uint8_t leftSide[CAMERA_H];
         uint8_t rightSide[CAMERA_H];
-
 
         uint8_t xl = left_line[105];
         uint8_t xr = right_line[105];
@@ -2451,121 +2617,159 @@ void design_cross_out() {
         for (int i = 105; i >= 10; i--) {
             left_line[i] = kl * (i - 105) + xl;
             right_line[i] = kr * (i - 105) + xr;
-            //////////printf("%d=%d,%d\n", i, leftSide[i], rightSide[i]);
+            ////////////printf("%d=%d,%d\n", i, leftSide[i], rightSide[i]);
         }
     }
-    else {////////////////////////////////
-          //从上往下
-          ////////////////////////////////
-    uint8_t ch = FAR_LINE;;
-    int dirction = 0;
-    uint8_t j_mid[CAMERA_H];
+    else {
+        ////////////////////////////////
+        //从上往下
+        ////////////////////////////////
+        uint8_t ch = FAR_LINE;;
+        int dirction = 0;
+        uint8_t j_mid[CAMERA_H];
 
-    for (int i = FAR_LINE; i < NEAR_LINE; i++) {
-        j_mid[i] = 1;
-        for (int j = 1; j <= my_road[i].white_num; j++) {
-            if (my_road[i].connected[j].width > 10) {
-                if (abs((my_road[i].connected[j_mid[i]].right + my_road[i].connected[j_mid[i]].left) / 2 - 93) > abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 - 93)) {
-                    j_mid[i] = j;
+        if (QWhere == RIGHT) {
+            for (int i = 1; i <= NEAR_LINE; i++) {
+                for (int j = my_road[i].white_num; j > 0; j--) {
+                    if (my_road[i].connected[j].width > 10) {
+                        j_mid[i] = j;
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            for (int i = 1; i <= NEAR_LINE; i++) {
+                for (int j = 1; j <= my_road[i].white_num; j++) {
+                    if (my_road[i].connected[j].width > 10) {
+                        j_mid[i] = j;
+                        break;
+                    }
                 }
             }
         }
 
-        ////////printf("%d:%dand%d\n", i, my_road[i].connected[j_mid[i]].left, my_road[i].connected[j_mid[i]].right);
-    }
+        for (int i = FAR_LINE; i < 90; i++) {
+            if (abs(my_road[i].connected[j_mid[i]].width - my_road[i + 1].connected[j_mid[i + 1]].width) > 4
+                && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) < 4) {
+                ch = i;
+                if (abs(my_road[i + 1].connected[j_mid[i + 1]].left - my_road[i].connected[j_mid[i]].left) < abs(my_road[i + 1].connected[j_mid[i + 1]].right - my_road[i].connected[j_mid[i]].right)) {
+                    dirction = RIGHT;
+                }
+                else {
+                    dirction = LEFT;
+                }
+                break;
+            }
+        }
 
+        uint8_t max = ch;
+        double cosmax = 1;
+        if (dirction == LEFT) {
+            cosmax = cos_angle(ch - 5, ch, ch + 5, my_road[ch - 5].connected[j_mid[ch - 5]].right, my_road[ch].connected[j_mid[ch]].right, my_road[ch + 5].connected[j_mid[ch + 5]].right);
+            int i = ch;
+            while (my_road[i + 5].connected[j_mid[i + 5]].right - right_side[i + 5] < -1) {
+                //////////printf("%d:%d=%f\n", dirction, i, cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right));
+                if (cosmax < cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right)
+                    && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right) < 0
+                    && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right) > -0.8) {
+                    cosmax = cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right);
+                    max = i;
+                }
+                i++;
+            }
+            //////////printf("%d:%d=%d,%d=%d\n", dirction, ch, my_road[ch].connected[j_mid[ch]].left, max, my_road[max].connected[j_mid[max]].right);
+        }
+        else if (dirction == RIGHT) {
 
+            cosmax = cos_angle(ch - 5, ch, ch + 5, my_road[ch - 5].connected[j_mid[ch - 5]].left, my_road[ch].connected[j_mid[ch]].left, my_road[ch + 5].connected[j_mid[ch + 5]].left);
+            int i = ch;
 
-    for (int i = FAR_LINE; i < 90; i++) {
-        if (abs(my_road[i].connected[j_mid[i]].width - my_road[i + 1].connected[j_mid[i + 1]].width) > 4
-            && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) < 4) {
-            ch = i;
-            if (abs(my_road[i + 1].connected[j_mid[i + 1]].left - my_road[i].connected[j_mid[i]].left) < abs(my_road[i + 1].connected[j_mid[i + 1]].right - my_road[i].connected[j_mid[i]].right)) {
-                dirction = RIGHT;
+            while (my_road[i + 5].connected[j_mid[i + 5]].left - left_side[i + 5] > 1) {
+                //////////printf("%d:%d=%f\n", dirction, i, cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left));
+                if (cosmax < cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left)
+                    && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left) < 0
+                    && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left) > -0.8) {
+                    cosmax = cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left);
+                    max = i;
+                }
+                i++;
+            }
+            //////////printf("%d:%d=%d,%d=%d\n", dirction, ch, my_road[ch].connected[j_mid[ch]].right, max, my_road[max].connected[j_mid[max]].left);
+        }
+
+        if (dirction == RIGHT) {
+            double kr;
+            ////////////////////////////////////////////
+            double ySum = 0;
+            double y2Sum = 0;
+            double xSum = 0;
+            double xySum = 0;
+            int num = ch - 10 + 1;
+            for (int i = 10; i <= ch; i++) {
+                xSum += my_road[i].connected[j_mid[i]].right;
+                ySum += i;
+                y2Sum += i * i;
+                xySum += i * my_road[i].connected[j_mid[i]].right;
+            }
+            if ((num * y2Sum - ySum * ySum) != 0) {
+                kr = (double)(num * xySum - xSum * ySum) / (num * y2Sum - ySum * ySum);
             }
             else {
-                dirction = LEFT;
+                kr = 0;
             }
-            break;
-        }
-    }
-
-    uint8_t max = ch;
-    double cosmax = 1;
-    if (dirction == LEFT) {
-        cosmax = cos_angle(ch - 5, ch, ch + 5, my_road[ch - 5].connected[j_mid[ch - 5]].right, my_road[ch].connected[j_mid[ch]].right, my_road[ch + 5].connected[j_mid[ch + 5]].right);
-        int i = ch;
-        while (my_road[i + 5].connected[j_mid[i + 5]].right - right_side[i + 5] < -1) {
-            ////////printf("%d:%d=%f\n", dirction, i, cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right));
-            if (cosmax < cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right)
-                && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right) < 0
-                && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right) > -0.8){
-                cosmax = cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right);
-                max = i;
+            ///////////////////////////////////////////
+            //////////printf("kl=%f,kr=%f", kl, kr);
+            if (fabs(kr) < 0.1) {
+                leftUpJumpPoint = ch;
+                rightUpJumpPoint = ch;
             }
-            i++;
-        }
-        ////////printf("%d:%d=%d,%d=%d\n", dirction, ch, my_road[ch].connected[j_mid[ch]].left, max, my_road[max].connected[j_mid[max]].right);
-    }
-    else if (dirction == RIGHT) {
-
-        cosmax = cos_angle(ch - 5, ch, ch + 5, my_road[ch-5].connected[j_mid[ch - 5]].left , my_road[ch].connected[j_mid[ch]].left, my_road[ch + 5].connected[j_mid[ch + 5]].left);
-        int i = ch;
-
-        while (my_road[i + 5].connected[j_mid[i + 5]].left - left_side[i + 5] > 1) {
-            ////////printf("%d:%d=%f\n", dirction, i, cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left));
-            if (cosmax < cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left)
-                && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left) < 0
-                && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left) > -0.8) {
-                cosmax = cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left);
-                max = i;
+            else {
+                leftUpJumpPoint = max;
+                rightUpJumpPoint = ch;
             }
-            i++;
         }
-        ////////printf("%d:%d=%d,%d=%d\n", dirction, ch, my_road[ch].connected[j_mid[ch]].right, max, my_road[max].connected[j_mid[max]].left);
-    }
+        else if (dirction == LEFT) {
+            double kl;
+            //////////////////////////////////////////////
+            double ySum = 0;
+            double y2Sum = 0;
+            double xSum = 0;
+            double xySum = 0;
+            int num = ch - 10 + 1;
+            for (int i = 10; i <= ch; i++) {
+                xSum += my_road[i].connected[j_mid[i]].left;
+                ySum += i;
+                y2Sum += i * i;
+                xySum += i * my_road[i].connected[j_mid[i]].left;
+            }
+            if ((num * y2Sum - ySum * ySum) != 0) {
+                kl = (double)(num * xySum - xSum * ySum) / (num * y2Sum - ySum * ySum);
+            }
+            else {
+                kl = 0;
+            }
+            ////////////////////////////////////////////
 
+            if (fabs(kl) < 0.15) {
+                leftUpJumpPoint = ch;
+                rightUpJumpPoint = ch;
+            }
+            else {
+                leftUpJumpPoint = ch;
+                rightUpJumpPoint = max;
+            }
+        }
+        ////////printf("ru=%d,lu=%d\n", rightUpJumpPoint, leftUpJumpPoint);
 
-    if (dirction == RIGHT) {
-        double kr;
+        double kl;
         ////////////////////////////////////////////
         double ySum = 0;
         double y2Sum = 0;
         double xSum = 0;
         double xySum = 0;
-        int num = ch - 10 + 1;
-        for (int i = 10; i <= ch; i++) {
-            xSum += my_road[i].connected[j_mid[i]].right;
-            ySum += i;
-            y2Sum += i * i;
-            xySum += i * my_road[i].connected[j_mid[i]].right;
-        }
-        if ((num * y2Sum - ySum * ySum) != 0) {
-            kr = (double)(num * xySum - xSum * ySum) / (num * y2Sum - ySum * ySum);
-        }
-        else {
-            kr = 0;
-        }
-        ///////////////////////////////////////////
-        ////////printf("kl=%f,kr=%f", kl, kr);
-        if (fabs(kr) < 0.15) {
-            leftUpJumpPoint = ch;
-            rightUpJumpPoint = ch;
-        }
-        else {
-            leftUpJumpPoint = max;
-            rightUpJumpPoint = ch;
-        }
-    }
-    else if (dirction == LEFT) {
-        double kl;
-        //////////////////////////////////////////////
-        double ySum = 0;
-        double y2Sum = 0;
-        double xSum = 0;
-        double xySum = 0;
-        int num = ch - 10 + 1;
-        for (int i = 10; i <= ch; i++) {
+        int num = leftUpJumpPoint - 5 + 1;
+        for (int i = 5; i <= leftUpJumpPoint; i++) {
             xSum += my_road[i].connected[j_mid[i]].left;
             ySum += i;
             y2Sum += i * i;
@@ -2578,69 +2782,37 @@ void design_cross_out() {
             kl = 0;
         }
         ////////////////////////////////////////////
-
-        if (fabs(kl) < 0.15) {
-            leftUpJumpPoint = ch;
-            rightUpJumpPoint = ch;
+        double kr;
+        ////////////////////////////////////////////
+        double ySum1 = 0;
+        double y2Sum1 = 0;
+        double xSum1 = 0;
+        double xySum1 = 0;
+        int num1 = rightUpJumpPoint - 5 + 1;
+        for (int i = 5; i <= rightUpJumpPoint; i++) {
+            xSum1 += my_road[i].connected[j_mid[i]].right;
+            ySum1 += i;
+            y2Sum1 += i * i;
+            xySum1 += i * my_road[i].connected[j_mid[i]].right;
+        }
+        if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
+            kr = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
         }
         else {
-            leftUpJumpPoint = ch;
-            rightUpJumpPoint = max;
+            kr = 0;
         }
-    }
-    //////printf("ru=%d,lu=%d\n", rightUpJumpPoint, leftUpJumpPoint);
-
-    double kl;
-    ////////////////////////////////////////////
-    double ySum = 0;
-    double y2Sum = 0;
-    double xSum = 0;
-    double xySum = 0;
-    int num = leftUpJumpPoint - 10 + 1;
-    for (int i = 10; i <= leftUpJumpPoint; i++) {
-        xSum += my_road[i].connected[j_mid[i]].left;
-        ySum += i;
-        y2Sum += i * i;
-        xySum += i * my_road[i].connected[j_mid[i]].left;
-    }
-    if ((num * y2Sum - ySum * ySum) != 0) {
-        kl = (double)(num * xySum - xSum * ySum) / (num * y2Sum - ySum * ySum);
-    }
-    else {
-        kl = 0;
-    }
-    ////////////////////////////////////////////
-    double kr;
-    ////////////////////////////////////////////
-    double ySum1 = 0;
-    double y2Sum1 = 0;
-    double xSum1 = 0;
-    double xySum1 = 0;
-    int num1 =  rightUpJumpPoint- 10 + 1;
-    for (int i = 10; i <= rightUpJumpPoint; i++) {
-        xSum1 += my_road[i].connected[j_mid[i]].right;
-        ySum1 += i;
-        y2Sum1 += i * i;
-        xySum1 += i * my_road[i].connected[j_mid[i]].right;
-    }
-    if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
-        kr = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
-    }
-    else {
-        kr = 0;
-    }
-    ///////////////////////////////////////////
+        ///////////////////////////////////////////
 
 
 
-    uint8_t xl = my_road[10].connected[j_mid[10]].left;
-    uint8_t xr = my_road[10].connected[j_mid[10]].right;
+        uint8_t xl = my_road[5].connected[j_mid[5]].left;
+        uint8_t xr = my_road[5].connected[j_mid[5]].right;
 
-    for (int i = 105; i >= 10; i--) {
-        left_line[i] = kl * (i - 10) + xl;
-        right_line[i] = kr * (i - 10) + xr;
-        //////////printf("%d=%d,%d\n", i, leftSide[i], rightSide[i]);
-    }
+        for (int i = 105; i >= 5; i--) {
+            left_line[i] = kl * (i - 5) + xl;
+            right_line[i] = kr * (i - 5) + xr;
+            ////////////printf("%d=%d,%d\n", i, leftSide[i], rightSide[i]);
+        }
 
     }
 
@@ -2652,7 +2824,7 @@ void design_cross_out() {
 //输出：
 //备注：
 ///////////////////////////////////////////
-void cross_over() {
+void cross_over()  {
     int flag = 0;
     ////////////////////////////////
     //从上往下
@@ -2671,7 +2843,7 @@ void cross_over() {
             }
         }
 
-        ////////printf("%d:%dand%d\n", i, my_road[i].connected[j_mid[i]].left, my_road[i].connected[j_mid[i]].right);
+        //////////printf("%d:%dand%d\n", i, my_road[i].connected[j_mid[i]].left, my_road[i].connected[j_mid[i]].right);
     }
     for (int i = FAR_LINE; i < 90; i++) {
         if (abs(my_road[i].connected[j_mid[i]].width - my_road[i + 1].connected[j_mid[i + 1]].width) > 4
@@ -2692,7 +2864,7 @@ void cross_over() {
         cosmax = cos_angle(ch - 5, ch, ch + 5, my_road[ch - 5].connected[j_mid[ch - 5]].right, my_road[ch].connected[j_mid[ch]].right, my_road[ch + 5].connected[j_mid[ch + 5]].right);
         int i = ch;
         while (my_road[i + 5].connected[j_mid[i + 5]].right - right_side[i + 5] < -1) {
-            ////////printf("%d:%d=%f\n", dirction, i, cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right));
+            //////////printf("%d:%d=%f\n", dirction, i, cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right));
             if (cosmax < cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right)
                 && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right) < 0
                 && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].right, my_road[i].connected[j_mid[i]].right, my_road[i + 5].connected[j_mid[i + 5]].right) > -0.8) {
@@ -2701,7 +2873,7 @@ void cross_over() {
             }
             i++;
         }
-        ////////printf("%d:%d=%d,%d=%d\n", dirction, ch, my_road[ch].connected[j_mid[ch]].left, max, my_road[max].connected[j_mid[max]].right);
+        //////////printf("%d:%d=%d,%d=%d\n", dirction, ch, my_road[ch].connected[j_mid[ch]].left, max, my_road[max].connected[j_mid[max]].right);
     }
     else if (dirction == RIGHT) {
 
@@ -2709,7 +2881,7 @@ void cross_over() {
         int i = ch;
 
         while (my_road[i + 5].connected[j_mid[i + 5]].left - left_side[i + 5] > 1) {
-            ////////printf("%d:%d=%f\n", dirction, i, cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left));
+            //////////printf("%d:%d=%f\n", dirction, i, cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left));
             if (cosmax < cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left)
                 && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left) < 0
                 && cos_angle(i - 5, i, i + 5, my_road[i - 5].connected[j_mid[i - 5]].left, my_road[i].connected[j_mid[i]].left, my_road[i + 5].connected[j_mid[i + 5]].left) > -0.8) {
@@ -2718,7 +2890,7 @@ void cross_over() {
             }
             i++;
         }
-        ////////printf("%d:%d=%d,%d=%d\n", dirction, ch, my_road[ch].connected[j_mid[ch]].right, max, my_road[max].connected[j_mid[max]].left);
+        //////////printf("%d:%d=%d,%d=%d\n", dirction, ch, my_road[ch].connected[j_mid[ch]].right, max, my_road[max].connected[j_mid[max]].left);
     }
 
     if (dirction == RIGHT) {
@@ -2742,7 +2914,7 @@ void cross_over() {
             kr = 0;
         }
         ///////////////////////////////////////////
-        ////////printf("kl=%f,kr=%f", kl, kr);
+        //////////printf("kl=%f,kr=%f", kl, kr);
         if (fabs(kr) < 0.15) {
             leftUpJumpPoint = ch;
             rightUpJumpPoint = ch;
@@ -2788,15 +2960,15 @@ void cross_over() {
         flag = 1;
     }
 
-    int sumB=0;
-    for(int i=1;i<=10;i++){
-        if(my_road[i].white_num==0){
+    int sumB = 0;
+    for (int i = 1; i <= 10; i++) {
+        if (my_road[i].white_num == 0) {
             sumB++;
         }
     }
 
-    if(sumB>=9){
-        flag=1;
+    if (sumB >= 9) {
+        flag = 1;
     }
 
     if (flag == 1) {
@@ -2807,9 +2979,6 @@ void cross_over() {
             lastState[1] = 1;
         }
         else if (lastState[1] == 1 && lastTwoState[1] == 1) {
-            if(sumB>=9){
-
-            }
             state = 0;
             lastState[1] = 0;
             lastTwoState[1] = 0;
@@ -2838,7 +3007,7 @@ void island_start(int type) {
     int delta = 2;
     int flag_left = 1;
     int flag_right = 1;
-//  ////////printf("right=%d,", rightUpJumpPoint);
+//  //////////printf("right=%d,", rightUpJumpPoint);
 //  一边是直线是个非常重要的事情，直线可以展示以下几个性质：
 //  拐弯的方向，小车与道路之间的关系
 
@@ -2881,7 +3050,7 @@ void island_start(int type) {
                 flag = 0;
             }
         }
-        //////////printf("flag=%d\n", flag);
+        ////////////printf("flag=%d\n", flag);
         uint8_t pointC=119;
         for (int i = 104; i >= 30; i--) {
 
@@ -2900,7 +3069,7 @@ void island_start(int type) {
         if (pointC > 104 || pointC < 50) {
             flag = 0;
         }
-        //////////printf("flag=%d\n", flag);
+        ////////////printf("flag=%d\n", flag);
     }
     else if (islandtype == LEFT) {
 
@@ -2920,7 +3089,7 @@ void island_start(int type) {
                 flag = 0;
             }
         }
-        //////////printf("flag=%d\n", flag);
+        ////////////printf("flag=%d\n", flag);
         uint8_t pointC = 119;
         for (int i = 104; i >= 30; i--) {
 
@@ -2939,10 +3108,10 @@ void island_start(int type) {
         if (pointC > 104 || pointC < 50) {
             flag = 0;
         }
-        //////////printf("flag=%d\n", flag);
+        ////////////printf("flag=%d\n", flag);
 
     }
-    //////////printf("lt=%d,ls=%d", lastTwoState[2], lastState[2]);
+    ////////////printf("lt=%d,ls=%d", lastTwoState[2], lastState[2]);
     if (flag == 1) {
         if (lastTwoState[2] == 0 && lastState[2] == 0) {
             lastTwoState[2] = 1;
@@ -3270,7 +3439,7 @@ void  islandOrcross_circle(int type) {
             else {
                 flag2 = 0;
             }
-            //////printf("1=%d,2=%d", flag1, flag2);
+            ////////printf("1=%d,2=%d", flag1, flag2);
 
             if (flag1 == 1) {
                 if (lastTwoState[3] == 0 && lastState[3] == 0) {
@@ -3520,9 +3689,9 @@ void design_island_turn(int type) {
             for (int i = 90; i >= Min - 3; i--) {
                 left_line[i] = k1 * (i - Min) + rightSide[Min];
             }
-            //////////////printf("y=%d,x=%d", Min, rightSide[Min]);
+            ////////////////printf("y=%d,x=%d", Min, rightSide[Min]);
         }
-        //////////////printf("k=%f", k);
+        ////////////////printf("k=%f", k);
     }
     else if (islandtype == LEFT) {
         double k = calculate_slope(70, 90, RIGHT);
@@ -3552,9 +3721,9 @@ void design_island_turn(int type) {
             for (int i = 90; i >= Min - 3; i--) {
                 right_line[i] = k1 * (i - Min) + leftSide[Min];
             }
-            //////////////printf("y=%d,x=%d", Min, rightSide[Min]);
+            ////////////////printf("y=%d,x=%d", Min, rightSide[Min]);
         }
-        //////////////printf("k=%f", k);
+        ////////////////printf("k=%f", k);
     }
 }
 
@@ -3584,7 +3753,7 @@ void island_turn(int type) {
 
 
     if (flag == 1) {
-        //////////////printf("state=%d,laststate=%d,lasttwostate=%d", state, lastState, lastTwoState);
+        ////////////////printf("state=%d,laststate=%d,lasttwostate=%d", state, lastState, lastTwoState);
         if (lastTwoState[3] == 0 && lastState[3] == 0) {
             lastTwoState[3] = 1;
         }
@@ -3592,7 +3761,7 @@ void island_turn(int type) {
             lastState[3] = 1;
         }
         else if (lastTwoState[3] == 1 && lastState[3] == 1) {
-            state = stateIsland3;
+            state = stateIsland5;
             lastTwoState[3] = 0;
             lastState[3] = 0;
         }
@@ -3647,7 +3816,7 @@ void design_island_out(int type) {
 //                          right_line[i] = left_line[i] + d;
 //                      }
 //                  }
-//                  ////////////printf("%d=%d", top, left_line[11]);
+//                  //////////////printf("%d=%d", top, left_line[11]);
 //              }
 //              else {
 //                  uint8_t leftSide[CAMERA_H];
@@ -3663,7 +3832,7 @@ void design_island_out(int type) {
 //                          right_line[i] = left_line[i] + d;
 //                      }
 //                  }
-//                  ////////////printf("2");
+//                  //////////////printf("2");
 //              }
 //
 //          }
@@ -3698,7 +3867,7 @@ void design_island_out(int type) {
 //                          left_line[i] = right_line[i] + d;
 //                      }
 //                  }
-//                  //////////////printf("%d=%d", top, left_line[11]);
+//                  ////////////////printf("%d=%d", top, left_line[11]);
 //              }
 //              else {
 //                  uint8_t rightSide[CAMERA_H];
@@ -3714,7 +3883,7 @@ void design_island_out(int type) {
 //                          left_line[i] = right_line[i] + d;
 //                      }
 //                  }
-//                  ////////////printf("2");
+//                  //////////////printf("2");
 //              }
 //          }
 //    }
@@ -3748,7 +3917,7 @@ void design_island_out(int type) {
                     right_line[i] = left_line[i] + d;
                 }
             }
-            ////////////printf("%d=%d", top, left_line[11]);
+            //////////////printf("%d=%d", top, left_line[11]);
         }
         else {
             uint8_t leftSide[CAMERA_H];
@@ -3767,7 +3936,7 @@ void design_island_out(int type) {
                     right_line[i] = left_line[i] + d;
                 }
             }
-            ////////////printf("2");
+            //////////////printf("2");
         }
 
     }
@@ -3801,7 +3970,7 @@ void design_island_out(int type) {
                     left_line[i] = right_line[i] + d;
                 }
             }
-            //////////////printf("%d=%d", top, left_line[11]);
+            ////////////////printf("%d=%d", top, left_line[11]);
         }
         else {
             uint8_t rightSide[CAMERA_H];
@@ -3820,7 +3989,7 @@ void design_island_out(int type) {
                     left_line[i] = right_line[i] + d;
                 }
             }
-            ////////////printf("2");
+            //////////////printf("2");
         }
     }
 }
@@ -3839,16 +4008,16 @@ void island_out_straight(int type) {
                 || left_line[i + 1] > left_line[i] || left_line[i + 2] > left_line[i]
                 ){
                 flag = 0;
-                ////////////printf("%d\n", i);
+                //////////////printf("%d\n", i);
                 break;
             }
         }
-        ////////////printf("flag1=%d\n", flag);
+        //////////////printf("flag1=%d\n", flag);
         if (fabs(calculate_slope(70, 100, LEFT) - calculate_slope(50, 80, LEFT)) > 0.1
             || calculate_slope(70, 100, LEFT) > 0 || calculate_slope(50, 80, LEFT) > 0) {
             flag = 0;
         }
-        ////////////printf("flag2=%d\n", flag);
+        //////////////printf("flag2=%d\n", flag);
     }
     else if (islandtype == LEFT) {
         for (int i = 102; i >= 30; i--) {
@@ -3866,7 +4035,7 @@ void island_out_straight(int type) {
     }
 
     if (flag == 1) {
-        //////////////printf("state=%d,laststate=%d", state, lastState);
+        ////////////////printf("state=%d,laststate=%d", state, lastState);
         if ( lastState[3] == 0) {
             lastState[3] = 1;
         }
@@ -3895,7 +4064,7 @@ void island_out_straight(int type) {
 ///////////////////////////////////////////
 void design_island_final(int type) {
     if (islandtype == RIGHT) {
-        ////////////printf("1");
+        //////////////printf("1");
         double k = calculate_slope(90, 100, LEFT);
 
         int x = right_line[105];
@@ -3934,7 +4103,7 @@ void island_straight(int type) {
         flag = 1;
     }
     if (flag == 1) {
-        //////////////printf("state=%d,laststate=%d,lasttwostate=%d", state, lastState, lastTwoState);
+        ////////////////printf("state=%d,laststate=%d,lasttwostate=%d", state, lastState, lastTwoState);
         if (lastTwoState[3] == 0 && lastState[3] == 0) {
             lastTwoState[3] = 1;
         }
@@ -4036,7 +4205,7 @@ void design_cross_circle_out() {
                     right_line[i - 2] == right_side[i - 2] &&
                     right_line[i - 1] - right_line[i] >= Right_Jump_Point_MaxD_Value)
                 {
-                    //printf("%d", i);
+                    ////printf("%d", i);
                     for (int j = i + 2; j >= FAR_LINE; j--)
                     {
                         if (IMG[j][right_line[i + 2]] != black)
@@ -4075,7 +4244,7 @@ void design_cross_circle_out() {
                     left_line[i - 2] == left_side[i - 2] &&
                     left_line[i] - left_line[i - 1] >= Left_Jump_Point_MaxD_Value)
                 {
-                    //printf("%d", i);
+                    ////printf("%d", i);
                     for (int j = i + 2; j >= FAR_LINE; j--)
                     {
                         if (IMG[j][left_line[i + 2]] != black)
@@ -4122,7 +4291,7 @@ void design_cross_circle_out() {
 ////                        return leftPark;
 ////                    }
 //                    else return -1;
-//                    //////////////////////printf("white_num=%d", my_road[i].white_num);
+//                    ////////////////////////printf("white_num=%d", my_road[i].white_num);
 //                    break;
 //                }
 //            }
@@ -4281,7 +4450,7 @@ void design_park()
         }
     }
 
-    //printf("leftpark = %d, rightpark = %d/n",leftPark, rightPark);
+    ////printf("leftpark = %d, rightpark = %d/n",leftPark, rightPark);
 
     for (j = 5; j < 75; j++)
     {
@@ -4374,20 +4543,20 @@ void protection() {
     int count1 = 0;
     uint8_t* pmap;
     pmap = fullBuffer + 60 * 188;
-    ////////////printf("%d", *(pmap));
+    //////////////printf("%d", *(pmap));
     for (int i = 0;i < 10 * 188;i++)
     {
-        ////////////printf("%d  ", *(pmap));
+        //////////////printf("%d  ", *(pmap));
         if (*(pmap) < 100)
         {
             count1++;
-            ////////////printf("1 ");
+            //////////////printf("1 ");
 
         }
         pmap++;
-        ////////////printf("%d  ", *(pmap));
+        //////////////printf("%d  ", *(pmap));
     }
-    ////////////printf("%d", count1);
+    //////////////printf("%d", count1);
     if (count1 > 9*188) stopFlag=1;
 
 
@@ -4444,7 +4613,7 @@ void folk_road_in() {
                     leftRoad[i].width = leftRoad[i].right - leftRoad[i].left;
                     rightRoad[i].width = rightRoad[i].right - rightRoad[i].left;
                 }
-                ////printf("%d:%dand%d,%dand%d,num=%d\n", i, leftRoad[i].left, leftRoad[i].right, rightRoad[i].left, rightRoad[i].right, my_road[i].white_num);
+                //////printf("%d:%dand%d,%dand%d,num=%d\n", i, leftRoad[i].left, leftRoad[i].right, rightRoad[i].left, rightRoad[i].right, my_road[i].white_num);
             }
         }
             uint8_t top = 119;
@@ -4488,7 +4657,7 @@ void folk_road_in() {
                     }
                 }
             }
-            ////printf("%d=%f,%d,=%f\n", minL, cosMinL, minR, cosMinR);
+            //////printf("%d=%f,%d,=%f\n", minL, cosMinL, minR, cosMinR);
 
 
             double k1 = calculate_slope(minL, minL + 10, LEFT);
@@ -4510,7 +4679,7 @@ void folk_road_in() {
                         whiteNum[i]++;
                     }
                 }
-                ////printf("%d,top=%d,l=%d,r=%d,whiteNum=%d\n", i, top, leftStraight[i], rightStraight[i], whiteNum[i]);
+                //////printf("%d,top=%d,l=%d,r=%d,whiteNum=%d\n", i, top, leftStraight[i], rightStraight[i], whiteNum[i]);
             }
             int sumW = 0;
             for (int i = FAR_LINE; i <= 25; i++) {
@@ -4565,7 +4734,7 @@ void folk_road_in() {
                 if (fabs(kt - kl) < 1) {
                     flag = 0;
                 }
-                ////printf("flag1=%f\n", fabs(kt - kr));
+                //////printf("flag1=%f\n", fabs(kt - kr));
             }
             else {
                 uint8_t kt;
@@ -4592,7 +4761,7 @@ void folk_road_in() {
                 if (fabs(kt - kr) < 1) {
                     flag = 0;
                 }
-                //////printf("flag1=%f\n", fabs(kt - kr));
+                ////////printf("flag1=%f\n", fabs(kt - kr));
             }
             uint8_t sumk = 0;
             for (int i = 1; i <= 10; i++) {
@@ -4701,7 +4870,7 @@ void design_folkroad_in() {
                 break;
             }
         }
-        ////////////printf
+        //////////////printf
         double k = (double)(left_line[106] - (rightRoad[top -1].left+leftRoad[top-1].right)/2) / (106 - top);
 
         int x = left_line[106];
@@ -4737,14 +4906,14 @@ void folk_road_out() {
                 }
 
                 double p = (double)sum / 71;
-                //////////printf("p=%f\n", p);
+                ////////////printf("p=%f\n", p);
                 if (p > 0.9) {
                     flag = 1;
                 }
             }
 
 
-        //////////printf("d=%f\n", fabs(calculate_slope(70, 93, LEFT) - calculate_slope(70, 93, RIGHT)) );
+        ////////////printf("d=%f\n", fabs(calculate_slope(70, 93, LEFT) - calculate_slope(70, 93, RIGHT)) );
     }
     else if (TurnFolkRoad == LEFT) {
         for (int i = 108; i > 35; i--) {
@@ -4776,137 +4945,6 @@ void folk_road_out() {
     }
 }
 
-////////////////////////////////////////////
-//功能： 三叉与十字的区分
-//输入：
-//输出：
-//备注：
-///////////////////////////////////////////
-void folk_or_cross() {
-
-    int flag = 0;
-        uint8_t ch = NEAR_LINE;
-        int dirction = 0;
-        for (int i = NEAR_LINE - 2; i > 20; i--) {
-            if (abs(my_road[i].connected[j_continue[i]].width - my_road[i + 1].connected[j_continue[i + 1]].width) < 4
-                && (my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width) > 4) {
-                ch = i;
-                if (abs(left_line[i - 1] - left_line[i]) < abs(right_line[i - 1] - right_line[i])) {
-                    dirction = RIGHT;
-                }
-                else {
-                    dirction = LEFT;
-                }
-                break;
-            }
-        }
-
-        uint8_t max = ch;
-        double cosmax = 1;
-        if (dirction == LEFT) {
-            cosmax = -1;
-            uint8_t i = ch;
-            while (right_line[i - 5] < right_side[i - 5] - 1 && ch - i <= 35) {
-                ////printf("%d=%f,%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]), cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])-cosmax);
-                if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
-                    && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) < -0.1
-                    && cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]) > -0.8) {
-                    cosmax = cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]);
-                    max = i;
-                    ////printf("?????????????max=%d", max);
-                }
-                i--;
-            }
-        }
-        else if (dirction == RIGHT) {
-            uint8_t i = ch;
-            cosmax = -1;
-            while (left_line[i - 5] > left_side[i - 5] && ch - i <= 35) {
-                //printf("%d,cos=%f\n", i, cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5]));
-                if (cosmax < cos_angle(i - 5, i, i + 5, right_line[i - 5], right_line[i], right_line[i + 5])
-                    && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) < 0
-                    && cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]) > -0.8) {
-                    cosmax = cos_angle(i - 5, i, i + 5, left_line[i - 5], left_line[i], left_line[i + 5]);
-                    max = i;
-                    //  //printf("??????????????????%d\n", max);
-                }
-                i--;
-                ////printf("max=%d", max);
-            }
-        }
-
-        if (dirction == RIGHT) {
-            double kl = calculate_slope(max, max + 10, LEFT);
-            double kr = calculate_slope(ch, ch + 10, RIGHT);
-
-            if (fabs(kr) < 0.15) {
-                leftDownJumpPoint = ch;
-                rightDownJumpPoint = ch;
-            }
-            else {
-                leftDownJumpPoint = max;
-                rightDownJumpPoint = ch;
-            }
-        }
-        else if (dirction == LEFT) {
-            double kl = calculate_slope(ch, 105, LEFT);
-            double kr = calculate_slope(max, 105, RIGHT);
-            if (fabs(kl) < 0.15) {
-                leftDownJumpPoint = ch;
-                rightDownJumpPoint = ch;
-            }
-            else {
-                leftDownJumpPoint = ch;
-                rightDownJumpPoint = max;
-            }
-        }
-
-        int leftSide[CAMERA_H];
-        int rightSide[CAMERA_H];
-
-        double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 20, LEFT);
-        double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 20, RIGHT);
-        uint8_t xl = left_line[leftDownJumpPoint];
-        uint8_t xr = right_line[rightDownJumpPoint];
-
-        for (int i = 100; i >= 2; i--) {
-            leftSide[i] = kl * (i - leftDownJumpPoint) + xl;
-            rightSide[i] = kr * (i - rightDownJumpPoint) + xr;
-            if (leftSide[i] <= left_side[i]) {
-                leftSide[i] = left_side[i];
-            }
-            if (rightSide[i] >= right_side[i]) {
-                rightSide[i] = right_side[i];
-            }
-        }
-
-        if (75 <= leftDownJumpPoint
-            && 75 <= rightDownJumpPoint) {
-            flag = 1;
-        }
-
-
-
-         if (flag == 1) {
-            if (flag == 1) {
-                //////printf("state=%d,laststate=%d", state, lastState);
-                if (lastState[1] == 0) {
-                    lastState[1] = 1;
-                }
-
-                else if (lastState[1] == 1) {
-                    state = stateOutCrossStraight;
-                    lastTwoState[1] = 0;
-                    lastState[1] = 0;
-                }
-                else {
-                    lastState[1] = 0;
-                    lastTwoState[1] = 0;
-                }
-            }
-        }
-
-}
 
 ////////////////////////////
 void cross_circle_out_patch()
@@ -4938,7 +4976,7 @@ void cross_circle_out_patch()
                                 right_line[i - 2] == right_side[i - 2] &&
                                 right_line[i - 1] - right_line[i] >= Right_Jump_Point_MaxD_Value)
                             {
-                                //printf("%d", i);
+                                ////printf("%d", i);
                                 for (int j = i+2;j >= FAR_LINE;j--)
                                 {
                                     if (IMG[j][right_line[i + 2]] != black)
@@ -4977,7 +5015,7 @@ void cross_circle_out_patch()
                                                 left_line[i - 2] == left_side[i - 2] &&
                                                 left_line[i] - left_line[i-1] >= Left_Jump_Point_MaxD_Value)
                                         {
-                                            //printf("%d", i);
+                                            ////printf("%d", i);
                                             for (int j = i+2;j >= FAR_LINE;j--)
                                             {
                                                 if (IMG[j][left_line[i + 2]] != black)
@@ -4992,4 +5030,154 @@ void cross_circle_out_patch()
         }
 
 
+}
+
+void island_out(int type)
+{
+    int jump_point;
+    int delta = 1;
+    int midPoint;
+    float k_low, k_up, k_jump, k_jump_up;
+    int kl, ku, kj, kju;
+
+    for (jump_point = 85; jump_point > 45; jump_point--)
+    {
+        if (type == LEFT)
+        {
+            if (right_line[jump_point - 3] - right_line[jump_point] > delta && right_line[jump_point + 3] - right_line[jump_point] > delta)
+            {
+                midPoint = (jump_point + 106) / 2;
+                k_jump_up = calculate_slope_two_point(jump_point - 10, RIGHT, jump_point, RIGHT);
+                kju = k_jump_up * (-1000);
+                k_jump = calculate_slope_two_point(jump_point, RIGHT, 106, RIGHT);
+                kj = k_jump * 1000;
+                k_low = calculate_slope_two_point(midPoint, RIGHT, 106, RIGHT);
+                kl = k_low * 1000;
+                k_up = calculate_slope_two_point(jump_point, RIGHT, midPoint, RIGHT);
+                ku = k_up * 1000;
+                ////printf("jumppoint=%d", jump_point);
+                ////printf("kjump = %f,klow = %f,kup = %f,kju=%f\n", k_jump, k_low, k_up,k_jump_up);
+                ////printf("kj = %d, kl = %d, ku = %d, kju=%d\n", kj, kl, ku, kju);
+
+                IMG[jump_point][right_line[jump_point] - 1] = purple;
+
+                if (ku > kj && ku > kl && kj > kl && kju < 2000)
+                {
+                    if (myIslandFlag == 1)
+                    {
+                        if (lastK_up > ku && lastK_jump > kj)
+                        {
+                            ////printf("lastrightline=%d,rightline=%d", right_line[lastJumpPoint], right_line[jump_point]);
+                            if (right_line[lastJumpPoint] <= right_line[jump_point])
+                            {
+                                myIslandFlag = 1;
+                                lastJumpPoint = jump_point;
+                                lastK_up = ku;
+                                lastK_jump = kj;
+                            }
+                            else myIslandFlag = 0;
+                        }
+                        else myIslandFlag = 0;
+
+
+                    }
+                    else if (myIslandFlag == 0)
+                    {
+                        myIslandFlag = 1;
+                        lastJumpPoint = jump_point;
+                        lastK_up = ku;
+                        lastK_jump = kj;
+
+                    }
+                }
+                else myIslandFlag = 0;
+
+                break;
+            }
+            else myIslandFlag = 0;
+        }
+
+        else if (type == RIGHT)//斜率k是负值，比较时要修改一下，还没改
+        {
+            if (left_line[jump_point] - left_line[jump_point - 3] > delta && left_line[jump_point] - left_line[jump_point - 3] > delta)
+            {
+                midPoint = (jump_point + 106) / 2;
+                k_jump_up = calculate_slope_two_point(jump_point - 10, RIGHT, jump_point, RIGHT);
+                kju = k_jump_up * (-1000);
+                k_jump = calculate_slope_two_point(jump_point, LEFT, 106, LEFT);
+                kj = k_jump * (-1000);
+                k_low = calculate_slope_two_point(midPoint, LEFT, 106, LEFT);
+                kl = k_low * (-1000);
+                k_up = calculate_slope_two_point(jump_point, LEFT, midPoint, LEFT);
+                ku = k_up * (-1000);
+
+                ////printf("kjump = %f,klow = %f,kup = %f,kju=%f\n", k_jump, k_low, k_up, k_jump_up);
+                ////printf("kj = %d, kl = %d, ku = %d, kju=%d\n", kj, kl, ku, kju);
+
+                IMG[jump_point][left_line[jump_point] + 1] = purple;
+
+                if (ku > kj && ku > kl && kj > kl && kju < 500)
+                {
+                    if (myIslandFlag == 1)
+                    {
+                        if (lastK_up > ku && lastK_jump > kj)
+                        {
+                            ////printf("lastrightline=%d,rightline=%d", right_line[lastJumpPoint], right_line[jump_point]);
+                            if (right_line[lastJumpPoint] >= right_line[jump_point])
+                            {
+                                myIslandFlag = 1;
+                                lastJumpPoint = jump_point;
+                                lastK_up = ku;
+                                lastK_jump = kj;
+                            }
+                            else myIslandFlag = 0;
+                        }
+                        else myIslandFlag = 0;
+
+                    }
+                    else if (myIslandFlag == 0)
+                    {
+                        myIslandFlag = 1;
+                        lastJumpPoint = jump_point;
+                        lastK_up = ku;
+                        lastK_jump = kj;
+
+                    }
+                }
+                else myIslandFlag = 0;
+
+                break;
+            }
+            else myIslandFlag = 0;
+
+        }
+    }
+
+    if (myIslandFlag == 1)
+    {
+        if (lastState[4] == 0 && lastTwoState[4] == 0)
+        {
+            lastTwoState[4] = 1;
+        }
+        else if (lastTwoState[4] == 1 && lastState[4] == 0)
+        {
+            lastState[4] = 1;
+
+        }
+        else if (lastTwoState[4] == 1 && lastState[4] == 1)
+        {
+            state = stateIsland3;
+        }
+        else
+        {
+            lastState[4] = 0;
+            lastTwoState[4] = 0;
+        }
+    }
+    else if (myIslandFlag == 0)
+    {
+        lastState[4] = 0;
+        lastTwoState[4] = 0;
+    }
+    ////printf("lasttwo=%d,last=%d\n", lastTwoState[4], lastState[4]);
 }
