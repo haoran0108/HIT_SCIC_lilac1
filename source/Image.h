@@ -121,6 +121,8 @@
 #define stateCrossCircleIng 13
 
 #define stateCarPark 14
+#define stateStraightCrossIn 15
+
 
 /////////////////////////////
 
@@ -209,8 +211,13 @@ void find_jump_point();
 void judge_type_road();
 int circle_360();
 double cos_angle();
+double calculate_any_slope(int start,int end,int side[CAMERA_H]);
 
 //Ê®×Ö
+void straight_cross_in();
+void design_straight_cross();
+void straight_cross_over();
+
 void cross_in();
 void cross_out();
 void cross_over();

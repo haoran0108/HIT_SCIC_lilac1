@@ -20,8 +20,8 @@
 #include "math.h"
 #include "SmartCar_ADC.h"
 
-#define PWM_MAX 9500
-#define PWM_MAX_N -8000
+#define PWM_MAX 9900
+#define PWM_MAX_N -9900
 #define pi 3.1415927
 
 /*Ô²ÐÎÇ°Õ°*/

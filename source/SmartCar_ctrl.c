@@ -251,7 +251,7 @@ void CTRL_Init()
 //    presentSpeedR.intValue = 1800;
 
     Pit_Init_ms(CCU6_0, PIT_CH0, 5);//定时器中断，给电机使用（0模块0通道）
-    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 630);//舵机
+    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 700);//舵机
     /*B、D给pwm，左右轮正转，AB右轮，CD左轮*/
     GPIO_Init(P33, 9,PUSHPULL, 0);//左正
     GPIO_Init(P33, 11,PUSHPULL, 1);//右正
@@ -295,43 +295,43 @@ float CTRL_FuzzyMemberShip(int midError)
 
     if(midError < PB && midError > PM)
     {
-        membership[0] = (midError - PM) / fuzzyWidth;
-        membership[1] = (midError - PB) / fuzzyWidth;
+        membership[0] = fabs((midError - PM) / fuzzyWidth);
+        membership[1] = fabs((midError - PB) / fuzzyWidth);
 
         servoKP = fuzzyPB.floatValue * membership[0] + fuzzyPM.floatValue * membership[1];
     }
     else if(midError < PM && midError > PS)
     {
-        membership[0] = (midError - PS) / fuzzyWidth;
-        membership[1] = (midError - PM) / fuzzyWidth;
+        membership[0] = fabs((midError - PS) / fuzzyWidth);
+        membership[1] = fabs((midError - PM) / fuzzyWidth);
 
         servoKP = fuzzyPM.floatValue * membership[0] + fuzzyPS.floatValue * membership[1];
     }
     else if(midError < PS && midError > ZO)
     {
-        membership[0] = (midError - ZO) / fuzzyWidth;
-        membership[1] = (midError - PS) / fuzzyWidth;
+        membership[0] = fabs((midError - ZO) / fuzzyWidth);
+        membership[1] = fabs((midError - PS) / fuzzyWidth);
 
         servoKP = fuzzyPS.floatValue * membership[0] + fuzzyZO.floatValue * membership[1];
     }
     else if(midError < ZO && midError > NS)
     {
-        membership[0] = (midError - NS) / fuzzyWidth;
-        membership[1] = (midError - ZO) / fuzzyWidth;
+        membership[0] = fabs((midError - NS) / fuzzyWidth);
+        membership[1] = fabs((midError - ZO) / fuzzyWidth);
 
         servoKP = fuzzyZO.floatValue * membership[0] + fuzzyNS.floatValue * membership[1];
     }
     else if(midError < NS && midError > NM)
     {
-        membership[0] = (midError - NM) / fuzzyWidth;
-        membership[1] = (midError - NS) / fuzzyWidth;
+        membership[0] = fabs((midError - NM) / fuzzyWidth);
+        membership[1] = fabs((midError - NS) / fuzzyWidth);
 
         servoKP = fuzzyNS.floatValue * membership[0] + fuzzyNM.floatValue * membership[1];
     }
     else if(midError < NM && midError > NB)
     {
-        membership[0] = (midError - NB) / fuzzyWidth;
-        membership[1] = (midError - NM) / fuzzyWidth;
+        membership[0] = fabs((midError - NB) / fuzzyWidth);
+        membership[1] = fabs((midError - NM) / fuzzyWidth);
 
         servoKP = fuzzyNM.floatValue * membership[0] + fuzzyNB.floatValue * membership[1];
     }
@@ -381,13 +381,14 @@ void CTRL_motorPID()
 //        expectL = 0;
 //        expectR = 0;
 //    }
-    if(stopFlag == 0 && flagStop == 0)
-    {
-        expectL = presentSpeed.intValue;//左轮
-        expectR = presentSpeed.intValue;//右轮
-    }
+//    if(stopFlag == 0 && flagStop == 0)
+//    {
+//    expectL = presentSpeed.intValue;//左轮
+//    expectR = presentSpeed.intValue;//右轮
+//    }
 
     speedL = CTRL_speedGetLeft();
+    speedR = CTRL_speedGetRight();
 
     errorML.currentError = expectL + speedL;//取偏差
     errorML.delta = errorML.currentError - errorML.lastError;
@@ -395,17 +396,15 @@ void CTRL_motorPID()
     errorML.lastError = errorML.currentError;//更新上一次误差
 
 
-    speedR = CTRL_speedGetRight();
     errorMR.currentError = expectR - speedR;//取偏差
     errorMR.delta = errorMR.currentError - errorMR.lastError;
     mySpeedR = (int32)(mySpeedR + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
 
     test_varible[0] = speedL;
-//    test_varible[1] = speedR;
+    test_varible[1] = speedR;
 
-//    test_varible[14] = mySpeedL;
-//    test_varible[15] = mySpeedR;
+
 }
 
 
@@ -418,7 +417,7 @@ void CTRL_servoMain()
 //    }
 //    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
 //    {
-        CTRL_servoPID();
+//        CTRL_servoPID();
 //    }
 //////
 //    else if(flagStop == 1)
@@ -451,7 +450,7 @@ void CTRL_servoMain()
 
 //    }
 
-//    CTRL_fuzzyPID();
+    CTRL_fuzzyPID();
     test_varible[10] = servoPwm;
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
@@ -495,6 +494,7 @@ void CTRL_motor()
     {
         mySpeedR = PWM_MAX_N;
     }
+
 
     if(mySpeedL >= 0 && mySpeedR >= 0)
     {
@@ -542,6 +542,7 @@ void CTRL_motor()
     }
 
 
+
 }
 
 
@@ -554,21 +555,23 @@ void CTRL_motorMain()
 //    }
 //
 //    testFlag++;
+
     if(stopFlag == 0 && flagStop == 0)//flagStop=1为车库停车，stopFlag=1为出赛道停车
     {
-        CTRL_CarParkStart();
+//        CTRL_CarParkStart();
+        CTRL_motorDiffer();
 
     }
-    else if(flagStop == 1)
-    {
-        CTRL_CarParkStop();
-
-//        expectL = 0;
-//        expectR= 0;
-//        CTRL_speedLoopPID();
-//        CTRL_curLoopPID();
-
-    }
+////    else if(flagStop == 1)
+////    {
+////        CTRL_CarParkStop();
+////
+//////        expectL = 0;
+//////        expectR= 0;
+//////        CTRL_speedLoopPID();
+//////        CTRL_curLoopPID();
+////
+////    }
     else if(stopFlag == 1)
     {
         expectL = 0;
@@ -597,7 +600,7 @@ void CTRL_motorDiffer()
 {
 
     int delta;
-    delta = 790 - servoPwm;
+    delta = 700 - servoPwm;
 
     /*内轮减速*/
     float k;
