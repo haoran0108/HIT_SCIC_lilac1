@@ -355,11 +355,11 @@ void CTRL_fuzzyPID()
 //    test_varible[12] = servo_error;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
     test_varible[11] = fuzzyKP;
-    servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + 3.2 * servoError.currentError);
-    if(servoPwm > 780)
-        servoPwm = 780;
-    else if(servoPwm < 620)
-        servoPwm = 620;
+    servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
+    if(servoPwm > 770)
+        servoPwm = 770;
+    else if(servoPwm < 630)
+        servoPwm = 630;
 
     test_varible[10] = servoPwm;
     servoError.lastError = servoError.currentError;

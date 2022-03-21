@@ -1402,6 +1402,7 @@ void image_main()
         IMG[i][right_line[i]] = blue;
     }
     get_mid_line();
+   // fixMidLine();
 
     for (int i = NEAR_LINE; i >= FAR_LINE; i--)
         if (mid_line[i] != MISS)
@@ -2140,7 +2141,7 @@ void straight_cross_in() {
     double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 10, LEFT);
     double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 10, RIGHT);
     //下方太歪，斜进，不进
-    if (fabs(kl) > 0.15 || fabs(kr) > 0.15) {
+    if (fabs(kl) > 0.2 || fabs(kr) > 0.2) {
         flag = 0;
     }
 
@@ -2441,10 +2442,10 @@ void cross_in() {
             }
             i--;
             //////////printf("max=%d", max);
-        }
-        if (calculate_slope(max - 10, max, LEFT) * calculate_slope(max, max + 10, LEFT) >= 0) {
-            flag = 0;
-        }*/
+        }8888*/
+//        if (calculate_slope(max - 10, max, LEFT) * calculate_slope(max, max + 10, LEFT) >= 0) {
+//            flag = 0;
+//        }
         uint8_t i = ch;
         //////printf("%d,%d,%d\n", i, left_line[i], left_side[i]);
         while (left_line[i] > left_side[i] + 1 && i >= 5) {
@@ -2469,9 +2470,9 @@ void cross_in() {
         double kl = calculate_slope(max, max + 10, LEFT);
 
         double kr = calculate_slope(ch, ch + 10, RIGHT);
-        if(fabs(kr)<0.15){
-            flag=0;
-        }
+//        if(fabs(kr)<0.15)
+//            flag=0;
+//        }
 
         if (fabs(kr) < 0.1) {
             leftDownJumpPoint = max;
@@ -2481,20 +2482,24 @@ void cross_in() {
         else {
             leftDownJumpPoint = max;
             rightDownJumpPoint = ch;
-            for (int i = leftDownJumpPoint + 4; i >= leftDownJumpPoint - 10; i--) {
-                if (IMG[i][left_line[leftDownJumpPoint]] == black) {
-                    flag = 0;
-                }
-              //  ////printf("2.flag=%d\n", flag);
-            }
+            int sume=0;
+//            for (int i = leftDownJumpPoint; i >= leftDownJumpPoint - 10; i--) {
+//                if (IMG[i][left_line[leftDownJumpPoint]] == black) {
+//                    sume++;
+//                }
+//              //  ////printf("2.flag=%d\n", flag);
+//            }
+//            if(sume>=6){
+//                flag=0;
+//            }
         }
     }
     else if (dirction == LEFT) {
         double kl = calculate_slope(ch, 105, LEFT);
         double kr = calculate_slope(max, 105, RIGHT);
-        if(fabs(kl)<0.15){
-            flag=0;
-        }
+//        if(fabs(kl)<0.15){
+//            flag=0;
+//        }
         if (fabs(kl) < 0.1) {
             leftDownJumpPoint = ch;
             rightDownJumpPoint = max;
@@ -2502,11 +2507,15 @@ void cross_in() {
         else {
             leftDownJumpPoint = ch;
             rightDownJumpPoint = max;
-            for (int i = rightDownJumpPoint + 4; i >= rightDownJumpPoint - 10; i--) {
-                if (IMG[i][right_line[rightDownJumpPoint]] == black) {
-                    flag = 0;
-                }
-            }
+            int sume=0;
+//            for (int i = rightDownJumpPoint; i >= rightDownJumpPoint - 10; i--) {
+//                if (IMG[i][right_line[rightDownJumpPoint]] == black) {
+//                  sume++;
+//                }
+//            }
+//            if(sume>=6){
+//                flag=0;
+//            }
            // ////printf("2.flag=%d\n", flag);
         }
     }
@@ -4414,103 +4423,105 @@ void design_island_out(int type) {
     int jump_point;
     int delta = 3;
     //float k_right, k_right_two;
-    float k_left, k_right;
+    float k_left, k_right, k_leftR, k_rightL;
     int roadWidth = right_line[105] - left_line[105];
 
     //k_right_two = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
     k_right = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
-    k_left = calculate_slope_two_point(80, LEFT, 100, LEFT) + 0.15;
+    k_left = calculate_slope_two_point(80, LEFT, 100, LEFT);
+    k_leftR = k_left + 0.3;
+    k_rightL = k_right - 0.3;
     //////////////printf("two=%f, k = %f\n", k_right_two, k_right);
     int minFlag = 0;
     int minRight = 95;
-    for (int min = 95; min > 45; min--)
-    {
-
-        if (right_line[min] <= right_line[minRight])
-        {
-            minRight = min;
-        }
-
-        if (minRight != 46 && min == 46)
-        {
-            minFlag = 1;
-        }
-
-    }
+//    for (int min = 95; min > 45; min--)
+//    {
+//
+//        if (right_line[min] <= right_line[minRight])
+//        {
+//            minRight = min;
+//        }
+//
+//        if (minRight != 46 && min == 46)
+//        {
+//            minFlag = 1;
+//        }
+//
+//    }
         ////////printf("minRight = %d", minRight);
 //        IMG[minRight][right_line[minRight]-1] = purple;
 
     if (islandtype == LEFT)
     {
-        for (jump_point = 95; jump_point > 45; jump_point--)
-        {
-               // //////printf("j=%d", jump_point);
-                //if ((right_line[jump_point - 3] - right_line[jump_point] >= delta && right_line[jump_point + 3] - right_line[jump_point] >= delta) || (right_line[jump_point - 5] - right_line[jump_point] >= delta && right_line[jump_point + 5] - right_line[jump_point] >= delta))
-            if(minFlag == 1)
-            {
+//        for (jump_point = 95; jump_point > 45; jump_point--)
+//        {
+//               // //////printf("j=%d", jump_point);
+//                //if ((right_line[jump_point - 3] - right_line[jump_point] >= delta && right_line[jump_point + 3] - right_line[jump_point] >= delta) || (right_line[jump_point - 5] - right_line[jump_point] >= delta && right_line[jump_point + 5] - right_line[jump_point] >= delta))
+//            if(minFlag == 1)
+//            {
                     //IMG[jump_point][right_line[jump_point] - 1] = purple;
               //  k_jump = calculate_slope_two_point(jump_point, RIGHT, jump_point+8, RIGHT);
                    // //////printf("k_left = %f,k_jump = %f\n", k_left, k_jump);
 
-                for (int i = 106; i > 5; i--)
-                {
-                    right_line[i] = k_left * (i - jump_point) + right_line[jump_point];
-                }
-                for (int i = 80; i > 5; i--)
-                {
-                    left_line[i] = k_left * (i - jump_point) + left_line[jump_point];
-
-                }
-                break;
-            }
-            else
-            {
-                for (int i = 106; i > 5; i--)
-                {
-                    right_line[i] = k_left * (i - 105) + left_line[105] + roadWidth;
-                }
-                for (int i = 80; i > 5; i--)
-                {
-                    left_line[i] = k_left * (i - 80) + left_line[80];
-
-                }
-            }
+        for (int i = 106; i > 5; i--)
+        {
+            right_line[i] = k_leftR * (i - 95) + right_line[95];
         }
+        for (int i = 80; i > 5; i--)
+        {
+            left_line[i] = k_left * (i - 80) + left_line[80];
+
+        }
+//                break;
+//            }
+//            else
+//            {
+//                for (int i = 106; i > 5; i--)
+//                {
+//                    right_line[i] = k_left * (i - 105) + left_line[105] + roadWidth;
+//                }
+//                for (int i = 80; i > 5; i--)
+//                {
+//                    left_line[i] = k_left * (i - 80) + left_line[80];
+//
+//                }
+//            }
+//        }
 
     }
 
     else if(islandtype == RIGHT)
     {
-        for (jump_point = 85; jump_point > 45; jump_point--)
+//        for (jump_point = 85; jump_point > 45; jump_point--)
+//        {
+//            if (left_line[jump_point] - left_line[jump_point - 3] > delta && left_line[jump_point] - left_line[jump_point+3] > delta)
+//            {
+//                for (int i = 106; i > 20; i--)
+//                {
+//                    left_line[i] = k_right * (i - jump_point) + left_line[jump_point];
+//                }
+//                for (int i = 80; i > 20; i--)
+//                {
+//                    right_line[i] = k_right * (i - jump_point) + right_line[jump_point];
+//
+//                }
+//                break;
+//            }
+//            else
+//            {
+        for (int i = 106; i > 20; i--)
         {
-            if (left_line[jump_point] - left_line[jump_point - 3] > delta && left_line[jump_point] - left_line[jump_point+3] > delta)
-            {
-                for (int i = 106; i > 20; i--)
-                {
-                    left_line[i] = k_right * (i - jump_point) + left_line[jump_point];
-                }
-                for (int i = 80; i > 20; i--)
-                {
-                    right_line[i] = k_right * (i - jump_point) + right_line[jump_point];
-
-                }
-                break;
-            }
-            else
-            {
-                for (int i = 106; i > 20; i--)
-                {
-                    left_line[i] = k_right * (i - 105) + right_line[105] - roadWidth;
-                }
-                for (int i = 80; i > 20; i--)
-                {
-                    right_line[i] = k_right * (i - 80) + right_line[80];
-
-                }
-            }
+            left_line[i] = k_rightL * (i - 95) + left_line[95];
         }
+        for (int i = 80; i > 20; i--)
+        {
+            right_line[i] = k_right * (i - 80) + right_line[80];
 
+//                }
+        }
     }
+
+
 //    if(my_road[5].white_num != 0){
 //        if (type == RIGHT) {
 //              int top = -1;
@@ -4739,7 +4750,7 @@ void island_out_straight(int type) {
                 break;
             }
         }*/
-        if (calculate_slope(20, 40, LEFT) > -0.7 && calculate_slope(60, 80, LEFT) > -0.7) {
+        if (calculate_slope(20, 40, LEFT) > -1.4 && calculate_slope(60, 80, LEFT) > -1.4) {
             flag = 1;
         }
         //////////////////////////printf("flag1=%d\n", flag);
@@ -4760,7 +4771,7 @@ void island_out_straight(int type) {
             }
         }*/
     //}
-           if (calculate_slope(20, 40, RIGHT) < 1.5 && calculate_slope(60, 80, RIGHT) < 1.5) {
+           if (calculate_slope(20, 40, RIGHT) < 1.4 && calculate_slope(60, 80, RIGHT) < 1.4) {
                flag = 1;
            }
 
@@ -4801,30 +4812,60 @@ void island_out_straight(int type) {
 //备注：
 ///////////////////////////////////////////
 void design_island_final(int type) {
+//    if (islandtype == RIGHT) {
+//        //////////////////////////printf("1");
+//        double k = calculate_slope(60, 80, LEFT);
+//
+//        int x = right_line[105];
+//        for (int i = 105; i > 20; i--) {
+//            int xi = k * (i - 105) + x;
+//           // if (right_line[i] > xi) {
+//                right_line[i] = xi;
+//            //}
+//        }
+//
+//    }
+//    else if (islandtype == LEFT) {
+//        double k = calculate_slope(60, 80, RIGHT);
+//
+//        int x = left_line[106];
+//        for (int i = 106; i > 20; i--) {
+//            int xi = k * (i - 106) + x;
+//           // if (left_line[i] < xi) {
+//                left_line[i] = xi;
+//            //}
+//        }
+//    }
     if (islandtype == RIGHT) {
-        //////////////////////////printf("1");
-        double k = calculate_slope(60, 80, LEFT);
+            uint8_t xMin=right_line[90], yMin=90;
+            for (int i = 90; i > 20; i--) {
+                if (xMin >= right_line[i]) {
+                    yMin = i;
+                    xMin = right_line[i];
+                }
+            }
 
-        int x = right_line[105];
-        for (int i = 105; i > 20; i--) {
-            int xi = k * (i - 105) + x;
-            if (right_line[i] > xi) {
-                right_line[i] = xi;
+            double k = calculate_slope(65, 85, LEFT);
+
+            for (int i = 100; i >= 10; i--) {
+                right_line[i] = k * (i - yMin) + xMin;
             }
         }
+        else if (islandtype == LEFT) {
+            uint8_t xMin = left_line[90], yMin = 90;
+            for (int i = 90; i > 20; i--) {
+                if (xMin <= left_line[i]) {
+                    yMin = i;
+                    xMin = left_line[i];
+                }
+            }
 
-    }
-    else if (islandtype == LEFT) {
-        double k = calculate_slope(60, 80, RIGHT);
+            double k = calculate_slope(65, 85, RIGHT);
 
-        int x = left_line[106];
-        for (int i = 106; i > 20; i--) {
-            int xi = k * (i - 106) + x;
-            if (left_line[i] < xi) {
-                left_line[i] = xi;
+            for (int i = 100; i >= 10; i--) {
+                left_line[i] = k * (i - yMin) + xMin;
             }
         }
-    }
 }
 
 ////////////////////////////////////////////
@@ -4835,9 +4876,9 @@ void design_island_final(int type) {
 ///////////////////////////////////////////
 void island_straight(int type) {
     int flag = 0;
-    double k1 = calculate_slope(80, 90, LEFT);
-    double k2 = calculate_slope(80, 90, RIGHT);
-    if (fabs(k1) - fabs(k2) < 0.2 && fabs(k1) < 0.2 && fabs(k2) < 0.2) {
+    double k1 = calculate_slope(85, 95, LEFT);
+    double k2 = calculate_slope(85, 95, RIGHT);
+    if (fabs(k1 - k2) < 0.2 && fabs(k1) < 0.2 && fabs(k2) < 0.2) {
         flag = 1;
     }
     if (flag == 1) {
@@ -4873,8 +4914,8 @@ void island_straight(int type) {
 void cross_circle_out() {
 
     int flag=1;
-    double k1 = calculate_slope(90, 105, LEFT);
-    double k2 = calculate_slope(90, 105, RIGHT);
+    double k1 = calculate_slope(95, 105, LEFT);
+    double k2 = calculate_slope(95, 105, RIGHT);
     double k3;
     if (islandtype == RIGHT) {
         k3 = calculate_slope(10, 25, LEFT);
@@ -4890,6 +4931,7 @@ void cross_circle_out() {
     }
 
     if (flag == 1) {
+
         if (lastState[4] == 0) {
             lastState[4] = 1;
         }
@@ -5000,46 +5042,6 @@ void design_cross_circle_out() {
 }
 
 
-//int carPark_in()
-//{
-//
-//    int gapNumber = 0;
-//    for (int i = 30; i < 80; i++)
-//    {
-//
-//        if (my_road[i].white_num > 3 && (my_road[i].connected[my_road[i].white_num].width > 15 || my_road[i].connected[1].width > 15))
-//        {
-//            for (int gap = 1; gap < j_continue[i]; gap++)
-//            {
-//                if (my_road[i].connected[gap].width <= 6)
-//                {
-//                    gapNumber++;
-//                }
-//                if (gapNumber >= 4)
-//                {
-//                    state = 14;
-////                    flagStop = 1;
-//
-//                    if(my_road[i].connected[my_road[i].white_num].width > 15)
-//                    {
-//                        return 1;
-//                    }
-////                    else if(my_road[i].connected[j_continue[i]].width > 15)
-////                    {
-////                        return leftPark;
-////                    }
-//                    else return -1;
-//                    ////////////////////////////////////printf("white_num=%d", my_road[i].white_num);
-//                    break;
-//                }
-//            }
-//
-//        }
-//
-//    }
-//}
-
-
 void carPark_in()
 {
     int flag=0;
@@ -5076,25 +5078,25 @@ void carPark_in()
 
     }
     if (flag == 1) {
-            if (lastState[10] == 0) {
-                lastState[10] = 1;
-            }
-
-            else if (lastState[10] == 1) {
-                state = 14;
-                carParkTimes += 1;
-                lastTwoState[10] = 0;
-                lastState[10] = 0;
-            }
-            else {
-                lastState[10] = 0;
-                lastTwoState[10] = 0;
-            }
+        if (lastState[10] == 0) {
+            lastState[10] = 1;
         }
-        else if (flag == 0) {
+
+        else if (lastState[10] == 1) {
+            state = 14;
+            carParkTimes += 1;
+            lastTwoState[10] = 0;
+            lastState[10] = 0;
+        }
+        else {
             lastState[10] = 0;
             lastTwoState[10] = 0;
         }
+    }
+    else if (flag == 0) {
+        lastState[10] = 0;
+        lastTwoState[10] = 0;
+    }
 }
 
 
@@ -5159,7 +5161,7 @@ void design_park()
         if (left_line[i] - left_line[i - 5] > down_delta)
         {
             down_jump_point = left_line[i];
-            IMG[i][left_line[i] + 1] = purple;
+            //IMG[i][left_line[i] + 1] = purple;
 
             if (leftPark == 0 && rightPark == 0)
             {
@@ -5224,13 +5226,13 @@ void design_park()
             {
                 k_left = calculate_slope(65, 85, LEFT);
 
-                right_line[miss_x] = k_left * (miss_x - 90) + left_line[90] + 43;
+                right_line[miss_x] = k_left * (miss_x - 90) + left_line[90] + 35;
 
             }
             else if(carParkX >= 50)
             {
                 k_left = calculate_slope(15, 35, LEFT);
-                right_line[miss_x] = k_left * (miss_x - 15) + left_line[15] + 43;
+                right_line[miss_x] = k_left * (miss_x - 15) + left_line[15] + 35;
 
             }
 
@@ -5241,13 +5243,13 @@ void design_park()
             {
                 k_right = calculate_slope(65, 85, RIGHT);
 
-                left_line[miss_x] = k_right * (miss_x - 90) + right_line[90] - 43;
+                left_line[miss_x] = k_right * (miss_x - 90) + right_line[90] - 35;
 
             }
             else if (carParkX >= 50)
             {
                 k_right = calculate_slope(15, 35, RIGHT);
-                left_line[miss_x] = k_right * (miss_x - 15) + right_line[15] - 43;
+                left_line[miss_x] = k_right * (miss_x - 15) + right_line[15] - 35;
 
             }
         }
@@ -5431,7 +5433,7 @@ void folk_road_in() {
     }
     int sumW = 0;
     for (int i = FAR_LINE; i <= 25; i++) {
-        if (whiteNum[i] <= 22) {
+        if (whiteNum[i] <= 20) {
             sumW++;
         }
     }
@@ -5440,7 +5442,7 @@ void folk_road_in() {
     }
 
 
-    if (top > 90 || top < 20) {
+    if (top > 90 || top < 10) {
         flag = 0;
     }
 
@@ -5932,4 +5934,43 @@ void island_out(int type)
         lastTwoState[4] = 0;
     }
     ////////////////printf("lasttwo=%d,last=%d\n", lastTwoState[4], lastState[4]);
+}
+
+
+void fixMidLine()
+{
+    int delta = 4;
+    int realGap = 0;
+    int i = 95;
+    int fix = 95;
+    int fixFlag = 0;
+    for (i = 95; i > 25; i--)
+    {
+
+        if (fixFlag == 1)
+        {
+            i = fix;
+            fixFlag = 0;
+        }
+        if (abs(mid_line[i + 1] - mid_line[i]) >= delta)
+        {
+            //printf("in!!!");
+            realGap = mid_line[i + 1] - mid_line[i];
+            for (fix = i; fix > 25; fix--)
+            {
+
+                mid_line[fix] = mid_line[fix] + realGap;
+                if (abs(mid_line[fix - 1] - mid_line[fix - 2]) >= delta)
+                {
+                    fixFlag = 1;
+                    break;
+                }
+
+            }
+
+        }
+
+    }
+   // printf("i = %d", i);
+
 }

@@ -270,4 +270,6 @@ void design_park();
 void protection();
 //иообфб
 
+void fixMidLine();
+
 #endif //

@@ -41,11 +41,6 @@
 
 
 
-
-
-
-
-
 int core1_main(void)
 {
 
