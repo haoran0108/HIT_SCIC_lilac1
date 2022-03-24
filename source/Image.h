@@ -226,7 +226,7 @@ void design_cross_out();
 void design_straight_route(int y_start, int y_end, int type);
 double variance(int y_start, int y_end, int type);
 void folk_or_cross();
-
+void  design_cross_titl_two_two();
 
 //»·µº
 void decide_miss();

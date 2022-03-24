@@ -29,13 +29,13 @@
 #define center_y 106
 
 /*Ä£ºýPID*/
-#define PB 90
-#define PM 60
-#define PS 30
+#define PB 40
+#define PM 25
+#define PS 10
 #define ZO 0
-#define NS -30
-#define NM -60
-#define NB -90
+#define NS -10
+#define NM -25
+#define NB -40
 
 extern uint32 servoPwm;
 extern int32 mySpeedL, mySpeedR;
@@ -49,6 +49,7 @@ extern float currentGyro;
 extern int parkStart;
 extern int flagCircleForsee;
 extern int testFlag;
+extern int speedFlag;
 struct error
 {
     double delta;
@@ -144,5 +145,7 @@ void CTRL_CircleServoPID();
 //-------------------------------------------------------------------------------------------------------------------
 int16_t CTRL_speedGetLeft();
 int16_t CTRL_speedGetRight();
+
+void speedUP_define();
 
 #endif /* SOURCE_SMARTCAR_CTRL_H_ */

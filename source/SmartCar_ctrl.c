@@ -290,7 +290,7 @@ float CTRL_FuzzyMemberShip(int midError)
 {
     float membership[2] = {1, 0};
     float servoKP = 0;
-    float fuzzyWidth = 30;
+    float fuzzyWidth = 15;
     test_varible[6] = midError;
 
     if(midError < PB && midError > PM)
@@ -559,6 +559,8 @@ void CTRL_motorMain()
     if(stopFlag == 0 && flagStop == 0)//flagStop=1为车库停车，stopFlag=1为出赛道停车
     {
 //        CTRL_CarParkStart();
+
+
         CTRL_motorDiffer();
 
     }
@@ -608,21 +610,77 @@ void CTRL_motorDiffer()
     {
         k = gap.floatValue * (1.1209 - 0.0061 * delta);
         if(k > 1) k = 1;
-        expectL = (int32)(presentSpeed.intValue);
-        expectR = (int32)(presentSpeed.intValue * k);
+        if(speedFlag == 1)
+        {
+            expectL = (int32)(presentSpeed.intValue * display6.floatValue);
+            expectR = (int32)(presentSpeed.intValue * display6.floatValue * k);
+            GPIO_Set(P22, 0, 1);
+        }
+        else if(speedFlag == 0)
+        {
+            if(state == 11)
+            {
+                expectL = (int32)(presentSpeed.intValue * display7.floatValue);
+                expectR = (int32)(presentSpeed.intValue * display7.floatValue * k);
+            }
+            else
+            {
+                expectL = (int32)(presentSpeed.intValue);
+                expectR = (int32)(presentSpeed.intValue * k);
+            }
+            GPIO_Set(P22, 0, 0);
+        }
+
     }
     else if(delta < 0)
     {
         k = gap.floatValue * (1.1209 + 0.0061 * delta);
         if(k > 1) k = 1;
-        expectL = (int32)(presentSpeed.intValue * k);
-        expectR = (int32)(presentSpeed.intValue);
+        if(speedFlag == 1)
+        {
+            expectL = (int32)(presentSpeed.intValue * display6.floatValue * k);
+            expectR = (int32)(presentSpeed.intValue * display6.floatValue);
+            GPIO_Set(P22, 0, 1);
+        }
+        else if(speedFlag == 0)
+        {
+            if(state == 11)
+            {
+                expectL = (int32)(presentSpeed.intValue * display7.floatValue * k);
+                expectR = (int32)(presentSpeed.intValue * display7.floatValue);
+            }
+            else
+            {
+                expectL = (int32)(presentSpeed.intValue * k);
+                expectR = (int32)(presentSpeed.intValue);
+            }
+            GPIO_Set(P22, 0, 0);
+        }
     }
     else if(delta == 0)
     {
 
-        expectL = (int32)(presentSpeed.intValue);
-        expectR = (int32)(presentSpeed.intValue);
+        if(speedFlag == 1)
+        {
+            expectL = (int32)(presentSpeed.intValue * display6.floatValue);
+            expectR = (int32)(presentSpeed.intValue * display6.floatValue);
+            GPIO_Set(P22, 0, 1);
+        }
+        else if(speedFlag == 0)
+        {
+            if(state == 11)
+            {
+                expectL = (int32)(presentSpeed.intValue * display7.floatValue);
+                expectR = (int32)(presentSpeed.intValue * display7.floatValue);
+            }
+            else
+            {
+                expectL = (int32)(presentSpeed.intValue);
+                expectR = (int32)(presentSpeed.intValue);
+            }
+            GPIO_Set(P22, 0, 0);
+        }
+
     }
 
     /*内减外加*/

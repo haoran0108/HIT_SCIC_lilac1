@@ -74,7 +74,7 @@ int core0_main(void)
     MENU_Init();
     CTRL_Init();//控制初始化
     SmartCar_MT9V034_Init();//摄像头初始化，没连摄像头时不能初始化，不然oled就停留在队标页面
-
+    GPIO_Init(P22, 0, PUSHPULL, 0);
 //    SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,1152000,3);
 
     Delay_ms(STM0, 1000);
@@ -100,11 +100,12 @@ int core0_main(void)
     tempFile = &file1;
     MENU_namePrintf(tempFile);
 
-
+//    GPIO_Set(P22, 0, 1);
 
 
     while(TRUE)
         {
+
             SmartCar_OLED_Printf6x8(110, 0, "%d", onPower);
             if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
                     !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
