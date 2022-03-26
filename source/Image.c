@@ -1322,20 +1322,20 @@ void get_mid_line(void)
 {
     my_memset(mid_line, MISS, CAMERA_H);
     for(int i = NEAR_LINE;i >= FAR_LINE;i--)
-        if (left_line[i] != MISS)
+        if (my_road[i].white_num != 0)
         {
             mid_line[i] = (left_line[i] + right_line[i]) / 2;
         }
-//        else if(my_road[i].white_num == 0)
-//        {
-//            ////////////////////////////////////////printf("miss=%d\n", i);
-//            double k=(double)(mid_line[i+1]-mid_line[i+10])/(10);
-//
-//            mid_line[i] = k+mid_line[i+1];
-//        }
-        else {
-            mid_line[i] = mid_line[i + 1];
+        else if(my_road[i].white_num == 0)
+        {
+            ////////////////////////////////////////printf("miss=%d\n", i);
+            //double k=(double)(mid_line[i+1]-mid_line[i+10])/(10);
+
+            mid_line[i] = mid_line[i+1];
         }
+//        else {
+//            mid_line[i] = mid_line[i + 1];
+//        }
 
 }
 
@@ -1411,23 +1411,7 @@ void image_main()
 
    // fixMidLine();
 
-//    if(count <= 200)
-//    {
-//        GPIO_Set(P22, 0, 0);
-//        count += 1;
-//
-//    }
-//    else if(count > 200 && count < 400)
-//    {
-//        GPIO_Set(P22, 0, 1);
-//        count += 1;
-//
-//    }
-//    else if(count >= 400)
-//    {
-//        count = 0;
-//
-//    }
+
 //    count+=1;
 //    if(count%20==0)
 //    {
@@ -1453,10 +1437,10 @@ void judge_type_road() {
     if (state == stateStart) {
            straight_cross_in();
        }
-       if (state == stateStraightCrossIn) {
-           straight_cross_over();
-           design_straight_cross();
-       }
+    if (state == stateStraightCrossIn) {
+        straight_cross_over();
+        design_straight_cross();
+    }
 
 
     // 斜十字
@@ -1503,7 +1487,6 @@ void judge_type_road() {
 
     //////////////////////////////////printf("@@state=%d@@\n", state);
 
-//    test_varible[1] = islandtype;
 
 
 
@@ -2121,6 +2104,7 @@ void straight_cross_in() {
 
 
     uint8_t i = 106;
+    test_varible[2] = 10;//进十字时检查bug 进循环前是10 出循环是20 四个循环分别对应test_varible[2][3][4][5]
     while (leftSide[i] > left_side[i] && i>=5 ) {
         if (leftSide[i - 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i - 2] > 4
             && leftSide[i + 1] - leftSide[i] < 3 && leftSide[i + 2] - leftSide[i] < 3
@@ -2131,7 +2115,10 @@ void straight_cross_in() {
         }
         i--;
     }
+    test_varible[2] = 20;
+
     i = 106;
+    test_varible[3] = 10;
     while (rightSide[i] < right_side[i] && i>=5) {
         if (rightSide[i - 1] > rightSide[i] + 4 && rightSide[i - 2] - rightSide[i] > 4
             && rightSide[i + 1] - rightSide[i] > -3 && rightSide[i + 2] - rightSide[i] > -3
@@ -2142,9 +2129,10 @@ void straight_cross_in() {
         }
         i--;
     }
-
+    test_varible[3] = 20;
 
     i = 2;
+    test_varible[4] = 10;
     while (leftSide[i] > left_side[i] && i<=106) {
         if (leftSide[i + 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i + 2] > 4
             && leftSide[i - 1] - leftSide[i] < 3 && leftSide[i - 2] - leftSide[i] < 3
@@ -2155,8 +2143,10 @@ void straight_cross_in() {
         }
         i++;
     }
+    test_varible[4] = 20;
 
     i = 2;
+    test_varible[5] = 10;
     while (rightSide[i] < right_side[i] && i<=106) {
         if (rightSide[i +1] > rightSide[i] + 4 && rightSide[i + 2] - rightSide[i] > 4
             && rightSide[i - 1] - rightSide[i] > -3 && rightSide[i - 2] - rightSide[i] > -3
@@ -2167,7 +2157,7 @@ void straight_cross_in() {
         }
         i++;
     }
-
+    test_varible[5] = 20;
     double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 10, LEFT);
     double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 10, RIGHT);
     //下方太歪，斜进，不进
@@ -2273,6 +2263,7 @@ void design_straight_cross() {
 
 
     uint8_t i = 106;
+    test_varible[2] = 30;//出十字时检查bug 进循环前是30 出循环时是40 四个循环分别对应test_varible[2][3][4][5]
     while (leftSide[i] > left_side[i] && i>=5) {
         if (leftSide[i - 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i - 2] > 4
             && leftSide[i + 1] - leftSide[i] < 3 && leftSide[i + 2] - leftSide[i] < 3
@@ -2283,7 +2274,10 @@ void design_straight_cross() {
         }
         i--;
     }
+    test_varible[2] = 40;
+
     i = 106;
+    test_varible[3] = 30;
     while (rightSide[i] < right_side[i] && i>=5) {
         if (rightSide[i - 1] > rightSide[i] + 4 && rightSide[i - 2] - rightSide[i] > 4
             && rightSide[i + 1] - rightSide[i] > -3 && rightSide[i + 2] - rightSide[i] > -3
@@ -2294,9 +2288,10 @@ void design_straight_cross() {
         }
         i--;
     }
-
+    test_varible[3] = 40;
 
     i = 2;
+    test_varible[4] = 30;
     while (leftSide[i] > left_side[i] && i<=106) {
         if (leftSide[i + 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i + 2] > 4
             && leftSide[i - 1] - leftSide[i] < 3 && leftSide[i - 2] - leftSide[i] < 3
@@ -2307,8 +2302,10 @@ void design_straight_cross() {
         }
         i++;
     }
+    test_varible[4] = 40;
 
     i = 2;
+    test_varible[5] = 30;
     while (rightSide[i] < right_side[i] && i<=106) {
         if (rightSide[i + 1] > rightSide[i] + 4 && rightSide[i + 2] - rightSide[i] > 4
             && rightSide[i - 1] - rightSide[i] > -3 && rightSide[i - 2] - rightSide[i] > -3
@@ -2319,6 +2316,7 @@ void design_straight_cross() {
         }
         i++;
     }
+    test_varible[5] = 40;
 
     if (rightDownJumpPoint > 90 || leftDownJumpPoint > 90) {
 
@@ -2730,11 +2728,14 @@ void  design_cross_titl_two_two(){
 
                             max = leftUpJumpPoint;
                             int i = leftUpJumpPoint;
-                            while (my_road[i].connected[j_mid[i]].right < right_side[i] && i <= 80) {
-                                if (my_road[max].connected[j_mid[max]].right > my_road[i].connected[j_mid[i]].right) {
-                                    max = i;
-                                }
-                                i++;
+                            if(leftUpJumpPoint!=119){
+                                while (my_road[i].connected[j_mid[i]].right < right_side[i] && i <= 80) {
+                                                               if (my_road[max].connected[j_mid[max]].right > my_road[i].connected[j_mid[i]].right) {
+                                                                   max = i;
+                                                               }
+                                                               i++;
+                                                           }
+
                             }
 
                             rightUpJumpPoint = max;
@@ -2803,7 +2804,7 @@ void  design_cross_titl_two_two(){
                             }
 
                             max = rightUpJumpPoint;
-                            if (1) {
+                            if (rightUpJumpPoint!=119) {
                                 int i = rightUpJumpPoint;
                                 while (my_road[i].connected[j_mid[i]].left > left_side[i] && i <= 80) {
                                     if (my_road[max].connected[j_mid[max]].left < my_road[i].connected[j_mid[i]].left) {
@@ -6229,12 +6230,12 @@ void protection() {
     //}
     int count1 = 0;
     uint8_t* pmap;
-    pmap = fullBuffer + 60 * 188;
+    pmap = fullBuffer + 75 * 188;
     ////////////////////////////printf("%d", *(pmap));
     for (int i = 0;i < 10 * 188;i++)
     {
         ////////////////////////////printf("%d  ", *(pmap));
-        if (*(pmap) < 123)
+        if (*(pmap) < display8.intValue)
         {
             count1++;
             ////////////////////////////printf("1 ");
@@ -6243,8 +6244,25 @@ void protection() {
         pmap++;
         ////////////////////////////printf("%d  ", *(pmap));
     }
+//    for (int i = 0;i < 10 ;i++)
+//    {
+//        pmap=pmap+30;
+//        for(int j=31;j<=158;j++)
+//        {
+//            ////////////////////////////printf("%d  ", *(pmap));
+//            if (*(pmap) < 130)
+//            {
+//                count1++;
+//                ////////////////////////////printf("1 ");
+//
+//            }
+//            pmap++;
+//            ////////////////////////////printf("%d  ", *(pmap));
+//        }
+//        pmap=pmap+30;
+//    }
     ////////////////////////////printf("%d", count1);
-    if (count1 > 9*188) stopFlag=1;
+    if (count1 > 9*128) stopFlag=1;
 
 
 }

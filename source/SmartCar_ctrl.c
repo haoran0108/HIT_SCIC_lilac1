@@ -207,11 +207,11 @@ void CTRL_speedLoopPID()
     if(currentExpectRT < 1000) currentExpectRT = 1000;
     else if(currentExpectRT > 4000) currentExpectRT = 4000;
 
-    test_varible[0] = speedL;
-    test_varible[1] = speedR;
-
-    test_varible[4] = currentExpectLF;
-    test_varible[5] = currentExpectRT;
+//    test_varible[0] = speedL;
+//    test_varible[1] = speedR;
+//
+//    test_varible[4] = currentExpectLF;
+//    test_varible[5] = currentExpectRT;
 
 
 }
@@ -224,8 +224,8 @@ void CTRL_curLoopPID()
     currentRT = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//ÓÒÂÖ
     currentLF = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//×óÂÖ
 
-    test_varible[2] = currentLF;
-    test_varible[3] = currentRT;
+//    test_varible[2] = currentLF;
+//    test_varible[3] = currentRT;
 
 
     currentLF_real = 4420 - currentLF;
@@ -277,6 +277,8 @@ void CTRL_servoPID()
 {
 
     servoError.currentError = 91 - mid_line[presentVision.intValue];
+    test_varible[10] =  mid_line[presentVision.intValue];
+
     servoError.delta = servoError.currentError - servoError.lastError;
     servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + fuzzyPB.floatValue * servoError.currentError);
     if(servoPwm > 780)
@@ -284,21 +286,30 @@ void CTRL_servoPID()
     else if(servoPwm < 620)
         servoPwm = 620;
     servoError.lastError = servoError.currentError;
+
 }
 
 float CTRL_FuzzyMemberShip(int midError)
 {
     float membership[2] = {1, 0};
     float servoKP = 0;
-    float fuzzyWidth = 15;
+    float fuzzyWidth = 10;
     test_varible[6] = midError;
 
-    if(midError < PB && midError > PM)
+    if(midError >= PB)
+    {
+        servoKP = fuzzyPB.floatValue;
+    }
+    else if(midError < PB && midError > PM)
     {
         membership[0] = fabs((midError - PM) / fuzzyWidth);
         membership[1] = fabs((midError - PB) / fuzzyWidth);
 
         servoKP = fuzzyPB.floatValue * membership[0] + fuzzyPM.floatValue * membership[1];
+    }
+    else if(midError == PM)
+    {
+        servoKP = fuzzyPM.floatValue;
     }
     else if(midError < PM && midError > PS)
     {
@@ -307,12 +318,20 @@ float CTRL_FuzzyMemberShip(int midError)
 
         servoKP = fuzzyPM.floatValue * membership[0] + fuzzyPS.floatValue * membership[1];
     }
+    else if(midError == PS)
+    {
+        servoKP = fuzzyPS.floatValue;
+    }
     else if(midError < PS && midError > ZO)
     {
         membership[0] = fabs((midError - ZO) / fuzzyWidth);
         membership[1] = fabs((midError - PS) / fuzzyWidth);
 
         servoKP = fuzzyPS.floatValue * membership[0] + fuzzyZO.floatValue * membership[1];
+    }
+    else if(midError == ZO)
+    {
+        servoKP = fuzzyZO.floatValue;
     }
     else if(midError < ZO && midError > NS)
     {
@@ -321,12 +340,20 @@ float CTRL_FuzzyMemberShip(int midError)
 
         servoKP = fuzzyZO.floatValue * membership[0] + fuzzyNS.floatValue * membership[1];
     }
+    else if(midError == NS)
+    {
+        servoKP = fuzzyNS.floatValue;
+    }
     else if(midError < NS && midError > NM)
     {
         membership[0] = fabs((midError - NM) / fuzzyWidth);
         membership[1] = fabs((midError - NS) / fuzzyWidth);
 
         servoKP = fuzzyNS.floatValue * membership[0] + fuzzyNM.floatValue * membership[1];
+    }
+    else if(midError == NM)
+    {
+        servoKP = fuzzyNM.floatValue;
     }
     else if(midError < NM && midError > NB)
     {
@@ -335,8 +362,12 @@ float CTRL_FuzzyMemberShip(int midError)
 
         servoKP = fuzzyNM.floatValue * membership[0] + fuzzyNB.floatValue * membership[1];
     }
-    membership[0] = fabs(membership[0]);
-    membership[1] = fabs(membership[1]);
+    else if(midError <= NB)
+    {
+        servoKP = fuzzyNB.floatValue;
+    }
+//    membership[0] = fabs(membership[0]);
+//    membership[1] = fabs(membership[1]);
 
     test_varible[7] = membership[0];
     test_varible[8] = membership[1];
@@ -352,7 +383,6 @@ void CTRL_fuzzyPID()
     servoError.currentError = 90 - mid_line[presentVision.intValue];
     servoError.delta = servoError.currentError - servoError.lastError;
 //    servo_error = servoError.currentError;
-//    test_varible[12] = servo_error;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
     test_varible[11] = fuzzyKP;
     servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
@@ -361,7 +391,7 @@ void CTRL_fuzzyPID()
     else if(servoPwm < 630)
         servoPwm = 630;
 
-    test_varible[10] = servoPwm;
+//    test_varible[10] = servoPwm;
     servoError.lastError = servoError.currentError;
 
 }
@@ -737,7 +767,6 @@ void CTRL_CarParkStop()
 //    delayStop++;
     if(flagStop == 1)
     {
-//        test_varible[12] = ;
         if(currentGyro > 50 || currentGyro < -50)
         {
             expectL = 0;

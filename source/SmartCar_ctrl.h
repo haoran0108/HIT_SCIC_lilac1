@@ -29,13 +29,13 @@
 #define center_y 106
 
 /*Ä£ºýPID*/
-#define PB 40
-#define PM 25
+#define PB 30
+#define PM 20
 #define PS 10
 #define ZO 0
 #define NS -10
-#define NM -25
-#define NB -40
+#define NM -20
+#define NB -30
 
 extern uint32 servoPwm;
 extern int32 mySpeedL, mySpeedR;
