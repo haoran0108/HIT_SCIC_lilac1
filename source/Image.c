@@ -1403,11 +1403,11 @@ void image_main()
         IMG[i][right_line[i]] = blue;
     }
     get_mid_line();
-    if(!GPIO_Read(P11, 3))
-    {
+//    if(!GPIO_Read(P11, 3))
+//    {
 //        speedUP_define();
-
-    }
+//
+//    }
 
    // fixMidLine();
 
@@ -1450,7 +1450,7 @@ void judge_type_road() {
 //环岛
 
     if (state == stateStart) {
-        island_start(0);
+      //  island_start(0);
 
     }
     if (state == stateIsland
@@ -1517,6 +1517,11 @@ void judge_type_road() {
         design_cross_titl_two_two();
     }
     //车库
+//    if(state != stateCarPark)
+//    {
+//        carPark_in();
+//
+//    }
     if(state == stateStart)
     {
         carPark_in();
@@ -1525,7 +1530,7 @@ void judge_type_road() {
     if(state == stateCarPark)
     {
 
-        if(carParkTimes < 5)
+        if(carParkTimes < 2)
         {
             design_park();
             carParkDelay += 1;
@@ -1536,7 +1541,7 @@ void judge_type_road() {
                 state = 0;
             }
         }
-        else if(carParkTimes == 5)
+        else if(carParkTimes == 2)
         {
             searchParkLine();
 
@@ -2248,6 +2253,7 @@ void design_straight_cross() {
     //正十字，94应在我想要的赛道中间
 
     for (int i = NEAR_LINE; i >= FAR_LINE; i--) {
+
         for (int j = 1; j <= my_road[i].white_num; j++) {
             if (my_road[i].connected[j].left < 94 && my_road[i].connected[j].right>94
                 && my_road[i].connected[j].width > 15) {
@@ -3210,8 +3216,8 @@ void cross_in() {
             //确定是四个点的斜十字
             if (30 <= leftDownJumpPoint && leftDownJumpPoint <= 102
                 && 30 <= rightDownJumpPoint && rightDownJumpPoint <= 102
-                && 10 <= leftUpJumpPoint && leftUpJumpPoint <= 80
-                && 10 <= rightUpJumpPoint && rightUpJumpPoint <= 80) {
+                && 20 <= leftUpJumpPoint && leftUpJumpPoint <= 80
+                && 20 <= rightUpJumpPoint && rightUpJumpPoint <= 80) {
                 //printf("t-t\n");
                 state = stateInCrossStraight;
             }
@@ -4638,7 +4644,7 @@ void island_start(int type) {
 
             float averD = (float)sumD / (105 - i);
 
-            if (right_line[i] - right_line[i - 1] > averD + 2 || right_line[i] - right_line[i - 1] < averD - 2) {
+            if (/*right_line[i] - right_line[i - 1] > averD + 2 ||*/ right_line[i] - right_line[i - 1] < averD - 2) {
                 pointC = i;
                 break;
             }
@@ -4677,12 +4683,12 @@ void island_start(int type) {
 
             float averD = (float)sumD / (105 - i);
 
-            if (left_line[i] - left_line[i - 1] > averD + 2 || left_line[i] - left_line[i - 1] < averD - 2) {
+            if (left_line[i] - left_line[i - 1] > averD + 2 /*|| left_line[i] - left_line[i - 1] < averD - 2*/) {
                 pointC = i;
                 break;
             }
         }
-        if (pointC > 104 || pointC < 50) {
+        if (pointC > 100 || pointC < 50) {
             flag = 0;
         }
         //////////////////////////printf("flag=%d\n", flag);
@@ -5866,10 +5872,10 @@ void cross_circle_out() {
     double k2 = calculate_slope(95, 105, RIGHT);
     double k3;
     if (islandtype == RIGHT) {
-        k3 = calculate_slope(10, 25, LEFT);
+        k3 = calculate_slope(20, 35, LEFT);
     }
     else {
-        k3 = calculate_slope(10, 25, RIGHT);
+        k3 = calculate_slope(20, 35, RIGHT);
     }
     if (fabs(k1 - k2) >= 0.2 ) {
         flag = 0;
@@ -6152,7 +6158,6 @@ void design_park()
         {
             up_jump_point = right_line[j];
             rightPark = 1;
-            IMG[j][right_line[j] - 1] = purple;
 
             break;
         }
@@ -6267,7 +6272,7 @@ void protection() {
 
 }
 
-////////////////////////////////////////////
+///////////////////////////////////////////
 //功能： 正三叉路口识别
 //输入：
 //输出：
@@ -6402,7 +6407,7 @@ void folk_road_in() {
             sumW++;
         }
     }
-    if (sumW < 17) {
+    if (sumW < 10) {
         flag = 0;
     }
 
@@ -6411,7 +6416,7 @@ void folk_road_in() {
         flag = 0;
     }
 
-    if (minL < 25 || minR < 25 || minL>102 || minR>102) {
+    if (minL < 20 || minR < 20 || minL>102 || minR>102) {
         flag = 0;
     }
    // ////////printf("n=%f", calculate_slope(minL - 10, minL, LEFT)* calculate_slope(minR - 5, minR, RIGHT));
@@ -6419,14 +6424,14 @@ void folk_road_in() {
 //        flag = 0;
 //    }
 
-    double kr = calculate_slope(93, 106, RIGHT);
-    double kl = calculate_slope(93, 106, LEFT);
+    double kr = calculate_slope(minR, minR+10, RIGHT);
+    double kl = calculate_slope(minL, minL+10, LEFT);
     //////////printf("d=%f", fabs(kl - kr));
     if (fabs(kl - kr) > 0.7) {
         flag = 0;
     }
     if (kl < 0) {
-        uint8_t kt;
+        double kt;
         /// ////////////////////////
         double ySum = 0;
         double y2Sum = 0;
@@ -6453,7 +6458,7 @@ void folk_road_in() {
         //////////////printf("flag1=%f\n", fabs(kt - kr));
     }
     else {
-        uint8_t kt;
+        double kt;
         /// ////////////////////////
         double ySum = 0;
         double y2Sum = 0;
@@ -6520,7 +6525,17 @@ double cos_angle(int x1,int x2,int x3,int y1,int y2,int y3) {
     double l2 = sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));
     double l3 = sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3));
 
-    double cosA = (double)(l1 * l1 + l2 * l2 - l3 * l3) / (2 * l1 * l2);
+    double cosA;
+    if(l1!=0&&l2!=0){
+        cosA = (double)(l1 * l1 + l2 * l2 - l3 * l3) / (2 * l1 * l2);
+    }else{
+        if(l1 * l1 + l2 * l2 - l3 * l3>0){
+            cosA=2;
+        }else{
+            cosA=-2;
+        }
+    }
+
 
     return cosA;
 
@@ -6579,7 +6594,7 @@ void design_folkroad_in() {
 
         }
         uint8_t top = 119;
-        for (int i = 1; i <= 60; i++) {
+        for (int i = 1; i <= 90; i++) {
             if (rightRoad[i].left - leftRoad[i].right < 20 && rightRoad[i].left - leftRoad[i].right >= 0
                 && rightRoad[i + 1].left - leftRoad[i + 1].right < 0
                 && rightRoad[i + 2].left - leftRoad[i + 2].right < 0) {
@@ -6587,14 +6602,81 @@ void design_folkroad_in() {
                 break;
             }
         }
+
+        uint8_t minR = 119;
+            double cosMinR = cos_angle(top + 15, top + 20, top + 25, rightRoad[top + 15].right, rightRoad[top + 20].right, rightRoad[top + 25].right);
+            if (top != 119) {
+
+                for (int i = top + 20; i <= 105; i++) {
+                    if (cos_angle(i - 5, i, i + 5, rightRoad[i - 5].right, rightRoad[i].right, rightRoad[i + 5].right) <= -0.5
+                        && cos_angle(i - 5, i, i + 5, rightRoad[i - 5].right, rightRoad[i].right, rightRoad[i + 5].right) > -0.8) {
+                        if (cos_angle(i - 5, i, i + 5, rightRoad[i - 5].right, rightRoad[i].right, rightRoad[i + 5].right) > cosMinR) {
+                            cosMinR = cos_angle(i - 5, i, i + 5, rightRoad[i - 5].right, rightRoad[i].right, rightRoad[i + 5].right);
+                            minR = i;
+                        }
+                    }
+                    //if()
+                }
+            }
+            uint8_t minL = 119;
+            double cosMinL = cos_angle(top + 15, top + 20, top + 25, leftRoad[top + 15].left, leftRoad[top + 20].left, leftRoad[top + 25].left);
+            if (top != 119) {
+                for (int i = top + 20; i <= 105; i++) {
+                    if (cos_angle(i - 5, i, i + 5, leftRoad[i - 5].left, leftRoad[i].left, leftRoad[i + 5].left) <= -0.5
+                        && cos_angle(i - 5, i, i + 5, leftRoad[i - 5].left, leftRoad[i].left, leftRoad[i + 5].left) > -0.8) {
+                        if (cos_angle(i - 5, i, i + 5, leftRoad[i - 5].left, leftRoad[i].left, leftRoad[i + 5].left) > cosMinL) {
+                            cosMinL = cos_angle(i - 5, i, i + 5, leftRoad[i - 5].left, leftRoad[i].left, leftRoad[i + 5].left);
+                            minL = i;
+                        }
+                    }
+                }
+            }
+
         ////////////////////////////printf
-        double k = (double)(left_line[106] - (rightRoad[top -1].left+leftRoad[top-1].right)/2) / (106 - top);
 
-        int x = left_line[106];
 
-        for (int i = top; i <= 106; i++) {
-            left_line[i] = k * (i - 106) + x;
+        if(minL<96){
+            double k = (double)(left_line[minL] - (rightRoad[top -1].left+leftRoad[top-1].right)/2) / (minL - top);
+            int x = left_line[minL];
+
+
+            for(int i=FAR_LINE;i<=106;i++){
+                left_line[i]=rightRoad[i].left;
+                if(top<=i&&i<=minL){
+                    left_line[i] = k * (i - minL) + x;
+                }
+            }
+        }else{
+
+            double kt;
+                    /// ////////////////////////
+                    double ySum = 0;
+                    double y2Sum = 0;
+                    double xSum = 0;
+                    double xySum = 0;
+                    int num = top - (top - 10) + 1;
+                    for (int i = top - 10; i <= top; i++) {
+                        xSum += rightRoad[i].left;
+                        ySum += i;
+                        y2Sum += i * i;
+                        xySum += i * rightRoad[i].left;
+                    }
+                    if ((num * y2Sum - ySum * ySum) != 0) {
+                        kt = (double)(num * xySum - xSum * ySum) / (num * y2Sum - ySum * ySum);
+                    }
+                    else {
+                        kt = 0;
+                    }
+                    double k=(double)(left_line[106]-(rightRoad[top-1].left+leftRoad[top-1].right)/2)/(106-top+1);
+                    for(int i=FAR_LINE;i<=106;i++){
+                        left_line[i]=rightRoad[i].left;
+                        if(top<=i){
+                            left_line[i]=k*(i-106)+left_line[106];
+                            //left_line[i] = kt * (i - top) +rightRoad[top].left;
+                        }
+                    }
         }
+
 
     }
     else if (TurnFolkRoad == LEFT) {
@@ -6603,6 +6685,7 @@ void design_folkroad_in() {
     }
 
 }
+
 
 ////////////////////////////////////////////
 //功能： 出三叉路口识别
@@ -6759,7 +6842,7 @@ void island_out(int type)
     float k_low, k_up, k_jump, k_jump_up;
     int kl, ku, kj, kju;
 
-    for (jump_point = 85; jump_point > 45; jump_point--)
+    for (jump_point = 85; jump_point > 30; jump_point--)
     {
         if (type == LEFT)
         {
@@ -6774,19 +6857,15 @@ void island_out(int type)
                 kl = k_low * 1000;
                 k_up = calculate_slope_two_point(jump_point, RIGHT, midPoint, RIGHT);
                 ku = k_up * 1000;
-                //////////////////printf("jumppoint=%d", jump_point);
-                //////////////////printf("kjump = %f,klow = %f,kup = %f,kju=%f\n", k_jump, k_low, k_up,k_jump_up);
-                //////////////////printf("kj = %d, kl = %d, ku = %d, kju=%d\n", kj, kl, ku, kju);
 
-                IMG[jump_point][right_line[jump_point] - 1] = purple;
 
-                if (ku > kj && ku > kl && kj > kl && kju < 2000)
+
+                if (ku > kj && ku > kl && kj > kl)
                 {
                     if (myIslandFlag == 1)
                     {
                         if (lastK_up > ku && lastK_jump > kj)
                         {
-                            //////////////////printf("lastrightline=%d,rightline=%d", right_line[lastJumpPoint], right_line[jump_point]);
                             if (right_line[lastJumpPoint] <= right_line[jump_point])
                             {
                                 myIslandFlag = 1;
@@ -6816,13 +6895,13 @@ void island_out(int type)
             else myIslandFlag = 0;
         }
 
-        else if (type == RIGHT)//斜率k是负值，比较时要修改一下，还没改
+        else if (type == RIGHT)
         {
             if (left_line[jump_point] - left_line[jump_point - 3] > delta && left_line[jump_point] - left_line[jump_point - 3] > delta)
             {
                 midPoint = (jump_point + 106) / 2;
-                k_jump_up = calculate_slope_two_point(jump_point - 10, RIGHT, jump_point, RIGHT);
-                kju = k_jump_up * (-1000);
+                k_jump_up = calculate_slope_two_point(jump_point - 10, LEFT, jump_point, LEFT);
+                kju = k_jump_up * 1000;
                 k_jump = calculate_slope_two_point(jump_point, LEFT, 106, LEFT);
                 kj = k_jump * (-1000);
                 k_low = calculate_slope_two_point(midPoint, LEFT, 106, LEFT);
@@ -6830,12 +6909,9 @@ void island_out(int type)
                 k_up = calculate_slope_two_point(jump_point, LEFT, midPoint, LEFT);
                 ku = k_up * (-1000);
 
-                //////////////////printf("kjump = %f,klow = %f,kup = %f,kju=%f\n", k_jump, k_low, k_up, k_jump_up);
-                //////////////////printf("kj = %d, kl = %d, ku = %d, kju=%d\n", kj, kl, ku, kju);
 
-                IMG[jump_point][left_line[jump_point] + 1] = purple;
 
-                if (ku > kj && ku > kl && kj > kl && kju < 500)
+                if (ku > kj && ku > kl && kj > kl)
                 {
                     if (myIslandFlag == 1)
                     {
@@ -6871,7 +6947,9 @@ void island_out(int type)
 
         }
     }
-
+    if(left_line[5]==MISS){
+        myIslandFlag=0;
+    }
     if (myIslandFlag == 1)
     {
         if (lastState[4] == 0 && lastTwoState[4] == 0)
