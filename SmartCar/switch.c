@@ -33,7 +33,7 @@ void SW_readSwitch()
 //        parkStart = 1;
 //        flagStop = 0;
         parkPosition = 0;
-        parkStart = 0;
+        parkStart = 1;
         state = 0;
         flagCircleForsee = 1;
         stopFlag = 0;

@@ -440,30 +440,30 @@ void CTRL_motorPID()
 
 void CTRL_servoMain()
 {
-//    if(GPIO_Read(P13, 2) && parkStart == 1)
-//    {
-////        CTRL_ParkStartServo(currentGyro);
-//        servoPwm = 620;
-//    }
-//    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
-//    {
-//        CTRL_servoPID();
-//    }
-//////
-//    else if(flagStop == 1)
-//    {
-////        CTRL_ParkStartServo(currentGyro);
-//
-////        if(parkPosition == 1)
-////        {
-////            servoPwm = 780;
-////        }
-////        else if(parkPosition == 2)
-////        {
-//            servoPwm = 620;
-////        }
-//
-//    }
+    if(GPIO_Read(P13, 2) && parkStart == 1)
+    {
+//        CTRL_ParkStartServo(currentGyro);
+        servoPwm = 620;
+    }
+    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
+    {
+        CTRL_servoPID();
+    }
+////
+    else if(flagStop == 1)
+    {
+//        CTRL_ParkStartServo(currentGyro);
+
+//        if(parkPosition == 1)
+//        {
+//            servoPwm = 780;
+//        }
+//        else if(parkPosition == 2)
+//        {
+            servoPwm = 620;
+//        }
+
+    }
 //    else CTRL_fuzzyPID();
 //    else CTRL_servoPID();
 
@@ -484,23 +484,7 @@ void CTRL_servoMain()
     test_varible[10] = servoPwm;
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//¶æ»ú¿ØÖÆ
 
-//    if(zebraCircle == display6.intValue || flagStop == 1)
-//    {
-//        delayStop ++;
-//        if(delayStop > display5.intValue)
-//        {
-//            expectL = 0;
-//            expectR = 0;
-//
-//        }
-//
-//    }
-//
-//    else
-//    {
-//        CTRL_motorDiffer();
 
-//    }
 
 
 }
