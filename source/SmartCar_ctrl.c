@@ -37,7 +37,7 @@ float position = 0; positionX = 0, positionY = 0;
 float expectGyro = 0;
 float gyroK = 20;
 float dx = 0, dy = 0;
-int parkStart = 0;//陀螺仪进出车库
+int parkStart = 1;//陀螺仪进出车库
 //float currentAngle;
 
 /*电流环参数*/
@@ -267,7 +267,7 @@ void CTRL_Init()
     ADC_Init(ADC_0, ADC0_CH5_A5);
     ADC_Init(ADC_0, ADC0_CH7_A7);
 
-//    CTRL_gyroInit();
+    CTRL_gyroInit();
 
 
 }
@@ -276,7 +276,7 @@ void CTRL_Init()
 void CTRL_servoPID()
 {
 
-    servoError.currentError = 91 - mid_line[presentVision.intValue];
+    servoError.currentError = 94 - mid_line[presentVision.intValue];
     test_varible[10] =  mid_line[presentVision.intValue];
 
     servoError.delta = servoError.currentError - servoError.lastError;
@@ -380,7 +380,7 @@ void CTRL_fuzzyPID()
 {
     float fuzzyKP = 1;
     int servo_error = 0;
-    servoError.currentError = 90 - mid_line[presentVision.intValue];
+    servoError.currentError = 93 - mid_line[presentVision.intValue];
     servoError.delta = servoError.currentError - servoError.lastError;
 //    servo_error = servoError.currentError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
@@ -443,11 +443,11 @@ void CTRL_servoMain()
     if(GPIO_Read(P13, 2) && parkStart == 1)
     {
 //        CTRL_ParkStartServo(currentGyro);
-        servoPwm = 620;
+        servoPwm = 630;
     }
     else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
     {
-        CTRL_servoPID();
+        CTRL_fuzzyPID();
     }
 ////
     else if(flagStop == 1)
@@ -460,7 +460,7 @@ void CTRL_servoMain()
 //        }
 //        else if(parkPosition == 2)
 //        {
-            servoPwm = 620;
+            servoPwm = 630;
 //        }
 
     }
@@ -480,7 +480,7 @@ void CTRL_servoMain()
 
 //    }
 
-    CTRL_fuzzyPID();
+//    CTRL_fuzzyPID();
     test_varible[10] = servoPwm;
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
@@ -572,22 +572,22 @@ void CTRL_motorMain()
 
     if(stopFlag == 0 && flagStop == 0)//flagStop=1为车库停车，stopFlag=1为出赛道停车
     {
-//        CTRL_CarParkStart();
+        CTRL_CarParkStart();
 
 
         CTRL_motorDiffer();
 
     }
-////    else if(flagStop == 1)
-////    {
-////        CTRL_CarParkStop();
-////
-//////        expectL = 0;
-//////        expectR= 0;
-//////        CTRL_speedLoopPID();
-//////        CTRL_curLoopPID();
-////
-////    }
+    else if(flagStop == 1)
+    {
+        CTRL_CarParkStop();
+
+//        expectL = 0;
+//        expectR= 0;
+//        CTRL_speedLoopPID();
+//        CTRL_curLoopPID();
+
+    }
     else if(stopFlag == 1)
     {
         expectL = 0;
@@ -622,7 +622,7 @@ void CTRL_motorDiffer()
     float k;
     if(delta > 0)
     {
-        k = gap.floatValue * (1.1209 - 0.0061 * delta);
+        k = gap.floatValue * (0.9935 - 0.0047 * delta);
         if(k > 1) k = 1;
         if(speedFlag == 1)
         {
@@ -648,7 +648,7 @@ void CTRL_motorDiffer()
     }
     else if(delta < 0)
     {
-        k = gap.floatValue * (1.1209 + 0.0061 * delta);
+        k = gap.floatValue * (0.9935 + 0.0047 * delta);
         if(k > 1) k = 1;
         if(speedFlag == 1)
         {
@@ -738,7 +738,7 @@ void CTRL_CarParkStart()
     //        {
     //            parkStart = 0;
     //        }
-        if(currentGyro > 75)
+        if(currentGyro < -30)
         {
             parkStart = 0;
             currentGyro = 0;
@@ -751,14 +751,14 @@ void CTRL_CarParkStop()
 //    delayStop++;
     if(flagStop == 1)
     {
-        if(currentGyro > 50 || currentGyro < -50)
+        if(currentGyro > 40 || currentGyro < -40)
         {
             expectL = 0;
             expectR = 0;
 //            currentGyro = 80;
         }
 
-        else if(currentGyro <= 50 && currentGyro >= -50)
+        else if(currentGyro <= 40 && currentGyro >= -40)
         {
             expectL = presentSpeed.intValue;
             expectR = presentSpeed.intValue;
