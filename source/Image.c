@@ -1431,6 +1431,12 @@ void image_main()
 ///////////////////////////////////////////
 void judge_type_road() {
 
+
+//    if(GPIO_Read(P11, 3))
+//    {
+//        state = display10.intValue;
+//    }
+
     ////////////////////////////////////printf("@@state=%d@@\n", state);
 
     //十字
@@ -1491,7 +1497,11 @@ void judge_type_road() {
 
 
     //十字回环
-    if (state == stateCrossCircleIn) {
+    if(state==stateCrossCircleIn){
+        cross_circle_turn();
+    }
+
+    if (state == stateCrossCircleOut) {
         cross_circle_out();
         design_cross_circle_out();
     }
@@ -2118,7 +2128,7 @@ void straight_cross_in() {
 
 
     uint8_t i = 106;
-    test_varible[2] = 10;//进十字时检查bug 进循环前是10 出循环是20 四个循环分别对应test_varible[2][3][4][5]
+//    test_varible[2] = 10;//进十字时检查bug 进循环前是10 出循环是20 四个循环分别对应test_varible[2][3][4][5]
     while (leftSide[i] > left_side[i] && i>=5 ) {
         if (leftSide[i - 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i - 2] > 4
             && leftSide[i + 1] - leftSide[i] < 3 && leftSide[i + 2] - leftSide[i] < 3
@@ -2129,10 +2139,10 @@ void straight_cross_in() {
         }
         i--;
     }
-    test_varible[2] = 20;
+//    test_varible[2] = 20;
 
     i = 106;
-    test_varible[3] = 10;
+//    test_varible[3] = 10;
     while (rightSide[i] < right_side[i] && i>=5) {
         if (rightSide[i - 1] > rightSide[i] + 4 && rightSide[i - 2] - rightSide[i] > 4
             && rightSide[i + 1] - rightSide[i] > -3 && rightSide[i + 2] - rightSide[i] > -3
@@ -2143,10 +2153,10 @@ void straight_cross_in() {
         }
         i--;
     }
-    test_varible[3] = 20;
+//    test_varible[3] = 20;
 
     i = 2;
-    test_varible[4] = 10;
+//    test_varible[4] = 10;
     while (leftSide[i] > left_side[i] && i<=106) {
         if (leftSide[i + 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i + 2] > 4
             && leftSide[i - 1] - leftSide[i] < 3 && leftSide[i - 2] - leftSide[i] < 3
@@ -2157,10 +2167,10 @@ void straight_cross_in() {
         }
         i++;
     }
-    test_varible[4] = 20;
+//    test_varible[4] = 20;
 
     i = 2;
-    test_varible[5] = 10;
+//    test_varible[5] = 10;
     while (rightSide[i] < right_side[i] && i<=106) {
         if (rightSide[i +1] > rightSide[i] + 4 && rightSide[i + 2] - rightSide[i] > 4
             && rightSide[i - 1] - rightSide[i] > -3 && rightSide[i - 2] - rightSide[i] > -3
@@ -2171,7 +2181,7 @@ void straight_cross_in() {
         }
         i++;
     }
-    test_varible[5] = 20;
+//    test_varible[5] = 20;
     double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 10, LEFT);
     double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 10, RIGHT);
     //下方太歪，斜进，不进
@@ -2278,7 +2288,7 @@ void design_straight_cross() {
 
 
     uint8_t i = 106;
-    test_varible[2] = 30;//出十字时检查bug 进循环前是30 出循环时是40 四个循环分别对应test_varible[2][3][4][5]
+//    test_varible[2] = 30;//出十字时检查bug 进循环前是30 出循环时是40 四个循环分别对应test_varible[2][3][4][5]
     while (leftSide[i] > left_side[i] && i>=5) {
         if (leftSide[i - 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i - 2] > 4
             && leftSide[i + 1] - leftSide[i] < 3 && leftSide[i + 2] - leftSide[i] < 3
@@ -2289,10 +2299,10 @@ void design_straight_cross() {
         }
         i--;
     }
-    test_varible[2] = 40;
+//    test_varible[2] = 40;
 
     i = 106;
-    test_varible[3] = 30;
+//    test_varible[3] = 30;
     while (rightSide[i] < right_side[i] && i>=5) {
         if (rightSide[i - 1] > rightSide[i] + 4 && rightSide[i - 2] - rightSide[i] > 4
             && rightSide[i + 1] - rightSide[i] > -3 && rightSide[i + 2] - rightSide[i] > -3
@@ -2303,10 +2313,10 @@ void design_straight_cross() {
         }
         i--;
     }
-    test_varible[3] = 40;
+//    test_varible[3] = 40;
 
     i = 2;
-    test_varible[4] = 30;
+//    test_varible[4] = 30;
     while (leftSide[i] > left_side[i] && i<=106) {
         if (leftSide[i + 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i + 2] > 4
             && leftSide[i - 1] - leftSide[i] < 3 && leftSide[i - 2] - leftSide[i] < 3
@@ -2317,10 +2327,10 @@ void design_straight_cross() {
         }
         i++;
     }
-    test_varible[4] = 40;
+//    test_varible[4] = 40;
 
     i = 2;
-    test_varible[5] = 30;
+//    test_varible[5] = 30;
     while (rightSide[i] < right_side[i] && i<=106) {
         if (rightSide[i + 1] > rightSide[i] + 4 && rightSide[i + 2] - rightSide[i] > 4
             && rightSide[i - 1] - rightSide[i] > -3 && rightSide[i - 2] - rightSide[i] > -3
@@ -2331,7 +2341,7 @@ void design_straight_cross() {
         }
         i++;
     }
-    test_varible[5] = 40;
+//    test_varible[5] = 40;
 
     if (rightDownJumpPoint > 90 || leftDownJumpPoint > 90) {
 
@@ -4639,7 +4649,7 @@ void island_start(int type) {
         //单边直线
 
 
-        if (fabs(calculate_slope(5, 25, LEFT) - calculate_slope(85, 105, LEFT)) > 0.1) {
+        if (fabs(calculate_slope(5, 25, LEFT) - calculate_slope(95, 105, LEFT)) > 0.1 && fabs(calculate_slope(40,60,LEFT)-calculate_slope(95,105,LEFT))>0.1) {
             flag = 0;
         }
 
@@ -4678,7 +4688,7 @@ void island_start(int type) {
     }
     else if (islandtype == LEFT) {
 
-        if (fabs(calculate_slope(5, 25, RIGHT) - calculate_slope(85, 105, RIGHT)) > 0.1) {
+        if (fabs(calculate_slope(5, 25, RIGHT) - calculate_slope(95, 105, RIGHT)) > 0.1 && fabs(calculate_slope(40,60,RIGHT)-calculate_slope(95,105,RIGHT))>0.1) {
             flag = 0;
         }
 
@@ -5405,8 +5415,8 @@ void design_island_out(int type) {
     //k_right_two = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
     k_right = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
     k_left = calculate_slope_two_point(80, LEFT, 100, LEFT);
-    k_leftR = k_left + 0.3;
-    k_rightL = k_right - 0.3;
+    k_leftR = k_left + 0.35;
+    k_rightL = k_right - 0.35;
     ////////////////////printf("two=%f, k = %f\n", k_right_two, k_right);
     int minFlag = 0;
     int minRight = 95;
@@ -5900,6 +5910,202 @@ void island_straight(int type) {
 //输出：
 //备注：
 ///////////////////////////////////////////
+void cross_circle_turn(){
+//    int jump_point;
+//        int delta = 1;
+//        int midPoint;
+//        float k_low, k_up, k_jump, k_jump_up;
+//        int kl, ku, kj, kju;
+//
+//        for (jump_point = 85; jump_point > 20; jump_point--)
+//        {
+//            if (islandtype == LEFT)
+//            {
+//                if (right_line[jump_point - 3] - right_line[jump_point] > delta && right_line[jump_point + 3] - right_line[jump_point] > delta)
+//                {
+//                    midPoint = (jump_point + 106) / 2;
+//                    k_jump_up = calculate_slope_two_point(jump_point - 10, RIGHT, jump_point, RIGHT);
+//                    kju = k_jump_up * (-1000);
+//                    k_jump = calculate_slope_two_point(jump_point, RIGHT, 106, RIGHT);
+//                    kj = k_jump * 1000;
+//                    k_low = calculate_slope_two_point(midPoint, RIGHT, 106, RIGHT);
+//                    kl = k_low * 1000;
+//                    k_up = calculate_slope_two_point(jump_point, RIGHT, midPoint, RIGHT);
+//                    ku = k_up * 1000;
+//
+//
+//
+//                    if (ku > kj && ku > kl && kj > kl)
+//                    {
+//                        if (myIslandFlag == 1)
+//                        {
+//                            if (lastK_up > ku && lastK_jump > kj)
+//                            {
+//                                if (right_line[lastJumpPoint] <= right_line[jump_point])
+//                                {
+//                                    myIslandFlag = 1;
+//                                    lastJumpPoint = jump_point;
+//                                    lastK_up = ku;
+//                                    lastK_jump = kj;
+//                                }
+//                                else myIslandFlag = 0;
+//                            }
+//                            else myIslandFlag = 0;
+//
+//
+//                        }
+//                        else if (myIslandFlag == 0)
+//                        {
+//                            myIslandFlag = 1;
+//                            lastJumpPoint = jump_point;
+//                            lastK_up = ku;
+//                            lastK_jump = kj;
+//
+//                        }
+//                    }
+//                    else myIslandFlag = 0;
+//
+//                    break;
+//                }
+//                else myIslandFlag = 0;
+//            }
+//
+//            else if (islandtype == RIGHT)
+//            {
+//                if (left_line[jump_point] - left_line[jump_point - 3] > delta && left_line[jump_point] - left_line[jump_point - 3] > delta)
+//                {
+//                    midPoint = (jump_point + 106) / 2;
+//                    k_jump_up = calculate_slope_two_point(jump_point - 10, LEFT, jump_point, LEFT);
+//                    kju = k_jump_up * 1000;
+//                    k_jump = calculate_slope_two_point(jump_point, LEFT, 106, LEFT);
+//                    kj = k_jump * (-1000);
+//                    k_low = calculate_slope_two_point(midPoint, LEFT, 106, LEFT);
+//                    kl = k_low * (-1000);
+//                    k_up = calculate_slope_two_point(jump_point, LEFT, midPoint, LEFT);
+//                    ku = k_up * (-1000);
+//
+//
+//
+//                    if (ku > kj && ku > kl && kj > kl)
+//                    {
+//                        if (myIslandFlag == 1)
+//                        {
+//                            if (lastK_up > ku && lastK_jump > kj)
+//                            {
+//                                //////////////////////printf("lastrightline=%d,rightline=%d", right_line[lastJumpPoint], right_line[jump_point]);
+//                                if (right_line[lastJumpPoint] >= right_line[jump_point])
+//                                {
+//                                    myIslandFlag = 1;
+//                                    lastJumpPoint = jump_point;
+//                                    lastK_up = ku;
+//                                    lastK_jump = kj;
+//                                }
+//                                else myIslandFlag = 0;
+//                            }
+//                            else myIslandFlag = 0;
+//
+//                        }
+//                        else if (myIslandFlag == 0)
+//                        {
+//                            myIslandFlag = 1;
+//                            lastJumpPoint = jump_point;
+//                            lastK_up = ku;
+//                            lastK_jump = kj;
+//
+//                        }
+//                    }
+//                    else myIslandFlag = 0;
+//
+//                    break;
+//                }
+//                else myIslandFlag = 0;
+//
+//            }
+//        }
+    int flag=0;
+    int sumL=0;
+    int sumR=0;
+
+
+
+    if(islandtype==LEFT){
+        for(int i=3;i<=70;i++){
+            //for(int j=1;j<=my_road[i].white_num;j++){
+                if(right_line[i]==right_side[i]){
+                    sumR++;
+                }
+            //}
+        }
+        for(int i=15;i<=85;i++){
+           // for(int j=1;j<=my_road[i].white_num;j++){
+                if(left_line[i]==left_side[i]){
+                    sumL++;
+                }
+            //}
+        }
+        if(sumL>=15&&sumR>=10){
+            flag=1;
+        }
+    }else if(islandtype==RIGHT){
+        for(int i=3;i<=70;i++){
+            //for(int j=1;j<=my_road[i].white_num;j++){
+                if(left_line[i]==left_side[i]){
+                    sumL++;
+                }
+           // }
+        }
+        for(int i=15;i<=85;i++){
+            //for(int j=1;j<=my_road[i].white_num;j++){
+                if(right_line[i]==right_side[i]){
+                    sumR++;
+                }
+           //}
+        }
+        if(sumL>=10&&sumR>=15){
+            flag=1;
+        }
+    }
+
+
+//        if(left_line[25]==MISS){
+//            flag=0;
+//        }
+        if (flag == 1)
+        {
+            if (lastState[4] == 0 && lastTwoState[4] == 0)
+            {
+                state = stateCrossCircleOut;
+            }
+    //        else if (lastTwoState[4] == 1 && lastState[4] == 0)
+    //        {
+    //            lastState[4] = 1;
+    //
+    //        }
+//            else if (lastTwoState[4] == 1 )
+//            {
+
+//        }
+            else
+            {
+                lastState[4] = 0;
+                lastTwoState[4] = 0;
+            }
+        }
+        else if (flag == 0)
+        {
+            lastState[4] = 0;
+            lastTwoState[4] = 0;
+        }
+        //////////////////////printf("lasttwo=%d,last=%d\n", lastTwoState[4], lastState[4]);
+}
+
+
+////////////////////////////////////////////
+//功能：出十字回环
+//输入：
+//输出：
+//备注：
+///////////////////////////////////////////
 void cross_circle_out() {
 
     int flag=1;
@@ -5947,45 +6153,50 @@ void cross_circle_out() {
 //备注：
 ///////////////////////////////////////////
 void design_cross_circle_out() {
-    if (my_road[25].white_num != 0) {
+    if (1) {
+        double k=1;
         if (islandtype == RIGHT) {
             uint8_t Right_Jump_Point_DownLimit = 105;
             uint8_t Right_Jump_Point_UpLimit = 60;
             uint8_t Right_Jump_Point_MaxD_Value = 7;
             uint8_t Look_Ahead_line = 12;
             uint8_t count = 0;
+
+
             for (int i = NEAR_LINE; i >= Look_Ahead_line; i--)
             {
                 if (right_line[i] == right_side[i] && left_line[i] == left_side[i]) count++;
             }
-            if (count >= 5)
+            if (count >= 3)
             {
                 for (int i = NEAR_LINE; i >= Look_Ahead_line; i--)
                 {
-                    right_line[i] = left_line[i] + 20 - 0.5*(i-Look_Ahead_line);
+                    right_line[i] = left_line[i] + 25 + k*(i-NEAR_LINE);
                 }
-            }
-            for (int i = Right_Jump_Point_DownLimit; i >= Right_Jump_Point_UpLimit; i--)
-            {
-                if (right_line[i + 2] != right_side[i + 2] &&
-                    right_line[i + 1] != right_side[i + 1] &&
-                    right_line[i] != right_side[i] &&
-                    right_line[i - 1] == right_side[i - 1] &&
-                    right_line[i - 2] == right_side[i - 2] &&
-                    right_line[i - 1] - right_line[i] >= Right_Jump_Point_MaxD_Value)
+            }else{
+                for (int i = Right_Jump_Point_DownLimit; i >= Right_Jump_Point_UpLimit; i--)
                 {
-                    //////////////////////printf("%d", i);
-                    for (int j = i + 2; j >= FAR_LINE; j--)
+                    if (right_line[i + 2] != right_side[i + 2] &&
+                            right_line[i + 1] != right_side[i + 1] &&
+                            right_line[i] != right_side[i] &&
+                            right_line[i - 1] == right_side[i - 1] &&
+                            right_line[i - 2] == right_side[i - 2] &&
+                            right_line[i - 1] - right_line[i] >= Right_Jump_Point_MaxD_Value)
                     {
-                        if (IMG[j][right_line[i + 2]] != black)
+                                    //////////////////////printf("%d", i);
+                        for (int j = i + 2; j >= FAR_LINE; j--)
                         {
-                            right_line[j] = right_line[i + 2];
+                            if (IMG[j][right_line[i + 2]] != black)
+                            {
+                                right_line[j] = right_line[i + 2] + k*(i-Right_Jump_Point_DownLimit);
+                            }
+                            else if (IMG[j - 1][right_line[i + 2]] == black) break;
                         }
-                        else if (IMG[j - 1][right_line[i + 2]] == black) break;
+                        break;
                     }
-                    break;
                 }
             }
+
         }
         else if (islandtype == LEFT) {
             uint8_t Left_Jump_Point_DownLimit = 105;
@@ -5997,34 +6208,36 @@ void design_cross_circle_out() {
             {
                 if (right_line[i] == right_side[i] && left_line[i] == left_side[i]) count++;
             }
-            if (count >= 5)
+            if (count >= 3)
             {
                 for (int i = NEAR_LINE; i >= Look_Ahead_line; i--)
                 {
-                    left_line[i] = right_line[i] - 20 + 0.5*(i-Look_Ahead_line);
+                    left_line[i] = right_line[i] - 25 - k*(i-NEAR_LINE);
                 }
-            }
-            for (int i = Left_Jump_Point_DownLimit; i >= Left_Jump_Point_UpLimit; i--)
-            {
-                if (left_line[i + 2] != left_side[i + 2] &&
-                    left_line[i + 1] != left_side[i + 1] &&
-                    left_line[i] != left_side[i] &&
-                    left_line[i - 1] == left_side[i - 1] &&
-                    left_line[i - 2] == left_side[i - 2] &&
-                    left_line[i] - left_line[i - 1] >= Left_Jump_Point_MaxD_Value)
+            }else{
+                for (int i = Left_Jump_Point_DownLimit; i >= Left_Jump_Point_UpLimit; i--)
                 {
-                    //////////////////////printf("%d", i);
-                    for (int j = i + 2; j >= FAR_LINE; j--)
+                    if (left_line[i + 2] != left_side[i + 2] &&
+                            left_line[i + 1] != left_side[i + 1] &&
+                            left_line[i] != left_side[i] &&
+                            left_line[i - 1] == left_side[i - 1] &&
+                            left_line[i - 2] == left_side[i - 2] &&
+                            left_line[i] - left_line[i - 1] >= Left_Jump_Point_MaxD_Value)
                     {
-                        if (IMG[j][left_line[i + 2]] != black)
+                        //////////////////////printf("%d", i);
+                        for (int j = i + 2; j >= FAR_LINE; j--)
                         {
-                            left_line[j] = left_line[i + 2];
+                            if (IMG[j][left_line[i + 2]] != black)
+                            {
+                                left_line[j] = left_line[i + 2] - k*(i-Left_Jump_Point_DownLimit);
+                            }
+                            else if (IMG[j - 1][left_line[i + 2]] == black) break;
                         }
-                        else if (IMG[j - 1][left_line[i + 2]] == black) break;
+                        break;
                     }
-                    break;
                 }
             }
+
         }
     }
 
@@ -6964,7 +7177,7 @@ void island_out(int type)
     float k_low, k_up, k_jump, k_jump_up;
     int kl, ku, kj, kju;
 
-    for (jump_point = 85; jump_point > 30; jump_point--)
+    for (jump_point = 85; jump_point > 20; jump_point--)
     {
         if (type == LEFT)
         {
@@ -7069,24 +7282,24 @@ void island_out(int type)
 
         }
     }
-    if(left_line[15]==MISS){
+    if(left_line[25]==MISS){
         myIslandFlag=0;
     }
     if (myIslandFlag == 1)
     {
         if (lastState[4] == 0 && lastTwoState[4] == 0)
         {
-            lastTwoState[4] = 1;
+            state = stateIsland3;
         }
 //        else if (lastTwoState[4] == 1 && lastState[4] == 0)
 //        {
 //            lastState[4] = 1;
 //
 //        }
-        else if (lastTwoState[4] == 1 )
-        {
-            state = stateIsland3;
-        }
+//        else if (lastTwoState[4] == 1 )
+//        {
+//            state = stateIsland3;
+//        }
         else
         {
             lastState[4] = 0;

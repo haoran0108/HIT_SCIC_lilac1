@@ -47,7 +47,7 @@ extern node_t fuzzyPB, fuzzyPM, fuzzyPS, fuzzyZO, fuzzyNS, fuzzyNM, fuzzyNB, pre
 extern node_t presentMotorP, presentMotorI;
 extern node_t gap;
 extern node_t presentTHRE;
-extern node_t display1, display2, display3, display4, display5, display6, display7, display8, display9;
+extern node_t display1, display2, display3, display4, display5, display6, display7, display8, display9, display10;
 //extern node_t CrossPD, CrossCircle, IslandPD;
 extern node_t currentRTKP, currentRTKI, currentLFKP, currentLFKI, expectC;
 extern node_t Cross_PB, Cross_PM, Cross_PS, Cross_ZO, Cross_NS, Cross_NM, Cross_NB, Cross_DS, Cross_DB;

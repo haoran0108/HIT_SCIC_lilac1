@@ -452,16 +452,12 @@ void CTRL_servoMain()
 ////
     else if(flagStop == 1)
     {
-//        CTRL_ParkStartServo(currentGyro);
+        if(currentGyro > 40 || currentGyro < -40)
+        {
+            servoPwm = 700;
+        }
+        else servoPwm = 630;
 
-//        if(parkPosition == 1)
-//        {
-//            servoPwm = 780;
-//        }
-//        else if(parkPosition == 2)
-//        {
-            servoPwm = 630;
-//        }
 
     }
 //    else CTRL_fuzzyPID();
@@ -509,6 +505,8 @@ void CTRL_motor()
         mySpeedR = PWM_MAX_N;
     }
 
+    test_varible[2] = mySpeedL;
+    test_varible[3] = mySpeedR;
 
     if(mySpeedL >= 0 && mySpeedR >= 0)
     {
