@@ -630,7 +630,7 @@ void CTRL_motorDiffer()
         }
         else if(speedFlag == 0)
         {
-            if(state == 11)
+            if(state == 11 || state == 13)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue * k);
@@ -656,7 +656,7 @@ void CTRL_motorDiffer()
         }
         else if(speedFlag == 0)
         {
-            if(state == 11)
+            if(state == 11 || state == 13)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue * k);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue);
@@ -680,7 +680,7 @@ void CTRL_motorDiffer()
         }
         else if(speedFlag == 0)
         {
-            if(state == 11)
+            if(state == 11 || state == 13)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue);

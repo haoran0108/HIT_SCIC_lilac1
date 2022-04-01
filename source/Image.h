@@ -116,6 +116,9 @@
 #define stateIsland6 10
 
 #define stateFolkRoadIn 11
+#define stateFolkRoadIng 16
+#define stateFolkRoadOut 17
+
 
 #define stateCrossCircleIn 12
 #define stateCrossCircleOut 13
@@ -250,9 +253,11 @@ void island_out(int type);
 
 //三叉
 void folk_road_in();
+void folk_road_in1();
 void design_folkroad_in();
 void folk_road_out();
 double cos_angle(int x1,int x2,int x3,int y1,int y2,int y3);
+void folk_road_out1();
 //十字回环
 //void cross_circle_in();
 //void design_cross_circle_in();
