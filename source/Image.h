@@ -139,6 +139,9 @@ extern int parkPosition;
 extern int stopFlag;
 extern int carParkTimes;
 extern int carParkDelay;
+
+extern int crossCircleCount;
+extern int startCount;
 typedef struct {
     int x;
     int y;

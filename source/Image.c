@@ -61,6 +61,9 @@ int leftPark = 0,rightPark = 0;
 uint8_t missLeft[CAMERA_H];
 uint8_t missRight[CAMERA_H];
 
+int crossCircleCount = 0;
+int startCount = 0;
+
 uint8_t ForeSee = 35;
 coordinate foreSee[CAMERA_W];
 
@@ -1375,7 +1378,11 @@ void image_main()
 //    orinary_two_line_history();
    // if(parkStart == 0){
 
-    if(parkStart == 0)
+    if(startCount <= parkCount.intValue)
+    {
+        startCount += 1;
+    }
+    if(parkStart == 0 && startCount > parkCount.intValue)
     {
         judge_type_road();
 
@@ -1502,6 +1509,7 @@ void judge_type_road() {
     }
 
     if (state == stateCrossCircleOut) {
+        crossCircleCount += 1;
         cross_circle_out();
         design_cross_circle_out();
     }
@@ -1518,8 +1526,8 @@ void judge_type_road() {
         folk_road_in1();
     }
     if (state == stateFolkRoadOut) {
-            folk_road_out1();
-            design_folkroad_in();
+        folk_road_out1();
+        design_folkroad_in();
     }
 
     if (state == stateStart) {
@@ -5423,8 +5431,8 @@ void design_island_out(int type) {
     //k_right_two = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
     k_right = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
     k_left = calculate_slope_two_point(80, LEFT, 100, LEFT);
-    k_leftR = k_left + 0.35;
-    k_rightL = k_right - 0.35;
+    k_leftR = k_left + design_island_k.floatValue;
+    k_rightL = k_right - design_island_k.floatValue;
     ////////////////////printf("two=%f, k = %f\n", k_right_two, k_right);
     int minFlag = 0;
     int minRight = 95;
@@ -6037,39 +6045,39 @@ void cross_circle_turn(){
 
 
     if(islandtype==LEFT){
-        for(int i=3;i<=70;i++){
+        for(int i=3;i<=90;i++){
             //for(int j=1;j<=my_road[i].white_num;j++){
                 if(right_line[i]==right_side[i]){
                     sumR++;
                 }
             //}
         }
-        for(int i=5;i<=85;i++){
+        for(int i=5;i<=90;i++){
            // for(int j=1;j<=my_road[i].white_num;j++){
                 if(left_line[i]==left_side[i]){
                     sumL++;
                 }
             //}
         }
-        if(sumL>=15&&sumR>=10){
+        if(sumL>=10&&sumR>=7){
             flag=1;
         }
     }else if(islandtype==RIGHT){
-        for(int i=3;i<=70;i++){
+        for(int i=3;i<=90;i++){
             //for(int j=1;j<=my_road[i].white_num;j++){
                 if(left_line[i]==left_side[i]){
                     sumL++;
                 }
            // }
         }
-        for(int i=5;i<=85;i++){
+        for(int i=5;i<=90;i++){
             //for(int j=1;j<=my_road[i].white_num;j++){
                 if(right_line[i]==right_side[i]){
                     sumR++;
                 }
            //}
         }
-        if(sumL>=10&&sumR>=15){
+        if(sumL>=7&&sumR>=10){
             flag=1;
         }
     }
@@ -6142,21 +6150,22 @@ void cross_circle_out() {
         flag = 0;
     }
 
-    if (flag == 1) {
-
-        if (lastState[4] == 0) {
-            lastState[4] = 1;
-        }
-
-        else if (lastState[4] == 1) {
-            state = 0;
-            lastTwoState[4] = 0;
-            lastState[4] = 0;
-        }
-        else {
-            lastState[4] = 0;
-            lastTwoState[4] = 0;
-        }
+    if (flag == 1 || crossCircleCount >= cross_circle_param1.intValue) {
+        state = 0;
+        crossCircleCount = 0;
+//        if (lastState[4] == 0) {
+//            lastState[4] = 1;
+//        }
+//
+//        else if (lastState[4] == 1) {
+//            state = 0;
+//            lastTwoState[4] = 0;
+//            lastState[4] = 0;
+//        }
+//        else {
+//            lastState[4] = 0;
+//            lastTwoState[4] = 0;
+//        }
     }
     else if (flag == 0) {
         lastState[4] = 0;
@@ -7490,7 +7499,7 @@ void island_out(int type)
     float k_low, k_up, k_jump, k_jump_up;
     int kl, ku, kj, kju;
 
-    for (jump_point = 85; jump_point > 20; jump_point--)
+    for (jump_point = 85; jump_point > islandout_up.intValue; jump_point--)
     {
         if (type == LEFT)
         {

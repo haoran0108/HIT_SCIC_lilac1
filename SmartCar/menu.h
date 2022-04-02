@@ -54,7 +54,9 @@ extern node_t Cross_PB, Cross_PM, Cross_PS, Cross_ZO, Cross_NS, Cross_NM, Cross_
 extern node_t circle_PB, circle_PM, circle_PS, circle_ZO, circle_NS, circle_NM, circle_NB, circle_DS, circle_DB;
 extern node_t Island_PB, Island_PM, Island_PS, Island_ZO, Island_NS, Island_NM, Island_NB, Island_DS, Island_DB;
 extern node_t Folk_PB, Folk_PM, Folk_PS, Folk_ZO, Folk_NS, Folk_NM, Folk_NB, Folk_DS, Folk_DB;
-
+extern node_t islandout_up, design_island_k;
+extern node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4;
+extern node_t parkCount;
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      对文件各参数进行初始化赋值
 //  @param      file 要赋值的文件  类型：node_t

@@ -162,21 +162,7 @@ void CTRL_gyroCircle()
 
 }
 
-//void CTRL_currentTIME()
-//{
-//    currentTime ++;
-//    if(currentTime < 400)
-//    {
-//        currentExpect = 2300;
-//    }
-//    else if(currentTime >= 400 && currentTime <= 800)
-//    {
-//        currentExpect = 2100;
-//    }
-//    else if(currentTime > 800)
-//        {currentTime = 0;}
-//
-//}
+
 
 void CTRL_speedLoopPID()
 {
@@ -366,8 +352,6 @@ float CTRL_FuzzyMemberShip(int midError)
     {
         servoKP = fuzzyNB.floatValue;
     }
-//    membership[0] = fabs(membership[0]);
-//    membership[1] = fabs(membership[1]);
 
     test_varible[7] = membership[0];
     test_varible[8] = membership[1];
@@ -400,22 +384,6 @@ void CTRL_fuzzyPID()
 void CTRL_motorPID()
 {
 
-//    if(testFlag < 400)
-//    {
-//           expectL = presentSpeed.intValue;//×óÂÖ
-//           expectR = presentSpeed.intValue;//ÓÒÂÖ
-//    }
-//
-//    else if(testFlag >= 400)
-//    {
-//        expectL = 0;
-//        expectR = 0;
-//    }
-//    if(stopFlag == 0 && flagStop == 0)
-//    {
-//    expectL = presentSpeed.intValue;//×óÂÖ
-//    expectR = presentSpeed.intValue;//ÓÒÂÖ
-//    }
 
     speedL = CTRL_speedGetLeft();
     speedR = CTRL_speedGetRight();
@@ -440,47 +408,26 @@ void CTRL_motorPID()
 
 void CTRL_servoMain()
 {
+
     if(GPIO_Read(P13, 2) && parkStart == 1)
     {
-//        CTRL_ParkStartServo(currentGyro);
         servoPwm = 630;
     }
+
     else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
     {
         CTRL_fuzzyPID();
     }
-////
+
     else if(flagStop == 1)
     {
-        if(currentGyro > 40 || currentGyro < -40)
-        {
-            servoPwm = 700;
-        }
-        else servoPwm = 630;
 
+        servoPwm = 630;
 
     }
-//    else CTRL_fuzzyPID();
-//    else CTRL_servoPID();
 
-//    CTRL_CircleForsee(presentVision.intValue);
-//    if(flagCircleForsee == 0)
-//    {
-//        CTRL_servoPID();
-
-//        flagCircleForsee = 1;
-//
-//    }
-//    else{
-//        CTRL_CircleServoPID();
-
-//    }
-
-//    CTRL_fuzzyPID();
     test_varible[10] = servoPwm;
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//¶æ»ú¿ØÖÆ
-
-
 
 
 }
@@ -749,14 +696,14 @@ void CTRL_CarParkStop()
 //    delayStop++;
     if(flagStop == 1)
     {
-        if(currentGyro > 40 || currentGyro < -40)
+        if(currentGyro > 30 || currentGyro < -30)
         {
             expectL = 0;
             expectR = 0;
 //            currentGyro = 80;
         }
 
-        else if(currentGyro <= 40 && currentGyro >= -40)
+        else if(currentGyro <= 30 && currentGyro >= -30)
         {
             expectL = presentSpeed.intValue;
             expectR = presentSpeed.intValue;

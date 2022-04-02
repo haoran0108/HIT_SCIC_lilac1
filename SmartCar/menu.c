@@ -29,6 +29,12 @@ node_t display, display1, display2, display3, display4, display5, display6, disp
 node_t fileSave, saveGear1, saveGear2, saveGear3;//用于写入flash
 node_t image;//显示摄像头图像
 node_t list;
+
+node_t param;
+node_t island,cross_circle, carPark;
+node_t islandout_up, design_island_k;
+node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4;
+node_t parkCount;
 nodeptr_t filePrint;
 nodeptr_t tempFile;
 
@@ -60,7 +66,18 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     CrossPD = MENU_fileInit(CrossPD, 1, 0.5, "cross", 2, none, NULL, &CrossCircle, &file3, &Cross_PB);
     CrossCircle = MENU_fileInit(CrossCircle, 1, 0.5, "crs-circle", 3, none, &CrossPD, &IslandPD, NULL, &circle_PB);
     IslandPD = MENU_fileInit(IslandPD, 1, 0, "island", 4, none, &CrossCircle, &FolkPD, NULL, &Island_PB);
-    FolkPD = MENU_fileInit(FolkPD, 1, 1.0, "folk", 5, none, &IslandPD, NULL, NULL, &Folk_PB);
+    FolkPD = MENU_fileInit(FolkPD, 1, 1.0, "folk", 5, none, &IslandPD, &param, NULL, &Folk_PB);
+    param = MENU_fileInit(param, 1, 1.0, "Param", 6, none, &FolkPD, NULL, NULL, &island);
+
+    island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
+    islandout_up = MENU_fileInit(islandout_up, 40, 1.0, "is-out-up", 2, dataint, NULL, &design_island_k, &island, NULL);
+    design_island_k = MENU_fileInit(design_island_k, 1, 0.3, "is-out-up", 3, datafloat, &islandout_up, NULL, NULL, NULL);
+
+    cross_circle = MENU_fileInit(cross_circle, 1, 1.0, "crocircle", 3, none, &island, &carPark, NULL, &cross_circle_param1);
+    cross_circle_param1 = MENU_fileInit(cross_circle_param1, 10, 1.0, "cc-count", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
+
+    carPark = MENU_fileInit(carPark, 1, 1.0, "park", 4, none, &cross_circle, NULL, NULL, &parkCount);
+    parkCount = MENU_fileInit(parkCount, 70, 1.0, "parkCount", 2, dataint, NULL, NULL, &carPark, NULL);
 
     Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
     Cross_PM = MENU_fileInit(Cross_PM, 1, 0.5, "crossPM", 3, datafloat, &Cross_PB, &Cross_PS, NULL, NULL);

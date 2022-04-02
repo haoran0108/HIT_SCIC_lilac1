@@ -40,6 +40,9 @@ void SW_readSwitch()
         carParkTimes = 0;
         carParkDelay = 0;
         servoPwm = 630;
+
+        crossCircleCount = 0;
+        startCount = 0;
 //        CTRL_directionAngleClean();
     }
     else
