@@ -166,18 +166,18 @@ void CTRL_gyroCircle()
 
 void CTRL_speedLoopPID()
 {
-    if(flagStop == 0 || stopFlag == 0)
-    {
-        expectL = presentSpeed.intValue;//左轮
-        expectR = presentSpeed.intValue;//右轮
-    }
+//    if(flagStop == 0 || stopFlag == 0)
+//    {
+//        expectL = presentSpeed.intValue;//左轮
+//        expectR = presentSpeed.intValue;//右轮
+//    }
 
     speedL = CTRL_speedGetLeft();
     errorML.currentError = expectL + speedL;//取偏差
     sumErrorLF += errorML.currentError;
     errorML.delta = errorML.currentError - errorML.lastError;
-    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
-//    currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
+//    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
+    currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
     if(currentExpectLF < 1000) currentExpectLF = 1000;
     else if(currentExpectLF > 4000) currentExpectLF = 4000;
@@ -187,8 +187,8 @@ void CTRL_speedLoopPID()
     errorMR.currentError = expectR - speedR;//取偏差
     sumErrorRT += errorMR.currentError;
     errorMR.delta = errorMR.currentError - errorMR.lastError;
-    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
-//    currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
+//    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
+    currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
     if(currentExpectRT < 1000) currentExpectRT = 1000;
     else if(currentExpectRT > 4000) currentExpectRT = 4000;
@@ -196,8 +196,8 @@ void CTRL_speedLoopPID()
 //    test_varible[0] = speedL;
 //    test_varible[1] = speedR;
 //
-//    test_varible[4] = currentExpectLF;
-//    test_varible[5] = currentExpectRT;
+    test_varible[4] = currentExpectLF;
+    test_varible[5] = currentExpectRT;
 
 
 }
@@ -210,11 +210,11 @@ void CTRL_curLoopPID()
     currentRT = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//右轮
     currentLF = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//左轮
 
-//    test_varible[2] = currentLF;
-//    test_varible[3] = currentRT;
+    test_varible[7] = currentLF;
+    test_varible[8] = currentRT;
 
 
-    currentLF_real = 4420 - currentLF;
+//    currentLF_real = 4420 - currentLF;
 
     currentErrorR.currentError = currentExpectRT - currentRT;
     currentErrorR.delta = currentErrorR.currentError - currentErrorR.lastError;
@@ -222,7 +222,7 @@ void CTRL_curLoopPID()
     currentErrorR.lastError = currentErrorR.currentError;
 
 
-    currentErrorL.currentError = currentExpectLF - currentLF_real;
+    currentErrorL.currentError = currentExpectLF - currentLF;
 //    currentErrorL.currentError = 2250 - currentLF;
     currentErrorL.delta = currentErrorL.currentError - currentErrorL.lastError;
     mySpeedL = (int32)(mySpeedL + currentErrorL.currentError * currentKI_L + currentErrorL.delta * currentKP_L);
@@ -353,8 +353,8 @@ float CTRL_FuzzyMemberShip(int midError)
         servoKP = fuzzyNB.floatValue;
     }
 
-    test_varible[7] = membership[0];
-    test_varible[8] = membership[1];
+//    test_varible[7] = membership[0];
+//    test_varible[8] = membership[1];
     test_varible[9] = servoKP;
 
     return servoKP;
@@ -539,7 +539,9 @@ void CTRL_motorMain()
         expectR = 0;
     }
 
-    CTRL_motorPID();
+//    CTRL_motorPID();
+    CTRL_speedLoopPID();
+    CTRL_curLoopPID();
     CTRL_motor();
 
 
@@ -573,11 +575,11 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue * k);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(speedFlag == 0)
         {
-            if(state == 11 || state == 13)
+            if(state == 11 || state == 13 || state == 18)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue * k);
@@ -587,7 +589,7 @@ void CTRL_motorDiffer()
                 expectL = (int32)(presentSpeed.intValue);
                 expectR = (int32)(presentSpeed.intValue * k);
             }
-            GPIO_Set(P22, 0, 0);
+//            GPIO_Set(P22, 0, 0);
         }
 
     }
@@ -599,11 +601,11 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue * k);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(speedFlag == 0)
         {
-            if(state == 11 || state == 13)
+            if(state == 11 || state == 13 || state == 18)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue * k);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue);
@@ -613,7 +615,7 @@ void CTRL_motorDiffer()
                 expectL = (int32)(presentSpeed.intValue * k);
                 expectR = (int32)(presentSpeed.intValue);
             }
-            GPIO_Set(P22, 0, 0);
+//            GPIO_Set(P22, 0, 0);
         }
     }
     else if(delta == 0)
@@ -623,11 +625,11 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(speedFlag == 0)
         {
-            if(state == 11 || state == 13)
+            if(state == 11 || state == 13 || state == 18)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue);
@@ -637,7 +639,7 @@ void CTRL_motorDiffer()
                 expectL = (int32)(presentSpeed.intValue);
                 expectR = (int32)(presentSpeed.intValue);
             }
-            GPIO_Set(P22, 0, 0);
+//            GPIO_Set(P22, 0, 0);
         }
 
     }

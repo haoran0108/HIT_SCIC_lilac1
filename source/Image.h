@@ -126,7 +126,7 @@
 #define stateCarPark 14
 #define stateStraightCrossIn 15
 
-
+#define rampway 18 //坡道
 /////////////////////////////
 
 extern uint8_t IMG[CAMERA_H][CAMERA_W];//二值化后图像数组
@@ -142,6 +142,8 @@ extern int carParkDelay;
 
 extern int crossCircleCount;
 extern int startCount;
+
+extern int lastState[10];
 typedef struct {
     int x;
     int y;
@@ -229,7 +231,7 @@ void cross_out();
 void cross_over();
 void design_cross_in();
 void design_cross_out();
-void design_straight_route(int y_start, int y_end, int type);
+//void design_straight_route(int y_start, int y_end, int type);
 double variance(int y_start, int y_end, int type);
 void folk_or_cross();
 void  design_cross_titl_two_two();
@@ -277,8 +279,12 @@ void design_park();
 
 //停车
 void protection();
+
 //上下坡
+void rampwayOn();
+void rampwayDown();
 
 void fixMidLine();
-
+void design_straight_route(int type);
+void straight_protection();
 #endif //

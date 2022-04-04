@@ -40,16 +40,16 @@ IFX_INTERRUPT(dma_ch5_isr, 0, ERU_DMA_INT_PRIO)
     }
     if(mt9v034_finish_flag == 1)
     {
-        if(GPIO_Read(P13, 2) || GPIO_Read(P11, 3)){
-
-            if(parkStart == 0)
-            {
-                image_main();
-            }
-
-            CTRL_servoMain();
+//        if(GPIO_Read(P13, 2) || GPIO_Read(P11, 3)){
 //
-        }
+//            if(parkStart == 0)
+//            {
+//                image_main();
+//            }
+//
+//            CTRL_servoMain();
+////
+//        }
 
         mt9v034_finish_flag = 0;
 
@@ -63,7 +63,7 @@ IFX_INTERRUPT(cc60_pit_ch0_isr, 0, CCU6_0_CH0_ISR_PRIORITY)//电机中断
     enableInterrupts();//开启中断嵌套
     PIT_CLEAR_FLAG(CCU6_0, PIT_CH0);
 
-    CTRL_motorMain();
+//    CTRL_motorMain();
 }
 
             /*spi有关dma中断*/
@@ -102,11 +102,21 @@ IFX_INTERRUPT(asclin0TxISR, 0, IFX_INTPRIO_ASCLIN0_TX)
     IfxAsclin_Asc_isrTransmit(&uart[0]);
 }
 
+
+
+
 IFX_INTERRUPT(asclin0RxISR, 0, IFX_INTPRIO_ASCLIN0_RX)
 {
     IfxCpu_enableInterrupts();//开启中断嵌套
     IfxAsclin_Asc_isrReceive(&uart[0]);
+
+    SmartCar_TFMINI_UARTCallBack();//tfmini
+    test_varible[15] = TFMINI_Distance;
+
 }
+
+
+
 
 IFX_INTERRUPT(asclin0ErISR, 0, IFX_INTPRIO_ASCLIN0_ER)
 {

@@ -33,7 +33,7 @@ void SW_readSwitch()
 //        parkStart = 1;
 //        flagStop = 0;
         parkPosition = 0;
-        parkStart = 1;
+        parkStart = startWay.intValue;
         state = 0;
         flagCircleForsee = 1;
         stopFlag = 0;
@@ -43,6 +43,7 @@ void SW_readSwitch()
 
         crossCircleCount = 0;
         startCount = 0;
+        lastState[8] = 0;
 //        CTRL_directionAngleClean();
     }
     else

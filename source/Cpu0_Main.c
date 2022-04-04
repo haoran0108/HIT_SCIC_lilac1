@@ -68,62 +68,60 @@ int core0_main(void)
     
     /** 初始化OLED*/
 
-    SmartCar_Oled_Init();
-    SmartCar_Buffer_Upload(DISP_image_HSIC_lilac);
+//    SmartCar_Oled_Init();
+//    SmartCar_Buffer_Upload(DISP_image_HSIC_lilac);
 
-    MENU_Init();
-    CTRL_Init();//控制初始化
+//    MENU_Init();
+//    CTRL_Init();//控制初始化
     SmartCar_MT9V034_Init();//摄像头初始化，没连摄像头时不能初始化，不然oled就停留在队标页面
-    GPIO_Init(P22, 0, PUSHPULL, 0);
-//    SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,1152000,3);
+    SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,1152000,3);
 
     Delay_ms(STM0, 1000);
-    SmartCar_OLED_Fill(0);
+//    SmartCar_OLED_Fill(0);
     /** 开启总中断*/
-    IfxCpu_enableInterrupts();
+//    IfxCpu_enableInterrupts();
 
-    SmartCar_OLED_Fill(0);
-    SmartCar_OLED_Printf6x8(70, 0, "%d", 1);
-    SmartCar_OLED_P6x8Str(0, 1, ">> ");
-    //namePrintf(filePrint);
-    /** 主循环 */
+//    SmartCar_OLED_Fill(0);
+//    SmartCar_OLED_Printf6x8(70, 0, "%d", 1);
+//    SmartCar_OLED_P6x8Str(0, 1, ">> ");
+//    //namePrintf(filePrint);
+//    /** 主循环 */
+//
+//
+//    /*记录上电次数*/
+//    uint32_t buf1[1024] = { 0 };
+//    onPower = Page_Read(3, 0, int32_t);
+//    onPower ++;
+//    memcpy(buf1, &onPower, sizeof(uint32_t));
+//    Sector_Erase(3);//将onPower放在第四个扇区
+//    Sector_Program(3, buf1);
+//
+//    tempFile = &file1;
+//    MENU_namePrintf(tempFile);
 
 
-    /*记录上电次数*/
-    uint32_t buf1[1024] = { 0 };
-    onPower = Page_Read(3, 0, int32_t);
-    onPower ++;
-    memcpy(buf1, &onPower, sizeof(uint32_t));
-    Sector_Erase(3);//将onPower放在第四个扇区
-    Sector_Program(3, buf1);
-
-    tempFile = &file1;
-    MENU_namePrintf(tempFile);
-
-//    GPIO_Set(P22, 0, 1);
 
 
     while(TRUE)
         {
-
-            SmartCar_OLED_Printf6x8(110, 0, "%d", onPower);
-            if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
-                    !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
-                {
-                    Delay_ms(STM0,100);
-
-                    tempFile = MENU_curPosition(tempFile);
-                }
+//            SmartCar_OLED_Printf6x8(110, 0, "%d", onPower);
+//            if (!GPIO_Read(P11, 6) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
+//                    !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
+//                {
+//                    Delay_ms(STM0,100);
+//
+//                    tempFile = MENU_curPosition(tempFile);
+//                }
 //            if(!GPIO_Read(P13, 2) || !GPIO_Read(P11, 3))
 //            {
 //                Delay_ms(STM0,100);
 //                SW_readSwitch();
 //            }
-
-            SW_readSwitch();//发车键
-
-//        SmartCar_ImgUpload(fullBuffer,120,188);//传图像给电脑，和uart一起用
 //
+//            SW_readSwitch();//发车键
+
+        SmartCar_ImgUpload(fullBuffer,120,188);//传图像给电脑，和uart一起用
+
         }
 
 }

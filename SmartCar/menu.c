@@ -35,6 +35,10 @@ node_t island,cross_circle, carPark;
 node_t islandout_up, design_island_k;
 node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4;
 node_t parkCount;
+node_t paramBottom;
+
+node_t startWay;
+
 nodeptr_t filePrint;
 nodeptr_t tempFile;
 
@@ -71,14 +75,15 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
     islandout_up = MENU_fileInit(islandout_up, 40, 1.0, "is-out-up", 2, dataint, NULL, &design_island_k, &island, NULL);
-    design_island_k = MENU_fileInit(design_island_k, 1, 0.3, "is-out-up", 3, datafloat, &islandout_up, NULL, NULL, NULL);
+    design_island_k = MENU_fileInit(design_island_k, 1, 0.3, "fix-k", 3, datafloat, &islandout_up, NULL, NULL, NULL);
 
     cross_circle = MENU_fileInit(cross_circle, 1, 1.0, "crocircle", 3, none, &island, &carPark, NULL, &cross_circle_param1);
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 10, 1.0, "cc-count", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
 
     carPark = MENU_fileInit(carPark, 1, 1.0, "park", 4, none, &cross_circle, NULL, NULL, &parkCount);
-    parkCount = MENU_fileInit(parkCount, 70, 1.0, "parkCount", 2, dataint, NULL, NULL, &carPark, NULL);
+    parkCount = MENU_fileInit(parkCount, 70, 1.0, "parkCount", 2, dataint, NULL, &paramBottom, &carPark, NULL);
 
+    paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkCount, NULL, NULL, NULL);
     Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
     Cross_PM = MENU_fileInit(Cross_PM, 1, 0.5, "crossPM", 3, datafloat, &Cross_PB, &Cross_PS, NULL, NULL);
     Cross_PS = MENU_fileInit(Cross_PS, 1, 0.5, "crossPS", 4, datafloat, &Cross_PM, &Cross_ZO, NULL, NULL);
@@ -190,10 +195,10 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     /*展示翻页效果*/
     display = MENU_fileInit(display, 1, 1.0, "motor", 5, none, &file3, &fileSave, NULL, &display1);
-    display1 = MENU_fileInit(display1, 40, 133.03, "LFKP", 2, dataint, NULL, &display2, &display, NULL);
-    display2 = MENU_fileInit(display2, 30, 33.71, "LFKI", 3, dataint, &display1, &display3, NULL, NULL);
-    display3 = MENU_fileInit(display3, 40, 2, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
-    display4 = MENU_fileInit(display4, 30, 1, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
+    display1 = MENU_fileInit(display1, 15, 133.03, "LFKP", 2, dataint, NULL, &display2, &display, NULL);
+    display2 = MENU_fileInit(display2, 5, 33.71, "LFKI", 3, dataint, &display1, &display3, NULL, NULL);
+    display3 = MENU_fileInit(display3, 15, 2, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
+    display4 = MENU_fileInit(display4, 5, 1, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
     display5 = MENU_fileInit(display5, 10, 2.701, "ParkDelay", 6, dataint, &display4, &display6, NULL, NULL);
     display6 = MENU_fileInit(display6, 2, 1.1, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);
     display7 = MENU_fileInit(display7, 100, 0.85, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
@@ -205,7 +210,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     fileSave = MENU_fileInit(fileSave, 1, 1.0, "SAVE", 6, none, &display, NULL, NULL, &saveGear1);
     saveGear1 = MENU_fileInit(saveGear1, 1, 1.0, "SaveGear1", 2, none, NULL, &saveGear2, &fileSave, &g1_Data1);
     saveGear2 = MENU_fileInit(saveGear2, 1, 1.0, "SaveGear2", 3, none, &saveGear1, &saveGear3, NULL, &g2_Data1);
-    saveGear3 = MENU_fileInit(saveGear3, 1, 1.0, "SaveGear3", 4, none, &saveGear2, NULL, NULL, &g3_Data1);
+    saveGear3 = MENU_fileInit(saveGear3, 1, 1.0, "SaveGear3", 4, none, &saveGear2, &startWay, NULL, &g3_Data1);
+
+    startWay = MENU_fileInit(startWay, 1, 1.0, "start-way", 5, dataint, &saveGear3, NULL, NULL, NULL);
 
     //摄像头显示在oled上
 //    image = MENU_fileInit(image, 1, 1.0, "IMAGE", 7, none, &fileSave, NULL, NULL, NULL);
