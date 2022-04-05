@@ -193,8 +193,8 @@ void CTRL_speedLoopPID()
     if(currentExpectRT < 1000) currentExpectRT = 1000;
     else if(currentExpectRT > 4000) currentExpectRT = 4000;
 
-//    test_varible[0] = speedL;
-//    test_varible[1] = speedR;
+    test_varible[0] = speedL;
+    test_varible[1] = speedR;
 //
     test_varible[4] = currentExpectLF;
     test_varible[5] = currentExpectRT;
@@ -355,7 +355,7 @@ float CTRL_FuzzyMemberShip(int midError)
 
 //    test_varible[7] = membership[0];
 //    test_varible[8] = membership[1];
-    test_varible[9] = servoKP;
+//    test_varible[9] = servoKP;
 
     return servoKP;
 }
@@ -368,7 +368,7 @@ void CTRL_fuzzyPID()
     servoError.delta = servoError.currentError - servoError.lastError;
 //    servo_error = servoError.currentError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
-    test_varible[11] = fuzzyKP;
+//    test_varible[11] = fuzzyKP;
     servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
     if(servoPwm > 770)
         servoPwm = 770;
@@ -426,7 +426,7 @@ void CTRL_servoMain()
 
     }
 
-    test_varible[10] = servoPwm;
+    test_varible[11] = servoPwm;
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
 
@@ -539,9 +539,9 @@ void CTRL_motorMain()
         expectR = 0;
     }
 
-//    CTRL_motorPID();
-    CTRL_speedLoopPID();
-    CTRL_curLoopPID();
+    CTRL_motorPID();
+//    CTRL_speedLoopPID();
+//    CTRL_curLoopPID();
     CTRL_motor();
 
 
@@ -579,10 +579,15 @@ void CTRL_motorDiffer()
         }
         else if(speedFlag == 0)
         {
-            if(state == 11 || state == 13 || state == 18)
+            if(state == 11 || state == 13)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue * k);
+            }
+            else if(state == 18)
+            {
+                expectL = 55;
+                expectR = 55;
             }
             else
             {
@@ -605,10 +610,15 @@ void CTRL_motorDiffer()
         }
         else if(speedFlag == 0)
         {
-            if(state == 11 || state == 13 || state == 18)
+            if(state == 11 || state == 13)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue * k);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue);
+            }
+            else if(state == 18)
+            {
+                expectL = 55;
+                expectR = 55;
             }
             else
             {
@@ -629,10 +639,15 @@ void CTRL_motorDiffer()
         }
         else if(speedFlag == 0)
         {
-            if(state == 11 || state == 13 || state == 18)
+            if(state == 11 || state == 13)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue);
+            }
+            else if(state == 18)
+            {
+                expectL = 55;
+                expectR = 55;
             }
             else
             {
@@ -643,7 +658,8 @@ void CTRL_motorDiffer()
         }
 
     }
-
+    test_varible[9] = expectL;
+    test_varible[10] = expectR;
     /*内减外加*/
 //    float kIN, kOUT;
 //    if(delta > 0)
