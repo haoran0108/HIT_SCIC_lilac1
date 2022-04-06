@@ -142,6 +142,8 @@ extern int carParkDelay;
 
 extern int crossCircleCount;
 extern int startCount;
+extern int rampWayCount;
+extern int parkJudgeCount;
 
 extern int lastState[10];
 

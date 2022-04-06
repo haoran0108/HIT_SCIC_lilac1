@@ -64,7 +64,8 @@ uint8_t missRight[CAMERA_H];
 //时间计数
 int crossCircleCount = 0;
 int startCount = 0;
-
+int rampWayCount = 0;
+int parkJudgeCount = 0;
 //flag
 int myIslandFlag = 0;
 int straightFlag = 0;
@@ -1550,9 +1551,19 @@ void judge_type_road() {
     //车库
     if(state != stateCarPark)
     {
-        carPark_in();
-        leftPark = 0;
-        rightPark = 0;
+        if(carParkTimes == 0)
+        {
+            carPark_in();
+            leftPark = 0;
+            rightPark = 0;
+        }
+        else if(carParkTimes == 1 && parkJudgeCount > 400)
+        {
+            carPark_in();
+            leftPark = 0;
+            rightPark = 0;
+        }
+
 
     }
 //    if(state == stateStart)
@@ -1562,10 +1573,15 @@ void judge_type_road() {
 //    }
     if(state == stateCarPark)
     {
-
         if(carParkTimes < 2)
         {
+
             if(carParkTimes == 1 && parkType == 1)
+            {
+                leftPark = 1;
+                rightPark = 0;
+            }
+            else if(carParkTimes == 1 && parkType == 0)
             {
                 leftPark = 1;
                 rightPark = 0;
@@ -1592,6 +1608,14 @@ void judge_type_road() {
             searchParkLine();
 
         }
+        else if(carParkTimes == 2 && parkType == 0)
+        {
+
+            leftPark = 0;
+            rightPark = 1;
+            searchParkLine();
+
+        }
         else if(carParkTimes == 2 && parkType == -1)
         {
             leftPark = 1;
@@ -1601,9 +1625,12 @@ void judge_type_road() {
 
     }
 
-    if(state==stateStart){
-        straight_protection();
+    if(carParkTimes == 1)
+    {
+        parkJudgeCount += 1;
+
     }
+
     if(state != rampway && state == stateStart)
     {
         rampwayOn();
@@ -1611,7 +1638,16 @@ void judge_type_road() {
 
     if(state == rampway)
     {
-        rampwayDown();
+//        rampwayDown();
+        rampWayCount += 1;
+        if(rampWayCount > rampCount.intValue)
+        {
+            state = 0;
+            rampWayCount=0;
+        }
+    }
+    if(state==stateStart){
+        straight_protection();
     }
 }
 
@@ -4818,7 +4854,7 @@ void island_start(int type) {
 
         int sumU = 0;
         for (int i = 5; i <= 35; i++) {
-            if (my_road[i].connected[j_mid[i]].width + 3 < right_line[pointC - 10] - left_line[pointC - 10]) {
+            if (my_road[i].connected[j_mid[i]].width < right_line[pointC - 10] - left_line[pointC - 10]) {
                 sumU++;
             }
         }
@@ -4882,7 +4918,7 @@ void island_start(int type) {
 
         int sumU = 0;
         for (int i = 5; i <= 35; i++) {
-            if (my_road[i].connected[j_mid[i]].width + 3 < right_line[pointC - 10] - left_line[pointC - 10]) {
+            if (my_road[i].connected[j_mid[i]].width < right_line[pointC - 10] - left_line[pointC - 10]) {
                 sumU++;
             }
         }
@@ -6406,7 +6442,10 @@ void carPark_in()
                 {
                     if (my_road[carParkX].connected[gap].width <= 5)
                     {
-                        gapNumber++;
+                        if(my_road[5].white_num!=0){
+                            gapNumber++;
+                        }
+
                     }
                     if (gapNumber >= 4)
                     {
@@ -7305,7 +7344,7 @@ void design_folkroad_in() {
                         xySum += i * rightRoad[i].left;
                     }
                     if ((num * y2Sum - ySum * ySum) != 0) {
-                        kt = (double)(num * xySum - xSum * ySum) / (num * y2Sum - ySum * ySum);
+                        kt = (double)(num * xySum - xSum * ySum) / (num * y2Sum - ySum * ySum) - 0.3;
                     }
                     else {
                         kt = 0;
@@ -7869,11 +7908,42 @@ void design_straight_route(int type)
 void rampwayOn()
 {
     int rampFlag1 = 0;
+    uint8_t mid_line[120];
+
+    for(int i=100;i>=10;i--){
+        if(left_line[i]!=MISS){
+            mid_line[i]=(left_line[i] + right_line[i]) / 2;
+        }
+    }
+    int width_max, width_min;
+    double k1=calculate_any_slope(20, 40, mid_line);
+    double k2=calculate_any_slope(50, 70, mid_line);
+    double k3=calculate_any_slope(70, 90, mid_line);
+
+    width_max = 0;
+    width_min =100;
+
+    for(int i=100;i>=10;i--){
+        if(my_road[i].connected[j_continue[i]].width>width_max){
+            width_max=my_road[i].connected[j_continue[i]].width;
+        }
+        if(my_road[i].connected[j_continue[i]].width<width_min){
+            width_min=my_road[i].connected[j_continue[i]].width;
+        }
+    }
+    test_varible[12] = width_max - width_min;
     if(my_road[5].white_num != 0)
     {
-        if(TFMINI_Distance < 30)
+        if(TFMINI_Distance < rampDistance.intValue)
         {
-            rampFlag1 = 1;
+//            if(fabs(k1-k2) < 0.35 && fabs(k1-k3) < 0.35 && fabs(k2-k3) < 0.35){
+            if(width_max - width_min >= 10 && width_max - width_min <= 45)
+            {
+                rampFlag1 = 1;
+
+            }
+//            }
+
         }
 
     }
@@ -7883,6 +7953,7 @@ void rampwayOn()
         if(lastState[9] == 0)
         {
             lastState[9] = 1;
+            lastState[8] = 0;
         }
         else if(lastState[9] == 1)
         {
@@ -7896,6 +7967,7 @@ void rampwayOn()
     else if(rampFlag1 == 0)
     {
         lastState[9] = 0;
+        lastState[8] = 0;
     }
 }
 
@@ -7910,7 +7982,7 @@ void rampwayDown()
         }
     }
 
-    if(TFMINI_Distance < 35 && lastState[8] == 1)
+    if(TFMINI_Distance < 40 && lastState[8] == 1)
     {
         state = 0;
     }
