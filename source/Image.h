@@ -144,6 +144,9 @@ extern int crossCircleCount;
 extern int startCount;
 
 extern int lastState[10];
+
+extern int leftPark, rightPark;
+
 typedef struct {
     int x;
     int y;

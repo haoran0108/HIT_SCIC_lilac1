@@ -34,7 +34,7 @@ node_t param;
 node_t island,cross_circle, carPark;
 node_t islandout_up, design_island_k;
 node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4;
-node_t parkCount;
+node_t parkCount, startGyro, endGyro, search_line;
 node_t paramBottom;
 
 node_t startWay;
@@ -81,9 +81,13 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 10, 1.0, "cc-count", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
 
     carPark = MENU_fileInit(carPark, 1, 1.0, "park", 4, none, &cross_circle, NULL, NULL, &parkCount);
-    parkCount = MENU_fileInit(parkCount, 70, 1.0, "parkCount", 2, dataint, NULL, &paramBottom, &carPark, NULL);
+    parkCount = MENU_fileInit(parkCount, 70, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
+    startGyro = MENU_fileInit(startGyro, 30, 1.0, "st-gyro", 3, dataint, &parkCount, &endGyro, NULL, NULL);
+    endGyro = MENU_fileInit(endGyro, 30, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
+    search_line = MENU_fileInit(search_line, 70, 1.0, "end-gyro", 5, dataint, &endGyro, &paramBottom, NULL, NULL);
 
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkCount, NULL, NULL, NULL);
+
     Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
     Cross_PM = MENU_fileInit(Cross_PM, 1, 0.5, "crossPM", 3, datafloat, &Cross_PB, &Cross_PS, NULL, NULL);
     Cross_PS = MENU_fileInit(Cross_PS, 1, 0.5, "crossPS", 4, datafloat, &Cross_PM, &Cross_ZO, NULL, NULL);

@@ -45,12 +45,18 @@ extern float test_varible[20];
 extern float motorLFKP, motorLFKI, motorRTKP, motorRTKI, motorRTKD;
 extern float currentKP_R, currentKI_R, currentKI_L, currentKP_L;
 extern int zebraFlag, zebraCircle;
-extern int flagStop, delayStop;
+
 extern float currentGyro;
+
 extern int parkStart;
+extern int parkType;
+
 extern int flagCircleForsee;
+
+extern int flagStop, delayStop;
 extern int testFlag;
 extern int speedFlag;
+
 struct error
 {
     double delta;

@@ -33,8 +33,12 @@ void SW_readSwitch()
 //        parkStart = 1;
 //        flagStop = 0;
         parkPosition = 0;
+
         parkStart = startWay.intValue;
+        parkType = startWay.intValue;
+
         state = 0;
+
         flagCircleForsee = 1;
         stopFlag = 0;
         carParkTimes = 0;

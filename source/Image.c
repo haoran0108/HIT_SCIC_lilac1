@@ -1565,10 +1565,15 @@ void judge_type_road() {
 
         if(carParkTimes < 2)
         {
-            if(carParkTimes == 1)
+            if(carParkTimes == 1 && parkType == 1)
             {
                 leftPark = 1;
                 rightPark = 0;
+            }
+            else if(carParkTimes == 1 && parkType == -1)
+            {
+                leftPark = 0;
+                rightPark = 1;
             }
             design_park();
             carParkDelay += 1;
@@ -1579,13 +1584,21 @@ void judge_type_road() {
                 state = 0;
             }
         }
-        else if(carParkTimes == 2)
+        else if(carParkTimes == 2 && parkType == 1)
         {
+
             leftPark = 0;
             rightPark = 1;
             searchParkLine();
 
         }
+        else if(carParkTimes == 2 && parkType == -1)
+        {
+            leftPark = 1;
+            rightPark = 0;
+            searchParkLine();
+        }
+
     }
 
     if(state==stateStart){
@@ -6443,7 +6456,7 @@ void searchParkLine()
 {
     int gapNumber = 0;
 
-        for(int i = 65; i < 100; i++)
+        for(int i = search_line.intValue; i < 100; i++)
         {
             if (my_road[i].white_num > 3 && (my_road[i].connected[my_road[i].white_num].width > 15 || my_road[i].connected[1].width > 15))
             {
