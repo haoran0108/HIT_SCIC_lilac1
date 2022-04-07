@@ -365,7 +365,10 @@ void CTRL_fuzzyPID()
 {
     float fuzzyKP = 1;
     int servo_error = 0;
-    servoError.currentError = 93 - mid_line[presentVision.intValue];
+    int realVision;
+    realVision = foresee();
+    servoError.currentError = 94 - mid_line[presentVision.intValue];
+//    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
 //    servo_error = servoError.currentError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
@@ -596,13 +599,13 @@ void CTRL_motorDiffer()
     {
         k = gap.floatValue * (0.9935 - 0.0047 * delta);
         if(k > 1) k = 1;
-        if(speedFlag == 1)
+        if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue * k);
 //            GPIO_Set(P22, 0, 1);
         }
-        else if(speedFlag == 0)
+        else if(straightFlag == 0)
         {
             if(state == 11 || state == 13)
             {
@@ -611,8 +614,8 @@ void CTRL_motorDiffer()
             }
             else if(state == 18)
             {
-                expectL = 55;
-                expectR = 55;
+                expectL = 50;
+                expectR = 50;
             }
             else
             {
@@ -627,13 +630,13 @@ void CTRL_motorDiffer()
     {
         k = gap.floatValue * (0.9935 + 0.0047 * delta);
         if(k > 1) k = 1;
-        if(speedFlag == 1)
+        if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue * k);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
 //            GPIO_Set(P22, 0, 1);
         }
-        else if(speedFlag == 0)
+        else if(straightFlag == 0)
         {
             if(state == 11 || state == 13)
             {
@@ -642,8 +645,8 @@ void CTRL_motorDiffer()
             }
             else if(state == 18)
             {
-                expectL = 55;
-                expectR = 55;
+                expectL = 50;
+                expectR = 50;
             }
             else
             {
@@ -656,13 +659,13 @@ void CTRL_motorDiffer()
     else if(delta == 0)
     {
 
-        if(speedFlag == 1)
+        if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
 //            GPIO_Set(P22, 0, 1);
         }
-        else if(speedFlag == 0)
+        else if(straightFlag == 0)
         {
             if(state == 11 || state == 13)
             {
@@ -671,8 +674,8 @@ void CTRL_motorDiffer()
             }
             else if(state == 18)
             {
-                expectL = 55;
-                expectR = 55;
+                expectL = 50;
+                expectR = 50;
             }
             else
             {
@@ -871,6 +874,44 @@ void CTRL_ServoPID_Determine()
         fuzzy_Dbig = Folk_DB.floatValue;
 
     }
+}
+
+int foresee()
+{
+    int speedAve;
+    int speedDelta;
+    int realForesee;
+    speedAve = (expectL + expectR) / 2;
+    speedDelta = speedAve - presentSpeed.intValue;
+    if(speedDelta < 5 && speedDelta > -5)
+    {
+        realForesee = presentTHRE.intValue;
+    }
+    else if(speedDelta >= 5 && speedDelta < 10)
+    {
+        realForesee = presentTHRE.intValue - 1;
+    }
+    else if(speedDelta >= 10 && speedDelta < 15)
+    {
+        realForesee = presentTHRE.intValue - 2;
+    }
+    else if(speedDelta >= 15)
+    {
+        realForesee = presentTHRE.intValue - 3;
+    }
+    else if(speedDelta <= -5 && speedDelta > -10)
+    {
+        realForesee = presentTHRE.intValue + 1;
+    }
+    else if(speedDelta <= -10 && speedDelta > -15)
+    {
+        realForesee = presentTHRE.intValue + 2;
+    }
+    else if(speedDelta <= -15)
+    {
+        realForesee = presentTHRE.intValue + 3;
+    }
+    return realForesee;
 }
 
 int16_t CTRL_speedGetRight()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚21.6和21.7对应T5

@@ -26,6 +26,7 @@ node_t preGear1, preGear2, preGear3;
 node_t presentSpeed, presentTHRE, presentVision, fuzzyPB, fuzzyPM, fuzzyPS, fuzzyZO, fuzzyNS, fuzzyNM, fuzzyNB, presentServoD, presentMotorP, presentMotorI, bottomData;
 node_t gap;//差速要乘的倍数
 node_t display, display1, display2, display3, display4, display5, display6, display7, display8, display9, display10;//展示翻页效果
+node_t LFKP, LFKI, RTKP, RTKI, slowLFKP, slowLFKI, slowRTKP, slowRTKI;
 node_t fileSave, saveGear1, saveGear2, saveGear3;//用于写入flash
 node_t image;//显示摄像头图像
 node_t list;
@@ -90,7 +91,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkCount, NULL, NULL, NULL);
 
     ramp = MENU_fileInit(ramp, 1, 1.0, "ramp", 5, none, &carPark, NULL, NULL, &rampCount);
-    rampCount = MENU_fileInit(rampCount, 40, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
+    rampCount = MENU_fileInit(rampCount, 35, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
     rampDistance = MENU_fileInit(rampDistance, 30, 1.0, "distance", 3, dataint, &rampCount, &rampBottom, NULL, NULL);
 
     rampBottom = MENU_fileInit(rampBottom, 50, 1.0, "Rbottom", 4, none, &rampDistance, NULL, NULL, NULL);
@@ -189,15 +190,15 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     presentSpeed = MENU_fileInit(presentSpeed, 90, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
     presentTHRE = MENU_fileInit(presentTHRE, 135, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
     presentVision = MENU_fileInit(presentVision, 73, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
-    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 2.45, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
+    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 2.4, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
     fuzzyPM = MENU_fileInit(fuzzyPM, 1, 2.3, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
     fuzzyPS = MENU_fileInit(fuzzyPS, 1, 2.2, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
-    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 2.1, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
+    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 2.0, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
     fuzzyNS = MENU_fileInit(fuzzyNS, 1, 2.2, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
     fuzzyNM = MENU_fileInit(fuzzyNM, 1, 2.3, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
-    fuzzyNB = MENU_fileInit(fuzzyNB, 1, 2.45, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
-    presentServoD = MENU_fileInit(presentServoD, 1, 4.1, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
-    gap = MENU_fileInit(presentMotorP, 1, 1.02, "GAP", 7, datafloat, &presentServoD, &bottomData, NULL, NULL);
+    fuzzyNB = MENU_fileInit(fuzzyNB, 1, 2.4, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
+    presentServoD = MENU_fileInit(presentServoD, 1, 4.3, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
+    gap = MENU_fileInit(presentMotorP, 1, 1.0, "GAP", 7, datafloat, &presentServoD, &bottomData, NULL, NULL);
 //    presentMotorI = MENU_fileInit(presentMotorI, 1, 190.0, "preMotorI", 2, datafloat, &gap, &bottomData, NULL, NULL);
 //    presentMotorP = MENU_fileInit(gap, 8, 250, "preMotorP", 3, datafloat, &presentMotorI, &bottomData, NULL, NULL);
     bottomData = MENU_fileInit(bottomData, 1, 1.0, "bottom", 2, none, &gap, NULL, NULL, NULL);
@@ -207,13 +208,24 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     /*展示翻页效果*/
     display = MENU_fileInit(display, 1, 1.0, "motor", 5, none, &file3, &fileSave, NULL, &display1);
-    display1 = MENU_fileInit(display1, 30, 133.03, "LFKP", 2, dataint, NULL, &display2, &display, NULL);
-    display2 = MENU_fileInit(display2, 30, 33.71, "LFKI", 3, dataint, &display1, &display3, NULL, NULL);
-    display3 = MENU_fileInit(display3, 30, 2, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
-    display4 = MENU_fileInit(display4, 30, 1, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
+    display1 = MENU_fileInit(display1, 40, 133.03, "motor", 2, none, NULL, &display2, &display, &LFKP);
+    display2 = MENU_fileInit(display2, 25, 33.71, "slowmotor", 3, none, &display1, &display3, NULL, &slowLFKP);
+
+    LFKP = MENU_fileInit(LFKP, 30, 133.03, "LFKP", 2, dataint, NULL, &LFKI, &display1, NULL);
+    LFKI = MENU_fileInit(LFKI, 25, 133.03, "LFKI", 3, dataint, &LFKP, &RTKP, NULL, NULL);
+    RTKP = MENU_fileInit(RTKP, 30, 133.03, "RTKP", 4, dataint, &LFKI, &RTKI, NULL, NULL);
+    RTKI = MENU_fileInit(RTKI, 25, 133.03, "RTKI", 5, dataint, &RTKP, NULL, NULL, NULL);
+
+    slowLFKP = MENU_fileInit(slowLFKP, 25, 133.03, "slowLFKP", 2, dataint, NULL, &slowLFKI, &display2, NULL);
+    slowLFKI = MENU_fileInit(slowLFKI, 10, 133.03, "slowLFKI", 3, dataint, &slowLFKP, &slowRTKP, NULL, NULL);
+    slowRTKP = MENU_fileInit(slowRTKP, 25, 133.03, "slowRTKP", 4, dataint, &slowLFKI, &slowRTKI, NULL, NULL);
+    slowRTKI = MENU_fileInit(slowRTKI, 10, 133.03, "slowRTKI", 5, dataint, &slowRTKP, NULL, NULL, NULL);
+
+    display3 = MENU_fileInit(display3, 40, 2, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
+    display4 = MENU_fileInit(display4, 25, 1, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
     display5 = MENU_fileInit(display5, 10, 2.701, "ParkDelay", 6, dataint, &display4, &display6, NULL, NULL);
-    display6 = MENU_fileInit(display6, 2, 1.1, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);
-    display7 = MENU_fileInit(display7, 100, 0.95, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
+    display6 = MENU_fileInit(display6, 2, 1.15, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);
+    display7 = MENU_fileInit(display7, 100, 0.98, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
     display8 = MENU_fileInit(display8, 147, 7.91, "stopTHRE", 3, dataint, &display7, &display9, NULL, NULL);
     display9 = MENU_fileInit(display9, 14, 9.02, "count2", 4, dataint, &display8, &display10, NULL, NULL);
     display10 = MENU_fileInit(display10, 0, 9.02, "state", 5, dataint, &display9, NULL, NULL, NULL);

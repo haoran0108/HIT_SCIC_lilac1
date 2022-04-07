@@ -26,6 +26,7 @@ void SW_readSwitch()
         zebraCircle = 0;
         flagStop = 0;
         delayFlag = 0;
+        straightFlag = 0;
 //        zebraCount = 0;
 //        zFlag = 0;
         delayStop = 0;
@@ -50,6 +51,8 @@ void SW_readSwitch()
         startCount = 0;
         lastState[8] = 0;
         parkJudgeCount = 0;
+
+        slowFlag = 0;
 //        CTRL_directionAngleClean();
     }
     else
@@ -59,10 +62,21 @@ void SW_readSwitch()
             Delay_ms(STM0,1000);
             delayFlag = 1;
         }
-        motorLFKP = display1.intValue;
-        motorLFKI = display2.intValue;
-        motorRTKP = display3.intValue;
-        motorRTKI = display4.intValue;
+        if(slowFlag == 1)
+        {
+            motorLFKP = slowLFKP.intValue;
+            motorLFKI = slowLFKI.intValue;
+            motorRTKP = slowRTKP.intValue;
+            motorRTKI = slowRTKI.intValue;
+        }
+        else
+        {
+            motorLFKP = LFKP.intValue;
+            motorLFKI = LFKI.intValue;
+            motorRTKP = RTKP.intValue;
+            motorRTKI = RTKI.intValue;
+        }
+
 
         currentKP_R = currentRTKP.floatValue;
         currentKI_R = currentRTKI.floatValue;

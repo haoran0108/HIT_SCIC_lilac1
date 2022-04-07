@@ -154,5 +154,6 @@ int16_t CTRL_speedGetLeft();
 int16_t CTRL_speedGetRight();
 
 void speedUP_define();
+int foresee();
 
 #endif /* SOURCE_SMARTCAR_CTRL_H_ */

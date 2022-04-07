@@ -148,7 +148,8 @@ extern int parkJudgeCount;
 extern int lastState[10];
 
 extern int leftPark, rightPark;
-
+extern int straightFlag, lastStraightFlag;
+extern int slowFlag;
 typedef struct {
     int x;
     int y;
