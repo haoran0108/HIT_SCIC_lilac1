@@ -7902,19 +7902,19 @@ void straight_protection() {
 
     if (flagL == 1 && flagR == 0) {
         design_straight_route(RIGHT);
-        if(fabs(calculate_slope(40,60,LEFT))<1){
+        if(fabs(calculate_slope(40,60,LEFT))<1 && straight_variance(65, 35) == 2){
             straightFlag = 1;
         }
 
     }
     else if (flagL == 0 && flagR == 1) {
         design_straight_route(LEFT);
-        if(fabs(calculate_slope(40,60,RIGHT))<1){
+        if(fabs(calculate_slope(40,60,RIGHT))<1 && straight_variance(65, 35) == 2){
             straightFlag = 1;
         }
     }
     else if (flagL == 1 && flagR == 1) {
-        if(fabs(calculate_slope(40,60,LEFT))<1){
+        if(fabs(calculate_slope(40,60,LEFT))<1 && (straight_variance(65, 35) == 2 || straight_variance(65, 35) == 3)){
             straightFlag = 1;
         }
     }
@@ -7984,6 +7984,39 @@ void design_straight_route(int type)
         }
     }
 }
+
+int straight_variance(int istart, int iend)
+{
+    float k, b;
+    int output;
+    int sumVar = 0, count = 0;
+    float var = 0;
+    k = (float)(mid_line[istart] - mid_line[iend]) / (istart - iend);
+    for (int i = istart; i > iend; i--)
+    {
+        output = k * (i - istart) + mid_line[istart];
+        output = output - mid_line[i];
+        output *= output;
+        sumVar += output;
+        count += 1;
+    }
+    var = (float)(sumVar) / count;
+    if (var > 100)
+    {
+        return 1;
+    }
+    else if(var <= 100 && var > 50)
+    {
+        return 2;
+
+    }
+    else if(var <= 50)
+    {
+        return 3;
+    }
+    else return 0;
+}
+
 
 
 void rampwayOn()

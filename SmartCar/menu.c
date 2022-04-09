@@ -78,7 +78,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
     islandout_up = MENU_fileInit(islandout_up, 40, 1.0, "is-out-up", 2, dataint, NULL, &design_island_k, &island, NULL);
-    design_island_k = MENU_fileInit(design_island_k, 1, 0.3, "fix-k", 3, datafloat, &islandout_up, NULL, NULL, NULL);
+    design_island_k = MENU_fileInit(design_island_k, 1, 0.35, "fix-k", 3, datafloat, &islandout_up, NULL, NULL, NULL);
 
     cross_circle = MENU_fileInit(cross_circle, 1, 1.0, "crocircle", 3, none, &island, &carPark, NULL, &cross_circle_param1);
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 10, 1.0, "cc-count", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
