@@ -1608,8 +1608,8 @@ void judge_type_road() {
         else if(carParkTimes == 2 && parkType == 0)
         {
 
-            leftPark = 0;
-            rightPark = 1;
+            leftPark = 1;
+            rightPark = 0;
             searchParkLine();
 
         }

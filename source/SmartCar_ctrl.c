@@ -21,7 +21,7 @@ error currentErrorL = {1, 1, 1}, currentErrorR = {1, 1, 1};
 uint32 servoPwm;
 uint32 motorPwm;
 int32 expectL, expectR;//预期速度
-int32 speedL, speedR;//实际速度
+int32 speedL, speedR, lastSpeedL, lastSpeedR;//实际速度
 int32 mySpeedL = 0, mySpeedR = 0;
 float motorLFKP, motorLFKI, motorLFKD, motorRTKP, motorRTKI, motorRTKD;
 float currentKP_L, currentKI_L, currentKP_R, currentKI_R;
@@ -392,6 +392,8 @@ void CTRL_motorPID()
     speedL = CTRL_speedGetLeft();
     speedR = CTRL_speedGetRight();
 
+    lowpassFilter();
+
     errorML.currentError = expectL + speedL;//取偏差
     errorML.delta = errorML.currentError - errorML.lastError;
     mySpeedL = (int32)(mySpeedL + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
@@ -402,6 +404,9 @@ void CTRL_motorPID()
     errorMR.delta = errorMR.currentError - errorMR.lastError;
     mySpeedR = (int32)(mySpeedR + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
+
+    lastSpeedL = speedL;
+    lastSpeedR = speedR;
 
     test_varible[0] = speedL;
     test_varible[1] = speedR;
@@ -614,8 +619,8 @@ void CTRL_motorDiffer()
             }
             else if(state == 18)
             {
-                expectL = 50;
-                expectR = 50;
+                expectL = rampSpeed.intValue;
+                expectR = rampSpeed.intValue;
             }
             else
             {
@@ -645,8 +650,8 @@ void CTRL_motorDiffer()
             }
             else if(state == 18)
             {
-                expectL = 50;
-                expectR = 50;
+                expectL = rampSpeed.intValue;
+                expectR = rampSpeed.intValue;
             }
             else
             {
@@ -674,8 +679,8 @@ void CTRL_motorDiffer()
             }
             else if(state == 18)
             {
-                expectL = 50;
-                expectR = 50;
+                expectL = rampSpeed.intValue;
+                expectR = rampSpeed.intValue;
             }
             else
             {
@@ -749,7 +754,7 @@ void CTRL_CarParkStop()
 //            currentGyro = 80;
         }
 
-        else if(currentGyro <= endGyro.intValue && currentGyro >= (-startGyro.intValue))
+        else if(currentGyro <= endGyro.intValue && currentGyro >= (-endGyro.intValue))
         {
             expectL = presentSpeed.intValue;
             expectR = presentSpeed.intValue;
@@ -930,3 +935,13 @@ int16_t CTRL_speedGetLeft()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚
     return ctrl_speedL;
 }
 
+
+void lowpassFilter()
+{
+    float alpha;
+    alpha = display3.floatValue;
+    speedL = speedL * alpha + lastSpeedL * (1 - alpha);
+    speedR = speedR * alpha + lastSpeedR * (1 - alpha);
+
+
+}

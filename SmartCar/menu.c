@@ -38,7 +38,7 @@ node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circ
 node_t parkCount, startGyro, endGyro, search_line;
 node_t paramBottom;
 
-node_t rampCount, rampDistance, rampBottom;
+node_t rampCount, rampDistance, rampSpeed, rampBottom;
 
 node_t startWay;
 
@@ -86,15 +86,16 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     carPark = MENU_fileInit(carPark, 1, 1.0, "park", 4, none, &cross_circle, &ramp, NULL, &parkCount);
     parkCount = MENU_fileInit(parkCount, 50, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
     startGyro = MENU_fileInit(startGyro, 30, 1.0, "st-gyro", 3, dataint, &parkCount, &endGyro, NULL, NULL);
-    endGyro = MENU_fileInit(endGyro, 30, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
-    search_line = MENU_fileInit(search_line, 70, 1.0, "line", 5, dataint, &endGyro, &paramBottom, NULL, NULL);
+    endGyro = MENU_fileInit(endGyro, 40, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
+    search_line = MENU_fileInit(search_line, 60, 1.0, "line", 5, dataint, &endGyro, &paramBottom, NULL, NULL);
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkCount, NULL, NULL, NULL);
 
     ramp = MENU_fileInit(ramp, 1, 1.0, "ramp", 5, none, &carPark, NULL, NULL, &rampCount);
-    rampCount = MENU_fileInit(rampCount, 35, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
-    rampDistance = MENU_fileInit(rampDistance, 30, 1.0, "distance", 3, dataint, &rampCount, &rampBottom, NULL, NULL);
+    rampCount = MENU_fileInit(rampCount, 40, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
+    rampDistance = MENU_fileInit(rampDistance, 40, 1.0, "distance", 3, dataint, &rampCount, &rampSpeed, NULL, NULL);
+    rampSpeed = MENU_fileInit(rampSpeed, 50, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampBottom, NULL, NULL);
 
-    rampBottom = MENU_fileInit(rampBottom, 50, 1.0, "Rbottom", 4, none, &rampDistance, NULL, NULL, NULL);
+    rampBottom = MENU_fileInit(rampBottom, 50, 1.0, "Rbottom", 4, none, &rampSpeed, NULL, NULL, NULL);
 
 
     Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
@@ -221,7 +222,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     slowRTKP = MENU_fileInit(slowRTKP, 25, 133.03, "slowRTKP", 4, dataint, &slowLFKI, &slowRTKI, NULL, NULL);
     slowRTKI = MENU_fileInit(slowRTKI, 10, 133.03, "slowRTKI", 5, dataint, &slowRTKP, NULL, NULL, NULL);
 
-    display3 = MENU_fileInit(display3, 40, 2, "RTKP", 4, dataint, &display2, &display4, NULL, NULL);
+    display3 = MENU_fileInit(display3, 40, 0.9, "alpha", 4, datafloat, &display2, &display4, NULL, NULL);
     display4 = MENU_fileInit(display4, 25, 1, "RTKI", 5, dataint, &display3, &display5, NULL, NULL);
     display5 = MENU_fileInit(display5, 10, 2.701, "ParkDelay", 6, dataint, &display4, &display6, NULL, NULL);
     display6 = MENU_fileInit(display6, 2, 1.15, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);

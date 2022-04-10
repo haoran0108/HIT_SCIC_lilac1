@@ -61,7 +61,7 @@ extern node_t Folk_PB, Folk_PM, Folk_PS, Folk_ZO, Folk_NS, Folk_NM, Folk_NB, Fol
 extern node_t islandout_up, design_island_k;
 extern node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4;
 extern node_t parkCount, startGyro, endGyro, search_line;
-extern node_t rampCount, rampDistance;
+extern node_t rampCount, rampDistance, rampSpeed;
 
 extern node_t startWay;
 //-------------------------------------------------------------------------------------------------------------------

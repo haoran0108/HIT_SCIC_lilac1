@@ -155,5 +155,6 @@ int16_t CTRL_speedGetRight();
 
 void speedUP_define();
 int foresee();
+void lowpassFilter();//µÍÍ¨ÂË²¨
 
 #endif /* SOURCE_SMARTCAR_CTRL_H_ */
