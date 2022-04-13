@@ -64,6 +64,7 @@ IFX_INTERRUPT(cc60_pit_ch0_isr, 0, CCU6_0_CH0_ISR_PRIORITY)//电机中断
     PIT_CLEAR_FLAG(CCU6_0, PIT_CH0);
 
     CTRL_motorMain();
+
 }
 
             /*spi有关dma中断*/
@@ -111,7 +112,7 @@ IFX_INTERRUPT(asclin0RxISR, 0, IFX_INTPRIO_ASCLIN0_RX)
     IfxAsclin_Asc_isrReceive(&uart[0]);
 
     SmartCar_TFMINI_UARTCallBack();//tfmini
-    test_varible[15] = TFMINI_Distance;
+//    test_varible[15] = TFMINI_Distance;
 
 }
 

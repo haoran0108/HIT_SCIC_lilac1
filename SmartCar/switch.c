@@ -53,6 +53,13 @@ void SW_readSwitch()
         parkJudgeCount = 0;
 
         slowFlag = 0;
+        lastRampGyro = 0;
+        rampGyro = 0;
+        rampGyroMax = 0;
+        rampFlag1 = 0;
+        rampFlag2 = 0;
+        rampFlag3 = 0;
+
 //        CTRL_directionAngleClean();
     }
     else
@@ -62,26 +69,7 @@ void SW_readSwitch()
             Delay_ms(STM0,1000);
             delayFlag = 1;
         }
-        if(slowFlag == 1)
-        {
-            motorLFKP = slowLFKP.intValue;
-            motorLFKI = slowLFKI.intValue;
-            motorRTKP = slowRTKP.intValue;
-            motorRTKI = slowRTKI.intValue;
-        }
-        else
-        {
-            motorLFKP = LFKP.intValue;
-            motorLFKI = LFKI.intValue;
-            motorRTKP = RTKP.intValue;
-            motorRTKI = RTKI.intValue;
-        }
 
-
-        currentKP_R = currentRTKP.floatValue;
-        currentKI_R = currentRTKI.floatValue;
-        currentKI_L = currentLFKI.floatValue;
-        currentKP_L = currentLFKP.floatValue;
 
     }
 }

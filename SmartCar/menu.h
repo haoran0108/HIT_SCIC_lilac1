@@ -49,7 +49,7 @@ extern node_t gap;
 extern node_t presentTHRE;
 extern node_t display1, display2, display3, display4, display5, display6, display7, display8, display9, display10;
 //extern node_t CrossPD, CrossCircle, IslandPD;
-extern node_t LFKP, LFKI, RTKP, RTKI, slowLFKP, slowLFKI, slowRTKP, slowRTKI;
+extern node_t LFKP, LFKI, RTKP, RTKI, slowLFKP, slowLFKI, slowRTKP, slowRTKI, fastLFKP, fastLFKI, fastRTKP, fastRTKI;
 
 extern node_t currentRTKP, currentRTKI, currentLFKP, currentLFKI, expectC;
 
@@ -60,8 +60,9 @@ extern node_t Folk_PB, Folk_PM, Folk_PS, Folk_ZO, Folk_NS, Folk_NM, Folk_NB, Fol
 
 extern node_t islandout_up, design_island_k;
 extern node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4;
-extern node_t parkCount, startGyro, endGyro, search_line;
+extern node_t parkCount, startGyro, endGyro, search_line, parkDelay;
 extern node_t rampCount, rampDistance, rampSpeed;
+extern node_t folkWay;
 
 extern node_t startWay;
 //-------------------------------------------------------------------------------------------------------------------

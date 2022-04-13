@@ -32,6 +32,8 @@ float fuzzy_PB = 3.2, fuzzy_PM = 3.0, fuzzy_PS = 2.9, fuzzy_ZO = 2.7, fuzzy_NS =
 
 /*ÍÓÂÝÒÇÏà¹Ø*/
 float deltaGyro = 0, currentGyro = 0, directionAngle = 0, lastGyro = 0;
+float lastRampGyro = 0, rampGyro = 0, rampGyroMax = 0;
+float deltaAcc = 0, currentAcc = 0;
 float averageSpeed = 0;
 float position = 0; positionX = 0, positionY = 0;
 float expectGyro = 0;
@@ -59,18 +61,32 @@ void CTRL_gyroInit()
 void CTRL_gyroUpdate()
 {
     INV_ImuUpdate();
-    deltaGyro = inv_gyro[2] * 0.05;
-
+    deltaGyro = inv_gyro[2];// 1¸©Ñö 0×óÓÒ·­×ª 2×óÓÒ×ª
+    deltaAcc = inv_accl[0];//2¸©Ñö 1×óÓÒ·´×ª 0×óÓÒ×ª
 }
 
 void CTRL_directionAngleGet()
 {
-    currentGyro += deltaGyro * 0.1;
+    currentGyro += deltaGyro * 0.005;
+    test_varible[14] = currentGyro;
+    test_varible[15] = deltaAcc;
 
 //    if(currentGyro > 180) currentGyro -= 360;
 //    else if(currentGyro < -180) currentGyro += 360;
 }
 
+void CTRL_rampGyroUpdate()
+{
+    lastRampGyro = rampGyro;
+    INV_ImuUpdate();
+    rampGyro += inv_gyro[1];// 1¸©Ñö 0×óÓÒ·­×ª 2×óÓÒ×ª
+    if(rampGyro < lastRampGyro)
+    {
+        rampGyroMax = rampGyro;
+    }
+    test_varible[15] = inv_accl[2];
+
+}
 
 
 void CTRL_positionGet()
@@ -197,8 +213,8 @@ void CTRL_speedLoopPID()
     test_varible[0] = speedL;
     test_varible[1] = speedR;
 //
-    test_varible[4] = currentExpectLF;
-    test_varible[5] = currentExpectRT;
+//    test_varible[4] = currentExpectLF;
+//    test_varible[5] = currentExpectRT;
 
 
 }
@@ -281,7 +297,7 @@ float CTRL_FuzzyMemberShip(int midError)
     float membership[2] = {1, 0};
     float servoKP = 0;
     float fuzzyWidth = 10;
-    test_varible[6] = midError;
+//    test_varible[6] = midError;
 
     if(midError >= PB)
     {
@@ -367,7 +383,7 @@ void CTRL_fuzzyPID()
     int servo_error = 0;
     int realVision;
     realVision = foresee();
-    servoError.currentError = 94 - mid_line[presentVision.intValue];
+    servoError.currentError = 91 - mid_line[presentVision.intValue];
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
 //    servo_error = servoError.currentError;
@@ -540,13 +556,6 @@ void CTRL_motor()
 
 void CTRL_motorMain()
 {
-//    if(straightSpeedUp() && zebraCircle < display6.intValue)
-//    {
-//        expectL = (int32)(display7.intValue);
-//        expectR = (int32)(display7.intValue);
-//    }
-//
-//    testFlag++;
 
     if(stopFlag == 0 && flagStop == 0)//flagStop=1Îª³µ¿âÍ£³µ£¬stopFlag=1Îª³öÈüµÀÍ£³µ
     {
@@ -560,17 +569,14 @@ void CTRL_motorMain()
     {
         CTRL_CarParkStop();
 
-//        expectL = 0;
-//        expectR= 0;
-//        CTRL_speedLoopPID();
-//        CTRL_curLoopPID();
-
     }
     else if(stopFlag == 1)
     {
         expectL = 0;
         expectR = 0;
     }
+
+    motorParamDefine();
 
     CTRL_motorPID();
 //    CTRL_speedLoopPID();
@@ -604,11 +610,17 @@ void CTRL_motorDiffer()
     {
         k = gap.floatValue * (0.9935 - 0.0047 * delta);
         if(k > 1) k = 1;
-        if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+        if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+        {
+            expectL = (int32)(presentSpeed.intValue * display5.floatValue);
+            expectR = (int32)(presentSpeed.intValue * display5.floatValue * k);
+//            GPIO_Set(P22, 0, 1);
+        }
+        else if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue * k);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -627,7 +639,7 @@ void CTRL_motorDiffer()
                 expectL = (int32)(presentSpeed.intValue);
                 expectR = (int32)(presentSpeed.intValue * k);
             }
-            GPIO_Set(P22, 0, 0);
+//            GPIO_Set(P22, 0, 0);
         }
 
     }
@@ -635,11 +647,18 @@ void CTRL_motorDiffer()
     {
         k = gap.floatValue * (0.9935 + 0.0047 * delta);
         if(k > 1) k = 1;
-        if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+        if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+        {
+            expectL = (int32)(presentSpeed.intValue * display5.floatValue);
+            expectR = (int32)(presentSpeed.intValue * display5.floatValue * k);
+//            GPIO_Set(P22, 0, 1);
+        }
+
+        else if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue * k);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -658,17 +677,22 @@ void CTRL_motorDiffer()
                 expectL = (int32)(presentSpeed.intValue * k);
                 expectR = (int32)(presentSpeed.intValue);
             }
-            GPIO_Set(P22, 0, 0);
+//            GPIO_Set(P22, 0, 0);
         }
     }
     else if(delta == 0)
     {
-
+        if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+        {
+            expectL = (int32)(presentSpeed.intValue * display5.floatValue);
+            expectR = (int32)(presentSpeed.intValue * display5.floatValue * k);
+//            GPIO_Set(P22, 0, 1);
+        }
         if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -687,7 +711,7 @@ void CTRL_motorDiffer()
                 expectL = (int32)(presentSpeed.intValue);
                 expectR = (int32)(presentSpeed.intValue);
             }
-            GPIO_Set(P22, 0, 0);
+//            GPIO_Set(P22, 0, 0);
         }
 
     }
@@ -943,5 +967,40 @@ void lowpassFilter()
     speedL = speedL * alpha + lastSpeedL * (1 - alpha);
     speedR = speedR * alpha + lastSpeedR * (1 - alpha);
 
+
+}
+
+void motorParamDefine()
+{
+    if(delayFlag == 1)
+    {
+        if(straightFlag == 2)
+        {
+            motorLFKP = fastLFKP.intValue;
+            motorLFKI = fastLFKI.intValue;
+            motorRTKP = fastRTKP.intValue;
+            motorRTKI = fastRTKI.intValue;
+        }
+        else if(slowFlag == 1)
+        {
+            motorLFKP = slowLFKP.intValue;
+            motorLFKI = slowLFKI.intValue;
+            motorRTKP = slowRTKP.intValue;
+            motorRTKI = slowRTKI.intValue;
+        }
+        else
+        {
+            motorLFKP = LFKP.intValue;
+            motorLFKI = LFKI.intValue;
+            motorRTKP = RTKP.intValue;
+            motorRTKI = RTKI.intValue;
+        }
+
+
+        currentKP_R = currentRTKP.floatValue;
+        currentKI_R = currentRTKI.floatValue;
+        currentKI_L = currentLFKI.floatValue;
+        currentKP_L = currentLFKP.floatValue;
+    }
 
 }

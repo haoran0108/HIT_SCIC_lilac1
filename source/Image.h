@@ -121,6 +121,7 @@
 
 
 #define stateCrossCircleIn 12
+#define stateCrossCircleIng 16
 #define stateCrossCircleOut 13
 
 #define stateCarPark 14
@@ -150,6 +151,8 @@ extern int lastState[10];
 extern int leftPark, rightPark;
 extern int straightFlag, lastStraightFlag;
 extern int slowFlag;
+extern int rampFlag1, rampFlag2,rampFlag3;
+
 typedef struct {
     int x;
     int y;
@@ -276,6 +279,7 @@ void cross_circle_out();
 void cross_circle_out_patch();
 void design_cross_circle_out();
 void cross_circle_turn();
+void cross_circle_ing();
 //ÉÏÏÂÆÂ
 
 //Èë¿â

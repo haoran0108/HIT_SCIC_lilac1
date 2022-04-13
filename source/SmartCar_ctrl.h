@@ -47,6 +47,7 @@ extern float currentKP_R, currentKI_R, currentKI_L, currentKP_L;
 extern int zebraFlag, zebraCircle;
 
 extern float currentGyro;
+extern float lastRampGyro, rampGyro, rampGyroMax;
 
 extern int parkStart;
 extern int parkType;
@@ -75,6 +76,7 @@ typedef struct error error;
 void CTRL_Init();
 void CTRL_gyroInit();
 void CTRL_gyroUpdate();
+void CTRL_rampGyroUpdate();
 void CTRL_directionAngleGet();
 void CTRL_directionAngleClean();
 void CTRL_positionGet();
@@ -156,5 +158,6 @@ int16_t CTRL_speedGetRight();
 void speedUP_define();
 int foresee();
 void lowpassFilter();//µÍÍ¨ÂË²¨
+void motorParamDefine();
 
 #endif /* SOURCE_SMARTCAR_CTRL_H_ */
