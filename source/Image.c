@@ -4949,8 +4949,9 @@ void island_start(int type) {
 
 
         int sumU = 0;
-        for (int i = 2; i <= 25; i++) {
-            if (my_road[i].connected[j_mid[i]].width + 3 < right_line[pointC - 5] - left_line[pointC - 5]) {
+        for (int i = 2; i <= folkParam2.intValue; i++) {
+            if (my_road[i].connected[j_mid[i]].width + 3 < right_line[pointC - 5] - left_line[pointC - 5]
+                && my_road[i].connected[j_mid[i]].width < folkParam1.intValue) {
                 sumU++;
             }
         }
@@ -5035,8 +5036,9 @@ void island_start(int type) {
         //圆环上方要有窄赛道
 
         int sumU = 0;
-        for (int i = 2; i <= 25; i++) {
-            if (my_road[i].connected[j_mid[i]].width + 3 < right_line[pointC - 5] - left_line[pointC - 5]) {
+        for (int i = 2; i <= folkParam2.intValue; i++) {
+            if (my_road[i].connected[j_mid[i]].width + 3 < right_line[pointC - 5] - left_line[pointC - 5]
+                && my_road[i].connected[j_mid[i]].width < folkParam1.intValue) {
                 sumU++;
             }
         }
@@ -6003,18 +6005,27 @@ void design_island_turn(int type) {
                 break;
             }
         }
-        if(upPoint!=119 || upPoint < 40){
+        if(0){
             double k=(double)(rightSide[upPoint] + 5 - leftSide[100])/(upPoint-100);
             for(int i=NEAR_LINE;i>=2;i--){
-                if(i>=upPoint){
+                if(1){
                     left_line[i]=k*(i-100)+leftSide[100];
+                    right_line[i]=left_line[i]+45;
                 }
             }
         }
         else{
             for(int i=NEAR_LINE;i>=2;i--){
+                if(right_line[i] <=94){
+                    right_line[i]=94;
+                }
                 if(1){
-                    left_line[i]=right_line[i]-35;
+                    if(right_line[i]-35 < 94){
+                        left_line[i]=94;
+                    }else{
+                        left_line[i]=right_line[i]-35;
+                    }
+
                 }
             }
         }
@@ -6066,16 +6077,25 @@ void design_island_turn(int type) {
                             break;
                         }
                     }
-                    if(upPoint!=119 || upPoint < 40){
+                    if(0){
                         double k=(double)(leftSide[upPoint] - 5 - rightSide[100])/(upPoint-100);
                         for(int i=NEAR_LINE;i>=2;i--){
-                            if(i>=upPoint){
+                            if(1){
                                 right_line[i]=k*(i-100)+rightSide[100];
+                                left_line[i]=right_line[i]-45;
                             }
                         }
                     }else{
                         for(int i=NEAR_LINE;i>=2;i--){
-                            right_line[i]=left_line[i]+35;
+                            if(left_line[i]>=94){
+                                left_line[i]=94;
+                            }
+                            if(left_line[i]+35 > 94){
+                                right_line[i]=94;
+                            }else{
+                                right_line[i]=left_line[i]+35;
+                            }
+
                         }
                     }
 
@@ -7737,7 +7757,7 @@ void folk_road_in() {
         flag = 0;
     }
 
-    if (top == 119 && minL != 119 && minR != 119) {
+    if (top == 119 && minL <= folkParam3.intValue && minR <= folkParam3.intValue) {
         //可能是特别歪的情况，因此，我们需要重新寻找top
         if (abs(minR - minL) >= 15) {
             if (minL - minR >= 20 && TurnFolkRoad == RIGHT) {
@@ -8840,7 +8860,7 @@ void island_out(int type)
 
         }
     }
-    if(left_line[15]==MISS){
+    if(my_road[15].white_num==0){
         myIslandFlag=0;
     }
     if (myIslandFlag == 1)

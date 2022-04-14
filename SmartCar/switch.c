@@ -59,7 +59,7 @@ void SW_readSwitch()
         rampFlag1 = 0;
         rampFlag2 = 0;
         rampFlag3 = 0;
-
+        GPIO_Set(P22, 0, 0);
 //        CTRL_directionAngleClean();
     }
     else

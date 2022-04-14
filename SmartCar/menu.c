@@ -113,8 +113,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     rampBottom = MENU_fileInit(rampBottom, 50, 1.0, "Rbottom", 4, none, &rampSpeed, NULL, NULL, NULL);
     folkWay = MENU_fileInit(folkWay, 1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);
-    folkParam1 = MENU_fileInit(folkParam1, 1, 1.0, "param1", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
-    folkParam2 = MENU_fileInit(folkParam2, 1, 1.0, "param2", 3, dataint, &folkParam1, &folkParam3, NULL, NULL);
+    folkParam1 = MENU_fileInit(folkParam1, 45, 1.0, "param1", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
+    folkParam2 = MENU_fileInit(folkParam2, 15, 1.0, "param2", 3, dataint, &folkParam1, &folkParam3, NULL, NULL);
     folkParam3 = MENU_fileInit(folkParam3, 1, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
     folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkParam5, NULL, NULL);
     folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);
