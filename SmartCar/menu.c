@@ -33,13 +33,13 @@ node_t list;
 
 node_t param;
 node_t island,cross_circle, carPark, ramp, folkWay;
-node_t islandout_up, design_island_k;
-node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4;
+node_t islandout_up, design_island_k, islandParam1, islandParam2, islandParam3, islandParam4, islandParam5, islandBottom;
+node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4, cross_circle_param5, cross_circle_param6, cross_circle_param7, ccBottom;
 node_t parkCount, startGyro, endGyro, search_line, parkDelay;
 node_t paramBottom;
 
 node_t rampCount, rampDistance, rampSpeed, rampBottom;
-
+node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6, folkParam7, folkParam8, folkParam9, folkParam10, folkBottom;
 node_t startWay;
 
 nodeptr_t filePrint;
@@ -78,10 +78,24 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
     islandout_up = MENU_fileInit(islandout_up, 40, 1.0, "is-out-up", 2, dataint, NULL, &design_island_k, &island, NULL);
-    design_island_k = MENU_fileInit(design_island_k, 1, 0.35, "fix-k", 3, datafloat, &islandout_up, NULL, NULL, NULL);
+    design_island_k = MENU_fileInit(design_island_k, 1, 0.35, "fix-k", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
+    islandParam1 = MENU_fileInit(islandParam1, 1, 0.35, "param1", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
+    islandParam2 = MENU_fileInit(islandParam2, 1, 0.35, "param2", 5, datafloat, &islandParam1, &islandParam3, NULL, NULL);
+    islandParam3 = MENU_fileInit(islandParam3, 1, 0.35, "param3", 6, datafloat, &islandParam2, &islandParam4, NULL, NULL);
+    islandParam4 = MENU_fileInit(islandParam4, 1, 0.35, "param4", 7, datafloat, &islandParam3, &islandParam5, NULL, NULL);
+    islandParam5 = MENU_fileInit(islandParam5, 1, 0.35, "param5", 2, datafloat, &islandParam4, &islandBottom, NULL, NULL);
+    islandBottom = MENU_fileInit(islandBottom, 1, 0.35, "bottom", 3, none, &islandParam5, NULL, NULL, NULL);
+
 
     cross_circle = MENU_fileInit(cross_circle, 1, 1.0, "crocircle", 3, none, &island, &carPark, NULL, &cross_circle_param1);
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 55, 1.0, "cc-count", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
+    cross_circle_param2 = MENU_fileInit(cross_circle_param2, 55, 1.0, "param2", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
+    cross_circle_param3 = MENU_fileInit(cross_circle_param3, 55, 1.0, "param3", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
+    cross_circle_param4 = MENU_fileInit(cross_circle_param4, 55, 1.0, "param4", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
+    cross_circle_param5 = MENU_fileInit(cross_circle_param5, 55, 1.0, "param5", 6, dataint, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
+    cross_circle_param6 = MENU_fileInit(cross_circle_param6, 55, 1.0, "param6", 7, dataint, &cross_circle_param5, &cross_circle_param7, NULL, NULL);
+    cross_circle_param7 = MENU_fileInit(cross_circle_param7, 55, 1.0, "param7", 2, dataint, &cross_circle_param6, &ccBottom, NULL, NULL);
+    ccBottom = MENU_fileInit(ccBottom, 55, 1.0, "bottom", 3, none, &cross_circle_param7, NULL, NULL, NULL);
 
     carPark = MENU_fileInit(carPark, 1, 1.0, "park", 4, none, &cross_circle, &ramp, NULL, &parkCount);
     parkCount = MENU_fileInit(parkCount, 50, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
@@ -98,48 +112,58 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     rampSpeed = MENU_fileInit(rampSpeed, 70, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampBottom, NULL, NULL);
 
     rampBottom = MENU_fileInit(rampBottom, 50, 1.0, "Rbottom", 4, none, &rampSpeed, NULL, NULL, NULL);
-    folkWay = MENU_fileInit(folkWay, 1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, NULL);
+    folkWay = MENU_fileInit(folkWay, 1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);
+    folkParam1 = MENU_fileInit(folkParam1, 1, 1.0, "param1", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
+    folkParam2 = MENU_fileInit(folkParam2, 1, 1.0, "param2", 3, dataint, &folkParam1, &folkParam3, NULL, NULL);
+    folkParam3 = MENU_fileInit(folkParam3, 1, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
+    folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkParam5, NULL, NULL);
+    folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);
+    folkParam6 = MENU_fileInit(folkParam6, 1, 1.0, "param6", 7, dataint, &folkParam5, &folkParam7, NULL, NULL);
+    folkParam7 = MENU_fileInit(folkParam7, 1, 1.0, "param7", 2, dataint, &folkParam6, &folkParam8, NULL, NULL);
+    folkParam8 = MENU_fileInit(folkParam8, 1, 1.0, "param8", 3, dataint, &folkParam7, &folkParam9, NULL, NULL);
+    folkParam9 = MENU_fileInit(folkParam9, 1, 1.0, "param9", 4, dataint, &folkParam8, &folkParam10, NULL, NULL);
+    folkParam10 = MENU_fileInit(folkParam10, 1, 1.0, "param10", 5, dataint, &folkParam9, &folkBottom, NULL, NULL);
+    folkBottom = MENU_fileInit(folkBottom, 1, 1.0, "bottom", 6, none, &folkParam10, NULL, NULL, NULL);
 
-
-    Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
-    Cross_PM = MENU_fileInit(Cross_PM, 1, 0.5, "crossPM", 3, datafloat, &Cross_PB, &Cross_PS, NULL, NULL);
-    Cross_PS = MENU_fileInit(Cross_PS, 1, 0.5, "crossPS", 4, datafloat, &Cross_PM, &Cross_ZO, NULL, NULL);
-    Cross_ZO = MENU_fileInit(Cross_ZO, 1, 0.5, "crossZO", 5, datafloat, &Cross_PS, &Cross_NS, NULL, NULL);
-    Cross_NS = MENU_fileInit(Cross_NS, 1, 0.5, "crossNS", 6, datafloat, &Cross_ZO, &Cross_NM, NULL, NULL);
-    Cross_NM = MENU_fileInit(Cross_NM, 1, 0.5, "crossNM", 7, datafloat, &Cross_NS, &Cross_NB, NULL, NULL);
-    Cross_NB = MENU_fileInit(Cross_NB, 1, 0.5, "crossNB", 2, datafloat, &Cross_NM, &Cross_DS, NULL, NULL);
-    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
-    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
-
-    circle_PB = MENU_fileInit(circle_PB, 1, 0.5, "circlePB", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
-    circle_PM = MENU_fileInit(circle_PM, 1, 0.5, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
-    circle_PS = MENU_fileInit(circle_PS, 1, 0.5, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
-    circle_ZO = MENU_fileInit(circle_ZO, 1, 0.5, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
-    circle_NS = MENU_fileInit(circle_NS, 1, 0.5, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
-    circle_NM = MENU_fileInit(circle_NM, 1, 0.5, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
-    circle_NB = MENU_fileInit(circle_NB, 1, 0.5, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
-    circle_DS = MENU_fileInit(circle_DS, 1, 0.5, "D-SMALL", 3, datafloat, &circle_NB, &circle_DB, NULL, NULL);
-    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
-
-    Island_PB = MENU_fileInit(Island_PB, 1, 0.5, "IslandPB", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
-    Island_PM = MENU_fileInit(Island_PM, 1, 0.5, "IslandPM", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
-    Island_PS = MENU_fileInit(Island_PS, 1, 0.5, "IslandPS", 4, datafloat, &Island_PM, &Island_ZO, NULL, NULL);
-    Island_ZO = MENU_fileInit(Island_ZO, 1, 0.5, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
-    Island_NS = MENU_fileInit(Island_NS, 1, 0.5, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
-    Island_NM = MENU_fileInit(Island_NM, 1, 0.5, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
-    Island_NB = MENU_fileInit(Island_NB, 1, 0.5, "IslandNB", 2, datafloat, &Island_NM, &Island_DS, NULL, NULL);
-    Island_DS = MENU_fileInit(Island_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Island_NB, &Island_DB, NULL, NULL);
-    Island_DB = MENU_fileInit(Island_DB, 1, 0.5, "D-BIG", 4, datafloat, &Island_DS, NULL, NULL, NULL);
-
-    Folk_PB = MENU_fileInit(Folk_PB, 1, 0.5, "FolkPB", 2, datafloat, NULL, &Folk_PM, &FolkPD, NULL);
-    Folk_PM = MENU_fileInit(Folk_PM, 1, 0.5, "FolkPM", 3, datafloat, &Folk_PB, &Folk_PS, NULL, NULL);
-    Folk_PS = MENU_fileInit(Folk_PS, 1, 0.5, "FolkPS", 4, datafloat, &Folk_PM, &Folk_ZO, NULL, NULL);
-    Folk_ZO = MENU_fileInit(Folk_ZO, 1, 0.5, "FolkZO", 5, datafloat, &Folk_PS, &Folk_NS, NULL, NULL);
-    Folk_NS = MENU_fileInit(Folk_NS, 1, 0.5, "FolkNS", 6, datafloat, &Folk_ZO, &Folk_NM, NULL, NULL);
-    Folk_NM = MENU_fileInit(Folk_NM, 1, 0.5, "FolkNM", 7, datafloat, &Folk_NS, &Folk_NB, NULL, NULL);
-    Folk_NB = MENU_fileInit(Folk_NB, 1, 0.5, "FolkNB", 2, datafloat, &Folk_NM, &Folk_DS, NULL, NULL);
-    Folk_DS = MENU_fileInit(Folk_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Folk_NB, &Folk_DB, NULL, NULL);
-    Folk_DB = MENU_fileInit(Folk_DB, 1, 0.5, "D-BIG", 4, datafloat, &Folk_DS, NULL, NULL, NULL);
+//    Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
+//    Cross_PM = MENU_fileInit(Cross_PM, 1, 0.5, "crossPM", 3, datafloat, &Cross_PB, &Cross_PS, NULL, NULL);
+//    Cross_PS = MENU_fileInit(Cross_PS, 1, 0.5, "crossPS", 4, datafloat, &Cross_PM, &Cross_ZO, NULL, NULL);
+//    Cross_ZO = MENU_fileInit(Cross_ZO, 1, 0.5, "crossZO", 5, datafloat, &Cross_PS, &Cross_NS, NULL, NULL);
+//    Cross_NS = MENU_fileInit(Cross_NS, 1, 0.5, "crossNS", 6, datafloat, &Cross_ZO, &Cross_NM, NULL, NULL);
+//    Cross_NM = MENU_fileInit(Cross_NM, 1, 0.5, "crossNM", 7, datafloat, &Cross_NS, &Cross_NB, NULL, NULL);
+//    Cross_NB = MENU_fileInit(Cross_NB, 1, 0.5, "crossNB", 2, datafloat, &Cross_NM, &Cross_DS, NULL, NULL);
+//    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
+//    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
+//
+//    circle_PB = MENU_fileInit(circle_PB, 1, 0.5, "circlePB", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
+//    circle_PM = MENU_fileInit(circle_PM, 1, 0.5, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
+//    circle_PS = MENU_fileInit(circle_PS, 1, 0.5, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
+//    circle_ZO = MENU_fileInit(circle_ZO, 1, 0.5, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
+//    circle_NS = MENU_fileInit(circle_NS, 1, 0.5, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
+//    circle_NM = MENU_fileInit(circle_NM, 1, 0.5, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
+//    circle_NB = MENU_fileInit(circle_NB, 1, 0.5, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
+//    circle_DS = MENU_fileInit(circle_DS, 1, 0.5, "D-SMALL", 3, datafloat, &circle_NB, &circle_DB, NULL, NULL);
+//    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
+//
+//    Island_PB = MENU_fileInit(Island_PB, 1, 0.5, "IslandPB", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
+//    Island_PM = MENU_fileInit(Island_PM, 1, 0.5, "IslandPM", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
+//    Island_PS = MENU_fileInit(Island_PS, 1, 0.5, "IslandPS", 4, datafloat, &Island_PM, &Island_ZO, NULL, NULL);
+//    Island_ZO = MENU_fileInit(Island_ZO, 1, 0.5, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
+//    Island_NS = MENU_fileInit(Island_NS, 1, 0.5, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
+//    Island_NM = MENU_fileInit(Island_NM, 1, 0.5, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
+//    Island_NB = MENU_fileInit(Island_NB, 1, 0.5, "IslandNB", 2, datafloat, &Island_NM, &Island_DS, NULL, NULL);
+//    Island_DS = MENU_fileInit(Island_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Island_NB, &Island_DB, NULL, NULL);
+//    Island_DB = MENU_fileInit(Island_DB, 1, 0.5, "D-BIG", 4, datafloat, &Island_DS, NULL, NULL, NULL);
+//
+//    Folk_PB = MENU_fileInit(Folk_PB, 1, 0.5, "FolkPB", 2, datafloat, NULL, &Folk_PM, &FolkPD, NULL);
+//    Folk_PM = MENU_fileInit(Folk_PM, 1, 0.5, "FolkPM", 3, datafloat, &Folk_PB, &Folk_PS, NULL, NULL);
+//    Folk_PS = MENU_fileInit(Folk_PS, 1, 0.5, "FolkPS", 4, datafloat, &Folk_PM, &Folk_ZO, NULL, NULL);
+//    Folk_ZO = MENU_fileInit(Folk_ZO, 1, 0.5, "FolkZO", 5, datafloat, &Folk_PS, &Folk_NS, NULL, NULL);
+//    Folk_NS = MENU_fileInit(Folk_NS, 1, 0.5, "FolkNS", 6, datafloat, &Folk_ZO, &Folk_NM, NULL, NULL);
+//    Folk_NM = MENU_fileInit(Folk_NM, 1, 0.5, "FolkNM", 7, datafloat, &Folk_NS, &Folk_NB, NULL, NULL);
+//    Folk_NB = MENU_fileInit(Folk_NB, 1, 0.5, "FolkNB", 2, datafloat, &Folk_NM, &Folk_DS, NULL, NULL);
+//    Folk_DS = MENU_fileInit(Folk_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Folk_NB, &Folk_DB, NULL, NULL);
+//    Folk_DB = MENU_fileInit(Folk_DB, 1, 0.5, "D-BIG", 4, datafloat, &Folk_DS, NULL, NULL, NULL);
 
 
     gear1 = MENU_fileInit(gear1, 1, 1.0, "GearSlow", 2, none, NULL, &gear2, &file1, &g1_Data1);//慢速档
