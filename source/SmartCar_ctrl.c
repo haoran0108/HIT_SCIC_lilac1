@@ -69,7 +69,7 @@ void CTRL_directionAngleGet()
 {
     currentGyro += deltaGyro * 0.005;
     test_varible[14] = currentGyro;
-    test_varible[15] = deltaAcc;
+//    test_varible[15] = deltaAcc;
 
 //    if(currentGyro > 180) currentGyro -= 360;
 //    else if(currentGyro < -180) currentGyro += 360;
@@ -383,17 +383,18 @@ void CTRL_fuzzyPID()
     int servo_error = 0;
     int realVision;
     realVision = foresee();
-    servoError.currentError = 91 - mid_line[presentVision.intValue];
+    servoError.currentError = 92 - mid_line[presentVision.intValue];
+    test_varible[12] = servoError.currentError;
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
 //    servo_error = servoError.currentError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
 //    test_varible[11] = fuzzyKP;
     servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
-    if(servoPwm > 770)
-        servoPwm = 770;
-    else if(servoPwm < 630)
-        servoPwm = 630;
+    if(servoPwm > 775)
+        servoPwm = 775;
+    else if(servoPwm < 625)
+        servoPwm = 625;
 
 //    test_varible[10] = servoPwm;
     servoError.lastError = servoError.currentError;

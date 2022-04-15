@@ -77,8 +77,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     param = MENU_fileInit(param, 1, 1.0, "Param", 6, none, &FolkPD, NULL, NULL, &island);
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
-    islandout_up = MENU_fileInit(islandout_up, 40, 1.0, "is-out-up", 2, dataint, NULL, &design_island_k, &island, NULL);
-    design_island_k = MENU_fileInit(design_island_k, 1, 0.35, "fix-k", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
+    islandout_up = MENU_fileInit(islandout_up, 50, 1.0, "is-out-up", 2, dataint, NULL, &design_island_k, &island, NULL);
+    design_island_k = MENU_fileInit(design_island_k, 1, 0.15, "fix-k", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
     islandParam1 = MENU_fileInit(islandParam1, 1, 0.35, "param1", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
     islandParam2 = MENU_fileInit(islandParam2, 1, 0.35, "param2", 5, datafloat, &islandParam1, &islandParam3, NULL, NULL);
     islandParam3 = MENU_fileInit(islandParam3, 1, 0.35, "param3", 6, datafloat, &islandParam2, &islandParam4, NULL, NULL);
@@ -115,7 +115,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     folkWay = MENU_fileInit(folkWay, 1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);
     folkParam1 = MENU_fileInit(folkParam1, 45, 1.0, "param1", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
     folkParam2 = MENU_fileInit(folkParam2, 15, 1.0, "param2", 3, dataint, &folkParam1, &folkParam3, NULL, NULL);
-    folkParam3 = MENU_fileInit(folkParam3, 1, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
+    folkParam3 = MENU_fileInit(folkParam3, 95, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
     folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkParam5, NULL, NULL);
     folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);
     folkParam6 = MENU_fileInit(folkParam6, 1, 1.0, "param6", 7, dataint, &folkParam5, &folkParam7, NULL, NULL);

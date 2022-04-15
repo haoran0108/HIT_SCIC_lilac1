@@ -1396,7 +1396,7 @@ void image_main()
         judge_type_road();
 
     }
-    test_varible[12] = straightFlag;
+//    test_varible[12] = straightFlag;
     test_varible[13] = state;
 //    test_varible[14] = carParkTimes;
 //    }
@@ -1660,7 +1660,7 @@ void judge_type_road() {
     else if(state != rampway)
         {GPIO_Set(P22, 0, 0);}
     if(state != rampway && state != stateCarPark){
-        straight_protection();
+//        straight_protection();
         lastStraightFlag = straightFlag;
 
         rampJudgeCount += 1;
@@ -5986,157 +5986,200 @@ void design_island_turn(int type) {
     leftSide[106] = left_line[106];
     rightSide[105] = right_line[105];
     rightSide[106] = right_line[106];
-    j_str[105]=j_continue[105];
+    j_str[105] = j_continue[105];
     if (islandtype == RIGHT) {
         for (int i = 104; i >= 2; i--) {
-            j_str[i] = j_continue[i];
-            for (int j = 1; j <= my_road[i].white_num; j++) {
-                if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_str[i + 1]].left) < abs(my_road[i].connected[j_str[i]].left - my_road[i + 1].connected[j_str[i + 1]].left)) {
-                    j_str[i] = j;
-                }
-            }
-            rightSide[i] = my_road[i].connected[j_str[i]].right;
-            leftSide[i] = my_road[i].connected[j_str[i]].left;
-        }
-        int upPoint = 119;
-        for (int i = 2; i <= 80; i++) {
-            if (rightSide[i] - rightSide[i + 3] < -7) {
-                upPoint = i;
-                break;
-            }
-        }
-        if(0){
-            double k=(double)(rightSide[upPoint] + 5 - leftSide[100])/(upPoint-100);
-            for(int i=NEAR_LINE;i>=2;i--){
-                if(1){
-                    left_line[i]=k*(i-100)+leftSide[100];
-                    right_line[i]=left_line[i]+45;
-                }
-            }
-        }
-        else{
-            for(int i=NEAR_LINE;i>=2;i--){
-                if(right_line[i] <=94){
-                    right_line[i]=94;
-                }
-                if(1){
-                    if(right_line[i]-35 < 94){
-                        left_line[i]=94;
-                    }else{
-                        left_line[i]=right_line[i]-35;
-                    }
-
-                }
-            }
-        }
-
-//            if (k <= 0.4 && k > -0.2) {
-//                uint8_t min[CAMERA_H];
-//                for (int i = 70; i > 5; i--) {
-//                    min[i] = abs(left_line[i] - rightSide[i]);
-//                    for (int j = 1; j <= my_road[i].white_num; j++) {
-//                        if (abs(my_road[i].connected[j].left - rightSide[i]) < min[i]) {
-//                            min[i] = abs(my_road[i].connected[j].left - rightSide[i]);
-//                            break;
-//                        }
-//                    }
-//
+//            j_str[i] = j_continue[i];
+//            for (int j = 1; j <= my_road[i].white_num; j++) {
+//                if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_str[i + 1]].left) < abs(my_road[i].connected[j_str[i]].left - my_road[i + 1].connected[j_str[i + 1]].left)
+//                   && my_road[i].connected[j].width > 5) {
+//                    j_str[i] = j;
 //                }
-//                int Min = 40;
-//                for (int i = 40; i > 5; i--) {
-//                    if (min[i] < min[Min]) {
-//                        Min = i;
-//                    }
-//                    if (i == 6 && Min == 40) {
-//                        Min = 25;
-//                    }
-//                }
-//                double k1 = (double)(rightSide[100] - left_line[100]) / (Min - 100);
-//                for (int i = 100; i >= Min - 3; i--) {
-//                    left_line[i] = k1 * (i - 100) + left_line[100];
-//                }
-//                ////////////////////////////////////printf("y=%d,x=%d", Min, rightSide[Min]);
 //            }
-            ////////////////////////////////////printf("k=%f", k);
-        }
-        else if (islandtype == LEFT) {
-            for (int i = 104; i >= 2; i--) {
-                        j_str[i] = j_continue[i];
-                        for (int j = 1; j <= my_road[i].white_num; j++) {
-                            if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_str[i + 1]].right) < abs(my_road[i].connected[j_str[i]].right - my_road[i + 1].connected[j_str[i + 1]].right)) {
-                                j_str[i] = j;
-                            }
-                        }
-                        rightSide[i] = my_road[i].connected[j_str[i]].right;
-                        leftSide[i] = my_road[i].connected[j_str[i]].left;
-                    }
-                    int upPoint = 119;
-                    for (int i = 2; i <= 80; i++) {
-                        if (leftSide[i] - leftSide[i + 3] > 7) {
-                            upPoint = i;
-                            break;
-                        }
-                    }
-                    if(0){
-                        double k=(double)(leftSide[upPoint] - 5 - rightSide[100])/(upPoint-100);
-                        for(int i=NEAR_LINE;i>=2;i--){
-                            if(1){
-                                right_line[i]=k*(i-100)+rightSide[100];
-                                left_line[i]=right_line[i]-45;
-                            }
-                        }
-                    }else{
-                        for(int i=NEAR_LINE;i>=2;i--){
-                            if(left_line[i]>=94){
-                                left_line[i]=94;
-                            }
-                            if(left_line[i]+35 > 94){
-                                right_line[i]=94;
-                            }else{
-                                right_line[i]=left_line[i]+35;
-                            }
-
-                        }
-                    }
-
-        }
-//            double k = calculate_slope(80, 95, RIGHT);
-//            int x = left_line[106];
-//            for (int i = 104; i > 5; i--) {
-//                leftSide[i] = k * (i - 106) + x;
-//            }
-//            if (k > -0.4 && k <= 0.2) {
-//                uint8_t min[CAMERA_H];
-//                for (int i = 70; i > 5; i--) {
-//                    min[i] = abs(right_line[i] - leftSide[i]);
-//                    for (int j = 1; j <= my_road[i].white_num; j++) {
-//                        if (abs(my_road[i].connected[j].right - leftSide[i]) < min[i]) {
-//                            min[i] = abs(my_road[i].connected[j].right - leftSide[i]);
-//                            break;
-//                        }
-//                    }
-//
-//                }
-//                int Min = 40;
-//                for (int i = 40; i > 5; i--) {
-//                    if (min[i] < min[Min]) {
-//                        Min = i;
-//                    }
-//                    if (i == 6 && Min == 40) {
-//                        Min = 25;
-//                    }
-//                }
-//                double k1 = (double)(leftSide[100] - right_line[100]) / (Min - 100);
-//
-//                for (int i = 100; i >= Min - 3; i--) {
-//                    right_line[i] = k1 * (i - 100) + right_line[100];
-//                }
-//                ////////////////////////////////////printf("y=%d,x=%d", Min, rightSide[Min]);
-//            }
-//            ////////////////////////////////////printf("k=%f", k);
+//            rightSide[i] = my_road[i].connected[j_str[i]].right;
+//            leftSide[i] = my_road[i].connected[j_str[i]].left;
 //        }
-}
+//        int upPoint = 119;
+//        for (int i = 2; i <= 100; i++) {
+//            if (rightSide[i] - rightSide[i + 3] < -7) {
+//                upPoint = i;
+//                break;
+//            }
+//        }
+//       // printf("up=%d\n", upPoint);
+//        if (upPoint != 119 && upPoint <=75 && upPoint >= 15) {
+//            double k = (double)(rightSide[upPoint] + 5 - leftSide[90]) / (upPoint - 90);
+//            for (int i = NEAR_LINE; i >= 2; i--) {
+//                if (1) {
+//                    if (k * (i - 90) + leftSide[90] >= 180) {
+//                        left_line[i] = 180;
+//                        right_line[i] = 180;
+//                    }else if(k * (i - 90) + leftSide[90] <=108){
+//                        right_line[i]=108;
+//                        left_line[i]=108;
+//                    }
+//                    else {
+//                        left_line[i] = k * (i - 90) + leftSide[90];
+//                        if (left_line[i] + 45 > 180) {
+//                            right_line[i] = 180;
+//                        }
+//                        else {
+//                            right_line[i] = left_line[i] + 45;
+//                        }
+//
+//                    }
+//
+//                }
+//            }
+//        }
+//        else {
+//            for (int i = NEAR_LINE; i >= 2; i--) {
+//                if (right_line[i] <= 104) {
+//                    right_line[i] = 104;
+//                }
+//                if (1) {
+//                    if (right_line[i] - 35 < 104) {
+//                        left_line[i] = 104;
+//                    }
+//                    else {
+//                        left_line[i] = right_line[i] - 35;
+//                    }
+//
+//                }
+//            }
+            right_line[i]=140;
+            left_line[i]=140;
+        }
 
+        //            if (k <= 0.4 && k > -0.2) {
+        //                uint8_t min[CAMERA_H];
+        //                for (int i = 70; i > 5; i--) {
+        //                    min[i] = abs(left_line[i] - rightSide[i]);
+        //                    for (int j = 1; j <= my_road[i].white_num; j++) {
+        //                        if (abs(my_road[i].connected[j].left - rightSide[i]) < min[i]) {
+        //                            min[i] = abs(my_road[i].connected[j].left - rightSide[i]);
+        //                            break;
+        //                        }
+        //                    }
+        //
+        //                }
+        //                int Min = 40;
+        //                for (int i = 40; i > 5; i--) {
+        //                    if (min[i] < min[Min]) {
+        //                        Min = i;
+        //                    }
+        //                    if (i == 6 && Min == 40) {
+        //                        Min = 25;
+        //                    }
+        //                }
+        //                double k1 = (double)(rightSide[100] - left_line[100]) / (Min - 100);
+        //                for (int i = 100; i >= Min - 3; i--) {
+        //                    left_line[i] = k1 * (i - 100) + left_line[100];
+        //                }
+        //                ////////////////////////////////////printf("y=%d,x=%d", Min, rightSide[Min]);
+        //            }
+                    ////////////////////////////////////printf("k=%f", k);
+    }
+    else if (islandtype == LEFT) {
+        for (int i = 104; i >= 2; i--) {
+//            j_str[i] = j_continue[i];
+//            for (int j = 1; j <= my_road[i].white_num; j++) {
+//                if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_str[i + 1]].right) < abs(my_road[i].connected[j_str[i]].right - my_road[i + 1].connected[j_str[i + 1]].right)
+//                    && my_road[i].connected[j].width > 5) {
+//                    j_str[i] = j;
+//                }
+//            }
+//            rightSide[i] = my_road[i].connected[j_str[i]].right;
+//            leftSide[i] = my_road[i].connected[j_str[i]].left;
+//        }
+//        int upPoint = 119;
+//        for (int i = 2; i <= 100; i++) {
+//            if (leftSide[i] - leftSide[i + 3] > 7) {
+//                upPoint = i;
+//                break;
+//            }
+//        }
+//        if (upPoint !=119 && upPoint <= 75 && upPoint >=15) {
+//            double k = (double)(leftSide[upPoint] - 5 - rightSide[90]) / (upPoint - 90);
+//            for (int i = NEAR_LINE; i >= 2; i--) {
+//                if (1) {
+//                    if (k * (i - 90) + rightSide[90] <= 1) {
+//                        right_line[i] = 1;
+//                        left_line[i] = 1;
+//                    }else if(k * (i - 90) + rightSide[90] >= 84){
+//                        right_line[i] = 84;
+//                        left_line[i] = 84;
+//                    }
+//                    else {
+//                        right_line[i] = k * (i - 90) + rightSide[90];
+//                        if (right_line[i] - 45 <= 1) {
+//                            left_line[i] = 1;
+//                        }else{
+//
+//                            left_line[i] = right_line[i] - 45;
+//                        }
+//
+//                    }
+//
+//
+//                }
+//            }
+//        }
+//        else {
+//            for (int i = NEAR_LINE; i >= 2; i--) {
+//                if (left_line[i] >= 84) {
+//                    left_line[i] = 84;
+//                }
+//                if (left_line[i] + 35 > 94) {
+//                    right_line[i] = 84;
+//                }
+//                else {
+//                    right_line[i] = left_line[i] + 35;
+//                }
+//
+//            }
+            right_line[i]=40;
+                       left_line[i]=40;
+        }
+
+    }
+    //            double k = calculate_slope(80, 95, RIGHT);
+    //            int x = left_line[106];
+    //            for (int i = 104; i > 5; i--) {
+    //                leftSide[i] = k * (i - 106) + x;
+    //            }
+    //            if (k > -0.4 && k <= 0.2) {
+    //                uint8_t min[CAMERA_H];
+    //                for (int i = 70; i > 5; i--) {
+    //                    min[i] = abs(right_line[i] - leftSide[i]);
+    //                    for (int j = 1; j <= my_road[i].white_num; j++) {
+    //                        if (abs(my_road[i].connected[j].right - leftSide[i]) < min[i]) {
+    //                            min[i] = abs(my_road[i].connected[j].right - leftSide[i]);
+    //                            break;
+    //                        }
+    //                    }
+    //
+    //                }
+    //                int Min = 40;
+    //                for (int i = 40; i > 5; i--) {
+    //                    if (min[i] < min[Min]) {
+    //                        Min = i;
+    //                    }
+    //                    if (i == 6 && Min == 40) {
+    //                        Min = 25;
+    //                    }
+    //                }
+    //                double k1 = (double)(leftSide[100] - right_line[100]) / (Min - 100);
+    //
+    //                for (int i = 100; i >= Min - 3; i--) {
+    //                    right_line[i] = k1 * (i - 100) + right_line[100];
+    //                }
+    //                ////////////////////////////////////printf("y=%d,x=%d", Min, rightSide[Min]);
+    //            }
+    //            ////////////////////////////////////printf("k=%f", k);
+    //        }
+
+}
 ////////////////////////////////////////////
 //功能：环岛弯道判断
 //输入：
@@ -7239,7 +7282,7 @@ void carPark_in()
     if (fabs(kl1-kl2)<0.2||fabs(kr1-kr2)<0.2){                                                                          ///////////////////////////////////////////
     for (carParkX = 40; carParkX < 90; carParkX++)
     {
-        if (my_road[carParkX + 1].white_num > 4 && my_road[carParkX].white_num > 4 && my_road[carParkX - 1].white_num > 4 && my_road[carParkX - 2].white_num > 4)
+        if (my_road[carParkX + 1].white_num > 3 && my_road[carParkX].white_num > 4 && my_road[carParkX - 1].white_num > 4 && my_road[carParkX - 2].white_num > 3)
         {
 
             if(my_road[carParkX].connected[my_road[carParkX].white_num].width > 20 || my_road[carParkX].connected[1].width > 20)
@@ -7757,35 +7800,39 @@ void folk_road_in() {
         flag = 0;
     }
 
-    if (top == 119 && minL <= folkParam3.intValue && minR <= folkParam3.intValue) {
-        //可能是特别歪的情况，因此，我们需要重新寻找top
-        if (abs(minR - minL) >= 15) {
-            if (minL - minR >= 20 && TurnFolkRoad == RIGHT) {
-                for (int i = 3; i <= minR; i++) {
-                    if (rightRoad[i].left - rightRoad[i + 1].left >= 6 && abs(rightRoad[i].right - rightRoad[i + 1].right) <= 3
-                        && abs(rightRoad[i].right - rightRoad[i - 1].right) <= 3 && abs(rightRoad[i].left - rightRoad[i - 1].left) <= 3) {
-                        top = i;
-                        break;
+    int L=1;
+    if(L == 2){
+        if (top == 119 && minL <= folkParam3.intValue && minR <= folkParam3.intValue) {
+                //可能是特别歪的情况，因此，我们需要重新寻找top
+                if (abs(minR - minL) >= 15) {
+                    if (minL - minR >= 20 && TurnFolkRoad == RIGHT) {
+                        for (int i = 3; i <= minR; i++) {
+                            if (rightRoad[i].left - rightRoad[i + 1].left >= 6 && abs(rightRoad[i].right - rightRoad[i + 1].right) <= 3
+                                && abs(rightRoad[i].right - rightRoad[i - 1].right) <= 3 && abs(rightRoad[i].left - rightRoad[i - 1].left) <= 3) {
+                                top = i;
+                                break;
+                            }
+                        }
+                    }else if (minR - minL >= 20 && TurnFolkRoad == LEFT) {
+                        for (int i = 3; i <= minR; i++) {
+                            if (leftRoad[i].right - leftRoad[i + 1].right <= -6 && abs(leftRoad[i].left - leftRoad[i + 1].left) <= 3
+                                && abs(leftRoad[i].right - leftRoad[i - 1].right) <= 3 && abs(leftRoad[i].left - leftRoad[i - 1].left) <= 3) {
+                                top = i;
+                                break;
+                            }
+                        }
                     }
                 }
-            }else if (minR - minL >= 20 && TurnFolkRoad == LEFT) {
-                for (int i = 3; i <= minR; i++) {
-                    if (leftRoad[i].right - leftRoad[i + 1].right <= -6 && abs(leftRoad[i].left - leftRoad[i + 1].left) <= 3
-                        && abs(leftRoad[i].right - leftRoad[i - 1].right) <= 3 && abs(leftRoad[i].left - leftRoad[i - 1].left) <= 3) {
-                        top = i;
-                        break;
-                    }
-                }
-            }
-        }
 
+            }
     }
+
 
     //printf("top=%d,minL=%d,minR=%d\n", top, minL, minR);
 
 
-    double k1 = calculate_slope(minL + 3, minL + 13, LEFT);
-    double k2 = calculate_slope(minR + 3, minR + 13, RIGHT);
+    double k1 = calculate_slope(minL + 3, minL + 18, LEFT);
+    double k2 = calculate_slope(minR + 3, minR + 18, RIGHT);
 
     int leftStraight[CAMERA_H] = { 200 };
     int rightStraight[CAMERA_H] = { 200 };
@@ -7824,11 +7871,11 @@ void folk_road_in() {
     }
     //printf("sumW=%d,flag=%d\n", sumW, flag);
 
-    if (top > 90 || top < 10) {
+    if (top > 90 || top < 15) {
         flag = 0;
     }
 
-    if (minL < 20 || minR < 20 || minL > 95 || minR > 95) {
+    if (minL < 30 || minR < 30 || minL > 95 || minR > 95) {
         flag = 0;
     }
     double kr = calculate_slope(minR + 3, minR + 13, RIGHT);
