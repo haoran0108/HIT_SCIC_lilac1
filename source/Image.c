@@ -6244,10 +6244,7 @@ void design_island_out(int type) {
     int roadWidth = right_line[105] - left_line[105];
 
     //k_right_two = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
-    k_right = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
-    k_left = calculate_slope_two_point(80, LEFT, 100, LEFT);
-    k_leftR = k_left + design_island_k.floatValue;
-    k_rightL = k_right - design_island_k.floatValue;
+
     //////////////////////////////printf("two=%f, k = %f\n", k_right_two, k_right);
     int minFlag = 0;
     int minRight = 95;
@@ -6270,19 +6267,34 @@ void design_island_out(int type) {
 
     if (islandtype == LEFT)
     {
-//        for (jump_point = 95; jump_point > 45; jump_point--)
-//        {
-//               // //////////////////////printf("j=%d", jump_point);
-//                //if ((right_line[jump_point - 3] - right_line[jump_point] >= delta && right_line[jump_point + 3] - right_line[jump_point] >= delta) || (right_line[jump_point - 5] - right_line[jump_point] >= delta && right_line[jump_point + 5] - right_line[jump_point] >= delta))
-//            if(minFlag == 1)
-//            {
-                    //IMG[jump_point][right_line[jump_point] - 1] = purple;
-              //  k_jump = calculate_slope_two_point(jump_point, RIGHT, jump_point+8, RIGHT);
-                   // //////////////////////printf("k_left = %f,k_jump = %f\n", k_left, k_jump);
+//
+        if (left_side[80] == left_line[80] && left_side[100] == left_line[100])
+        {
+            k_left = calculate_slope_two_point(80, LEFT, 100, LEFT);
+
+        }
+        else if (left_side[80] != left_line[80] && left_side[100] != left_line[100])
+        {
+            k_left = calculate_slope_two_point(80, LEFT, 100, LEFT);
+
+        }
+        else
+        {
+            k_left = calculate_slope_two_point(60, LEFT, 80, LEFT);
+
+        }
+        k_leftR = k_left + design_island_k.floatValue;
 
         for (int i = 106; i > 5; i--)
         {
-            right_line[i] = k_leftR * (i - 95) + right_line[95];
+            if (right_line[95] == right_side[95])
+            {
+                right_line[i] = k_leftR * (i - 105) + right_line[105];
+            }
+            else {
+                right_line[i] = k_leftR * (i - 95) + right_line[95];
+
+            }
         }
         for (int i = 80; i > 5; i--)
         {
@@ -6309,26 +6321,34 @@ void design_island_out(int type) {
 
     else if(islandtype == RIGHT)
     {
-//        for (jump_point = 85; jump_point > 45; jump_point--)
-//        {
-//            if (left_line[jump_point] - left_line[jump_point - 3] > delta && left_line[jump_point] - left_line[jump_point+3] > delta)
-//            {
-//                for (int i = 106; i > 20; i--)
-//                {
-//                    left_line[i] = k_right * (i - jump_point) + left_line[jump_point];
-//                }
-//                for (int i = 80; i > 20; i--)
-//                {
-//                    right_line[i] = k_right * (i - jump_point) + right_line[jump_point];
-//
-//                }
-//                break;
-//            }
-//            else
-//            {
+
+        if (right_side[80] == right_line[80] && right_side[100] == right_line[100])
+        {
+            k_right = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
+
+        }
+        else if (right_side[80] != right_line[80] && right_side[100] != right_line[100])
+        {
+            k_right = calculate_slope_two_point(80, RIGHT, 100, RIGHT);
+
+        }
+        else
+        {
+            k_right = calculate_slope_two_point(60, RIGHT, 80, RIGHT);
+
+        }
+        k_rightL = k_right - design_island_k.floatValue;
+
         for (int i = 106; i > 20; i--)
         {
-            left_line[i] = k_rightL * (i - 95) + left_line[95];
+            if (left_line[95] == left_side[95])
+            {
+                left_line[i] = k_rightL * (i - 105) + left_line[105];
+
+            }
+            else {
+                left_line[i] = k_rightL * (i - 95) + left_line[95];
+            }
         }
         for (int i = 80; i > 20; i--)
         {
