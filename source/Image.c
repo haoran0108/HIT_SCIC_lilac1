@@ -1599,6 +1599,8 @@ void judge_type_road() {
                 carParkDelay = 0;
                 state = 0;
             }
+            straightFlag = 1;
+
         }
         else if(carParkTimes == 2 && parkType == 1)
         {
@@ -6049,8 +6051,8 @@ void design_island_turn(int type) {
 //
 //                }
 //            }
-            right_line[i]=140;
-            left_line[i]=140;
+            right_line[i]=122;
+            left_line[i]=122;
         }
 
         //            if (k <= 0.4 && k > -0.2) {
@@ -6140,8 +6142,8 @@ void design_island_turn(int type) {
 //                }
 //
 //            }
-            right_line[i]=40;
-                       left_line[i]=40;
+            right_line[i]=67;
+            left_line[i]=67;
         }
 
     }
@@ -6194,12 +6196,12 @@ void island_turn(int type) {
     int sum = 0;
     int i;
 
-    for (int i = 1; i <= 36; i++) {
+    for (int i = 1; i <= 30; i++) {
         if (my_road[i].white_num == 0) {
             sum++;
         }
     }
-    double p = (double)sum / 36;
+    double p = (double)sum / 30;
 
     if (p > 0.9) {
         flag = 1;
@@ -7304,7 +7306,7 @@ void carPark_in()
     if (fabs(kl1-kl2)<0.2||fabs(kr1-kr2)<0.2){                                                                          ///////////////////////////////////////////
     for (carParkX = 25; carParkX < 90; carParkX++)
     {
-        if (my_road[carParkX + 1].white_num > 3 && my_road[carParkX].white_num > 3 && my_road[carParkX - 1].white_num > 4 && my_road[carParkX - 2].white_num > 4)
+        if (my_road[carParkX].white_num > 4 && my_road[carParkX + 2].white_num > 3 && my_road[carParkX - 2].white_num > 3)
         {
 
             if(my_road[carParkX].connected[my_road[carParkX].white_num].width > 20 || my_road[carParkX].connected[1].width > 20)
@@ -7614,10 +7616,10 @@ void folk_road_in() {
             else if (my_road[i].white_num == 2) {
                 leftRoad[i] = my_road[i].connected[1];
                 rightRoad[i] = my_road[i].connected[2];
-                if (my_road[i].connected[1].width <= 29) {
+                if (my_road[i].connected[1].width <= 29 && my_road[i].connected[2].width >=30) {
                     leftRoad[i] = my_road[i].connected[2];
                 }
-                if (my_road[i].connected[2].width <= 29) {
+                if (my_road[i].connected[2].width <= 29 && my_road[i].connected[1].width >= 30) {
                     rightRoad[i] = my_road[i].connected[1];
                 }
             }
@@ -7818,7 +7820,7 @@ void folk_road_in() {
     }
 
 
-    if (minL == 119 || minR == 119) {
+    if (minL == 119 || minR == 119 || (abs(top-minR)<20 || abs(top-minL)<20)) {
         flag = 0;
     }
 
@@ -7882,7 +7884,7 @@ void folk_road_in() {
     }
     int sumW = 0;
     for (int i = FAR_LINE; i <= 25; i++) {
-        if (whiteNum[i] <= 25) {
+        if (whiteNum[i] <= 16) {
             sumW++;
             //printf("%d,l=%d,r=%d,whiteNum=%d\n", i, leftStraight[i], rightStraight[i], whiteNum[i]);
         }
@@ -7893,11 +7895,11 @@ void folk_road_in() {
     }
     //printf("sumW=%d,flag=%d\n", sumW, flag);
 
-    if (top > 90 || top < 15) {
+    if (top > 90 || top < 20) {
         flag = 0;
     }
 
-    if (minL < 30 || minR < 30 || minL > 90 || minR > 90) {
+    if (minL < 40 || minR < 40 || minL > 90 || minR > 90) {
         flag = 0;
     }
     double kr = calculate_slope(minR + 3, minR + 13, RIGHT);
@@ -9077,7 +9079,7 @@ void straight_protection() {
 //        if(fabs(calculate_slope(50,70,LEFT))<1 && straight_variance(80, 50) >= 2 && straight_variance(70, 50) >= 2){
 //            straightFlag = 2;
 //        }
-        if(fabs(calculate_slope(50,70,LEFT))<0.3 && straight_variance(65, 30) == 2 && midMaxColumn() == 1){
+        if(fabs(calculate_slope(50,70,LEFT))<0.3 && straight_variance(85, 35) == 2 && midMaxColumn() == 1){
             straightFlag = 1;
         }
         else straightFlag = 0;
@@ -9087,7 +9089,7 @@ void straight_protection() {
 //        if(fabs(calculate_slope(50,70,RIGHT))<1 && straight_variance(80, 50) >= 2 && straight_variance(70, 50) >= 2){
 //            straightFlag = 2;
 //        }
-        if(fabs(calculate_slope(50,70,RIGHT)) < 0.3 && straight_variance(65, 30) == 2 && midMaxColumn() == 1){
+        if(fabs(calculate_slope(50,70,RIGHT)) < 0.3 && straight_variance(85, 35) == 2 && midMaxColumn() == 1){
             straightFlag = 1;
         }
         else straightFlag = 0;
@@ -9096,7 +9098,7 @@ void straight_protection() {
 //        if(fabs(calculate_slope(50,70,LEFT))<1 && straight_variance(80, 50) >= 2 && straight_variance(70, 50) >= 2){
 //            straightFlag = 2;
 //        }
-        if(fabs(calculate_slope(50,70,LEFT))<0.3 && straight_variance(65, 30) == 2 && midMaxColumn() == 1){
+        if(fabs(calculate_slope(50,70,LEFT))<0.3 && straight_variance(85, 35) == 2 && midMaxColumn() == 1){
             straightFlag = 1;
         }
         else straightFlag = 0;
@@ -9320,7 +9322,7 @@ int midMaxColumn()
 {
 
     int count1 = 0;
-    for(int i = 90; i > 25; i--)
+    for(int i = 90; i > 30; i--)
     {
         if(IMG[i][93] == white && my_road[i].connected[j_continue[i]].width < 38)
         {
@@ -9329,7 +9331,7 @@ int midMaxColumn()
 
 
     }
-    if(count1 > 63)
+    if(count1 > 58)
     {
         return 1;
 
