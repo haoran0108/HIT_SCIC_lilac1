@@ -6272,37 +6272,50 @@ void design_island_out(int type) {
     if (islandtype == LEFT)
     {
 //
-        if (left_side[80] == left_line[80] && left_side[100] == left_line[100])
+        if (left_side[85] == left_line[85] && left_side[100] == left_line[100])
         {
-            k_left = calculate_slope_two_point(80, LEFT, 100, LEFT);
+            k_left = calculate_slope_two_point(85, LEFT, 100, LEFT);
 
         }
-        else if (left_side[80] != left_line[80] && left_side[100] != left_line[100])
+        else if (left_side[85] != left_line[85] && left_side[100] != left_line[100])
         {
-            k_left = calculate_slope_two_point(80, LEFT, 100, LEFT);
+            k_left = calculate_slope_two_point(85, LEFT, 100, LEFT);
 
         }
         else
         {
-            k_left = calculate_slope_two_point(60, LEFT, 80, LEFT);
+            k_left = calculate_slope_two_point(60, LEFT, 85, LEFT);
 
         }
         k_leftR = k_left + design_island_k.floatValue;
 
         for (int i = 106; i > 5; i--)
         {
-            if (right_line[95] == right_side[95])
+//            if (right_line[95] == right_side[95])
+//            {
+//                right_line[i] = k_leftR * (i - 105) + right_line[105];
+//            }
+//            else {
+//                right_line[i] = k_leftR * (i - 95) + right_line[95];
+//
+//            }
+            if (right_line[95] == right_side[95] && right_line[105] != right_side[105])
             {
                 right_line[i] = k_leftR * (i - 105) + right_line[105];
+            }
+            else if (right_line[95] == right_side[95] && right_line[105] == right_side[105])
+            {
+                right_line[i] = k_leftR * (i - 105) + left_line[105] + 35;
+
             }
             else {
                 right_line[i] = k_leftR * (i - 95) + right_line[95];
 
             }
         }
-        for (int i = 80; i > 5; i--)
+        for (int i = 85; i > 5; i--)
         {
-            left_line[i] = k_left * (i - 80) + left_line[80];
+            left_line[i] = k_left * (i - 85) + left_line[85];
 
         }
 //                break;
@@ -6345,9 +6358,22 @@ void design_island_out(int type) {
 
         for (int i = 106; i > 20; i--)
         {
-            if (left_line[95] == left_side[95])
+//            if (left_line[95] == left_side[95])
+//            {
+//                left_line[i] = k_rightL * (i - 105) + left_line[105];
+//
+//            }
+//            else {
+//                left_line[i] = k_rightL * (i - 95) + left_line[95];
+//            }
+            if (left_line[95] == left_side[95] && left_line[105] != left_side[105])
             {
                 left_line[i] = k_rightL * (i - 105) + left_line[105];
+
+            }
+            else if (left_line[95] == left_side[95] && left_line[105] == left_side[105])
+            {
+                left_line[i] = k_rightL * (i - 105) + right_line[105] - 35;
 
             }
             else {
@@ -7303,10 +7329,10 @@ void carPark_in()
     else {
         kr2 = 0;
     }
-    if (fabs(kl1-kl2)<0.2||fabs(kr1-kr2)<0.2){                                                                          ///////////////////////////////////////////
-    for (carParkX = 25; carParkX < 90; carParkX++)
+//    if (fabs(kl1-kl2)<0.3||fabs(kr1-kr2)<0.3){                                                                          ///////////////////////////////////////////
+    for (carParkX = 15; carParkX < 90; carParkX++)
     {
-        if (my_road[carParkX].white_num > 4 && my_road[carParkX + 2].white_num > 3 && my_road[carParkX - 2].white_num > 3)
+        if (my_road[carParkX].white_num > 4 && my_road[carParkX + 2].white_num > 4 && my_road[carParkX - 2].white_num > 4 && my_road[carParkX + 4].white_num > 4 && my_road[carParkX - 4].white_num > 4)
         {
 
             if(my_road[carParkX].connected[my_road[carParkX].white_num].width > 20 || my_road[carParkX].connected[1].width > 20)
@@ -7340,7 +7366,7 @@ void carPark_in()
 
         }
     }
-    }
+//    }
     if (flag == 1) {
         state = 14;
 
