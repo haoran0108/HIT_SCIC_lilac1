@@ -1396,7 +1396,7 @@ void image_main()
         judge_type_road();
 
     }
-//    test_varible[12] = straightFlag;
+    test_varible[15] = straightFlag;
     test_varible[13] = state;
 //    test_varible[14] = carParkTimes;
 //    }
@@ -1647,7 +1647,7 @@ void judge_type_road() {
 
     if(state == rampway)
     {
-        GPIO_Set(P22, 0, 1);
+//        GPIO_Set(P22, 0, 1);
         rampwayDown();
         rampWayCount += 1;
 
@@ -1658,9 +1658,11 @@ void judge_type_road() {
         }
     }
     else if(state != rampway)
-        {GPIO_Set(P22, 0, 0);}
+    {
+//        GPIO_Set(P22, 0, 0);
+    }
     if(state != rampway && state != stateCarPark){
-//        straight_protection();
+        straight_protection();
         lastStraightFlag = straightFlag;
 
         rampJudgeCount += 1;
@@ -5561,7 +5563,7 @@ void  islandOrcross_circle(int type) {
             }
         }
 
-        if (sumS > 5) {
+        if (sumS > 3) {
             //直线判断，如果误差较大，有可能是上一个方案判断错误
             double ku = calculate_any_slope(5, 20, rightSide);
             double km = calculate_any_slope(40, 55, rightSide);
@@ -5618,7 +5620,7 @@ void  islandOrcross_circle(int type) {
             }
         }
 
-        if (sumS > 5) {
+        if (sumS > 3) {
             //直线判断，如果误差较大，有可能是上一个方案判断错误
             double ku = calculate_any_slope(5, 20, leftSide);
             double km = calculate_any_slope(40, 55, leftSide);
@@ -6192,12 +6194,12 @@ void island_turn(int type) {
     int sum = 0;
     int i;
 
-    for (int i = 1; i <= 30; i++) {
+    for (int i = 1; i <= 36; i++) {
         if (my_road[i].white_num == 0) {
             sum++;
         }
     }
-    double p = (double)sum / 30;
+    double p = (double)sum / 36;
 
     if (p > 0.9) {
         flag = 1;
@@ -6213,7 +6215,7 @@ void island_turn(int type) {
 //        else if (lastTwoState[3] == 1 && lastState[3] == 0) {
 //            lastState[3] = 1;
 //        }
-        else if ( lastState[3] == 1) {
+        else if (lastState[3] == 1) {
             state = stateIsland5;
             lastTwoState[3] = 0;
             lastState[3] = 0;
@@ -7300,9 +7302,9 @@ void carPark_in()
         kr2 = 0;
     }
     if (fabs(kl1-kl2)<0.2||fabs(kr1-kr2)<0.2){                                                                          ///////////////////////////////////////////
-    for (carParkX = 40; carParkX < 90; carParkX++)
+    for (carParkX = 25; carParkX < 90; carParkX++)
     {
-        if (my_road[carParkX + 1].white_num > 3 && my_road[carParkX].white_num > 4 && my_road[carParkX - 1].white_num > 4 && my_road[carParkX - 2].white_num > 3)
+        if (my_road[carParkX + 1].white_num > 3 && my_road[carParkX].white_num > 3 && my_road[carParkX - 1].white_num > 4 && my_road[carParkX - 2].white_num > 4)
         {
 
             if(my_road[carParkX].connected[my_road[carParkX].white_num].width > 20 || my_road[carParkX].connected[1].width > 20)
@@ -7648,8 +7650,8 @@ void folk_road_in() {
     uint8_t sumD = 0;
 
     for (int i = 2; i <= 70; i++) {
-        if (rightRoad[i - 1].left - leftRoad[i - 1].right < 20 && rightRoad[i - 1].left - leftRoad[i - 1].right >= 0
-            && rightRoad[i].left - leftRoad[i].right < 20 && rightRoad[i].left - leftRoad[i].right >= 0
+        if (rightRoad[i - 1].left - leftRoad[i - 1].right < 20 && rightRoad[i - 1].left - leftRoad[i - 1].right >= 2
+            && rightRoad[i].left - leftRoad[i].right < 20 && rightRoad[i].left - leftRoad[i].right >= 2
             && rightRoad[i + 1].left - leftRoad[i + 1].right < 0
             && rightRoad[i + 2].left - leftRoad[i + 2].right < 0) {
             top = i;
@@ -7895,13 +7897,13 @@ void folk_road_in() {
         flag = 0;
     }
 
-    if (minL < 30 || minR < 30 || minL > 95 || minR > 95) {
+    if (minL < 30 || minR < 30 || minL > 90 || minR > 90) {
         flag = 0;
     }
     double kr = calculate_slope(minR + 3, minR + 13, RIGHT);
     double kl = calculate_slope(minL + 3, minL + 13, LEFT);
 
-    if (fabs(kl - kr) > 0.3) {
+    if (fabs(kl - kr) > 0.2) {
         flag = 0;
     }
     //printf("fabs(kl - kr)=%f,flag=%d\n", fabs(kl - kr), flag);
@@ -9046,7 +9048,7 @@ void straight_protection() {
     int flagR = 0;
 
 //    int flagL12 = 0, flagL13 = 0;
-    double k_delta = 0.15;
+    double k_delta = 0.1;
     //判断知否是直线，如果是直线，flag为1
     if (my_road[10].white_num != 0) {
         if (fabs(kl1-kl2) < k_delta && fabs(kl1 - kl3) < k_delta && fabs(kl2 - kl3) < k_delta) {
@@ -9075,7 +9077,7 @@ void straight_protection() {
 //        if(fabs(calculate_slope(50,70,LEFT))<1 && straight_variance(80, 50) >= 2 && straight_variance(70, 50) >= 2){
 //            straightFlag = 2;
 //        }
-        if(fabs(calculate_slope(50,70,LEFT))<1 && straight_variance(65, 30) == 2){
+        if(fabs(calculate_slope(50,70,LEFT))<0.3 && straight_variance(65, 30) == 2 && midMaxColumn() == 1){
             straightFlag = 1;
         }
         else straightFlag = 0;
@@ -9085,7 +9087,7 @@ void straight_protection() {
 //        if(fabs(calculate_slope(50,70,RIGHT))<1 && straight_variance(80, 50) >= 2 && straight_variance(70, 50) >= 2){
 //            straightFlag = 2;
 //        }
-        if(fabs(calculate_slope(50,70,RIGHT)) < 1 && straight_variance(65, 30) == 2){
+        if(fabs(calculate_slope(50,70,RIGHT)) < 0.3 && straight_variance(65, 30) == 2 && midMaxColumn() == 1){
             straightFlag = 1;
         }
         else straightFlag = 0;
@@ -9094,7 +9096,7 @@ void straight_protection() {
 //        if(fabs(calculate_slope(50,70,LEFT))<1 && straight_variance(80, 50) >= 2 && straight_variance(70, 50) >= 2){
 //            straightFlag = 2;
 //        }
-        if(fabs(calculate_slope(50,70,LEFT))<1 && straight_variance(65, 30) == 2){
+        if(fabs(calculate_slope(50,70,LEFT))<0.3 && straight_variance(65, 30) == 2 && midMaxColumn() == 1){
             straightFlag = 1;
         }
         else straightFlag = 0;
@@ -9182,11 +9184,11 @@ int straight_variance(int istart, int iend)
         count += 1;
     }
     var = (float)(sumVar) / count;
-    if (var > 30)
+    if (var > 10)
     {
         return 1;
     }
-    else if(var <= 30)
+    else if(var <= 10)
     {
         return 2;
 
@@ -9312,4 +9314,27 @@ void rampwayDown()
 //        }
 //
 //    }
+}
+
+int midMaxColumn()
+{
+
+    int count1 = 0;
+    for(int i = 90; i > 25; i--)
+    {
+        if(IMG[i][93] == white && my_road[i].connected[j_continue[i]].width < 38)
+        {
+            count1 += 1;
+        }
+
+
+    }
+    if(count1 > 63)
+    {
+        return 1;
+
+    }
+    else return 0;
+
+
 }

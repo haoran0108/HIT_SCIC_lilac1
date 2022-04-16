@@ -297,4 +297,6 @@ void rampwayDown();
 void fixMidLine();
 void design_straight_route(int type);
 void straight_protection();
+int midMaxColumn();
+
 #endif //
