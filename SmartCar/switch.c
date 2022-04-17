@@ -53,6 +53,7 @@ void SW_readSwitch()
         parkJudgeCount = 0;
 
         slowFlag = 0;
+
         lastRampGyro = 0;
         rampGyro = 0;
         rampGyroMax = 0;

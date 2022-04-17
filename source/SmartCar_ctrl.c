@@ -620,7 +620,7 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue * k);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -639,7 +639,7 @@ void CTRL_motorDiffer()
                 expectL = (int32)(presentSpeed.intValue);
                 expectR = (int32)(presentSpeed.intValue * k);
             }
-            GPIO_Set(P22, 0, 0);
+//            GPIO_Set(P22, 0, 0);
         }
 
     }
@@ -658,7 +658,7 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue * k);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -677,7 +677,7 @@ void CTRL_motorDiffer()
                 expectL = (int32)(presentSpeed.intValue * k);
                 expectR = (int32)(presentSpeed.intValue);
             }
-            GPIO_Set(P22, 0, 0);
+//            GPIO_Set(P22, 0, 0);
         }
     }
     else if(delta == 0)
@@ -692,7 +692,7 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -711,7 +711,7 @@ void CTRL_motorDiffer()
                 expectL = (int32)(presentSpeed.intValue);
                 expectR = (int32)(presentSpeed.intValue);
             }
-            GPIO_Set(P22, 0, 0);
+//            GPIO_Set(P22, 0, 0);
         }
 
     }

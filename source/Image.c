@@ -9,8 +9,8 @@ int state=stateStart;
 
 int stateUsed = 0;
 
-int lastTwoState[10]={0};
-int lastState[10]={0};
+int lastTwoState[11]={0};
+int lastState[11]={0};
 int featureLeft;
 int featureRight;
 int islandtype;
@@ -20,7 +20,7 @@ int carParkDelay = 0;
 int lastJumpPoint;
 int lastK_up, lastK_jump;
 int speedFlag = 0;
-jump_point partJumpPoint[CAMERA_H];
+//jump_point partJumpPoint[CAMERA_H];
 all_range white_range[CAMERA_H];//所有白条子
 road my_road[CAMERA_H];//赛道
 //uint8_t word[CAMERA_H][CAMERA_H];//
@@ -30,7 +30,7 @@ uint8_t IMG[CAMERA_H][CAMERA_W];//二值化后图像数组
 //uint8_t IMG_distor[CAMERA_H][CAMERA_W];
 uint8_t left_line[CAMERA_H], right_line[CAMERA_H];//赛道的左右边界
 uint8_t mid_line[CAMERA_H];
-road_noise swell;
+//road_noise swell;
 int all_connect_num = 0;//所有白条子数
 uint8_t top_road;//赛道最高处所在行数
 
@@ -51,15 +51,15 @@ int rightUpJumpPoint;//寻找右下角的拐点的行数
 int flagJumpPoint;//跳跃点的个数
 
 //三叉
-int upSharpPoint = 119;
-int leftSharpPoint = 119;
-int rightSharpPoint = 119;
+//int upSharpPoint = 119;
+//int leftSharpPoint = 119;
+//int rightSharpPoint = 119;
 
 //车库
 int parkPosition = 0;
 int leftPark = 0,rightPark = 0;
-uint8_t missLeft[CAMERA_H];
-uint8_t missRight[CAMERA_H];
+//uint8_t missLeft[CAMERA_H];
+//uint8_t missRight[CAMERA_H];
 
 //时间计数
 int crossCircleCount = 0;
@@ -74,7 +74,7 @@ int slowFlag = 0;
 int rampFlag1 = 0, rampFlag2 = 0,rampFlag3 = 0;
 
 uint8_t ForeSee = 35;
-coordinate foreSee[CAMERA_W];
+//coordinate foreSee[CAMERA_W];
 
 //uint8_t zebraFlag;
 //uint8_t zebraCircle;
@@ -410,23 +410,23 @@ void transform()
 //输出：
 //备注：
 ///////////////////////////////////////////
-void circle_foresee() {
-    int midx = (left_line[108] + right_line[108]) / 2;
-    int midy = NEAR_LINE;
-    int k = 0;
-
-    for (int i = 0; i <= CAMERA_W; i++) {
-        for (int j = 0; j <= NEAR_LINE; j++) {
-            if ((i - midx) * (i - midx) + (j - midy) * (j - midy) < ForeSee + 1 && (i - midx) * (i - midx) + (j - midy) * (j - midy) >= ForeSee) {
-                foreSee[k].x = i;
-                foreSee[k].y = j;
-                k++;
-            }
-        }
-    }
-
-
-}
+//void circle_foresee() {
+////    int midx = (left_line[108] + right_line[108]) / 2;
+////    int midy = NEAR_LINE;
+////    int k = 0;
+////
+////    for (int i = 0; i <= CAMERA_W; i++) {
+////        for (int j = 0; j <= NEAR_LINE; j++) {
+////            if ((i - midx) * (i - midx) + (j - midy) * (j - midy) < ForeSee + 1 && (i - midx) * (i - midx) + (j - midy) * (j - midy) >= ForeSee) {
+////                foreSee[k].x = i;
+////                foreSee[k].y = j;
+////                k++;
+////            }
+////        }
+////    }
+////
+//
+//}
 
 ////////////////////////////////////////////
 //功能：阈值的确定
@@ -434,21 +434,21 @@ void circle_foresee() {
 //输出：
 //备注：大津算法
 ///////////////////////////////////////////
-void decide_miss() {
-    for (int i = 0; i <= NEAR_LINE; i++) {
-        if (i <= 35) {
-            missLeft[i] = MISS;
-            missRight[i] = MISS;
-        }
-        else if (i > 35) {
-            double kLeft = (double)(0 - 61) / (36 - 109);
-            double kRight = (double)(125 - 187) / (36 - 109);
-
-            missLeft[i] = kLeft * (i - 36);
-            missRight[i] = kRight * (i - 36) + 187;
-        }
-    }
-}
+//void decide_miss() {
+////    for (int i = 0; i <= NEAR_LINE; i++) {
+////        if (i <= 35) {
+////            missLeft[i] = MISS;
+////            missRight[i] = MISS;
+////        }
+////        else if (i > 35) {
+////            double kLeft = (double)(0 - 61) / (36 - 109);
+////            double kRight = (double)(125 - 187) / (36 - 109);
+////
+////            missLeft[i] = kLeft * (i - 36);
+////            missRight[i] = kRight * (i - 36) + 187;
+////        }
+////    }
+//}
 
 ////////////////////////////////////////////
 //功能：阈值的确定
@@ -745,58 +745,58 @@ void distortion() {
 //输出：二值化图片
 //备注：
 ///////////////////////////////////////////
-void THRE(int num)
-{
-    //iteration();
-    if (num != 2) {
-        uint8_t* map;
-        uint8_t* my_map;
-        uint8_t* my_map1;
-        map = fullBuffer;
-
-        //threshold = threshold - 50;
-        for (int i = 0; i < 120; i++)
-        {
-            my_map = &IMG[i][0];
-            for (int j = 0; j < 188; j++)
-            {
-                if ((*map) > threshold)
-                    (*my_map) = white;
-                else (*my_map) = black;
-                map++;
-                my_map++;
-            }
-        }
-    }
-    else if (num == 2) {
-        uint8_t* map;
-        uint8_t* my_map;
-        uint8_t* my_map1;
-        map = fullBuffer;
-
-        //threshold -= 80;
-        for (int i = 0; i < 120; i++)
-        {
-            my_map = &IMG[i][0];
-            if (i < 60) {
-                threshold = thresholdUp;
-            }
-            else if (i >= 120) {
-                threshold = thresholdDown;
-            }
-            for (int j = 0; j < 188; j++)
-            {
-                if ((*map) > threshold)
-                    (*my_map) = white;
-                else (*my_map) = black;
-                map++;
-                my_map++;
-            }
-        }
-    }
-
-
-}
+//void THRE(int num)
+//{
+//    //iteration();
+//    if (num != 2) {
+//        uint8_t* map;
+//        uint8_t* my_map;
+//        uint8_t* my_map1;
+//        map = fullBuffer;
+//
+//        //threshold = threshold - 50;
+//        for (int i = 0; i < 120; i++)
+//        {
+//            my_map = &IMG[i][0];
+//            for (int j = 0; j < 188; j++)
+//            {
+//                if ((*map) > threshold)
+//                    (*my_map) = white;
+//                else (*my_map) = black;
+//                map++;
+//                my_map++;
+//            }
+//        }
+//    }
+//    else if (num == 2) {
+//        uint8_t* map;
+//        uint8_t* my_map;
+//        uint8_t* my_map1;
+//        map = fullBuffer;
+//
+//        //threshold -= 80;
+//        for (int i = 0; i < 120; i++)
+//        {
+//            my_map = &IMG[i][0];
+//            if (i < 60) {
+//                threshold = thresholdUp;
+//            }
+//            else if (i >= 120) {
+//                threshold = thresholdDown;
+//            }
+//            for (int j = 0; j < 188; j++)
+//            {
+//                if ((*map) > threshold)
+//                    (*my_map) = white;
+//                else (*my_map) = black;
+//                map++;
+//                my_map++;
+//            }
+//        }
+//    }
+//
+//
+//}
 
 ////////////////////////////////////////////
 //功能：逆透视变换 // 指针优化版
@@ -871,31 +871,31 @@ void THRE(int num)
 //输出：
 //备注：
 ///////////////////////////////////////////
-void sharpen() {
-    float IMG_sharpen[86][256];
-    float IMG_delta[86][256];
-    for (int i = 0; i < 86; i++) {
-        for (int j = 0; j < 256; j++) {
-            IMG_delta[i][j] = abs(-5 * (IMG[i][j] - (IMG[i - 1][j] + IMG[i][j - 1] + IMG[i][j] + IMG[i][j + 1] + IMG[i + 1][j])));
-            IMG_sharpen[i][j] = IMG[i][j] - IMG_delta[i][j];
-        }
-    }
-    for (int i = 0; i < 86; i++) {
-        for (int j = 0; j < 256; j++) {
-            IMG[i][j] = IMG[i][j] - IMG_sharpen[i][j];
-        }
-    }
-    for (int i = 0; i < 86; i++) {
-        for (int j = 0; j < 256; j++) {
-            if (IMG[i][j] > 0.8) {
-                IMG[i][j] = 1;
-            }
-            else {
-                IMG[i][j] = 0;
-            }
-        }
-    }
-}
+//void sharpen() {
+//    float IMG_sharpen[86][256];
+//    float IMG_delta[86][256];
+//    for (int i = 0; i < 86; i++) {
+//        for (int j = 0; j < 256; j++) {
+//            IMG_delta[i][j] = abs(-5 * (IMG[i][j] - (IMG[i - 1][j] + IMG[i][j - 1] + IMG[i][j] + IMG[i][j + 1] + IMG[i + 1][j])));
+//            IMG_sharpen[i][j] = IMG[i][j] - IMG_delta[i][j];
+//        }
+//    }
+//    for (int i = 0; i < 86; i++) {
+//        for (int j = 0; j < 256; j++) {
+//            IMG[i][j] = IMG[i][j] - IMG_sharpen[i][j];
+//        }
+//    }
+//    for (int i = 0; i < 86; i++) {
+//        for (int j = 0; j < 256; j++) {
+//            if (IMG[i][j] > 0.8) {
+//                IMG[i][j] = 1;
+//            }
+//            else {
+//                IMG[i][j] = 0;
+//            }
+//        }
+//    }
+//}
 
 ////////////////////////////////////////////
 //功能：粗犷的清车头
@@ -903,26 +903,26 @@ void sharpen() {
 //输出：
 //备注：要根据自己车头的大小进行修改
 ///////////////////////////////////////////
-void head_clear(void)
-{
-    uint8_t* my_map;
-    for (int i = 85; i >= 79; i--)
-    {
-        my_map = &IMG[i][0];
-        for (int j = 62; j <= 112; j++)
-        {
-            *(my_map + j) = white;
-        }
-    }
-    /*for (int i = 80; i >= 70; i--)
-    {
-        my_map = &IMG[i][0];
-        for (int j = 37; j <= 150; j++)
-        {
-            *(my_map + j) = white;
-        }
-    }*/
-}
+//void head_clear(void)
+//{
+//    uint8_t* my_map;
+//    for (int i = 85; i >= 79; i--)
+//    {
+//        my_map = &IMG[i][0];
+//        for (int j = 62; j <= 112; j++)
+//        {
+//            *(my_map + j) = white;
+//        }
+//    }
+//    /*for (int i = 80; i >= 70; i--)
+//    {
+//        my_map = &IMG[i][0];
+//        for (int j = 37; j <= 150; j++)
+//        {
+//            *(my_map + j) = white;
+//        }
+//    }*/
+//}
 
 ////////////////////////////////////////////
 //功能：查找父节点
@@ -1454,15 +1454,19 @@ void judge_type_road() {
     //十字
     if (state == stateStart) {
            straight_cross_in();
-       }
+    }
+    if (state == stateStart) {
+        cross_in();
+    }
     if (state == stateStraightCrossIn) {
         straight_cross_over();
         design_straight_cross();
     }
-
-    if (state == stateStart) {
-        cross_in();
+    if (state == stateInCrossStraight) {
+        cross_over();
+        design_cross_titl_two_two();
     }
+
     // 斜十字
 
 
@@ -1546,10 +1550,7 @@ void judge_type_road() {
 ////        folk_or_cross();
 ////        design_cross_in();
 //    }
-    if (state == stateInCrossStraight) {
-        cross_over();
-        design_cross_titl_two_two();
-    }
+
     //车库
     if(state != stateCarPark)
     {
@@ -1571,6 +1572,7 @@ void judge_type_road() {
 
     if(state == stateCarPark)
     {
+        GPIO_Set(P22, 0, 1);
         if(carParkTimes < 2)
         {
 
@@ -1594,6 +1596,7 @@ void judge_type_road() {
             design_park();
             carParkDelay += 1;
 
+            carPark_out();
             if(carParkDelay > parkDelay.intValue)
             {
                 carParkDelay = 0;
@@ -1625,6 +1628,10 @@ void judge_type_road() {
             searchParkLine();
         }
 
+    }
+    else
+    {
+        GPIO_Set(P22, 0, 0);
     }
 
     if(carParkTimes == 1)
@@ -1683,102 +1690,102 @@ void judge_type_road() {
 //备注：
 ///////////////////////////////////////////
 void find_part_jumppoint(int yStart, int yEnd, int type) {
-    int delta = 3;
-    int num = 0;
-
-    for (int i = yStart; i <= yEnd; i++) {
-        if (type == RIGHT) {
-            if (right_line[i + 1] - right_line[i] > delta && right_line[i + 2] - right_line[i] > delta
-                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width > 10 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width > 10
-                && right_line[i - 1] - right_line[i] < delta && right_line[i - 2] - right_line[i] < delta
-                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < 3
-                ) {
-                partJumpPoint[num].y = i;
-                partJumpPoint[num].x = right_line[i];
-                partJumpPoint[num].type = RIGHT;
-                partJumpPoint[num].direction = 01;
-                num++;
-            }
-            if (right_line[i + 1] - right_line[i] < -1 * delta && right_line[i + 2] - right_line[i] - 1 * delta
-                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < -5 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < -5
-                && right_line[i - 1] - right_line[i] < delta && right_line[i - 2] - right_line[i] < delta
-                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < 3
-                ) {
-                partJumpPoint[num].y = i;
-                partJumpPoint[num].x = right_line[i];
-                partJumpPoint[num].type = RIGHT;
-                partJumpPoint[num].direction = 00;
-                num++;
-            }
-            if (right_line[i - 1] - right_line[i] > delta && right_line[i - 2] - right_line[i] > delta
-                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width > 10 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width > 10
-                && right_line[i + 1] - right_line[i] < delta && right_line[i + 2] - right_line[i] < delta
-                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < 3
-                ) {
-                partJumpPoint[num].y = i;
-                partJumpPoint[num].x = right_line[i];
-                partJumpPoint[num].type = RIGHT;
-                partJumpPoint[num].direction = 11;
-            }
-            if (right_line[i - 1] - right_line[i] < -1 * delta && right_line[i - 2] - right_line[i] - 1 * delta
-                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < -5 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < -5
-                && right_line[i + 1] - right_line[i] < delta && right_line[i + 2] - right_line[i] < delta
-                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < 3
-                ) {
-                partJumpPoint[num].y = i;
-                partJumpPoint[num].x = right_line[i];
-                partJumpPoint[num].type = RIGHT;
-                partJumpPoint[num].direction = 10;
-                num++;
-            }
-        }
-        else if (type == LEFT) {
-            if (left_line[i + 1] - left_line[i] > delta && left_line[i + 2] - left_line[i] > delta
-                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width > 10 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width > 10
-                && left_line[i - 1] - left_line[i] < delta && left_line[i - 2] - left_line[i] < delta
-                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < 3
-                ) {
-                partJumpPoint[num].y = i;
-                partJumpPoint[num].x = left_line[i];
-                partJumpPoint[num].type = LEFT;
-                partJumpPoint[num].direction = 01;
-                num++;
-            }
-            if (left_line[i + 1] - left_line[i] < -1 * delta && left_line[i + 2] - left_line[i] - 1 * delta
-                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < -5 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < -5
-                && left_line[i - 1] - left_line[i] < delta && left_line[i - 2] - left_line[i] < delta
-                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < 3
-                ) {
-                partJumpPoint[num].y = i;
-                partJumpPoint[num].x = left_line[i];
-                partJumpPoint[num].type = LEFT;
-                partJumpPoint[num].direction = 00;
-                num++;
-            }
-            if (left_line[i - 1] - left_line[i] > delta && left_line[i - 2] - left_line[i] > delta
-                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width > 10 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width > 10
-                && left_line[i + 1] - left_line[i] < delta && left_line[i + 2] - left_line[i] < delta
-                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < 3
-                ) {
-                partJumpPoint[num].y = i;
-                partJumpPoint[num].x = left_line[i];
-                partJumpPoint[num].type = LEFT;
-                partJumpPoint[num].direction = 11;
-            }
-            if (left_line[i - 1] - left_line[i] < -1 * delta && left_line[i - 2] - left_line[i] - 1 * delta
-                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < -5 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < -5
-                && left_line[i + 1] - left_line[i] < delta && left_line[i + 2] - left_line[i] < delta
-                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < 3
-                ) {
-                partJumpPoint[num].y = i;
-                partJumpPoint[num].x = left_line[i];
-                partJumpPoint[num].type = LEFT;
-                partJumpPoint[num].direction = 10;
-                num++;
-            }
-        }
-
-    }
+//    int delta = 3;
+//    int num = 0;
+//
+//    for (int i = yStart; i <= yEnd; i++) {
+//        if (type == RIGHT) {
+//            if (right_line[i + 1] - right_line[i] > delta && right_line[i + 2] - right_line[i] > delta
+//                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width > 10 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width > 10
+//                && right_line[i - 1] - right_line[i] < delta && right_line[i - 2] - right_line[i] < delta
+//                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < 3
+//                ) {
+//                partJumpPoint[num].y = i;
+//                partJumpPoint[num].x = right_line[i];
+//                partJumpPoint[num].type = RIGHT;
+//                partJumpPoint[num].direction = 01;
+//                num++;
+//            }
+//            if (right_line[i + 1] - right_line[i] < -1 * delta && right_line[i + 2] - right_line[i] - 1 * delta
+//                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < -5 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < -5
+//                && right_line[i - 1] - right_line[i] < delta && right_line[i - 2] - right_line[i] < delta
+//                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < 3
+//                ) {
+//                partJumpPoint[num].y = i;
+//                partJumpPoint[num].x = right_line[i];
+//                partJumpPoint[num].type = RIGHT;
+//                partJumpPoint[num].direction = 00;
+//                num++;
+//            }
+//            if (right_line[i - 1] - right_line[i] > delta && right_line[i - 2] - right_line[i] > delta
+//                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width > 10 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width > 10
+//                && right_line[i + 1] - right_line[i] < delta && right_line[i + 2] - right_line[i] < delta
+//                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < 3
+//                ) {
+//                partJumpPoint[num].y = i;
+//                partJumpPoint[num].x = right_line[i];
+//                partJumpPoint[num].type = RIGHT;
+//                partJumpPoint[num].direction = 11;
+//            }
+//            if (right_line[i - 1] - right_line[i] < -1 * delta && right_line[i - 2] - right_line[i] - 1 * delta
+//                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < -5 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < -5
+//                && right_line[i + 1] - right_line[i] < delta && right_line[i + 2] - right_line[i] < delta
+//                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < 3
+//                ) {
+//                partJumpPoint[num].y = i;
+//                partJumpPoint[num].x = right_line[i];
+//                partJumpPoint[num].type = RIGHT;
+//                partJumpPoint[num].direction = 10;
+//                num++;
+//            }
+//        }
+//        else if (type == LEFT) {
+//            if (left_line[i + 1] - left_line[i] > delta && left_line[i + 2] - left_line[i] > delta
+//                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width > 10 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width > 10
+//                && left_line[i - 1] - left_line[i] < delta && left_line[i - 2] - left_line[i] < delta
+//                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < 3
+//                ) {
+//                partJumpPoint[num].y = i;
+//                partJumpPoint[num].x = left_line[i];
+//                partJumpPoint[num].type = LEFT;
+//                partJumpPoint[num].direction = 01;
+//                num++;
+//            }
+//            if (left_line[i + 1] - left_line[i] < -1 * delta && left_line[i + 2] - left_line[i] - 1 * delta
+//                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < -5 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < -5
+//                && left_line[i - 1] - left_line[i] < delta && left_line[i - 2] - left_line[i] < delta
+//                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < 3
+//                ) {
+//                partJumpPoint[num].y = i;
+//                partJumpPoint[num].x = left_line[i];
+//                partJumpPoint[num].type = LEFT;
+//                partJumpPoint[num].direction = 00;
+//                num++;
+//            }
+//            if (left_line[i - 1] - left_line[i] > delta && left_line[i - 2] - left_line[i] > delta
+//                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width > 10 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width > 10
+//                && left_line[i + 1] - left_line[i] < delta && left_line[i + 2] - left_line[i] < delta
+//                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < 3
+//                ) {
+//                partJumpPoint[num].y = i;
+//                partJumpPoint[num].x = left_line[i];
+//                partJumpPoint[num].type = LEFT;
+//                partJumpPoint[num].direction = 11;
+//            }
+//            if (left_line[i - 1] - left_line[i] < -1 * delta && left_line[i - 2] - left_line[i] - 1 * delta
+//                && my_road[i - 2].connected[j_continue[i - 2]].width - my_road[i].connected[j_continue[i]].width < -5 && my_road[i - 1].connected[j_continue[i - 1]].width - my_road[i].connected[j_continue[i]].width < -5
+//                && left_line[i + 1] - left_line[i] < delta && left_line[i + 2] - left_line[i] < delta
+//                && my_road[i + 2].connected[j_continue[i + 2]].width - my_road[i].connected[j_continue[i]].width < 3 && my_road[i + 1].connected[j_continue[i + 1]].width - my_road[i].connected[j_continue[i]].width < 3
+//                ) {
+//                partJumpPoint[num].y = i;
+//                partJumpPoint[num].x = left_line[i];
+//                partJumpPoint[num].type = LEFT;
+//                partJumpPoint[num].direction = 10;
+//                num++;
+//            }
+//        }
+//
+//    }
 }
 
 ////////////////////////////////////////////
@@ -2488,12 +2495,12 @@ void straight_cross_over() {
     int flag = 0;
     int sumD = 0;
     for (int i = 105; i >= 95; i--) {
-        if (my_road[i].connected[j_continue[i]].width > 45) {
+        if (my_road[i].connected[j_continue[i]].width > 47) {
             sumD++;
         }
     }
 
-    if (fabs(calculate_slope(68, 88, LEFT) - calculate_slope(68, 88, RIGHT)) < 0.3) {
+    if (fabs(calculate_slope(68, 88, LEFT) - calculate_slope(68, 88, RIGHT)) < 0.25) {
         if (sumD >= 7) {
             flag = 1;
         }
@@ -2693,7 +2700,7 @@ void  design_cross_titl_two_two() {
 
                             max = leftUpJumpPoint;
                             int i = leftUpJumpPoint;
-                            while (my_road[i].connected[j_mid[i]].right < right_side[i] && i <= 90) {
+                            while (i <= 90 && my_road[i].connected[j_mid[i]].right < right_side[i] ) {
                                 if (my_road[max].connected[j_mid[max]].right >= my_road[i].connected[j_mid[i]].right) {
                                     max = i;
                                 }
@@ -2834,24 +2841,28 @@ void  design_cross_titl_two_two() {
             double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 15, RIGHT);
             int leftSide[CAMERA_H];
             int rightSide[CAMERA_H];
+           // int midSide[CAMERA_H];
 
             for (int i = NEAR_LINE; i >= FAR_LINE; i--) {
                 leftSide[i] = kl * (i - leftDownJumpPoint) + left_line[leftDownJumpPoint];
                 rightSide[i] = kr * (i - rightDownJumpPoint) + right_line[rightDownJumpPoint];
+              //  midSide[i]=(leftSide[i]+rightSide[i])/2;
             }
             //寻找对应的上方赛道
+
+
             int j_mid[CAMERA_H] = { 0 };
 
             for (int i = NEAR_LINE; i >= FAR_LINE; i--) {
                 j_mid[i] = j_continue[i];
                 for (int j = 1; j <= my_road[i].white_num; j++) {
                     if (dirction == -1 * LEFT) {
-                        if (abs(my_road[i].connected[j].left - leftSide[i]) <= abs(my_road[i].connected[j_mid[i]].left - leftSide[i]) && my_road[i].connected[j].width > 20) {
+                        if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 -(leftSide[i]+rightSide[i])/2) <= abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right)/2 - (leftSide[i]+rightSide[i])/2) && my_road[i].connected[j].width > 20) {
                             j_mid[i] = j;
                         }
                     }
                     else if (dirction == -1 * RIGHT) {
-                        if (abs(my_road[i].connected[j].right - rightSide[i]) < abs(my_road[i].connected[j_mid[i]].right - rightSide[i]) && my_road[i].connected[j].width > 20) {
+                        if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 - (leftSide[i]+rightSide[i])/2) < abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right)/2 - (leftSide[i]+rightSide[i])/2) && my_road[i].connected[j].width > 20) {
                             j_mid[i] = j;
                         }
                     }
@@ -2887,7 +2898,7 @@ void  design_cross_titl_two_two() {
                 if (dirction == LEFT) {
                     uint8_t min = rightUpJumpPoint;
                     uint8_t i = min;
-                    while (my_road[i].connected[j_mid[i]].left > left_side[i] + 1 && i <= 75) {
+                    while (i <= 75 && my_road[i].connected[j_mid[i]].left > left_side[i] + 1 ) {
                         if (my_road[i].connected[j_mid[i]].left > my_road[min].connected[j_mid[min]].left) {
                             min = i;
                         }
@@ -2898,7 +2909,7 @@ void  design_cross_titl_two_two() {
                 else if (dirction == RIGHT) {
                     uint8_t min = leftUpJumpPoint;
                     uint8_t i = min;
-                    while (my_road[i].connected[j_mid[i]].right < right_side[i] - 1 && i <= 75) {
+                    while (i <= 75 && my_road[i].connected[j_mid[i]].right < right_side[i] - 1 ) {
                         if (my_road[i].connected[j_mid[i]].right < my_road[min].connected[j_mid[min]].right) {
                             min = i;
                         }
@@ -2927,7 +2938,7 @@ void  design_cross_titl_two_two() {
                 if (dirction == LEFT) {
                     uint8_t min = FAR_LINE;
                     uint8_t ii = min;
-                    while (my_road[ii].connected[j_mid[ii]].left > left_side[ii] && ii <= 75) {
+                    while (  ii <= 75 && my_road[ii].connected[j_mid[ii]].left > left_side[ii] ) {
                         if (my_road[ii].connected[j_mid[ii]].left > my_road[min].connected[j_mid[min]].left) {
                             min = ii;
                         }
@@ -2960,7 +2971,7 @@ void  design_cross_titl_two_two() {
                 else if (dirction == RIGHT) {
                     uint8_t min = FAR_LINE;
                     uint8_t ii = min;
-                    while (my_road[ii].connected[j_mid[ii]].right < right_side[ii] && ii <= 75) {
+                    while ( ii <= 75 &&  my_road[ii].connected[j_mid[ii]].right < right_side[ii] ) {
                         if (my_road[ii].connected[j_mid[ii]].right < my_road[min].connected[j_mid[min]].right) {
                             min = ii;
                         }
@@ -3241,7 +3252,7 @@ void  design_cross_titl_two_two() {
 
                             max = leftUpJumpPoint;
                             int i = leftUpJumpPoint;
-                            while (my_road[i].connected[j_mid[i]].right < right_side[i] && i <= 80) {
+                            while ( i <= 80 && my_road[i].connected[j_mid[i]].right < right_side[i]) {
                                 if (my_road[max].connected[j_mid[max]].right > my_road[i].connected[j_mid[i]].right) {
                                     max = i;
                                 }
@@ -3269,7 +3280,7 @@ void  design_cross_titl_two_two() {
                             max = rightUpJumpPoint;
                             if (rightUpJumpPoint != 119) {
                                 int i = rightUpJumpPoint;
-                                while (my_road[i].connected[j_mid[i]].left > left_side[i] && i <= 80) {
+                                while (i <= 80 && my_road[i].connected[j_mid[i]].left > left_side[i] ) {
                                     if (my_road[max].connected[j_mid[max]].left < my_road[i].connected[j_mid[i]].left) {
                                         max = i;
                                     }
@@ -6617,11 +6628,12 @@ void island_out_straight(int type) {
                 break;
             }
         }*/
-        if (calculate_slope(20, 40, LEFT) > -1.4 && calculate_slope(60, 80, LEFT) > -1.4) {
+        if (calculate_slope(20, 40, LEFT) > - 1 && calculate_slope(60, 80, LEFT) > -1
+            && calculate_slope(20, 40, LEFT) <=0.2 && calculate_slope(60, 80, LEFT) <= 0.2) {
             flag = 1;
         }
         //////////////////////////////////////////printf("flag1=%d\n", flag);
-        if (fabs(calculate_slope(20, 40, LEFT) - calculate_slope(60, 80, LEFT)) > 0.1
+        if (fabs(calculate_slope(20, 40, LEFT) - calculate_slope(60, 80, LEFT)) > 0.15
             || calculate_slope(30, 50, LEFT) > 0 || calculate_slope(60, 80, LEFT) > 0) {
             flag = 0;
         }
@@ -6638,7 +6650,8 @@ void island_out_straight(int type) {
             }
         }*/
     //}
-           if (calculate_slope(20, 40, RIGHT) < 1.4 && calculate_slope(60, 80, RIGHT) < 1.4) {
+           if (calculate_slope(20, 40, RIGHT) < 1 && calculate_slope(60, 80, RIGHT) < 1
+               && calculate_slope(20, 40, LEFT) >=-0.1 && calculate_slope(60, 80, LEFT) >= -0.1) {
                flag = 1;
            }
 
@@ -7247,95 +7260,95 @@ void carPark_in()
     int flag=0;
     int gapNumber = 0;
 
-    double kl1;
-
-    ////////////////////////////////////////////
-    double ySum1 = 0;
-    double y2Sum1 = 0;
-    double xSum1 = 0;
-    double xySum1 = 0;
-    int num1 = 35 - 15 + 1;
-    for (int i = 15; i <= 35; i++) {
-        xSum1 += my_road[i].connected[1].left;
-        ySum1 += i;
-        y2Sum1 += i * i;
-        xySum1 += i * my_road[i].connected[1].left;
-    }
-    if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
-        kl1 = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
-    }
-    else {
-        kl1 = 0;
-    }
-
-
-                ///////////////////////////////////////////
-    double kl2;
-    ////////////////////////////////////////////
-    ySum1 = 0;
-    y2Sum1 = 0;
-    xSum1 = 0;
-    xySum1 = 0;
-    num1 = 95 - 75 + 1;
-    for (int i = 75; i <= 95; i++) {
-        xSum1 += my_road[i].connected[1].left;
-        ySum1 += i;
-        y2Sum1 += i * i;
-        xySum1 += i * my_road[i].connected[1].left;
-    }
-    if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
-        kl2 = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
-    }
-    else {
-        kl2 = 0;
-    }
-    ///////////////////////////////////////////
-    double kr1;
-            ////////////////////////////////////////////
-    ySum1 = 0;
-    y2Sum1 = 0;
-    xSum1 = 0;
-    xySum1 = 0;
-    num1 = 35 - 15 + 1;
-    for (int i = 15; i <= 35; i++) {
-        xSum1 += my_road[i].connected[my_road[i].white_num].right;
-        ySum1 += i;
-        y2Sum1 += i * i;
-        xySum1 += i * my_road[i].connected[my_road[i].white_num].right;
-    }
-    if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
-        kr1 = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
-    }
-    else {
-        kr1 = 0;
-    }
-    ///////////////////////////////////////////
-    double kr2;
-    ////////////////////////////////////////////
-    ySum1 = 0;
-    y2Sum1 = 0;
-    xSum1 = 0;
-    xySum1 = 0;
-    num1 = 95 - 75 + 1;
-    for (int i = 75; i <= 95; i++) {
-        xSum1 += my_road[i].connected[my_road[i].white_num].right;
-        ySum1 += i;
-        y2Sum1 += i * i;
-        xySum1 += i * my_road[i].connected[my_road[i].white_num].right;
-    }
-    if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
-        kr2 = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
-    }
-    else {
-        kr2 = 0;
-    }
+//    double kl1;
+//
+//    ////////////////////////////////////////////
+//    double ySum1 = 0;
+//    double y2Sum1 = 0;
+//    double xSum1 = 0;
+//    double xySum1 = 0;
+//    int num1 = 35 - 15 + 1;
+//    for (int i = 15; i <= 35; i++) {
+//        xSum1 += my_road[i].connected[1].left;
+//        ySum1 += i;
+//        y2Sum1 += i * i;
+//        xySum1 += i * my_road[i].connected[1].left;
+//    }
+//    if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
+//        kl1 = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
+//    }
+//    else {
+//        kl1 = 0;
+//    }
+//
+//
+//                ///////////////////////////////////////////
+//    double kl2;
+//    ////////////////////////////////////////////
+//    ySum1 = 0;
+//    y2Sum1 = 0;
+//    xSum1 = 0;
+//    xySum1 = 0;
+//    num1 = 95 - 75 + 1;
+//    for (int i = 75; i <= 95; i++) {
+//        xSum1 += my_road[i].connected[1].left;
+//        ySum1 += i;
+//        y2Sum1 += i * i;
+//        xySum1 += i * my_road[i].connected[1].left;
+//    }
+//    if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
+//        kl2 = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
+//    }
+//    else {
+//        kl2 = 0;
+//    }
+//    ///////////////////////////////////////////
+//    double kr1;
+//            ////////////////////////////////////////////
+//    ySum1 = 0;
+//    y2Sum1 = 0;
+//    xSum1 = 0;
+//    xySum1 = 0;
+//    num1 = 35 - 15 + 1;
+//    for (int i = 15; i <= 35; i++) {
+//        xSum1 += my_road[i].connected[my_road[i].white_num].right;
+//        ySum1 += i;
+//        y2Sum1 += i * i;
+//        xySum1 += i * my_road[i].connected[my_road[i].white_num].right;
+//    }
+//    if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
+//        kr1 = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
+//    }
+//    else {
+//        kr1 = 0;
+//    }
+//    ///////////////////////////////////////////
+//    double kr2;
+//    ////////////////////////////////////////////
+//    ySum1 = 0;
+//    y2Sum1 = 0;
+//    xSum1 = 0;
+//    xySum1 = 0;
+//    num1 = 95 - 75 + 1;
+//    for (int i = 75; i <= 95; i++) {
+//        xSum1 += my_road[i].connected[my_road[i].white_num].right;
+//        ySum1 += i;
+//        y2Sum1 += i * i;
+//        xySum1 += i * my_road[i].connected[my_road[i].white_num].right;
+//    }
+//    if ((num1 * y2Sum1 - ySum1 * ySum1) != 0) {
+//        kr2 = (double)(num1 * xySum1 - xSum1 * ySum1) / (num1 * y2Sum1 - ySum1 * ySum1);
+//    }
+//    else {
+//        kr2 = 0;
+//    }
 //    if (fabs(kl1-kl2)<0.3||fabs(kr1-kr2)<0.3){                                                                          ///////////////////////////////////////////
-    for (carParkX = 15; carParkX < 90; carParkX++)
+    for (carParkX = 25; carParkX < 105; carParkX++)
     {
-        if (my_road[carParkX].white_num > 4 && my_road[carParkX + 2].white_num > 4 && my_road[carParkX - 2].white_num > 4 && my_road[carParkX + 4].white_num > 4 && my_road[carParkX - 4].white_num > 4)
+        if (my_road[carParkX].white_num > 4 && my_road[carParkX - 2].white_num > 4 && my_road[carParkX - 6].white_num > 3 && my_road[carParkX - 4].white_num > 3)
         {
 
-            if(my_road[carParkX].connected[my_road[carParkX].white_num].width > 20 || my_road[carParkX].connected[1].width > 20)
+            if (my_road[carParkX].connected[my_road[carParkX].white_num].width > 10 || my_road[carParkX].connected[1].width > 10)
             {
                 for (int gap = 1; gap <= my_road[carParkX].white_num; gap++)
                 {
@@ -7380,11 +7393,43 @@ void carPark_in()
 //        }
     }
     else if (flag == 0) {
-        lastState[10] = 0;
-        lastTwoState[10] = 0;
+//        state = 0;
+//        lastState[10] = 0;
+//        lastTwoState[10] = 0;
     }
 }
 
+void carPark_out()
+{
+    int flag=0;
+    int gapNumber = 0;
+
+    for (carParkX = 25; carParkX < 105; carParkX++)
+    {
+        if (my_road[carParkX].white_num > 4 && my_road[carParkX - 2].white_num > 4 && my_road[carParkX - 6].white_num > 3 && my_road[carParkX - 4].white_num > 3)
+        {
+
+            if (my_road[carParkX].connected[my_road[carParkX].white_num].width > 10 || my_road[carParkX].connected[1].width > 10)
+            {
+                flag = 1;
+                if(flag == 1)
+                {
+                    break;
+                }
+            }
+
+
+        }
+    }
+    if (flag == 1) {
+        state = 14;
+
+    }
+    else if (flag == 0) {
+        state = 0;
+
+    }
+}
 
 void searchParkLine()
 {
@@ -9101,7 +9146,7 @@ void straight_protection() {
 
 
     if (flagL == 1 && flagR == 0) {
-        design_straight_route(RIGHT);
+//        design_straight_route(RIGHT);
 //        if(fabs(calculate_slope(50,70,LEFT))<1 && straight_variance(80, 50) >= 2 && straight_variance(70, 50) >= 2){
 //            straightFlag = 2;
 //        }
@@ -9111,7 +9156,7 @@ void straight_protection() {
         else straightFlag = 0;
     }
     else if (flagL == 0 && flagR == 1) {
-        design_straight_route(LEFT);
+//        design_straight_route(LEFT);
 //        if(fabs(calculate_slope(50,70,RIGHT))<1 && straight_variance(80, 50) >= 2 && straight_variance(70, 50) >= 2){
 //            straightFlag = 2;
 //        }

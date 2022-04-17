@@ -80,7 +80,7 @@
 #define LEFT_SIDE 0//图像处理左边界
 #define RIGHT_SIDE 187//图像处理右边界
 #define MISS 255
-#define white_num_MAX 10//每行最多允许白条数
+#define white_num_MAX 11//每行最多允许白条数
 
 #define white_straight 37 //正视直道的格数
 #define LEFT 1
@@ -146,7 +146,7 @@ extern int startCount;
 extern int rampWayCount;
 extern int parkJudgeCount;
 
-extern int lastState[10];
+extern int lastState[11];
 
 extern int leftPark, rightPark;
 extern int straightFlag, lastStraightFlag;
@@ -198,12 +198,12 @@ typedef struct {
 }coordinate;
 
 
-void circle_foresee();
-void head_clear(void);
+//void circle_foresee();
+//void head_clear(void);
 void OTSU();
 void part_OUST();
 void iteration();
-void THRE(int num);
+//void THRE(int num);
 int find_f(int a);
 void search_white_range();
 void find_all_connect();
@@ -212,14 +212,14 @@ uint8_t find_continue(uint8_t i_start, uint8_t j_start);
 void ordinary_two_line(void);
 void image_main();
 void get_mid_line(void);
-void sharpen();
-void IPM_map();
+//void sharpen();
+//void IPM_map();
 void distortion();
 //void show_dis(cv::Mat image_undisor);
 void my_memset(uint8_t* ptr, uint8_t num, uint8_t size);
 
 void transform();
-void orinary_two_line_history();
+//void orinary_two_line_history();
 //道路规划
 void find_part_jumppoint(int yStart, int yEnd, int type);
 double calculate_slope(int start, int end, int type);
@@ -284,6 +284,8 @@ void cross_circle_ing();
 
 //入库
 void carPark_in();
+void carPark_out();
+
 void searchParkLine();
 void design_park();
 

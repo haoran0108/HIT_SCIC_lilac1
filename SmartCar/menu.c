@@ -88,7 +88,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 
     cross_circle = MENU_fileInit(cross_circle, 1, 1.0, "crocircle", 3, none, &island, &carPark, NULL, &cross_circle_param1);
-    cross_circle_param1 = MENU_fileInit(cross_circle_param1, 50, 1.0, "cc-count", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
+    cross_circle_param1 = MENU_fileInit(cross_circle_param1, 30, 1.0, "cc-count", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
     cross_circle_param2 = MENU_fileInit(cross_circle_param2, 55, 1.0, "param2", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
     cross_circle_param3 = MENU_fileInit(cross_circle_param3, 55, 1.0, "param3", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
     cross_circle_param4 = MENU_fileInit(cross_circle_param4, 55, 1.0, "param4", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
@@ -116,14 +116,14 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     folkParam1 = MENU_fileInit(folkParam1, 45, 1.0, "param1", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
     folkParam2 = MENU_fileInit(folkParam2, 15, 1.0, "param2", 3, dataint, &folkParam1, &folkParam3, NULL, NULL);
     folkParam3 = MENU_fileInit(folkParam3, 95, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
-    folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkParam5, NULL, NULL);
-    folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);
-    folkParam6 = MENU_fileInit(folkParam6, 1, 1.0, "param6", 7, dataint, &folkParam5, &folkParam7, NULL, NULL);
-    folkParam7 = MENU_fileInit(folkParam7, 1, 1.0, "param7", 2, dataint, &folkParam6, &folkParam8, NULL, NULL);
-    folkParam8 = MENU_fileInit(folkParam8, 1, 1.0, "param8", 3, dataint, &folkParam7, &folkParam9, NULL, NULL);
-    folkParam9 = MENU_fileInit(folkParam9, 1, 1.0, "param9", 4, dataint, &folkParam8, &folkParam10, NULL, NULL);
-    folkParam10 = MENU_fileInit(folkParam10, 1, 1.0, "param10", 5, dataint, &folkParam9, &folkBottom, NULL, NULL);
-    folkBottom = MENU_fileInit(folkBottom, 1, 1.0, "bottom", 6, none, &folkParam10, NULL, NULL, NULL);
+    folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkBottom, NULL, NULL);
+//    folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);
+//    folkParam6 = MENU_fileInit(folkParam6, 1, 1.0, "param6", 7, dataint, &folkParam5, &folkParam7, NULL, NULL);
+//    folkParam7 = MENU_fileInit(folkParam7, 1, 1.0, "param7", 2, dataint, &folkParam6, &folkParam8, NULL, NULL);
+//    folkParam8 = MENU_fileInit(folkParam8, 1, 1.0, "param8", 3, dataint, &folkParam7, &folkParam9, NULL, NULL);
+//    folkParam9 = MENU_fileInit(folkParam9, 1, 1.0, "param9", 4, dataint, &folkParam8, &folkParam10, NULL, NULL);
+//    folkParam10 = MENU_fileInit(folkParam10, 1, 1.0, "param10", 5, dataint, &folkParam9, &folkBottom, NULL, NULL);
+    folkBottom = MENU_fileInit(folkBottom, 1, 1.0, "bottom", 6, none, &folkParam4, NULL, NULL, NULL);
 
 //    Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
 //    Cross_PM = MENU_fileInit(Cross_PM, 1, 0.5, "crossPM", 3, datafloat, &Cross_PB, &Cross_PS, NULL, NULL);
