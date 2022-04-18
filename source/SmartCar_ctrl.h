@@ -157,7 +157,9 @@ int16_t CTRL_speedGetRight();
 
 void speedUP_define();
 int foresee();
-void lowpassFilter();//低通滤波
+void CTRL_lowpassFilter();//低通滤波
+void CTRL_currentAverageFilter();//电流环平均滑动滤波
+
 void motorParamDefine();
 
 #endif /* SOURCE_SMARTCAR_CTRL_H_ */

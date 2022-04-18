@@ -195,9 +195,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 5, none, &gear3, &Threshold, NULL, &currentRTKP);
     currentRTKP = MENU_fileInit(currentRTKP, 3, 3.4, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentK, NULL);
-    currentRTKI = MENU_fileInit(currentRTKI, 2, 1.5, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
+    currentRTKI = MENU_fileInit(currentRTKI, 2, 2.2, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
     currentLFKP = MENU_fileInit(currentLFKP, 3, 3.4, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
-    currentLFKI = MENU_fileInit(currentLFKI, 2, 1.5, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
+    currentLFKI = MENU_fileInit(currentLFKI, 2, 2.2, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
 //    currentKD = MENU_fileInit(currentKD, 2, 3.0, "motorKD", 4, datafloat, &currentRTKI, &expectC, NULL, NULL);
     expectC = MENU_fileInit(expectC, 2200, 9.5, "expect", 6, dataint, &currentLFKI, NULL, NULL, NULL);
 
@@ -239,10 +239,10 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display1 = MENU_fileInit(display1, 40, 133.03, "motor", 2, none, NULL, &display2, &display, &LFKP);
     display2 = MENU_fileInit(display2, 25, 33.71, "slowmotor", 3, none, &display1, &display3, NULL, &slowLFKP);
 
-    LFKP = MENU_fileInit(LFKP, 40, 133.03, "LFKP", 2, dataint, NULL, &LFKI, &display1, NULL);
-    LFKI = MENU_fileInit(LFKI, 35, 133.03, "LFKI", 3, dataint, &LFKP, &RTKP, NULL, NULL);
-    RTKP = MENU_fileInit(RTKP, 40, 133.03, "RTKP", 4, dataint, &LFKI, &RTKI, NULL, NULL);
-    RTKI = MENU_fileInit(RTKI, 35, 133.03, "RTKI", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
+    LFKP = MENU_fileInit(LFKP, 15, 133.03, "LFKP", 2, dataint, NULL, &LFKI, &display1, NULL);
+    LFKI = MENU_fileInit(LFKI, 5, 133.03, "LFKI", 3, dataint, &LFKP, &RTKP, NULL, NULL);
+    RTKP = MENU_fileInit(RTKP, 15, 133.03, "RTKP", 4, dataint, &LFKI, &RTKI, NULL, NULL);
+    RTKI = MENU_fileInit(RTKI, 5, 133.03, "RTKI", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
     fastLFKP = MENU_fileInit(fastLFKP, 60, 133.03, "fastLFKP", 6, dataint, &RTKI, &fastLFKI, NULL, NULL);
     fastLFKI = MENU_fileInit(fastLFKI, 50, 133.03, "fastLFKI", 7, dataint, &fastLFKP, &fastRTKP, NULL, NULL);
     fastRTKP = MENU_fileInit(fastRTKP, 60, 133.03, "fastRTKP", 2, dataint, &fastLFKI, &fastRTKI, NULL, NULL);
@@ -253,9 +253,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     slowRTKP = MENU_fileInit(slowRTKP, 25, 133.03, "slowRTKP", 4, dataint, &slowLFKI, &slowRTKI, NULL, NULL);
     slowRTKI = MENU_fileInit(slowRTKI, 15, 133.03, "slowRTKI", 5, dataint, &slowRTKP, NULL, NULL, NULL);
 
-    display3 = MENU_fileInit(display3, 40, 0.9, "alpha", 4, datafloat, &display2, &display4, NULL, NULL);
-    display4 = MENU_fileInit(display4, 10, 1, "PARK", 5, dataint, &display3, &display5, NULL, NULL);
-    display5 = MENU_fileInit(display5, 10, 1.2, "speedUP2", 6, datafloat, &display4, &display6, NULL, NULL);
+    display3 = MENU_fileInit(display3, 40, 0.95, "alpha", 4, datafloat, &display2, &display4, NULL, NULL);
+    display4 = MENU_fileInit(display4, 10, 0.5, "beta1", 5, datafloat, &display3, &display5, NULL, NULL);
+    display5 = MENU_fileInit(display5, 10, 0.3, "beta2", 6, datafloat, &display4, &display6, NULL, NULL);
     display6 = MENU_fileInit(display6, 2, 1.1, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);
     display7 = MENU_fileInit(display7, 100, 0.85, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
     display8 = MENU_fileInit(display8, 95, 7.91, "stopTHRE", 3, dataint, &display7, &display9, NULL, NULL);

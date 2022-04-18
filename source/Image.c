@@ -2242,7 +2242,6 @@ void straight_cross_in() {
 
 
     uint8_t i = 106;
-//    test_varible[2] = 10;//进十字时检查bug 进循环前是10 出循环是20 四个循环分别对应test_varible[2][3][4][5]
     while (leftSide[i] > left_side[i] && i>=5 ) {
         if (leftSide[i - 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i - 2] > 4
             && leftSide[i + 1] - leftSide[i] < 3 && leftSide[i + 2] - leftSide[i] < 3
@@ -2253,10 +2252,8 @@ void straight_cross_in() {
         }
         i--;
     }
-//    test_varible[2] = 20;
 
     i = 106;
-//    test_varible[3] = 10;
     while (rightSide[i] < right_side[i] && i>=5) {
         if (rightSide[i - 1] > rightSide[i] + 4 && rightSide[i - 2] - rightSide[i] > 4
             && rightSide[i + 1] - rightSide[i] > -3 && rightSide[i + 2] - rightSide[i] > -3
@@ -2267,10 +2264,8 @@ void straight_cross_in() {
         }
         i--;
     }
-//    test_varible[3] = 20;
 
     i = 2;
-//    test_varible[4] = 10;
     while (leftSide[i] > left_side[i] && i<=106) {
         if (leftSide[i + 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i + 2] > 4
             && leftSide[i - 1] - leftSide[i] < 3 && leftSide[i - 2] - leftSide[i] < 3
@@ -2281,10 +2276,8 @@ void straight_cross_in() {
         }
         i++;
     }
-//    test_varible[4] = 20;
 
     i = 2;
-//    test_varible[5] = 10;
     while (rightSide[i] < right_side[i] && i<=106) {
         if (rightSide[i +1] > rightSide[i] + 4 && rightSide[i + 2] - rightSide[i] > 4
             && rightSide[i - 1] - rightSide[i] > -3 && rightSide[i - 2] - rightSide[i] > -3
@@ -2295,7 +2288,6 @@ void straight_cross_in() {
         }
         i++;
     }
-//    test_varible[5] = 20;
     double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 10, LEFT);
     double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 10, RIGHT);
     //下方太歪，斜进，不进
@@ -2402,7 +2394,6 @@ void design_straight_cross() {
 
 
     uint8_t i = 106;
-//    test_varible[2] = 30;//出十字时检查bug 进循环前是30 出循环时是40 四个循环分别对应test_varible[2][3][4][5]
     while (leftSide[i] > left_side[i] && i>=5) {
         if (leftSide[i - 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i - 2] > 4
             && leftSide[i + 1] - leftSide[i] < 3 && leftSide[i + 2] - leftSide[i] < 3
@@ -2413,10 +2404,8 @@ void design_straight_cross() {
         }
         i--;
     }
-//    test_varible[2] = 40;
 
     i = 106;
-//    test_varible[3] = 30;
     while (rightSide[i] < right_side[i] && i>=5) {
         if (rightSide[i - 1] > rightSide[i] + 4 && rightSide[i - 2] - rightSide[i] > 4
             && rightSide[i + 1] - rightSide[i] > -3 && rightSide[i + 2] - rightSide[i] > -3
@@ -2427,10 +2416,8 @@ void design_straight_cross() {
         }
         i--;
     }
-//    test_varible[3] = 40;
 
     i = 2;
-//    test_varible[4] = 30;
     while (leftSide[i] > left_side[i] && i<=106) {
         if (leftSide[i + 1] < leftSide[i] - 4 && leftSide[i] - leftSide[i + 2] > 4
             && leftSide[i - 1] - leftSide[i] < 3 && leftSide[i - 2] - leftSide[i] < 3
@@ -2441,10 +2428,8 @@ void design_straight_cross() {
         }
         i++;
     }
-//    test_varible[4] = 40;
 
     i = 2;
-//    test_varible[5] = 30;
     while (rightSide[i] < right_side[i] && i<=106) {
         if (rightSide[i + 1] > rightSide[i] + 4 && rightSide[i + 2] - rightSide[i] > 4
             && rightSide[i - 1] - rightSide[i] > -3 && rightSide[i - 2] - rightSide[i] > -3
@@ -2455,7 +2440,6 @@ void design_straight_cross() {
         }
         i++;
     }
-//    test_varible[5] = 40;
 
     if (rightDownJumpPoint > 90 || leftDownJumpPoint > 90) {
 
@@ -9344,26 +9328,6 @@ void rampwayDown()
     CTRL_rampGyroUpdate();
 
 
-//    if(inv_accl[2] < 9.3 && rampFlag1 == 0)
-//    {
-//        rampFlag1 = 1;
-//    }
-//    if(inv_accl[2] > 9.73 && rampFlag1 == 1)
-//    {
-//        rampFlag2 = 1;
-//    }
-//    if(inv_accl[2] < 9.3 && rampFlag1 == 1 && rampFlag2 == 1)
-//    {
-//        rampFlag3 = 1;
-//    }
-//    if(rampFlag1 == 1 && rampFlag2 == 1 && rampFlag3 == 1)
-//    {
-//        state = 0;
-//    }
-//    test_varible[15] = inv_accl[2];
-//    test_varible[4] = rampFlag1;
-//    test_varible[5] = rampFlag2;
-//    test_varible[6] = rampFlag3;
     if(TFMINI_Distance > 100)
     {
         if(lastTwoState[8] == 0)
