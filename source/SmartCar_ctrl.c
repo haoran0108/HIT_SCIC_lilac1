@@ -191,7 +191,8 @@ void CTRL_speedLoopPID()
 
     errorML.currentError = expectL + speedL;//取偏差
     sumErrorLF += errorML.currentError;
-    errorML.delta = errorML.currentError - errorML.lastError;
+//    errorML.delta = errorML.currentError - errorML.lastError;
+    errorML.delta = (errorML.currentError - errorML.lastError) * speedKdLpf.floatValue + errorML.delta * (1 - speedKdLpf.floatValue);
 //    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
     currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
@@ -201,7 +202,9 @@ void CTRL_speedLoopPID()
 
     errorMR.currentError = expectR - speedR;//取偏差
     sumErrorRT += errorMR.currentError;
-    errorMR.delta = errorMR.currentError - errorMR.lastError;
+//    errorMR.delta = errorMR.currentError - errorMR.lastError;
+    errorMR.delta = (errorMR.currentError - errorMR.lastError) * speedKdLpf.floatValue + errorMR.delta * (1 - speedKdLpf.floatValue);
+
 //    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
     currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
@@ -235,6 +238,7 @@ void CTRL_curLoopPID()
 
     currentErrorR.currentError = currentExpectRT - currentRT[0];
     currentErrorR.delta = currentErrorR.currentError - currentErrorR.lastError;
+//    currentErrorR.delta = (currentErrorR.currentError - currentErrorR.lastError) * currentKdLpf.floatValue + currentErrorR.delta * (1 - currentKdLpf.floatValue);
     mySpeedR = (int32)(mySpeedR + currentErrorR.currentError * currentKI_R + currentErrorR.delta * currentKP_R);
     currentErrorR.lastError = currentErrorR.currentError;
 
@@ -242,6 +246,8 @@ void CTRL_curLoopPID()
     currentErrorL.currentError = currentExpectLF - currentLF[0];
 //    currentErrorL.currentError = 2250 - currentLF;
     currentErrorL.delta = currentErrorL.currentError - currentErrorL.lastError;
+//    currentErrorL.delta = (currentErrorL.currentError - currentErrorL.lastError) * currentKdLpf.floatValue + currentErrorL.delta * (1 - currentKdLpf.floatValue);
+
     mySpeedL = (int32)(mySpeedL + currentErrorL.currentError * currentKI_L + currentErrorL.delta * currentKP_L);
     currentErrorL.lastError = currentErrorL.currentError;
 
@@ -966,7 +972,7 @@ int16_t CTRL_speedGetLeft()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚
 void CTRL_lowpassFilter()
 {
     float alpha;
-    alpha = display3.floatValue;
+    alpha = speedFilter.floatValue;
     speedL = speedL * alpha + lastSpeedL * (1 - alpha);
     speedR = speedR * alpha + lastSpeedR * (1 - alpha);
 
@@ -979,10 +985,10 @@ void CTRL_currentAverageFilter()
 //    currentLF[0] = (currentLF[4] + currentLF[3] + currentLF[2] + currentLF[1] + currentLF[0]) / 5;
 //    currentRT[0] = (currentRT[2] + currentRT[1] + currentRT[0]) / 3;
 //    currentLF[0] = (currentLF[2] + currentLF[1] + currentLF[0]) / 3;
-    if((display5.floatValue + display4.floatValue) < 1)
+    if((currentFilter1.floatValue + currentFilter2.floatValue) < 1)
     {
-        currentRT[0] = currentRT[2] * (1 - display5.floatValue - display4.floatValue) + currentRT[1] * display5.floatValue + currentRT[0] * display4.floatValue;
-        currentLF[0] = currentLF[2] * (1 - display5.floatValue - display4.floatValue) + currentLF[1] * display5.floatValue + currentLF[0] * display4.floatValue;
+        currentRT[0] = currentRT[2] * (1 - currentFilter1.floatValue - currentFilter2.floatValue) + currentRT[1] * currentFilter2.floatValue + currentRT[0] * currentFilter1.floatValue;
+        currentLF[0] = currentLF[2] * (1 - currentFilter1.floatValue - currentFilter2.floatValue) + currentLF[1] * currentFilter2.floatValue + currentLF[0] * currentFilter1.floatValue;
 
     }
 

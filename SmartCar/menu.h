@@ -65,6 +65,7 @@ extern node_t parkCount, startGyro, endGyro, search_line, parkDelay;
 extern node_t rampCount, rampDistance, rampSpeed;
 extern node_t folkWay;
 extern node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6, folkParam7, folkParam8, folkParam9, folkParam10, folkBottom;
+extern node_t speedFilter, currentFilter1, currentFilter2, currentKdLpf, speedKdLpf;
 
 extern node_t startWay;
 //-------------------------------------------------------------------------------------------------------------------
