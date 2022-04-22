@@ -77,6 +77,7 @@ int core0_main(void)
     SmartCar_MT9V034_Init();//摄像头初始化，没连摄像头时不能初始化，不然oled就停留在队标页面
     SmartCar_TFMINI_Init();
     GPIO_Init(P22, 0, PUSHPULL, 0);
+    GPIO_Init(P00, 8, PUSHPULL, 0);
 //    SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,1152000,3);
 
     Delay_ms(STM0, 1000);

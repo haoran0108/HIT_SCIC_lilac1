@@ -61,6 +61,8 @@ void SW_readSwitch()
         rampFlag2 = 0;
         rampFlag3 = 0;
         GPIO_Set(P22, 0, 0);
+        GPIO_Set(P00, 8, 0);
+
 //        CTRL_directionAngleClean();
     }
     else
@@ -71,6 +73,7 @@ void SW_readSwitch()
             delayFlag = 1;
         }
 
+        GPIO_Set(P00, 8, 1);
 
     }
 }

@@ -262,7 +262,7 @@ void CTRL_Init()
 //    presentSpeedR.intValue = 1800;
 
     Pit_Init_ms(CCU6_0, PIT_CH0, 5);//定时器中断，给电机使用（0模块0通道）
-    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 700);//舵机
+    SmartCar_Gtm_Pwm_Init(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, 50, 730);//舵机
     /*B、D给pwm，左右轮正转，AB右轮，CD左轮*/
     GPIO_Init(P33, 9,PUSHPULL, 0);//左正
     GPIO_Init(P33, 11,PUSHPULL, 1);//右正
@@ -392,11 +392,11 @@ void CTRL_fuzzyPID()
     servoError.delta = servoError.currentError - servoError.lastError;
 //    servo_error = servoError.currentError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
-    servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
-    if(servoPwm > 775)
-        servoPwm = 775;
-    else if(servoPwm < 625)
-        servoPwm = 625;
+    servoPwm = (uint32)(730 + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
+    if(servoPwm > 810)
+        servoPwm = 810;
+    else if(servoPwm < 655)
+        servoPwm = 655;
 
     servoError.lastError = servoError.currentError;
 
@@ -446,11 +446,11 @@ void CTRL_servoMain()
     {
         if(parkStart == 1)
         {
-            servoPwm = 630;
+            servoPwm = 660;//630
         }
         else if(parkStart == -1)
         {
-            servoPwm = 770;
+            servoPwm = 810;
         }
         else if(parkStart == 0 && flagStop == 0)
         {
@@ -459,11 +459,11 @@ void CTRL_servoMain()
         }
         else if(flagStop == 1 && leftPark == 0 && rightPark == 1)
         {
-            servoPwm = 630;
+            servoPwm = 660;//630
         }
         else if(flagStop == 1 && leftPark == 1 && rightPark == 0)
         {
-            servoPwm = 770;
+            servoPwm = 810;//770
         }
     }
 //    if(GPIO_Read(P13, 2) && parkStart == 1)
