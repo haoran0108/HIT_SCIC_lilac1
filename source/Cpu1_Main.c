@@ -57,12 +57,23 @@ int core1_main(void)
     IfxCpu_waitEvent(&g_cpuSyncEvent, 1);
     SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,921600,3);
     char transport_num = 16;
-
+    GPIO_Init(P02, 7, PUSHPULL, 1);
+    GPIO_Init(P02, 8, PUSHPULL, 1);
     while(1)
     {
 
 
         SmartCar_VarUpload(test_varible, transport_num);
+        if(GPIO_Read(P13, 3))
+        {
+            GPIO_Set(P02, 8, 1);
+            GPIO_Set(P02, 7, 0);
+
+        }
+        else{
+            GPIO_Set(P02, 8, 0);
+            GPIO_Set(P02, 7, 1);
+        }
 
 
     }
