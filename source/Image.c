@@ -1458,10 +1458,10 @@ void judge_type_road() {
     if (state == stateStart) {
         cross_in();
     }
-    if (state == stateStraightCrossIn) {
-        straight_cross_over();
-        design_straight_cross();
-    }
+//    if (state == stateStraightCrossIn) {
+//        straight_cross_over();
+//        design_straight_cross();
+//    }
     if (state == stateInCrossStraight) {
         cross_over();
         design_cross_titl_two_two();
@@ -2596,7 +2596,7 @@ void  design_cross_titl_two_two() {
 
 
 
-            if (calculate_slope(i - 10, i, RIGHT) * calculate_slope(max +4, max + 14, RIGHT) <= 0 && ch > 103) {
+            if (calculate_slope(i - 10, i, RIGHT) * calculate_slope(max +4, max + 14, RIGHT) <= 0 ) {
                 flag1 = 1;
             }
             else if (abs(max - ch) <= 5 && ch <= 100) {
@@ -2616,7 +2616,7 @@ void  design_cross_titl_two_two() {
             }
 
 
-            if (calculate_slope(i - 10, i, LEFT) * calculate_slope(max + 4, max + 14, LEFT) <= 0 && ch > 103) {
+            if (calculate_slope(i - 10, i, LEFT) * calculate_slope(max + 4, max + 14, LEFT) <= 0 ) {
                 flag1 = 1;
             }else if (abs(max - ch) <= 5 && ch <= 100) {
                 flag2 = 1;
@@ -2639,8 +2639,8 @@ void  design_cross_titl_two_two() {
 
             if (leftDownJumpPoint <= 85) {
 
-                double kl = calculate_slope(leftDownJumpPoint, leftDownJumpPoint + 20, LEFT);
-                double kr = calculate_slope(rightDownJumpPoint, rightDownJumpPoint + 20, RIGHT);
+                double kl = calculate_slope(leftDownJumpPoint + 3, leftDownJumpPoint + 20, LEFT);
+                double kr = calculate_slope(rightDownJumpPoint + 3, rightDownJumpPoint + 20, RIGHT);
 
                 for (int i = NEAR_LINE; i >= FAR_LINE; i--) {
                     left_line[i] =  kl*(i-leftDownJumpPoint) + left_line[leftDownJumpPoint];
@@ -2655,7 +2655,8 @@ void  design_cross_titl_two_two() {
                     j_mid[i] = j_continue[i];
                     for (int j = 1; j <= my_road[i].white_num; j++)
                     {
-                        if (abs(94 - (my_road[i].connected[j].left + my_road[i].connected[j].right) / 2) < abs(94 - (my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right) / 2)) {
+                        if (abs(94 - (my_road[i].connected[j].left + my_road[i].connected[j].right) / 2) < abs(94 - (my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right) / 2)
+                               && my_road[i].connected[j].width>=30 ) {
                             j_mid[i] = j;
                         }
                     }
@@ -2683,6 +2684,7 @@ void  design_cross_titl_two_two() {
                         if (1) {
                             for (int i = 5; i <= 90; i++) {
                                 if (my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 5
+                                        && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left)<3
                                     && my_road[i].connected[j_mid[i]].left > left_side[i] && my_road[i + 10].connected[j_mid[i + 10]].left - left_side[i + 10] <= 10) {
                                     leftUpJumpPoint = i;
                                     break;
@@ -2710,6 +2712,7 @@ void  design_cross_titl_two_two() {
                         if (1) {
                             for (int i = 5; i <= 90; i++) {
                                 if (my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -5
+                                    && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) < 3
                                     && my_road[i].connected[j_mid[i]].right < right_side[i] && my_road[i + 10].connected[j_mid[i + 10]].right - right_side[i+10] >= -10) {
                                     rightUpJumpPoint = i;
                                     break;
@@ -2801,10 +2804,10 @@ void  design_cross_titl_two_two() {
                     left_line[i] = my_road[i].connected[j_mid[i]].left;
                     right_line[i] = my_road[i].connected[j_mid[i]].right;
                     if (leftUpJumpPoint < i) {
-                        left_line[i] = kl * (i - leftUpJumpPoint) + my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left;
+                        left_line[i] = kl * (i - leftUpJumpPoint + 5) + my_road[leftUpJumpPoint - 5].connected[j_mid[leftUpJumpPoint - 5]].left;
                     }
                     if (i > rightUpJumpPoint) {
-                        right_line[i] = kr * (i - rightUpJumpPoint) + my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right;
+                        right_line[i] = kr * (i - rightUpJumpPoint + 5) + my_road[rightUpJumpPoint - 5].connected[j_mid[rightUpJumpPoint - 5]].right;
                     }
                 }
 
@@ -2848,12 +2851,12 @@ void  design_cross_titl_two_two() {
                 j_mid[i] = j_continue[i];
                 for (int j = 1; j <= my_road[i].white_num; j++) {
                     if (dirction == -1 * LEFT) {
-                        if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 -(leftSide[i]+rightSide[i])/2) <= abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right)/2 - (leftSide[i]+rightSide[i])/2) && my_road[i].connected[j].width > 20) {
+                        if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 -(leftSide[i]+rightSide[i])/2) <= abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right)/2 - (leftSide[i]+rightSide[i])/2) && my_road[i].connected[j].width > 30) {
                             j_mid[i] = j;
                         }
                     }
                     else if (dirction == -1 * RIGHT) {
-                        if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 - (leftSide[i]+rightSide[i])/2) < abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right)/2 - (leftSide[i]+rightSide[i])/2) && my_road[i].connected[j].width > 20) {
+                        if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 - (leftSide[i]+rightSide[i])/2) < abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right)/2 - (leftSide[i]+rightSide[i])/2) && my_road[i].connected[j].width > 30) {
                             j_mid[i] = j;
                         }
                     }
@@ -3053,7 +3056,8 @@ void  design_cross_titl_two_two() {
                                 j_mid[i] = j_continue[i];
                                 for (int j = 1; j <= my_road[i].white_num; j++) {
                                     if (my_road[i].connected[j].width > 10) {
-                                        if (abs(my_road[i].connected[j].left - leftSide[i]) < abs(leftSide[i] - my_road[i].connected[j_mid[i]].left)) {
+                                        if (abs(my_road[i].connected[j].left - leftSide[i]) < abs(leftSide[i] - my_road[i].connected[j_mid[i]].left)
+                                                && my_road[i].connected[j].width>30) {
                                             j_mid[i] = j;
                                         }
                                     }
@@ -3140,7 +3144,8 @@ void  design_cross_titl_two_two() {
                                 j_mid[i] = j_continue[i];
                                 for (int j = 1; j <= my_road[i].white_num; j++) {
                                     if (my_road[i].connected[j].width > 10) {
-                                        if (abs(my_road[i].connected[j].right - rightSide[i]) < abs(rightSide[i] - my_road[i].connected[j_mid[i]].right)) {
+                                        if (abs(my_road[i].connected[j].right - rightSide[i]) < abs(rightSide[i] - my_road[i].connected[j_mid[i]].right)
+                                                && my_road[i].connected[j].width>30) {
                                             j_mid[i] = j;
                                         }
                                     }
@@ -3207,7 +3212,8 @@ void  design_cross_titl_two_two() {
                     j_mid[i] = j_continue[i];
                     for (int j = 1; j <= my_road[i].white_num; j++)
                     {
-                        if (abs(94 - (my_road[i].connected[j].left + my_road[i].connected[j].right) / 2) < abs(94 - (my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right) / 2)) {
+                        if (abs(94 - (my_road[i].connected[j].left + my_road[i].connected[j].right) / 2) < abs(94 - (my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right) / 2)
+                                && my_road[i].connected[j].width>30) {
                             j_mid[i] = j;
                         }
                     }
@@ -3235,6 +3241,7 @@ void  design_cross_titl_two_two() {
                         if (1) {
                             for (int i = 5; i <= 90; i++) {
                                 if (my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 5
+                                    && abs(my_road[i].connected[j_mid[i]].left-my_road[i-1].connected[j_mid[i-1]].left) < 3
                                     && my_road[i].connected[j_mid[i]].left > left_side[i] && my_road[i + 1].connected[j_mid[i + 1]].left - left_side[i] <= 5) {
                                     leftUpJumpPoint = i;
                                     break;
@@ -3262,6 +3269,7 @@ void  design_cross_titl_two_two() {
                         if (1) {
                             for (int i = 5; i <= 90; i++) {
                                 if (my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -5
+                                    && abs(my_road[i].connected[j_mid[i]].right-my_road[i-1].connected[j_mid[i-1]].right) < 3
                                     && my_road[i].connected[j_mid[i]].right < right_side[i] && my_road[i + 1].connected[j_mid[i + 1]].right - right_side[i] >= -5) {
                                     rightUpJumpPoint = i;
                                     break;
@@ -3292,8 +3300,8 @@ void  design_cross_titl_two_two() {
                     int y2Sum = 0;
                     int xSum = 0;
                     int xySum = 0;
-                    int start = leftUpJumpPoint - 10;
-                    int end = leftUpJumpPoint;
+                    int start = leftUpJumpPoint - 18;
+                    int end = leftUpJumpPoint - 3;
                     int num = end - start + 1;
 
                     if (start <= 0) {
@@ -3324,8 +3332,8 @@ void  design_cross_titl_two_two() {
                     int y2Sum = 0;
                     int xSum = 0;
                     int xySum = 0;
-                    int start = rightUpJumpPoint - 10;
-                    int end = rightUpJumpPoint;
+                    int start = rightUpJumpPoint - 18;
+                    int end = rightUpJumpPoint - 3;
                     int num = end - start + 1;
 
                     if (start <= 0) {
@@ -4955,9 +4963,9 @@ void island_start(int type) {
 
 
         int sumU = 0;
-        for (int i = 2; i <= 25; i++) {
+        for (int i = 2; i <= 28; i++) {
             if (my_road[i].connected[j_mid[i]].width + 3 < right_line[pointC - 5] - left_line[pointC - 5]
-                && my_road[i].connected[j_mid[i]].width < 55) {
+                && my_road[i].connected[j_mid[i]].width < 70) {
                 sumU++;
             }
         }
@@ -5042,9 +5050,9 @@ void island_start(int type) {
         //圆环上方要有窄赛道
 
         int sumU = 0;
-        for (int i = 2; i <= 25; i++) {
+        for (int i = 2; i <= 28; i++) {
             if (my_road[i].connected[j_mid[i]].width + 3 < right_line[pointC - 5] - left_line[pointC - 5]
-                && my_road[i].connected[j_mid[i]].width < 55) {
+                && my_road[i].connected[j_mid[i]].width < 70) {
                 sumU++;
             }
         }
@@ -5487,7 +5495,7 @@ void design_island_ing(int type) {
         else {
             for (int i = 100; i >= 2; i--) {
                 right_line[i] = k * (i - yMin) + xMin;
-                left_line[i] = right_line[i] - 25;
+                left_line[i] = right_line[i] - 20;
             }
         }
 
@@ -5525,7 +5533,7 @@ void design_island_ing(int type) {
         else {
             for (int i = 100; i >= 2; i--) {
                 left_line[i] = k * (i - yMin) + xMin;
-                right_line[i] = left_line[i] + 25;
+                right_line[i] = left_line[i] + 20;
             }
         }
 

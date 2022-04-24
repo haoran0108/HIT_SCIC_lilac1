@@ -38,6 +38,11 @@
 #define NM -20
 #define NB -30
 
+#define servoMidValue 730
+#define servoMin 650
+#define servoMax 810
+
+
 extern uint32 servoPwm;
 extern int32 mySpeedL, mySpeedR;
 extern int32 speedL, speedR;
@@ -78,12 +83,7 @@ void CTRL_gyroInit();
 void CTRL_gyroUpdate();
 void CTRL_rampGyroUpdate();
 void CTRL_directionAngleGet();
-void CTRL_directionAngleClean();
-void CTRL_positionGet();
-void CTRL_circleControl(int direction, float r);
-void CTRL_waihuan();
-void CTRL_gyroCircle();
-void CTRL_ParkStartServo(float gyro);
+
 
 /*µçÁ÷»·*/
 void CTRL_curLoopPID();

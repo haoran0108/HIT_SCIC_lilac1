@@ -45,8 +45,8 @@ int parkType = 1;//保存parkStart的值
 
 /*电流环参数*/
 int currentFlag = 0, currentTime = 0;
-uint16 currentLF[5] = {2220}, currentRT[5] = {2220};
-int currentExpectLF = 2250, currentExpectRT = 2250;
+uint16 currentLF[5] = {2250}, currentRT[5] = {2250};
+int currentExpectLF = 2280, currentExpectRT = 2280;
 
 int testFlag = 0;
 
@@ -88,97 +88,6 @@ void CTRL_rampGyroUpdate()
 }
 
 
-void CTRL_positionGet()
-{
-
-    averageSpeed = (float)(speedL - speedR) / 2;
-    dx = averageSpeed * (float)(sin(currentGyro * pi / 180)) * 0.05;
-    dy = averageSpeed * (float)(cos(currentGyro * pi / 180)) * 0.05;
-
-    positionX += dx;
-    positionY += dy;
-
-    if(positionX < 0.0001 && positionX > -0.0001)
-    {
-        directionAngle = 0;
-
-    }
-    else
-    {
-        directionAngle = (float)(atan2(positionY,positionX) / pi * 180);
-
-    }
-
-    if(currentGyro > 360)
-    {
-        currentGyro = 0;
-        expectGyro = 0;
-    }
-    else if(currentGyro < -360)
-    {
-        currentGyro = 0;
-        expectGyro = 0;
-    }
-
-
-}
-
-void CTRL_circleControl(int direction, float r)
-{
-    float delta = 0;
-    position = sqrt(positionX * positionX + positionY * positionY);
-    delta = r - position;
-    if(direction == 1)//1为顺时针
-    {
-        expectGyro = directionAngle - 90;
-
-//        expectGyro += delta * neihuanK.floatValue;
-    }
-    else//0为逆时针
-    {
-        expectGyro = directionAngle + 90;
-
-//        expectGyro -= delta * neihuanK.floatValue;
-    }
-
-
-}
-
-void CTRL_waihuan()
-{
-//    servoError.currentError = expectGyro - currentGyro;
-//    servoError.delta = servoError.currentError - servoError.lastError;
-//    servoPwm = (uint32)(675 + IslandPD.floatValue * servoError.delta + CrossCircle.floatValue * servoError.currentError);
-//    if(servoPwm > 750)
-//        servoPwm = 750;
-//    else if(servoPwm < 600)
-//        servoPwm = 600;
-//    servoError.lastError = servoError.currentError;
-}
-
-void CTRL_directionAngleClean()
-{
-    deltaGyro = 0;
-    currentGyro = 0;
-    expectGyro = 0;
-    directionAngle = 0;
-    dx = 0;
-    dy = 0;
-    positionX = 0;
-    positionY = 0;
-    servoPwm = 675;
-}
-
-void CTRL_gyroCircle()
-{
-    CTRL_gyroUpdate();
-    CTRL_positionGet();
-    CTRL_directionAngleGet();
-    CTRL_circleControl(file3.intValue,presentTHRE.intValue);
-
-}
-
-
 
 void CTRL_speedLoopPID()
 {
@@ -196,8 +105,8 @@ void CTRL_speedLoopPID()
 //    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
     currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
-    if(currentExpectLF < 1000) currentExpectLF = 1000;
-    else if(currentExpectLF > 4000) currentExpectLF = 4000;
+    if(currentExpectLF < 800) currentExpectLF = 800;
+    else if(currentExpectLF > 4200) currentExpectLF = 4200;
 
 
     errorMR.currentError = expectR - speedR;//取偏差
@@ -208,8 +117,8 @@ void CTRL_speedLoopPID()
 //    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
     currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
-    if(currentExpectRT < 1000) currentExpectRT = 1000;
-    else if(currentExpectRT > 4000) currentExpectRT = 4000;
+    if(currentExpectRT < 800) currentExpectRT = 800;
+    else if(currentExpectRT > 4200) currentExpectRT = 4200;
 
     test_varible[0] = speedL;
     test_varible[1] = speedR;
@@ -290,11 +199,11 @@ void CTRL_servoPID()
     servoError.currentError = 94 - mid_line[presentVision.intValue];
 
     servoError.delta = servoError.currentError - servoError.lastError;
-    servoPwm = (uint32)(700 + presentServoD.floatValue * servoError.delta + fuzzyPB.floatValue * servoError.currentError);
-    if(servoPwm > 780)
-        servoPwm = 780;
-    else if(servoPwm < 620)
-        servoPwm = 620;
+    servoPwm = (uint32)(servoMidValue + presentServoD.floatValue * servoError.delta + fuzzyPB.floatValue * servoError.currentError);
+    if(servoPwm > servoMax)
+        servoPwm = servoMax;
+    else if(servoPwm < servoMin)
+        servoPwm = servoMin;
     servoError.lastError = servoError.currentError;
 
 }
@@ -383,20 +292,18 @@ float CTRL_FuzzyMemberShip(int midError)
 void CTRL_fuzzyPID()
 {
     float fuzzyKP = 1;
-    int servo_error = 0;
-    int realVision;
-    realVision = foresee();
+//    int realVision;
+//    realVision = foresee();
     servoError.currentError = 92 - mid_line[presentVision.intValue];
     test_varible[12] = servoError.currentError;
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
-//    servo_error = servoError.currentError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
-    servoPwm = (uint32)(730 + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
-    if(servoPwm > 810)
-        servoPwm = 810;
-    else if(servoPwm < 655)
-        servoPwm = 655;
+    servoPwm = (uint32)(servoMidValue + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
+    if(servoPwm > servoMax)
+        servoPwm = servoMax;
+    else if(servoPwm < servoMin)
+        servoPwm = servoMin;
 
     servoError.lastError = servoError.currentError;
 
@@ -446,11 +353,11 @@ void CTRL_servoMain()
     {
         if(parkStart == 1)
         {
-            servoPwm = 660;//630
+            servoPwm = servoMin;//630
         }
         else if(parkStart == -1)
         {
-            servoPwm = 810;
+            servoPwm = servoMax;
         }
         else if(parkStart == 0 && flagStop == 0)
         {
@@ -459,11 +366,11 @@ void CTRL_servoMain()
         }
         else if(flagStop == 1 && leftPark == 0 && rightPark == 1)
         {
-            servoPwm = 660;//630
+            servoPwm = servoMin;//630
         }
         else if(flagStop == 1 && leftPark == 1 && rightPark == 0)
         {
-            servoPwm = 810;//770
+            servoPwm = servoMax;//770
         }
     }
 //    if(GPIO_Read(P13, 2) && parkStart == 1)
@@ -592,18 +499,6 @@ void CTRL_motorMain()
     CTRL_curLoopPID();
     CTRL_motor();
 
-
-}
-
-void CTRL_ParkStartServo(float gyro)
-{
-//    servoPwm = (uint32)(gyro * (-0.8) + 760);
-    servoPwm = (uint32)(gyro * (-0.8) + 780);
-
-    if(servoPwm > 780)
-        servoPwm = 780;
-    else if(servoPwm < 620)
-        servoPwm = 620;
 
 }
 
@@ -826,19 +721,6 @@ void CTRL_CircleForsee(int radius)
 //    flagCircleForsee = 0;
 
 
-}
-
-void CTRL_CircleServoPID()
-{
-
-    servoError.currentError = my_sin;
-    servoError.delta = servoError.lastError - servoError.currentError;
-    servoPwm = (uint32)(740 + presentServoD.floatValue * servoError.delta + fuzzyPB.floatValue * servoError.currentError);
-    if(servoPwm > 820)
-        servoPwm = 820;
-    else if(servoPwm < 670)
-        servoPwm = 670;
-    servoError.lastError = servoError.currentError;
 }
 
 void CTRL_ServoPID_Determine()
