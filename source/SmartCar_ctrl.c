@@ -624,34 +624,34 @@ void CTRL_motorDiffer()
     /*内减外加*/
     double kIN, kOUT;
 
-    kOUT = gap.floatValue * (0.0018 * FabsDelta + 0.9769);
-    kIN = gap.floatValue * (-0.004 * FabsDelta + 1.0487);
-    if(kIN >= 1)
-    {
-        kIN = 1;
-    }
-    if(kOUT <= 1)
-    {
-        kOUT = 1;
-    }
+//    kOUT = gap.floatValue * (0.0018 * FabsDelta + 0.9769);
+//    kIN = gap.floatValue * (-0.004 * FabsDelta + 1.0487);
+//    if(kIN >= 1)
+//    {
+//        kIN = 1;
+//    }
+//    if(kOUT <= 1)
+//    {
+//        kOUT = 1;
+//    }
 //    kIN = gap.floatValue * ((-1e-5)* (fabsDelta * fabsDelta) - 0.0024 * fabsDelta + 1);
 //    kOUT = gap.floatValue * ((6e-6) * (fabsDelta * fabsDelta) + 0.001 * fabsDelta + 1);
-    if(delta > 0)
+    if(delta > 0)//右转
     {
-//        kIN = gap.floatValue * (1.0886 - 0.004 * delta);
-//        kOUT = gap.floatValue * (0.9114 + 0.004 * delta);
-//        if(kIN > 1) kIN = 1;
-//        if(kOUT < 1) kOUT = 1;
+        kIN = gap.floatValue * (1.037 - 0.0041 * delta);
+        kOUT = gap.floatValue * (0.991 + 0.001 * delta);
+        if(kIN > 1) kIN = 1;
+        if(kOUT < 1) kOUT = 1;
 
         expectL = (int32)(presentSpeed.intValue * kOUT);
         expectR = (int32)(presentSpeed.intValue * kIN);
     }
-    else if(delta < 0)
+    else if(delta < 0)//左转
     {
-//        kIN = gap.floatValue * (1.0886 + 0.004 * delta);
-//        kOUT = gap.floatValue * (0.9114 - 0.004 * delta);
-//        if(kIN > 1) kIN = 1;
-//        if(kOUT < 1) kOUT = 1;
+        kIN = gap.floatValue * (1.0172 + 0.0045 * delta);
+        kOUT = gap.floatValue * (0.9931 - 0.0012 * delta);
+        if(kIN > 1) kIN = 1;
+        if(kOUT < 1) kOUT = 1;
 
         expectL = (int32)(presentSpeed.intValue * kIN);
         expectR = (int32)(presentSpeed.intValue * kOUT);
