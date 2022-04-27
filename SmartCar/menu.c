@@ -25,6 +25,7 @@ node_t preGear1, preGear2, preGear3;
 /*现在的档位参数,bottomData为最后一个数据，无实际意义，为了倒数第二个数据能附上值*/
 node_t presentSpeed, presentTHRE, presentVision, fuzzyPB, fuzzyPM, fuzzyPS, fuzzyZO, fuzzyNS, fuzzyNM, fuzzyNB, presentServoD, presentMotorP, presentMotorI, bottomData;
 node_t gap;//差速要乘的倍数
+node_t midLineKP, gyroKP, gyroKD;
 node_t display, display1, display2, display3, display4, display5, display6, display7, display8, display9, display10;//展示翻页效果
 node_t LFKP, LFKI, RTKP, RTKI, slowLFKP, slowLFKI, slowRTKP, slowRTKI, fastLFKP, fastLFKI, fastRTKP, fastRTKI;
 node_t fileSave, saveGear1, saveGear2, saveGear3;//用于写入flash
@@ -228,10 +229,13 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     fuzzyNM = MENU_fileInit(fuzzyNM, 1, 2.6, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
     fuzzyNB = MENU_fileInit(fuzzyNB, 1, 2.8, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
     presentServoD = MENU_fileInit(presentServoD, 1, 3.8, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
-    gap = MENU_fileInit(presentMotorP, 1, 1.0, "GAP", 7, datafloat, &presentServoD, &bottomData, NULL, NULL);
+    gap = MENU_fileInit(gap, 1, 1.0, "GAP", 7, datafloat, &presentServoD, &midLineKP, NULL, NULL);
+    midLineKP = MENU_fileInit(midLineKP, 1, 0.13    , "midlineKP", 2, datafloat, &gap, &gyroKP, NULL, NULL);
+    gyroKP = MENU_fileInit(gyroKP, 1, 0.06, "gyroKP", 3, datafloat, &midLineKP, &gyroKD, NULL, NULL);
+    gyroKD = MENU_fileInit(gyroKD, 1, 0.2, "gyroKD", 4, datafloat, &gyroKP, &bottomData, NULL, NULL);
 //    presentMotorI = MENU_fileInit(presentMotorI, 1, 190.0, "preMotorI", 2, datafloat, &gap, &bottomData, NULL, NULL);
 //    presentMotorP = MENU_fileInit(gap, 8, 250, "preMotorP", 3, datafloat, &presentMotorI, &bottomData, NULL, NULL);
-    bottomData = MENU_fileInit(bottomData, 1, 1.0, "bottom", 2, none, &gap, NULL, NULL, NULL);
+    bottomData = MENU_fileInit(bottomData, 1, 1.0, "bottom", 5, none, &gyroKD, NULL, NULL, NULL);
     preGear1 = MENU_fileInit(preGear1, 1, 1.0, "Present1", 3, none, &g1_Data7, NULL, NULL, &presentSpeed);
     preGear2 = MENU_fileInit(preGear2, 1, 1.0, "Present2", 3, none, &g2_Data7, NULL, NULL, &presentSpeed);
     preGear3 = MENU_fileInit(preGear3, 1, 1.0, "Present3", 3, none, &g3_Data7, NULL, NULL, &presentSpeed);
@@ -315,6 +319,15 @@ void MENU_namePrintf(nodeptr_t printFile)
         }
     }
 
+    else if(y >= 13 && y < 19)
+    {
+        flag = 12;
+        while((flag--) && (printFile->next != NULL))
+        {
+            printFile = printFile->next;
+        }
+    }
+
     do
     {
 
@@ -344,6 +357,14 @@ void MENU_valuePrintf(nodeptr_t temp)
     if(y > 6 && y < 13)
     {
         flag1 = 6;
+        while((flag1--) && (temp->next != NULL))
+        {
+            temp = temp->next;
+        }
+    }
+    else if(y >= 13 && y < 19)
+    {
+        flag1 = 12;
         while((flag1--) && (temp->next != NULL))
         {
             temp = temp->next;

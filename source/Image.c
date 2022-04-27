@@ -1396,7 +1396,7 @@ void image_main()
         judge_type_road();
 
     }
-    test_varible[15] = straightFlag;
+//    test_varible[15] = straightFlag;
     test_varible[13] = state;
 //    test_varible[14] = carParkTimes;
 //    }
@@ -1663,7 +1663,7 @@ void judge_type_road() {
 
     if(state == rampway)
     {
-//        GPIO_Set(P22, 0, 1);
+        GPIO_Set(P22, 0, 1);
         rampwayDown();
         rampWayCount += 1;
 
@@ -1675,7 +1675,7 @@ void judge_type_road() {
     }
     else if(state != rampway)
     {
-//        GPIO_Set(P22, 0, 0);
+        GPIO_Set(P22, 0, 0);
     }
     if(state != rampway && state != stateCarPark){
         straight_protection();

@@ -96,6 +96,8 @@ void CTRL_speedLoopPID();
 //  Sample usage:
 //-------------------------------------------------------------------------------------------------------------------
 void CTRL_servoPID();
+void CTRL_midLineLoopPID();
+void CTRL_gyroLoopPID();
 
 /*模糊PID*/
 float CTRL_FuzzyMemberShip(int midError);
@@ -159,6 +161,7 @@ void speedUP_define();
 int foresee();
 void CTRL_lowpassFilter();//低通滤波
 void CTRL_currentAverageFilter();//电流环平均滑动滤波
+void CTRL_gyroAverageFilter();
 
 void motorParamDefine();
 
