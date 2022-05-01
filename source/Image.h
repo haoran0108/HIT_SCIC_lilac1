@@ -8,9 +8,6 @@
 #ifndef SOURCE_IMAGE_H_
 #define SOURCE_IMAGE_H_
 
-#ifdef PC
-printf("");
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,13 +16,13 @@ printf("");
 #include "SmartCar_MT9V034.h"
 #include "SmartCar_ctrl.h"
 #include "menu.h"
-//#include<string>
-//#ifndef _IMAGE_H
-//#define _IMAGE_H
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <math.h>
-//#include "image.h"
+ //#include<string>
+ //#ifndef _IMAGE_H
+ //#define _IMAGE_H
+ //#include <stdio.h>
+ //#include <stdlib.h>
+ //#include <math.h>
+ //#include "image.h"
 
 #define MISS 255
 //#define CAMERA_H  120                            //图片高度
@@ -79,7 +76,7 @@ printf("");
 #define CAMERA_H  120                            //图片高度
 #define CAMERA_W  188                            //图片宽度
 #define FAR_LINE 1//图像处理上边界
-#define NEAR_LINE 106//图像处理下边界
+#define NEAR_LINE 113//图像处理下边界
 #define LEFT_SIDE 0//图像处理左边界
 #define RIGHT_SIDE 187//图像处理右边界
 #define MISS 255
@@ -103,34 +100,20 @@ printf("");
 #define purple 6
 ///////////////////////////
 
-//////////////////////////////
-#define stateStart 0      //初始状态或者直线
-
-#define stateInCrossStraight 1    //直入十字
-#define stateOutCrossStraight 2   //直出十字
-
-#define stateIslandTurn 3
-#define stateIsland 4       //进入环岛
-#define stateIsland1 5
-#define stateIsland2 6
-#define stateIsland3 7
-#define stateIsland4 8
-#define stateIsland5 9
-#define stateIsland6 10
-
-#define stateFolkRoadIn 11
-#define stateFolkRoadIng 16
-#define stateFolkRoadOut 17
-
-
-#define stateCrossCircleIn 12
-#define stateCrossCircleIng 16
-#define stateCrossCircleOut 13
-
-#define stateCarPark 14
-#define stateStraightCrossIn 15
-
-#define rampway 18 //坡道
+//////////////////////////////状态机的标志
+#define stateStart 0
+#define stateCrossIn 10
+#define stateFolkRoadIn 20
+#define stateTIslandIn 30
+#define stateTIn 40
+#define stateTOut 50
+#define stateTover 60
+#define stateIslandIng 70
+#define stateIslandTurn 80
+#define stateIslandCircle 90
+#define stateIslandOut 100
+#define stateIslandFinal 110
+#define stateTOut 120
 /////////////////////////////
 
 extern uint8_t IMG[CAMERA_H][CAMERA_W];//二值化后图像数组
@@ -143,19 +126,14 @@ extern int parkPosition;
 extern int stopFlag;
 extern int carParkTimes;
 extern int carParkDelay;
-
-extern int crossCircleCount;
-extern int startCount;
-extern int rampWayCount;
-extern int parkJudgeCount;
-
-extern int lastState[11];
-
-extern int leftPark, rightPark;
 extern int straightFlag, lastStraightFlag;
 extern int slowFlag;
 extern int rampFlag1, rampFlag2,rampFlag3;
+extern int rampWayCount;
+extern int leftPark,rightPark;
 
+extern int crossCircleCount;
+extern int startCount;
 typedef struct {
     int x;
     int y;
@@ -201,12 +179,12 @@ typedef struct {
 }coordinate;
 
 
-//void circle_foresee();
-//void head_clear(void);
+
+void head_clear(void);
 void OTSU();
 void part_OUST();
 void iteration();
-//void THRE(int num);
+void THRE(int num);
 int find_f(int a);
 void search_white_range();
 void find_all_connect();
@@ -215,93 +193,69 @@ uint8_t find_continue(uint8_t i_start, uint8_t j_start);
 void ordinary_two_line(void);
 void image_main();
 void get_mid_line(void);
-//void sharpen();
-//void IPM_map();
+void IPM_map();
 void distortion();
-//void show_dis(cv::Mat image_undisor);
 void my_memset(uint8_t* ptr, uint8_t num, uint8_t size);
-
 void transform();
-//void orinary_two_line_history();
+void orinary_two_line_history();
+
+void protection();
 //道路规划
-void find_part_jumppoint(int yStart, int yEnd, int type);
-double calculate_slope(int start, int end, int type);
-double calculate_slope_two_point(int yStart, int startType, int yEnd, int endType);
-void find_jump_point();
 void judge_type_road();
-int circle_360();
-double cos_angle();
-double calculate_any_slope(int start,int end,int side[CAMERA_H]);
+
+//数据处理函数
+double calculate_slope(int start, int end, int side[CAMERA_H]);
+double calculate_slope_uint(int start, int end, uint8_t side[CAMERA_H]);
+double calculate_two_point_slope(int start, int xStart, int end, int xEnd);
+double calculate_slope_struct(int start, int end, uint8_t j_mid[CAMERA_H], int type);
+double variance(int yStart, int yEnd, int side[CAMERA_H]);
+double correlation_coefficient(int start, int end, int side[CAMERA_W]);
 
 //十字
-void straight_cross_in();
-void design_straight_cross();
-void straight_cross_over();
-
 void cross_in();
-void cross_out();
+void design_cross_ing();
 void cross_over();
-void design_cross_in();
-void design_cross_out();
-//void design_straight_route(int y_start, int y_end, int type);
-double variance(int y_start, int y_end, int type);
-void folk_or_cross();
-void  design_cross_titl_two_two();
 
+
+//T与环岛共用函数
+void T_island_in_start();
+void design_T_island_in();
+void T_or_island();
 //环岛
-void decide_miss();
-void island_start(int type);
-void design_island_start(int type);
-void design_island_in(int type);
-void island_ing(int type);
-void design_island_ing(int type);
-void islandOrcross_circle(int type);
-void design_island_turn(int type);
-void island_turn(int type);
-void design_island_out(int type);
-//void island_out_turn(int type);
-//void design_island_out_turn(int type);
-void island_out_straight(int type);
-void design_island_final(int type);
-void island_straight(int type);
-//int check_state();
-void folk_or_cross();
-void island_out(int type);
+void design_island_ing();
+void island_turn();
+void design_island_turn();
+void island_circle();
+void island_out();
+void design_island_out();
+void island_straight();
+void design_island_straight();
+void island_final();
 
 //三叉
 void folk_road_in();
-void folk_road_in1();
-void design_folkroad_in();
+void design_folk_road();
 void folk_road_out();
-double cos_angle(int x1,int x2,int x3,int y1,int y2,int y3);
-void folk_road_out1();
-//十字回环
-//void cross_circle_in();
-//void design_cross_circle_in();
-void cross_circle_out();
-void cross_circle_out_patch();
-void design_cross_circle_out();
-void cross_circle_turn();
-void cross_circle_ing();
+
+//T字口
+
+void cross_T_in_over();
+void cross_T_out_start();
+void design_cross_T_out();
+void cross_T_out_over();
+
 //上下坡
 
 //入库
-void carPark_in();
-void carPark_out();
-
-void searchParkLine();
-void design_park();
 
 //停车
-void protection();
 
 //上下坡
-void rampwayOn();
-void rampwayDown();
 
-void fixMidLine();
-void design_straight_route(int type);
-void straight_protection();
-int midMaxColumn();
+//废案
+void cross_T_in_start();
+void design_cross_T_in();
+void island_start();
+void design_island_start();
 
 #endif //

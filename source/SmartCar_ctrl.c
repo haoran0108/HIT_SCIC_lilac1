@@ -568,9 +568,9 @@ void CTRL_motorMain()
 
     motorParamDefine();
 
-//    CTRL_motorPID();
-    CTRL_speedLoopPID();
-    CTRL_curLoopPID();
+    CTRL_motorPID();
+//    CTRL_speedLoopPID();
+//    CTRL_curLoopPID();
     CTRL_motor();
 
 
