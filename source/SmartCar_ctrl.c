@@ -20,6 +20,7 @@ error gyroError = {1, 1, 1};
 int sumErrorRT = 0, sumErrorLF = 0;
 error currentErrorL = {1, 1, 1}, currentErrorR = {1, 1, 1};
 uint32 servoPwm;
+uint32 servoGyroPwm;
 uint32 motorPwm;
 int32 expectL, expectR;//预期速度
 int32 speedL, speedR, lastSpeedL, lastSpeedR;//实际速度
@@ -192,6 +193,7 @@ void CTRL_Init()
 
     ADC_Init(ADC_0, ADC0_CH5_A5);
     ADC_Init(ADC_0, ADC0_CH7_A7);
+    ADC_Init(ADC_1, ADC1_CH5_A21);
 
     CTRL_gyroInit();
 
@@ -218,7 +220,7 @@ float CTRL_FuzzyMemberShip(int midError)
 {
     float membership[2] = {1, 0};
     float servoKP = 0;
-    float fuzzyWidth = 10;
+    float fuzzyWidth1 = 5, fuzzyWidth2 = 10;
 
     if(midError >= PB)
     {
@@ -226,8 +228,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < PB && midError > PM)
     {
-        membership[0] = fabs((midError - PM) / fuzzyWidth);
-        membership[1] = fabs((midError - PB) / fuzzyWidth);
+        membership[0] = fabs((midError - PM) / fuzzyWidth2);
+        membership[1] = fabs((midError - PB) / fuzzyWidth2);
 
         servoKP = fuzzyPB.floatValue * membership[0] + fuzzyPM.floatValue * membership[1];
     }
@@ -237,8 +239,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < PM && midError > PS)
     {
-        membership[0] = fabs((midError - PS) / fuzzyWidth);
-        membership[1] = fabs((midError - PM) / fuzzyWidth);
+        membership[0] = fabs((midError - PS) / fuzzyWidth2);
+        membership[1] = fabs((midError - PM) / fuzzyWidth2);
 
         servoKP = fuzzyPM.floatValue * membership[0] + fuzzyPS.floatValue * membership[1];
     }
@@ -248,8 +250,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < PS && midError > ZO)
     {
-        membership[0] = fabs((midError - ZO) / fuzzyWidth);
-        membership[1] = fabs((midError - PS) / fuzzyWidth);
+        membership[0] = fabs((midError - ZO) / fuzzyWidth1);
+        membership[1] = fabs((midError - PS) / fuzzyWidth1);
 
         servoKP = fuzzyPS.floatValue * membership[0] + fuzzyZO.floatValue * membership[1];
     }
@@ -259,8 +261,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < ZO && midError > NS)
     {
-        membership[0] = fabs((midError - NS) / fuzzyWidth);
-        membership[1] = fabs((midError - ZO) / fuzzyWidth);
+        membership[0] = fabs((midError - NS) / fuzzyWidth1);
+        membership[1] = fabs((midError - ZO) / fuzzyWidth1);
 
         servoKP = fuzzyZO.floatValue * membership[0] + fuzzyNS.floatValue * membership[1];
     }
@@ -270,8 +272,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < NS && midError > NM)
     {
-        membership[0] = fabs((midError - NM) / fuzzyWidth);
-        membership[1] = fabs((midError - NS) / fuzzyWidth);
+        membership[0] = fabs((midError - NM) / fuzzyWidth2);
+        membership[1] = fabs((midError - NS) / fuzzyWidth2);
 
         servoKP = fuzzyNS.floatValue * membership[0] + fuzzyNM.floatValue * membership[1];
     }
@@ -281,8 +283,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < NM && midError > NB)
     {
-        membership[0] = fabs((midError - NB) / fuzzyWidth);
-        membership[1] = fabs((midError - NM) / fuzzyWidth);
+        membership[0] = fabs((midError - NB) / fuzzyWidth2);
+        membership[1] = fabs((midError - NM) / fuzzyWidth2);
 
         servoKP = fuzzyNM.floatValue * membership[0] + fuzzyNB.floatValue * membership[1];
     }
@@ -318,11 +320,23 @@ void CTRL_fuzzyPID()
 void CTRL_midLineLoopPID()
 {
     int averageSpeed;
-    averageSpeed = (expectL + expectR) / 2;
+    float fuzzyKP = 1;
+
+    averageSpeed = (speedR - speedL) / 2;
     servoError.currentError = 92 - mid_line[presentVision.intValue];
     test_varible[12] = servoError.currentError;
-
     expectGyro = servoError.currentError * midLineKP.floatValue * averageSpeed;
+
+    servoError.delta = servoError.currentError - servoError.lastError;
+    fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
+    servoPwm = (uint32)(servoMidValue + presentServoD.floatValue * servoError.delta + fuzzyKP * servoError.currentError);
+    if(servoPwm > servoMax)
+        servoPwm = servoMax;
+    else if(servoPwm < servoMin)
+        servoPwm = servoMin;
+
+    servoError.lastError = servoError.currentError;
+//    test_varible[13] = servoPwm;
     test_varible[15] = expectGyro;
 
 }
@@ -333,12 +347,37 @@ void CTRL_gyroLoopPID()
 //    expectGyro = midLineKP.floatValue;
     gyroError.currentError = expectGyro - deltaGyro[0];
     gyroError.delta = gyroError.currentError - gyroError.lastError;
-    servoPwm = (uint32)(servoPwm + gyroKP.floatValue * gyroError.currentError + gyroKD.floatValue * gyroError.delta);
+    if(straightFlag == 0)
+    {
+        if(abs(servoError.currentError) > 10 || (state == 5 || state == 6 || state == 7 || state == 9 || state == 12 || state == 16))
+        {
+            servoGyroPwm = (uint32)(servoPwm + gyroKP.floatValue * gyroError.currentError + gyroKD.floatValue * gyroError.delta);
 
-    if(servoPwm > servoMax)
-        servoPwm = servoMax;
-    else if(servoPwm < servoMin)
-        servoPwm = servoMin;
+            if(servoGyroPwm > servoPwm + 5)
+            {
+                servoGyroPwm = servoPwm + 5;
+            }
+            else if(servoGyroPwm < servoPwm - 5)
+            {
+                servoGyroPwm = servoPwm - 5;
+
+            }
+        }
+
+        else
+        {
+            servoGyroPwm = servoPwm;
+        }
+    }
+
+    else
+    {
+        servoGyroPwm = servoPwm;
+    }
+    if(servoGyroPwm > servoMax)
+        servoGyroPwm = servoMax;
+    else if(servoGyroPwm < servoMin)
+        servoGyroPwm = servoMin;
 
     gyroError.lastError = gyroError.currentError;
 }
@@ -424,8 +463,9 @@ void CTRL_servoMain()
 //
 //    }
 
-    test_varible[11] = servoPwm;
-    SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
+    test_varible[11] = servoGyroPwm;
+//    servoGyroPwm = display8.intValue;
+    SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoGyroPwm);//舵机控制
 
 
 }
@@ -969,7 +1009,7 @@ void CTRL_currentAverageFilter()
 
 void CTRL_gyroAverageFilter()
 {
-    deltaGyro[0] = (deltaGyro[0] + deltaGyro[1] + deltaGyro[2] + deltaGyro[3] + deltaGyro[4] + deltaGyro[5] + deltaGyro[6]) / 7;
+    deltaGyro[0] = (deltaGyro[0] + deltaGyro[1] + deltaGyro[2]) / 3;
 //    deltaGyro[4] = deltaGyro[3];
     deltaGyro[6] = deltaGyro[5];
     deltaGyro[5] = deltaGyro[4];

@@ -63,8 +63,8 @@ void SW_readSwitch()
         GPIO_Set(P22, 0, 0);//蜂鸣器
         GPIO_Set(P00, 8, 0);//电机开关
 
-//        GPIO_Set(P02, 7, 1);//图传SD
-        GPIO_Set(P02, 8, 1);//图传SD 采图
+        GPIO_Set(P02, 8, 1);//图传SD
+//        GPIO_Set(P02, 8, 1);//图传SD 采图
 //        CTRL_directionAngleClean();
     }
     else
@@ -78,16 +78,18 @@ void SW_readSwitch()
         GPIO_Set(P00, 8, 1);
 
 //        GPIO_Set(P02, 8, 0);
-        if(GPIO_Read(P13, 3))
-        {
-            GPIO_Set(P02, 7, 1);
 
-        }
-        else
-        {
-            GPIO_Set(P02, 7, 0);
-
-        }
         GPIO_Set(P02, 8, 0);
+    }
+
+    if(GPIO_Read(P13, 3))
+    {
+        GPIO_Set(P02, 7, 1);
+
+    }
+    else
+    {
+        GPIO_Set(P02, 7, 0);
+
     }
 }

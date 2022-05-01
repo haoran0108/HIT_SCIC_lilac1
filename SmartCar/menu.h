@@ -37,7 +37,7 @@ struct menuNode
 };
 typedef struct menuNode node_t;
 typedef struct menuNode* nodeptr_t;
-
+extern float voltage;
 extern nodeptr_t tempFile;
 extern node_t file1, file3;
 extern uint32 leftSpeed;

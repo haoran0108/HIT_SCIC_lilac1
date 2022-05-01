@@ -47,11 +47,13 @@
 #include "SmartCar_GPIO.h"
 #include"SmartCar_TFMINI.h"
 
+//extern float voltage;
 #pragma section all "cpu0_dsram"
 //IfxCpu_syncEvent g_cpuSyncEvent;
 
 uint32 onPower;//上电次数
-
+uint16 power;
+//float voltage;
 int core0_main(void)
 {
     /** 关闭总中断*/
@@ -107,24 +109,20 @@ int core0_main(void)
 
 
     while(TRUE)
+    {
+
+        SmartCar_OLED_Printf6x8(110, 0, "%d", onPower);
+        if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
+                !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
         {
+            Delay_ms(STM0,100);
 
-            SmartCar_OLED_Printf6x8(110, 0, "%d", onPower);
-            if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
-                    !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
-                {
-                    Delay_ms(STM0,100);
+            tempFile = MENU_curPosition(tempFile);
+        }
 
-                    tempFile = MENU_curPosition(tempFile);
-                }
-//            if(!GPIO_Read(P13, 2) || !GPIO_Read(P11, 3))
-//            {
-//                Delay_ms(STM0,100);
-//                SW_readSwitch();
-//            }
-
-            SW_readSwitch();//发车键
-
+        SW_readSwitch();//发车键
+        power = ADC_Get(ADC_1, ADC1_CH5_A21, ADC_12BIT);
+        voltage = 3.3 * 3 * power / 4096;
 //        SmartCar_ImgUpload(fullBuffer,120,188);//传图像给电脑，和uart一起用
 //
         }

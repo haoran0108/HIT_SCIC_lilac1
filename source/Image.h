@@ -8,6 +8,9 @@
 #ifndef SOURCE_IMAGE_H_
 #define SOURCE_IMAGE_H_
 
+#ifdef PC
+printf("");
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +18,7 @@
 #include <math.h>
 #include "SmartCar_MT9V034.h"
 #include "SmartCar_ctrl.h"
-
+#include "menu.h"
 //#include<string>
 //#ifndef _IMAGE_H
 //#define _IMAGE_H
@@ -80,7 +83,7 @@
 #define LEFT_SIDE 0//图像处理左边界
 #define RIGHT_SIDE 187//图像处理右边界
 #define MISS 255
-#define white_num_MAX 11//每行最多允许白条数
+#define white_num_MAX 10//每行最多允许白条数
 
 #define white_straight 37 //正视直道的格数
 #define LEFT 1
