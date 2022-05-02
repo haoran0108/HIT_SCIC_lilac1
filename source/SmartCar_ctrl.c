@@ -433,9 +433,9 @@ void CTRL_servoMain()
         }
         else if(parkStart == 0 && flagStop == 0)
         {
-//            CTRL_fuzzyPID();
-            CTRL_midLineLoopPID();
-            CTRL_gyroLoopPID();
+            CTRL_fuzzyPID();
+//            CTRL_midLineLoopPID();
+//            CTRL_gyroLoopPID();
         }
         else if(flagStop == 1 && leftPark == 0 && rightPark == 1)
         {
@@ -462,10 +462,14 @@ void CTRL_servoMain()
 //        servoPwm = 630;
 //
 //    }
-
+    if(servoPwm > servoMax)
+        servoPwm = servoMax;
+    else if(servoPwm < servoMin)
+        servoPwm = servoMin;
     test_varible[11] = servoGyroPwm;
-//    servoGyroPwm = display8.intValue;
-    SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoGyroPwm);//舵机控制
+//    servoPwm = display8.intValue;
+
+    SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
 
 }
@@ -568,9 +572,9 @@ void CTRL_motorMain()
 
     motorParamDefine();
 
-    CTRL_motorPID();
-//    CTRL_speedLoopPID();
-//    CTRL_curLoopPID();
+//    CTRL_motorPID();
+    CTRL_speedLoopPID();
+    CTRL_curLoopPID();
     CTRL_motor();
 
 

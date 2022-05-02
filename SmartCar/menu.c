@@ -218,9 +218,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
-    presentSpeed = MENU_fileInit(presentSpeed, 95, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
-    presentTHRE = MENU_fileInit(presentTHRE, 80, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
-    presentVision = MENU_fileInit(presentVision, 68, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
+    presentSpeed = MENU_fileInit(presentSpeed, 40, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
+    presentTHRE = MENU_fileInit(presentTHRE, 100, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
+    presentVision = MENU_fileInit(presentVision, 80, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
     fuzzyPB = MENU_fileInit(fuzzyPB, 1, 3.2, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
     fuzzyPM = MENU_fileInit(fuzzyPM, 1, 2.8, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
     fuzzyPS = MENU_fileInit(fuzzyPS, 1, 2.4, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
@@ -272,7 +272,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display5 = MENU_fileInit(display5, 10, 0.3, "beta2", 6, datafloat, &display4, &display6, NULL, NULL);
     display6 = MENU_fileInit(display6, 2, 1.1, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);
     display7 = MENU_fileInit(display7, 100, 0.75, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
-    display8 = MENU_fileInit(display8, 730, 7.91, "stopTHRE", 3, dataint, &display7, &display9, NULL, NULL);
+    display8 = MENU_fileInit(display8, 770, 7.91, "stopTHRE", 3, dataint, &display7, &display9, NULL, NULL);
     display9 = MENU_fileInit(display9, 90, 9.02, "param1", 4, dataint, &display8, &display10, NULL, NULL);
     display10 = MENU_fileInit(display10, 70, 9.02, "param2", 5, dataint, &display9, NULL, NULL, NULL);
 

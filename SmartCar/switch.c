@@ -44,7 +44,7 @@ void SW_readSwitch()
         stopFlag = 0;
         carParkTimes = 0;
         carParkDelay = 0;
-        servoPwm = 630;
+        servoPwm = servoMin;
 
         crossCircleCount = 0;
         rampWayCount = 0;
