@@ -273,7 +273,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display6 = MENU_fileInit(display6, 2, 1.1, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);
     display7 = MENU_fileInit(display7, 100, 0.75, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
     display8 = MENU_fileInit(display8, 770, 7.91, "stopTHRE", 3, dataint, &display7, &display9, NULL, NULL);
-    display9 = MENU_fileInit(display9, 90, 9.02, "param1", 4, dataint, &display8, &display10, NULL, NULL);
+    display9 = MENU_fileInit(display9, 60, 9.02, "param1", 4, dataint, &display8, &display10, NULL, NULL);
     display10 = MENU_fileInit(display10, 70, 9.02, "param2", 5, dataint, &display9, NULL, NULL, NULL);
 
     //数据写入flash

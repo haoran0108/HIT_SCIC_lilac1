@@ -30,18 +30,18 @@
 #define center_y 106
 
 /*Ä£ºýPID*/
-#define PB 25
-#define PM 15
-#define PS 5
+#define PB 30
+#define PM 20
+#define PS 10
 #define ZO 0
-#define NS -5
-#define NM -15
-#define NB -25
+#define NS -10
+#define NM -20
+#define NB -30
 
 /*¶æ»ú*/
-#define servoMidValue 800
-#define servoMin 730
-#define servoMax 880
+#define servoMidValue 792
+#define servoMin 712
+#define servoMax 882
 
 
 extern uint32 servoPwm;

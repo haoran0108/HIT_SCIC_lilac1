@@ -12,6 +12,8 @@ float test_varible[20] = {1,2,3,4,5,6,7,8,9,10};//发送数据的   //数组
 /*标志位*/
 int zebraFlag = 0, zebraCircle = 0;
 int flagStop = 0, delayStop = 0;
+int16_t ctrl_speedR = 0;
+int16_t ctrl_speedL = 0;
 
 /*pid相关*/
 error servoError = {1, 1, 1};
@@ -220,7 +222,7 @@ float CTRL_FuzzyMemberShip(int midError)
 {
     float membership[2] = {1, 0};
     float servoKP = 0;
-    float fuzzyWidth1 = 5, fuzzyWidth2 = 10;
+    float fuzzyWidth = 10;
 
     if(midError >= PB)
     {
@@ -228,8 +230,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < PB && midError > PM)
     {
-        membership[0] = fabs((midError - PM) / fuzzyWidth2);
-        membership[1] = fabs((midError - PB) / fuzzyWidth2);
+        membership[0] = fabs((midError - PM) / fuzzyWidth);
+        membership[1] = fabs((midError - PB) / fuzzyWidth);
 
         servoKP = fuzzyPB.floatValue * membership[0] + fuzzyPM.floatValue * membership[1];
     }
@@ -239,8 +241,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < PM && midError > PS)
     {
-        membership[0] = fabs((midError - PS) / fuzzyWidth2);
-        membership[1] = fabs((midError - PM) / fuzzyWidth2);
+        membership[0] = fabs((midError - PS) / fuzzyWidth);
+        membership[1] = fabs((midError - PM) / fuzzyWidth);
 
         servoKP = fuzzyPM.floatValue * membership[0] + fuzzyPS.floatValue * membership[1];
     }
@@ -250,8 +252,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < PS && midError > ZO)
     {
-        membership[0] = fabs((midError - ZO) / fuzzyWidth1);
-        membership[1] = fabs((midError - PS) / fuzzyWidth1);
+        membership[0] = fabs((midError - ZO) / fuzzyWidth);
+        membership[1] = fabs((midError - PS) / fuzzyWidth);
 
         servoKP = fuzzyPS.floatValue * membership[0] + fuzzyZO.floatValue * membership[1];
     }
@@ -261,8 +263,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < ZO && midError > NS)
     {
-        membership[0] = fabs((midError - NS) / fuzzyWidth1);
-        membership[1] = fabs((midError - ZO) / fuzzyWidth1);
+        membership[0] = fabs((midError - NS) / fuzzyWidth);
+        membership[1] = fabs((midError - ZO) / fuzzyWidth);
 
         servoKP = fuzzyZO.floatValue * membership[0] + fuzzyNS.floatValue * membership[1];
     }
@@ -272,8 +274,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < NS && midError > NM)
     {
-        membership[0] = fabs((midError - NM) / fuzzyWidth2);
-        membership[1] = fabs((midError - NS) / fuzzyWidth2);
+        membership[0] = fabs((midError - NM) / fuzzyWidth);
+        membership[1] = fabs((midError - NS) / fuzzyWidth);
 
         servoKP = fuzzyNS.floatValue * membership[0] + fuzzyNM.floatValue * membership[1];
     }
@@ -283,8 +285,8 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < NM && midError > NB)
     {
-        membership[0] = fabs((midError - NB) / fuzzyWidth2);
-        membership[1] = fabs((midError - NM) / fuzzyWidth2);
+        membership[0] = fabs((midError - NB) / fuzzyWidth);
+        membership[1] = fabs((midError - NM) / fuzzyWidth);
 
         servoKP = fuzzyNM.floatValue * membership[0] + fuzzyNB.floatValue * membership[1];
     }
@@ -467,7 +469,7 @@ void CTRL_servoMain()
     else if(servoPwm < servoMin)
         servoPwm = servoMin;
     test_varible[11] = servoGyroPwm;
-//    servoPwm = display8.intValue;
+    servoPwm = display8.intValue;
 
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
@@ -591,7 +593,7 @@ void CTRL_motorDiffer()
     float k;
     if(delta > 0)
     {
-        k = gap.floatValue * (0.9935 - 0.0047 * delta);
+        k = gap.floatValue * (1.0134 - 0.0044 * delta);
         if(k > 1) k = 1;
         if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
         {
@@ -599,7 +601,7 @@ void CTRL_motorDiffer()
             expectR = (int32)(presentSpeed.intValue * display5.floatValue * k);
 //            GPIO_Set(P22, 0, 1);
         }
-        else if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+        else if(straightFlag == 1 && (state == 0 || state == 130 || state == 10 || state == 30 || state == 100))
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue * k);
@@ -607,12 +609,12 @@ void CTRL_motorDiffer()
         }
         else if(straightFlag == 0)
         {
-            if(state == 11 || state == 13)
+            if(state == 20 || state == 60)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue * k);
             }
-            else if(state == 18)
+            else if(state == 130)
             {
                 expectL = rampSpeed.intValue;
                 expectR = rampSpeed.intValue;
@@ -628,7 +630,7 @@ void CTRL_motorDiffer()
     }
     else if(delta < 0)
     {
-        k = gap.floatValue * (0.9935 + 0.0047 * delta);
+        k = gap.floatValue * (0.9994 + 0.0044 * delta);
         if(k > 1) k = 1;
         if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
         {
@@ -637,7 +639,7 @@ void CTRL_motorDiffer()
 //            GPIO_Set(P22, 0, 1);
         }
 
-        else if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+        else if(straightFlag == 1 && (state == 0 || state == 130 || state == 10 || state == 30 || state == 100))
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue * k);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
@@ -645,12 +647,12 @@ void CTRL_motorDiffer()
         }
         else if(straightFlag == 0)
         {
-            if(state == 11 || state == 13)
+            if(state == 20 || state == 60)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue * k);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue);
             }
-            else if(state == 18)
+            else if(state == 130)
             {
                 expectL = rampSpeed.intValue;
                 expectR = rampSpeed.intValue;
@@ -671,7 +673,7 @@ void CTRL_motorDiffer()
             expectR = (int32)(presentSpeed.intValue * display5.floatValue * k);
 //            GPIO_Set(P22, 0, 1);
         }
-        if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+        if(straightFlag == 1 && (state == 0 || state == 130 || state == 10 || state == 30 || state == 100))
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
@@ -679,12 +681,12 @@ void CTRL_motorDiffer()
         }
         else if(straightFlag == 0)
         {
-            if(state == 11 || state == 13)
+            if(state == 20 || state == 60)
             {
                 expectL = (int32)(presentSpeed.intValue * display7.floatValue);
                 expectR = (int32)(presentSpeed.intValue * display7.floatValue);
             }
-            else if(state == 18)
+            else if(state == 130)
             {
                 expectL = rampSpeed.intValue;
                 expectR = rampSpeed.intValue;
@@ -957,17 +959,17 @@ int foresee()
 
 int16_t CTRL_speedGetRight()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚21.6和21.7对应T5
 {
-    int16_t ctrl_speedR = 0;
+//    int16_t ctrl_speedR = 0;
     ctrl_speedR = SmartCar_Encoder_Get(GPT12_T5);
-    SmartCar_Encoder_Clear(GPT12_T5);
+//    SmartCar_Encoder_Clear(GPT12_T5);
     return ctrl_speedR;
 }
 
 int16_t CTRL_speedGetLeft()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚21.6和21.7对应T5
 {
-    int16_t ctrl_speedL = 0;
+//    int16_t ctrl_speedL = 0;
     ctrl_speedL = SmartCar_Encoder_Get(GPT12_T6);
-    SmartCar_Encoder_Clear(GPT12_T6);
+//    SmartCar_Encoder_Clear(GPT12_T6);
     return ctrl_speedL;
 }
 

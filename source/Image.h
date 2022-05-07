@@ -113,7 +113,8 @@
 #define stateIslandCircle 90
 #define stateIslandOut 100
 #define stateIslandFinal 110
-#define stateTOut 120
+#define stateParkIn 120
+#define stateRampway 130
 /////////////////////////////
 
 extern uint8_t IMG[CAMERA_H][CAMERA_W];//二值化后图像数组
@@ -130,6 +131,8 @@ extern int straightFlag, lastStraightFlag;
 extern int slowFlag;
 extern int rampFlag1, rampFlag2,rampFlag3;
 extern int rampWayCount;
+extern int rampJudgeCount;
+
 extern int leftPark,rightPark;
 
 extern int crossCircleCount;
@@ -247,11 +250,14 @@ void cross_T_out_over();
 //上下坡
 
 //入库
-
+void carpark_in();
+void carpark_out();
+void design_carpark();
 //停车
 
 //上下坡
-
+void rampwayOn();
+void rampwayDown();
 //废案
 void cross_T_in_start();
 void design_cross_T_in();
