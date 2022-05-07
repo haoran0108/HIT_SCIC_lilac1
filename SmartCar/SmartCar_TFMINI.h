@@ -19,6 +19,7 @@
 #define TFMINI_BAUDRATE     115200
 
 extern uint16 TFMINI_Distance;
+extern uint16 TFMINI_Strength;
 //typedef struct Information
 //{
 //    uint16 Distance;

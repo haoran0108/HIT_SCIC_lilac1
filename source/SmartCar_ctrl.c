@@ -70,7 +70,7 @@ void CTRL_gyroUpdate()
 
     deltaAcc = inv_accl[0];//2¸©Ñö 1×óÓÒ·´×ª 0×óÓÒ×ª
 //    test_varible[15] = inv_gyro[2];
-    test_varible[14] = deltaGyro[0];
+//    test_varible[14] = deltaGyro[0];
 
 }
 
@@ -303,7 +303,13 @@ void CTRL_fuzzyPID()
     float fuzzyKP = 1;
 //    int realVision;
 //    realVision = foresee();
-    servoError.currentError = 92 - mid_line[presentVision.intValue];
+//    servoError.currentError = 92 - mid_line[presentVision.intValue];
+    if(state == stateRampway)
+    {
+        servoError.currentError = 92 - mid_line[presentVision.intValue+10];
+
+    }
+    else servoError.currentError = 92 - mid_line[presentVision.intValue];
     test_varible[12] = servoError.currentError;
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
@@ -338,7 +344,7 @@ void CTRL_midLineLoopPID()
 
     servoError.lastError = servoError.currentError;
 //    test_varible[13] = servoPwm;
-    test_varible[15] = expectGyro;
+//    test_varible[15] = expectGyro;
 
 }
 

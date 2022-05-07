@@ -1207,10 +1207,30 @@ void get_mid_line(void)
         {
             mid_line[i] = (left_line[i] + right_line[i]) / 2;
         }
-        else if (left_line[i] == MISS)
+        else if (left_line[i] == MISS && state != stateRampway)
         {
 
             mid_line[i] = mid_line[i + 1];
+        }
+        else if(left_line[i] == MISS && state == stateRampway)
+        {
+            int way=1;
+            if(way == 1){
+                mid_line[i] = 92;
+            }else if(way == 2){
+                if(my_road[i].white_num!=0){
+                    mid_line[i]=(my_road[i].connected[1].left+my_road[i].connected[1].right)/2;
+                    for(int j=1;j<=my_road[i].white_num;j++){
+                        if(abs((my_road[i].connected[j].left+my_road[i].connected[j].right)/2-92)<abs(mid_line[i]-92)){
+                            mid_line[i]=(my_road[i].connected[j].left+my_road[i].connected[j].right)/2;
+                        }
+                    }
+                }else{
+                    mid_line[i] = mid_line[i + 1];
+                }
+
+            }
+
         }
         last_mid_line[i] = mid_line[i];
     }
@@ -2518,7 +2538,7 @@ void T_or_island() {
     int sumD = 0;
     int sumU = 0;
     for (int i = NEAR_LINE; i >= 103; i--) {
-        if (right_line[i] - left_line[i] > 32&& (left_line[i]==left_side[i] || right_line[i]==right_side[i])) {
+        if (right_line[i] - left_line[i] > 32&& (left_line[i]<=left_side[i] + 5 || right_line[i]>=right_side[i] - 5)) {
             sumD++;
         }
     }
@@ -3201,6 +3221,8 @@ void cross_T_out_start() {
                 if (my_road[i - 1].white_num != 0) {
                     if (left_line[i] >= xMax) {
                         xMax = left_line[i];
+
+
                         yMax = i;
                     }
                 }
@@ -3210,7 +3232,7 @@ void cross_T_out_start() {
             }
 
             if (calculate_slope_uint(yMax - 18, yMax - 1, left_line) * calculate_slope_uint(yMax + 2, yMax + 18, left_line) < 0) {
-                if (xMax < 94 && yMax >= 80 && yMax <= 110) {
+                if (xMax <= cross_circle_param2.intValue && yMax >= 80 && yMax <= 110) {
                     state = stateTOut;
                 }
             }
@@ -3233,7 +3255,7 @@ void cross_T_out_start() {
             }
 
             if (calculate_slope_uint(yMin - 18, yMin - 1, right_line) * calculate_slope_uint(yMin + 2, yMin + 18, right_line) < 0) {
-                if (xMin > 94 && yMin >= 80 && yMin <= 110) {
+                if (xMin >= cross_circle_param3.intValue && yMin >= 80 && yMin <= 110) {
                     state = stateTOut;
                 }
             }
@@ -3600,10 +3622,18 @@ void folk_road_out() {
     }
 
     if (sumD > 4 && sumU > 7) {
-        if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(85, 100, right_line)) < 0.2) {
-            state = 0;
+            if (FolkRoadWhere == RIGHT) {
+                if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(95, 110, right_line)) < 0.2) {
+                    state = 0;
+                }
+            }
+            else if (FolkRoadWhere == LEFT) {
+                if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(95, 110, left_line)) < 0.2) {
+                    state = 0;
+                }
+            }
+
         }
-    }
 }
 
 
