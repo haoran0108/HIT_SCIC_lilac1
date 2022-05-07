@@ -12,8 +12,7 @@ float test_varible[20] = {1,2,3,4,5,6,7,8,9,10};//发送数据的   //数组
 /*标志位*/
 int zebraFlag = 0, zebraCircle = 0;
 int flagStop = 0, delayStop = 0;
-int16_t ctrl_speedR = 0;
-int16_t ctrl_speedL = 0;
+
 
 /*pid相关*/
 error servoError = {1, 1, 1};
@@ -469,7 +468,7 @@ void CTRL_servoMain()
     else if(servoPwm < servoMin)
         servoPwm = servoMin;
     test_varible[11] = servoGyroPwm;
-    servoPwm = display8.intValue;
+//    servoPwm = display8.intValue;
 
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
@@ -959,17 +958,17 @@ int foresee()
 
 int16_t CTRL_speedGetRight()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚21.6和21.7对应T5
 {
-//    int16_t ctrl_speedR = 0;
+    int16_t ctrl_speedR = 0;
     ctrl_speedR = SmartCar_Encoder_Get(GPT12_T5);
-//    SmartCar_Encoder_Clear(GPT12_T5);
+    SmartCar_Encoder_Clear(GPT12_T5);
     return ctrl_speedR;
 }
 
 int16_t CTRL_speedGetLeft()//左轮编码器1 引脚20.3和20.0对应T6   右轮编码器2 引脚21.6和21.7对应T5
 {
-//    int16_t ctrl_speedL = 0;
+    int16_t ctrl_speedL = 0;
     ctrl_speedL = SmartCar_Encoder_Get(GPT12_T6);
-//    SmartCar_Encoder_Clear(GPT12_T6);
+    SmartCar_Encoder_Clear(GPT12_T6);
     return ctrl_speedL;
 }
 

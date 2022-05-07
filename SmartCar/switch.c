@@ -64,10 +64,7 @@ void SW_readSwitch()
         GPIO_Set(P00, 8, 0);//电机开关
 
         GPIO_Set(P02, 8, 1);//图传SD
-//        GPIO_Set(P02, 8, 1);//图传SD 采图
-//        CTRL_directionAngleClean();
-        SmartCar_Encoder_Clear(GPT12_T6);
-        SmartCar_Encoder_Clear(GPT12_T5);
+
     }
     else
     {
@@ -77,7 +74,7 @@ void SW_readSwitch()
             delayFlag = 1;
         }
 
-        GPIO_Set(P00, 8, 0);//电机
+        GPIO_Set(P00, 8, 1);//电机
 
 //        GPIO_Set(P02, 8, 0);
 
