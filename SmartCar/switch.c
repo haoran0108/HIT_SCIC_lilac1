@@ -50,7 +50,7 @@ void SW_readSwitch()
         rampWayCount = 0;
         startCount = 0;
 //        lastState[8] = 0;
-//        parkJudgeCount = 0;
+        parkJudgeCount = 0;
 
         slowFlag = 0;
 

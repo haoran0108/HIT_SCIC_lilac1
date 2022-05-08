@@ -92,8 +92,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     cross_circle = MENU_fileInit(cross_circle, 1, 1.0, "crocircle", 3, none, &island, &carPark, NULL, &cross_circle_param1);
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 60, 1.0, "cc-count", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
-    cross_circle_param2 = MENU_fileInit(cross_circle_param2, 92, 1.0, "param2", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
-    cross_circle_param3 = MENU_fileInit(cross_circle_param3, 88, 1.0, "param3", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
+    cross_circle_param2 = MENU_fileInit(cross_circle_param2, 86, 1.0, "param2", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
+    cross_circle_param3 = MENU_fileInit(cross_circle_param3, 94, 1.0, "param3", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
     cross_circle_param4 = MENU_fileInit(cross_circle_param4, 55, 1.0, "param4", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
     cross_circle_param5 = MENU_fileInit(cross_circle_param5, 55, 1.0, "param5", 6, dataint, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
     cross_circle_param6 = MENU_fileInit(cross_circle_param6, 55, 1.0, "param6", 7, dataint, &cross_circle_param5, &cross_circle_param7, NULL, NULL);
@@ -282,7 +282,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     saveGear2 = MENU_fileInit(saveGear2, 1, 1.0, "SaveGear2", 3, none, &saveGear1, &saveGear3, NULL, &g2_Data1);
     saveGear3 = MENU_fileInit(saveGear3, 1, 1.0, "SaveGear3", 4, none, &saveGear2, &startWay, NULL, &g3_Data1);
 
-    startWay = MENU_fileInit(startWay, 0, 1.0, "start-way", 5, dataint, &saveGear3, NULL, NULL, NULL);
+    startWay = MENU_fileInit(startWay, 1, 1.0, "start-way", 5, dataint, &saveGear3, NULL, NULL, NULL);
 
     //摄像头显示在oled上
 //    image = MENU_fileInit(image, 1, 1.0, "IMAGE", 7, none, &fileSave, NULL, NULL, NULL);

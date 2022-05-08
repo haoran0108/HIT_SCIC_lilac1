@@ -134,7 +134,7 @@ extern int rampWayCount;
 extern int rampJudgeCount;
 
 extern int leftPark,rightPark;
-
+extern int parkJudgeCount;
 extern int crossCircleCount;
 extern int startCount;
 typedef struct {
