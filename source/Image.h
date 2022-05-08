@@ -253,6 +253,8 @@ void cross_T_out_over();
 void carpark_in();
 void carpark_out();
 void design_carpark();
+void searchParkLine();
+
 //Í£³µ
 
 //ÉÏÏÂÆÂ

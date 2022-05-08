@@ -1365,6 +1365,8 @@ void judge_type_road() {
             {
                 leftPark = 0;
                 rightPark = 1;
+                searchParkLine();
+
             }
         }
 
@@ -3676,7 +3678,7 @@ void carpark_in()
     int flag = 0;
     int gapNumber = 0;
 
-    for (carParkX = 60; carParkX < 105; carParkX++)
+    for (carParkX = 50; carParkX < 105; carParkX++)
     {
         if (my_road[carParkX + 1].white_num > 4 && my_road[carParkX].white_num > 4 && my_road[carParkX - 1].white_num > 4 && my_road[carParkX - 2].white_num > 3 && my_road[carParkX - 3].white_num > 2)
         {
@@ -3727,7 +3729,7 @@ void carpark_in()
 void carpark_out()
 {
     int flag = 0;
-    for (int i = 55; i < 105; i++)
+    for (int i = 45; i < 105; i++)
     {
         if (my_road[i + 1].white_num > 4 && my_road[i].white_num > 4 && my_road[i - 1].white_num > 4 && my_road[i - 2].white_num > 3)
         {
@@ -3818,6 +3820,22 @@ void design_carpark()
         }
 
     }
+}
+
+void searchParkLine()
+{
+    int gapNumber = 0;
+
+    for(int i = search_line.intValue; i < 105; i++)
+    {
+        if (my_road[i].white_num > 3 && (my_road[i].connected[my_road[i].white_num].width > 10 || my_road[i].connected[1].width > 10))
+        {
+            flagStop = 1;
+
+            break;
+        }
+    }
+
 }
 
 void rampwayOn()
