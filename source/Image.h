@@ -258,6 +258,13 @@ void design_carpark();
 //上下坡
 void rampwayOn();
 void rampwayDown();
+
+//直道
+int straight_variance(int istart, int iend,int varThreshold);
+int midMaxColumn(int istart, int iend, int param);
+void straight_define();
+
+
 //废案
 void cross_T_in_start();
 void design_cross_T_in();

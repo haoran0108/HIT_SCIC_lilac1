@@ -1409,6 +1409,8 @@ void judge_type_road() {
                 rampWayCount = 0;
             }
             if(state != stateRampway && state != stateParkIn){
+                straight_define();
+
         //        straight_protection();
         //        lastStraightFlag = straightFlag;
         //
@@ -1722,7 +1724,7 @@ void cross_in() {
     }
     //printf("j=%d,d=%d\n", jumpLine, direction);
     //统一坐标
-    if (60 < jumpLine && jumpLine <= NEAR_LINE - 4) {
+    if (50 < jumpLine && jumpLine <= NEAR_LINE - 4) {
         if (direction == 0) {
             if (my_road[jumpLine - 5].connected[j_mid[jumpLine - 5]].right + 1 >= my_road[jumpLine].connected[j_mid[jumpLine]].right
                 && my_road[jumpLine - 5].connected[j_mid[jumpLine - 5]].left - 1<= my_road[jumpLine].connected[j_mid[jumpLine]].left) {
@@ -3609,26 +3611,26 @@ void design_folk_road() {
 void folk_road_out() {
 
     int sumD = 0;
-    for (int i = NEAR_LINE; i > 101; i--) {
-        if (right_line[i] - left_line[i] > 35) {
+    for (int i = NEAR_LINE; i > 95; i--) {
+        if (right_line[i] - left_line[i] > 31) {
             sumD++;
         }
     }
     int sumU = 0;
-    for (int i = 100; i >= 90; i--) {
-        if (right_line[i] - left_line[i] < 35) {
+    for (int i = 100; i >= 85; i--) {
+        if (right_line[i] - left_line[i] < 32) {
             sumU++;
         }
     }
 
     if (sumD > 4 && sumU > 7) {
             if (FolkRoadWhere == RIGHT) {
-                if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(95, 110, right_line)) < 0.2) {
+                if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(90, 105, right_line)) < 0.2) {
                     state = 0;
                 }
             }
             else if (FolkRoadWhere == LEFT) {
-                if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(95, 110, left_line)) < 0.2) {
+                if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(90, 105, left_line)) < 0.2) {
                     state = 0;
                 }
             }
@@ -3887,7 +3889,81 @@ void rampwayDown()
 
 }
 
+int midMaxColumn(int istart, int iend, int param)
+{
 
+    int count1 = 0;
+    int count2 = istart - iend - param;
+    for(int i = istart; i > iend; i--)
+    {
+        if(IMG[i][93] == white && my_road[i].connected[j_continue[i]].width < 30)
+        {
+            count1 += 1;
+        }
+
+    }
+    if(count1 > count2)
+    {
+        return 1;
+
+    }
+    else return 0;
+
+
+}
+
+int straight_variance(int istart, int iend, int varThreshold)
+{
+    float k, b;
+    int output;
+    int sumVar = 0, count = 0;
+    float var = 0;
+    k = (float)(mid_line[istart] - mid_line[iend]) / (istart - iend);
+    for (int i = istart; i > iend; i--)
+    {
+        output = k * (i - istart) + mid_line[istart];
+        output = output - mid_line[i];
+        output *= output;
+        sumVar += output;
+        count += 1;
+    }
+    var = (float)(sumVar) / count;
+    if (var > varThreshold)
+    {
+        return 1;
+    }
+    else if(var <= varThreshold)
+    {
+        return 2;
+
+    }
+
+    else return 0;
+}
+
+void straight_define()
+{
+//    for(int i = presentVision.intValue;i>60;i--)
+//    {
+//
+//    }
+
+    if(straightFlag == 0 && straight_variance(presentVision.intValue, 60, 10) == 2 && midMaxColumn(presentVision.intValue, 60, 2) == 1)
+    {
+        straightFlag = 1;
+    }
+
+    else if(straightFlag == 1)
+    {
+        if(midMaxColumn(presentVision.intValue + 5, 80, 4) == 1)
+        {
+            straightFlag = 1;
+        }
+        else straightFlag = 0;
+    }
+
+    test_varible[6] = straightFlag;
+}
 
 // 以下是废案，没有成功的代码，以防万一需要使用的内容
 ////////////////////////////////////////////
