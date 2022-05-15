@@ -114,7 +114,7 @@ void CTRL_speedLoopPID()
     currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
     if(currentExpectLF < 800) currentExpectLF = 800;
-    else if(currentExpectLF > 4200) currentExpectLF = 4200;
+    else if(currentExpectLF > 4096) currentExpectLF = 4096;
 
 
     errorMR.currentError = expectR - speedR;//取偏差
@@ -126,7 +126,7 @@ void CTRL_speedLoopPID()
     currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
     if(currentExpectRT < 800) currentExpectRT = 800;
-    else if(currentExpectRT > 4200) currentExpectRT = 4200;
+    else if(currentExpectRT > 4096) currentExpectRT = 4096;
 
     test_varible[0] = -speedL;
     test_varible[1] = speedR;
@@ -430,11 +430,11 @@ void CTRL_servoMain()
 
     if(GPIO_Read(P13, 2))
     {
-        if(parkStart == 1)
+        if(parkStart == 1 || parkStart == 2)
         {
             servoPwm = servoMin;//630
         }
-        else if(parkStart == -1)
+        else if(parkStart == -1 || parkStart == -2)
         {
             servoPwm = servoMax;
         }
@@ -606,7 +606,7 @@ void CTRL_motorDiffer()
             expectR = (int32)(presentSpeed.intValue * display5.floatValue * k);
 //            GPIO_Set(P22, 0, 1);
         }
-        else if(straightFlag == 1 && (state == 0 || state == 130 || state == 10 || state == 30 || state == 100))
+        else if(straightFlag == 1)
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue * k);
@@ -644,7 +644,7 @@ void CTRL_motorDiffer()
 //            GPIO_Set(P22, 0, 1);
         }
 
-        else if(straightFlag == 1 && (state == 0 || state == 130 || state == 10 || state == 30 || state == 100))
+        else if(straightFlag == 1)
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue * k);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
@@ -678,7 +678,7 @@ void CTRL_motorDiffer()
             expectR = (int32)(presentSpeed.intValue * display5.floatValue * k);
 //            GPIO_Set(P22, 0, 1);
         }
-        if(straightFlag == 1 && (state == 0 || state == 130 || state == 10 || state == 30 || state == 100))
+        if(straightFlag == 1)
         {
             expectL = (int32)(presentSpeed.intValue * display6.floatValue);
             expectR = (int32)(presentSpeed.intValue * display6.floatValue);
@@ -780,7 +780,7 @@ void CTRL_motorDiffer()
 
 void CTRL_CarParkStart()
 {
-    if(GPIO_Read(P13, 2) && (parkStart == 1 || parkStart == -1))
+    if(GPIO_Read(P13, 2) && (parkStart == 1 || parkStart == -1 || parkStart == 2 || parkStart == -2))
     {
         CTRL_gyroUpdate();
         CTRL_directionAngleGet();

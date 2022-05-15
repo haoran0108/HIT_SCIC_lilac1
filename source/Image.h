@@ -262,7 +262,7 @@ void rampwayOn();
 void rampwayDown();
 
 //Ö±µÀ
-int straight_variance(int istart, int iend,int varThreshold);
+int straight_variance(int istart, int iend,float varThreshold);
 int midMaxColumn(int istart, int iend, int param);
 void straight_define();
 

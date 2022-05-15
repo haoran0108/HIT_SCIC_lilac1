@@ -113,8 +113,8 @@ IFX_INTERRUPT(asclin0RxISR, 0, IFX_INTPRIO_ASCLIN0_RX)
     IfxAsclin_Asc_isrReceive(&uart[0]);
 
     SmartCar_TFMINI_UARTCallBack();//tfmini
-    test_varible[15] = TFMINI_Distance;
-    test_varible[14] = TFMINI_Strength;
+//    test_varible[15] = TFMINI_Distance;
+//    test_varible[14] = TFMINI_Strength;
 
 }
 

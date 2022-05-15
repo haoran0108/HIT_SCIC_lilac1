@@ -37,6 +37,7 @@ struct menuNode
 };
 typedef struct menuNode node_t;
 typedef struct menuNode* nodeptr_t;
+
 extern float voltage;
 extern nodeptr_t tempFile;
 extern node_t file1, file3;
@@ -63,7 +64,7 @@ extern node_t Folk_PB, Folk_PM, Folk_PS, Folk_ZO, Folk_NS, Folk_NM, Folk_NB, Fol
 extern node_t islandout_up, design_island_k, islandParam1, islandParam2, islandParam3, islandParam4, islandParam5;
 extern node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4, cross_circle_param5, cross_circle_param6;
 extern node_t parkCount, startGyro, endGyro, search_line, parkDelay;
-extern node_t rampCount, rampDistance, rampSpeed;
+extern node_t rampCount, rampDistance, rampSpeed,rampMax, rampMin;
 extern node_t folkWay;
 extern node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6, folkParam7, folkParam8, folkParam9, folkParam10, folkBottom;
 extern node_t speedFilter, currentFilter1, currentFilter2, currentKdLpf, speedKdLpf;
