@@ -23,12 +23,18 @@ typedef enum data//列举
     datafloat
 }menuData;
 
+
 struct menuNode
 {
-    int intValue;
-    float floatValue;
+//    int intValue;
+//    float floatValue;
+    union
+    {
+            int16 intVal;
+            float floatVal;
+    };
     char name[10];//文件名
-    int pos;//文件的位置（出现在屏幕的第几行）
+    uint8_t pos;//文件的位置（出现在屏幕的第几行）
     menuData i;//数据类型标志
     struct menuNode* prior; //同一文件下的上一个文件
     struct menuNode* next;//同一个文件下的下一个文件
@@ -86,7 +92,7 @@ extern node_t startWay;
 //  @since      v1.0
 //  Sample usage:
 //-------------------------------------------------------------------------------------------------------------------
-node_t MENU_fileInit(node_t file, int intVal, float floatVal, char name[10], int pos,menuData i,struct menuNode* prior,struct menuNode* next,struct menuNode* backward,struct menuNode* forward);
+node_t MENU_fileInit(node_t file, int16 valuei, float valuef, char name[10], uint8_t pos,menuData i,struct menuNode* prior,struct menuNode* next,struct menuNode* backward,struct menuNode* forward);
 
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      实际创建文件
@@ -96,6 +102,7 @@ node_t MENU_fileInit(node_t file, int intVal, float floatVal, char name[10], int
 //  Sample usage:
 //-------------------------------------------------------------------------------------------------------------------
 void MENU_Init();
+
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      打印同一级文件的名字
 //  @param      allFile   类型nodeptr_t 当前的文件（指针类型）

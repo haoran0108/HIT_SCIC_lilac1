@@ -51,14 +51,25 @@ nodeptr_t tempFile;
 uint32 y = 1;
 uint32 pageNum = 1;
 float voltage;
-node_t MENU_fileInit(node_t file, int intVal, float floatVal, char name[10],int pos,menuData i,
+
+node_t MENU_fileInit(node_t file, int16 valuei, float valuef, char name[10],uint8_t pos,menuData type,
         struct menuNode* prior,struct menuNode* next,struct menuNode* backward,struct menuNode* forward)
 {
-    file.floatValue = floatVal;
-    file.intValue = intVal;
+//    file.floatValue = floatVal;
+//    file.intValue = intVal;
+    file.i = type;
+    if(file.i == dataint)
+    {
+        file.intVal = valuei;
+    }
+    else if(file.i == datafloat)
+    {
+        file.floatVal = valuef;
+    }
+//    else if()
     snprintf(file.name,12*sizeof(char), name);
     file.pos = pos;
-    file.i = i;
+
     file.prior = prior;
     file.next = next;
     file.backward = backward;
@@ -133,41 +144,41 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    folkParam10 = MENU_fileInit(folkParam10, 1, 1.0, "param10", 5, dataint, &folkParam9, &folkBottom, NULL, NULL);
     folkBottom = MENU_fileInit(folkBottom, 1, 1.0, "bottom", 6, none, &folkParam4, NULL, NULL, NULL);
 
-//    Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
-//    Cross_PM = MENU_fileInit(Cross_PM, 1, 0.5, "crossPM", 3, datafloat, &Cross_PB, &Cross_PS, NULL, NULL);
-//    Cross_PS = MENU_fileInit(Cross_PS, 1, 0.5, "crossPS", 4, datafloat, &Cross_PM, &Cross_ZO, NULL, NULL);
-//    Cross_ZO = MENU_fileInit(Cross_ZO, 1, 0.5, "crossZO", 5, datafloat, &Cross_PS, &Cross_NS, NULL, NULL);
-//    Cross_NS = MENU_fileInit(Cross_NS, 1, 0.5, "crossNS", 6, datafloat, &Cross_ZO, &Cross_NM, NULL, NULL);
-//    Cross_NM = MENU_fileInit(Cross_NM, 1, 0.5, "crossNM", 7, datafloat, &Cross_NS, &Cross_NB, NULL, NULL);
-//    Cross_NB = MENU_fileInit(Cross_NB, 1, 0.5, "crossNB", 2, datafloat, &Cross_NM, &Cross_DS, NULL, NULL);
-//    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
-//    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
-//
-//    circle_PB = MENU_fileInit(circle_PB, 1, 0.5, "circlePB", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
-//    circle_PM = MENU_fileInit(circle_PM, 1, 0.5, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
-//    circle_PS = MENU_fileInit(circle_PS, 1, 0.5, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
-//    circle_ZO = MENU_fileInit(circle_ZO, 1, 0.5, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
-//    circle_NS = MENU_fileInit(circle_NS, 1, 0.5, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
-//    circle_NM = MENU_fileInit(circle_NM, 1, 0.5, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
-//    circle_NB = MENU_fileInit(circle_NB, 1, 0.5, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
-//    circle_DS = MENU_fileInit(circle_DS, 1, 0.5, "D-SMALL", 3, datafloat, &circle_NB, &circle_DB, NULL, NULL);
-//    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
-//
-//    Island_PB = MENU_fileInit(Island_PB, 1, 0.5, "IslandPB", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
-//    Island_PM = MENU_fileInit(Island_PM, 1, 0.5, "IslandPM", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
-//    Island_PS = MENU_fileInit(Island_PS, 1, 0.5, "IslandPS", 4, datafloat, &Island_PM, &Island_ZO, NULL, NULL);
-//    Island_ZO = MENU_fileInit(Island_ZO, 1, 0.5, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
-//    Island_NS = MENU_fileInit(Island_NS, 1, 0.5, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
-//    Island_NM = MENU_fileInit(Island_NM, 1, 0.5, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
-//    Island_NB = MENU_fileInit(Island_NB, 1, 0.5, "IslandNB", 2, datafloat, &Island_NM, &Island_DS, NULL, NULL);
-//    Island_DS = MENU_fileInit(Island_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Island_NB, &Island_DB, NULL, NULL);
-//    Island_DB = MENU_fileInit(Island_DB, 1, 0.5, "D-BIG", 4, datafloat, &Island_DS, NULL, NULL, NULL);
-//
-//    Folk_PB = MENU_fileInit(Folk_PB, 1, 0.5, "FolkPB", 2, datafloat, NULL, &Folk_PM, &FolkPD, NULL);
-//    Folk_PM = MENU_fileInit(Folk_PM, 1, 0.5, "FolkPM", 3, datafloat, &Folk_PB, &Folk_PS, NULL, NULL);
-//    Folk_PS = MENU_fileInit(Folk_PS, 1, 0.5, "FolkPS", 4, datafloat, &Folk_PM, &Folk_ZO, NULL, NULL);
-//    Folk_ZO = MENU_fileInit(Folk_ZO, 1, 0.5, "FolkZO", 5, datafloat, &Folk_PS, &Folk_NS, NULL, NULL);
-//    Folk_NS = MENU_fileInit(Folk_NS, 1, 0.5, "FolkNS", 6, datafloat, &Folk_ZO, &Folk_NM, NULL, NULL);
+    Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
+    Cross_PM = MENU_fileInit(Cross_PM, 1, 0.5, "crossPM", 3, datafloat, &Cross_PB, &Cross_PS, NULL, NULL);
+    Cross_PS = MENU_fileInit(Cross_PS, 1, 0.5, "crossPS", 4, datafloat, &Cross_PM, &Cross_ZO, NULL, NULL);
+    Cross_ZO = MENU_fileInit(Cross_ZO, 1, 0.5, "crossZO", 5, datafloat, &Cross_PS, &Cross_NS, NULL, NULL);
+    Cross_NS = MENU_fileInit(Cross_NS, 1, 0.5, "crossNS", 6, datafloat, &Cross_ZO, &Cross_NM, NULL, NULL);
+    Cross_NM = MENU_fileInit(Cross_NM, 1, 0.5, "crossNM", 7, datafloat, &Cross_NS, &Cross_NB, NULL, NULL);
+    Cross_NB = MENU_fileInit(Cross_NB, 1, 0.5, "crossNB", 2, datafloat, &Cross_NM, &Cross_DS, NULL, NULL);
+    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
+    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
+
+    circle_PB = MENU_fileInit(circle_PB, 1, 0.5, "circlePB", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
+    circle_PM = MENU_fileInit(circle_PM, 1, 0.5, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
+    circle_PS = MENU_fileInit(circle_PS, 1, 0.5, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
+    circle_ZO = MENU_fileInit(circle_ZO, 1, 0.5, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
+    circle_NS = MENU_fileInit(circle_NS, 1, 0.5, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
+    circle_NM = MENU_fileInit(circle_NM, 1, 0.5, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
+    circle_NB = MENU_fileInit(circle_NB, 1, 0.5, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
+    circle_DS = MENU_fileInit(circle_DS, 1, 0.5, "D-SMALL", 3, datafloat, &circle_NB, &circle_DB, NULL, NULL);
+    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
+
+    Island_PB = MENU_fileInit(Island_PB, 1, 0.5, "IslandPB", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
+    Island_PM = MENU_fileInit(Island_PM, 1, 0.5, "IslandPM", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
+    Island_PS = MENU_fileInit(Island_PS, 1, 0.5, "IslandPS", 4, datafloat, &Island_PM, &Island_ZO, NULL, NULL);
+    Island_ZO = MENU_fileInit(Island_ZO, 1, 0.5, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
+    Island_NS = MENU_fileInit(Island_NS, 1, 0.5, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
+    Island_NM = MENU_fileInit(Island_NM, 1, 0.5, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
+    Island_NB = MENU_fileInit(Island_NB, 1, 0.5, "IslandNB", 2, datafloat, &Island_NM, &Island_DS, NULL, NULL);
+    Island_DS = MENU_fileInit(Island_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Island_NB, &Island_DB, NULL, NULL);
+    Island_DB = MENU_fileInit(Island_DB, 1, 0.5, "D-BIG", 4, datafloat, &Island_DS, NULL, NULL, NULL);
+
+    Folk_PB = MENU_fileInit(Folk_PB, 1, 0.5, "FolkPB", 2, datafloat, NULL, &Folk_PM, &FolkPD, NULL);
+    Folk_PM = MENU_fileInit(Folk_PM, 1, 0.5, "FolkPM", 3, datafloat, &Folk_PB, &Folk_PS, NULL, NULL);
+    Folk_PS = MENU_fileInit(Folk_PS, 1, 0.5, "FolkPS", 4, datafloat, &Folk_PM, &Folk_ZO, NULL, NULL);
+    Folk_ZO = MENU_fileInit(Folk_ZO, 1, 0.5, "FolkZO", 5, datafloat, &Folk_PS, &Folk_NS, NULL, NULL);
+    Folk_NS = MENU_fileInit(Folk_NS, 1, 0.5, "FolkNS", 6, datafloat, &Folk_ZO, &Folk_NM, NULL, NULL);
 //    Folk_NM = MENU_fileInit(Folk_NM, 1, 0.5, "FolkNM", 7, datafloat, &Folk_NS, &Folk_NB, NULL, NULL);
 //    Folk_NB = MENU_fileInit(Folk_NB, 1, 0.5, "FolkNB", 2, datafloat, &Folk_NM, &Folk_DS, NULL, NULL);
 //    Folk_DS = MENU_fileInit(Folk_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Folk_NB, &Folk_DB, NULL, NULL);
@@ -384,11 +395,11 @@ void MENU_valuePrintf(nodeptr_t temp)
     {
         if(temp->i == dataint)
         {
-             SmartCar_OLED_Printf6x8(80, 2+count1, "%d", temp->intValue);
+             SmartCar_OLED_Printf6x8(80, 2+count1, "%d", temp->intVal);
         }
         else if(temp->i == datafloat)
         {
-            SmartCar_OLED_Printf6x8(80, 2+count1, "%0.3f", temp->floatValue);
+            SmartCar_OLED_Printf6x8(80, 2+count1, "%0.3f", temp->floatVal);
         }
 
         temp = temp->next;
@@ -397,11 +408,11 @@ void MENU_valuePrintf(nodeptr_t temp)
         {
             if(temp->i == dataint)
             {
-                SmartCar_OLED_Printf6x8(80, 2+count1, "%d", temp->intValue);
+                SmartCar_OLED_Printf6x8(80, 2+count1, "%d", temp->intVal);
             }
             else if(temp->i == datafloat)
             {
-                SmartCar_OLED_Printf6x8(80, 2+count1, "%0.3f", temp->floatValue);
+                SmartCar_OLED_Printf6x8(80, 2+count1, "%0.3f", temp->floatVal);
             }
             count1 = 0;
         }
@@ -527,8 +538,8 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
         {
             SmartCar_OLED_Fill(0);
 
-            tempInt = temp->intValue;
-            tempFloat = temp->floatValue;
+            tempInt = temp->intVal;
+            tempFloat = temp->floatVal;
 
             while(TRUE)
             {
@@ -543,12 +554,12 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         if(!GPIO_Read(P11, 2))//值增加 上
                         {
                             SmartCar_OLED_Fill(0);
-                            temp->intValue += 1 * times;
+                            temp->intVal += 1 * times;
                         }
                         else if(!GPIO_Read(P11, 9))//值减小 下
                         {
                             SmartCar_OLED_Fill(0);
-                            temp->intValue -= 1 * times;
+                            temp->intVal -= 1 * times;
                         }
                         else if(!GPIO_Read(P11, 10))//位数向左 左
                         {
@@ -556,7 +567,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                             times = times * 10;
                             //intCursor -= 5;
 
-                            SmartCar_OLED_Printf6x8(55, 3, "%2d", temp->intValue);
+                            SmartCar_OLED_Printf6x8(55, 3, "%2d", temp->intVal);
                             SmartCar_OLED_Printf6x8(55, 4, "%2d", tempInt);
 
 
@@ -570,7 +581,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                             }
 
                             SmartCar_OLED_Printf6x8(55, 4, "%2d", tempInt);
-                            SmartCar_OLED_Printf6x8(55, 3, "%2d", temp->intValue);
+                            SmartCar_OLED_Printf6x8(55, 3, "%2d", temp->intVal);
 
                         }
                         else if(!GPIO_Read(P11, 12))//确认 ok并回到上一级
@@ -584,7 +595,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         SmartCar_OLED_P6x8Str(40, 5, "times:");
                         SmartCar_OLED_Printf6x8(80, 5, "%2.1f", times);
                         SmartCar_OLED_Printf6x8(55, 4, "%2d", tempInt);
-                        SmartCar_OLED_Printf6x8(55, 3, "%2d", temp->intValue);
+                        SmartCar_OLED_Printf6x8(55, 3, "%2d", temp->intVal);
                     }
 
                     else if(temp->i == datafloat)
@@ -593,12 +604,12 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         if(!GPIO_Read(P11, 2))//值增加 上
                         {
                             SmartCar_OLED_Fill(0);
-                            temp->floatValue += 0.1 * times;
+                            temp->floatVal += 0.1 * times;
                         }
                         else if(!GPIO_Read(P11, 9))//值减小 下
                         {
                             SmartCar_OLED_Fill(0);
-                            temp->floatValue -= 0.1 * times;
+                            temp->floatVal -= 0.1 * times;
                         }
                         else if(!GPIO_Read(P11, 10))//位数向左 左
                         {
@@ -606,7 +617,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                             times = times * 10;
 
                             SmartCar_OLED_Printf6x8(40, 4, "%0.3f", tempFloat);
-                            SmartCar_OLED_Printf6x8(40, 3, "%0.3f", temp->floatValue);
+                            SmartCar_OLED_Printf6x8(40, 3, "%0.3f", temp->floatVal);
 
                         }
                         else if (!GPIO_Read(P11, 11))//位数向右 右
@@ -615,7 +626,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                             times = times / 10.0;
 
                             SmartCar_OLED_Printf6x8(40, 4, "%0.3f", tempFloat);
-                            SmartCar_OLED_Printf6x8(40, 3, "%0.3f", temp->floatValue);
+                            SmartCar_OLED_Printf6x8(40, 3, "%0.3f", temp->floatVal);
 
                         }
                         else if(!GPIO_Read(P11, 12))//确认 ok并回到上一级
@@ -629,7 +640,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         SmartCar_OLED_P6x8Str(40, 5, "times:");
                         SmartCar_OLED_Printf6x8(80, 5, "%0.3f", times / 10.0);
                         SmartCar_OLED_Printf6x8(40, 4, "%3.3f", tempFloat);
-                        SmartCar_OLED_Printf6x8(40, 3, "%3.3f", temp->floatValue);
+                        SmartCar_OLED_Printf6x8(40, 3, "%3.3f", temp->floatVal);
                     }
 
                 }
@@ -648,11 +659,11 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         {
                             if(dataRead->i == datafloat)
                             {
-                                dataRead->floatValue = Page_Read(0, page, float);
+                                dataRead->floatVal = Page_Read(0, page, float);
                             }
                             else if(dataRead->i == dataint)
                             {
-                                dataRead->intValue = Page_Read(0, page, uint32);
+                                dataRead->intVal = Page_Read(0, page, uint32);
                             }
 
                             page ++;
@@ -669,11 +680,11 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         {
                             if(dataRead->i == datafloat)
                             {
-                                dataRead->floatValue = Page_Read(1, page, float);
+                                dataRead->floatVal = Page_Read(1, page, float);
                             }
                             else if(dataRead->i == dataint)
                             {
-                                dataRead->intValue = Page_Read(1, page, uint32);
+                                dataRead->intVal = Page_Read(1, page, uint32);
                             }
 
                             page ++;
@@ -691,11 +702,11 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         {
                             if(dataRead->i == datafloat)
                             {
-                                dataRead->floatValue = Page_Read(2, page, float);
+                                dataRead->floatVal = Page_Read(2, page, float);
                             }
                             else if(dataRead->i == dataint)
                             {
-                                dataRead->intValue = Page_Read(2, page, uint32);
+                                dataRead->intVal = Page_Read(2, page, uint32);
                             }
 
                             page ++;
@@ -712,11 +723,11 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         {
                             if(dataRead->i == datafloat)
                             {
-                                dataRead->floatValue = Page_Read(0, page, float);
+                                dataRead->floatVal = Page_Read(0, page, float);
                             }
                             else if(dataRead->i == dataint)
                             {
-                                dataRead->intValue = Page_Read(0, page, uint32);
+                                dataRead->intVal = Page_Read(0, page, uint32);
                             }
 
                             page ++;
@@ -733,11 +744,11 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         {
                             if(dataRead->i == datafloat)
                             {
-                                dataRead->floatValue = Page_Read(1, page, float);
+                                dataRead->floatVal = Page_Read(1, page, float);
                             }
                             else if(dataRead->i == dataint)
                             {
-                                dataRead->intValue = Page_Read(1, page, uint32);
+                                dataRead->intVal = Page_Read(1, page, uint32);
                             }
 
                             page ++;
@@ -754,11 +765,11 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
                         {
                             if(dataRead->i == datafloat)
                             {
-                                dataRead->floatValue = Page_Read(2, page, float);
+                                dataRead->floatVal = Page_Read(2, page, float);
                             }
                             else if(dataRead->i == dataint)
                             {
-                                dataRead->intValue = Page_Read(2, page, uint32);
+                                dataRead->intVal = Page_Read(2, page, uint32);
                             }
 
                             page ++;
@@ -786,11 +797,11 @@ void MENU_sectorSave(uint32 sectorNum, nodeptr_t gearData)//按扇区写入
     {
         if(gearData->i == dataint)
         {
-            memcpy(buf + count, &(gearData->intValue), sizeof(uint32_t));
+            memcpy(buf + count, &(gearData->intVal), sizeof(uint32_t));
         }
         else if(gearData->i == datafloat)
         {
-            memcpy(buf + count, &(gearData->floatValue), sizeof(uint32_t));
+            memcpy(buf + count, &(gearData->floatVal), sizeof(uint32_t));
         }
 
         if(gearData->i != none)

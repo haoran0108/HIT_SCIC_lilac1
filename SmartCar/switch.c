@@ -35,8 +35,8 @@ void SW_readSwitch()
 //        flagStop = 0;
         parkPosition = 0;
 
-        parkStart = startWay.intValue;
-        parkType = startWay.intValue;
+        parkStart = startWay.intVal;
+        parkType = startWay.intVal;
 
         state = 0;
 
