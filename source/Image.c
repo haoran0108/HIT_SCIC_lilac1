@@ -2393,7 +2393,7 @@ void T_island_in_start() {
 
             }
             else {
-                int num = 105;
+                int num = 110;
                 downPoint = num;
                 while (num >= 40 && my_road[num].connected[j_mid[num]].right <= right_side[num] - 1
                     && abs(my_road[num - 1].connected[j_mid[num - 1]].right - my_road[num].connected[j_mid[num]].right) <= 4
@@ -2410,7 +2410,7 @@ void T_island_in_start() {
             }
 
             if (fabs(calculate_slope_struct(downPoint + 1, downPoint + 15, j_mid, LEFT) - calculate_slope_struct(downPoint + 1, downPoint + 15, j_mid, RIGHT)) < 0.2
-                && downPoint <= 110 && 75 <= downPoint) {
+                && downPoint < 110 && 75 <= downPoint) {
                 //寻找上方窄道
                 int upPoint = 119;
                 double kr = calculate_slope_struct(downPoint + 1, downPoint + 15, j_mid, RIGHT);
@@ -2495,7 +2495,7 @@ void T_island_in_start() {
             }
             else {
 
-                int num = 105;
+                int num = 110;
                 downPoint = num;
                 while (num >= 40 && my_road[num].connected[j_mid[num]].left >= left_side[num] + 1
                     && abs(my_road[num - 1].connected[j_mid[num - 1]].left - my_road[num].connected[j_mid[num]].left) <= 4
@@ -2513,7 +2513,7 @@ void T_island_in_start() {
             //printf("dp=%d", downPoint);
             //下方是直道，控制一下
             if (fabs(calculate_slope_struct(downPoint + 1, downPoint + 15, j_mid, RIGHT) - calculate_slope_struct(downPoint + 1, downPoint + 15, j_mid, LEFT)) < 0.2
-                && downPoint <= 110 && 70 <= downPoint) {
+                && downPoint < 110 && 70 <= downPoint) {
                 //寻找上方圆环
                 int upPoint = 119;
                 double kl = calculate_slope_struct(downPoint + 1, downPoint + 15, j_mid, LEFT);

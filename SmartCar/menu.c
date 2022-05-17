@@ -133,7 +133,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     ccBottom = MENU_fileInit(ccBottom, 55, 1.0, "bottom", 3, none, &cross_circle_param7, NULL, NULL, NULL);
 
     carPark = MENU_fileInit(carPark, 1, 1.0, "park", 4, none, &cross_circle, &ramp, NULL, &parkCount);
-    parkCount = MENU_fileInit(parkCount, 5, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
+    parkCount = MENU_fileInit(parkCount, 55, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
     startGyro = MENU_fileInit(startGyro, 30, 1.0, "st-gyro", 3, dataint, &parkCount, &endGyro, NULL, NULL);
     endGyro = MENU_fileInit(endGyro, 40, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
     search_line = MENU_fileInit(search_line, 80, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
@@ -144,7 +144,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     ramp = MENU_fileInit(ramp, 1, 1.0, "ramp", 5, none, &carPark, &folkWay, NULL, &rampCount);
     rampCount = MENU_fileInit(rampCount, 200, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
     rampDistance = MENU_fileInit(rampDistance, 50, 1.0, "distance", 3, dataint, &rampCount, &rampSpeed, NULL, NULL);
-    rampSpeed = MENU_fileInit(rampSpeed, 70, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampMax, NULL, NULL);
+    rampSpeed = MENU_fileInit(rampSpeed, 75, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampMax, NULL, NULL);
     rampMax = MENU_fileInit(rampMax, 60, 1.0, "Max", 5, dataint, &rampSpeed, &rampMin, NULL, NULL);
     rampMin = MENU_fileInit(rampMin, 10, 1.0, "Min", 6, dataint, &rampMax, &rampBottom, NULL, NULL);
 
@@ -260,15 +260,15 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
     presentSpeed = MENU_fileInit(presentSpeed, 85, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
     presentTHRE = MENU_fileInit(presentTHRE, 170, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
-    presentVision = MENU_fileInit(presentVision, 90, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
-    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 3.1, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
-    fuzzyPM = MENU_fileInit(fuzzyPM, 1, 2.6, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
-    fuzzyPS = MENU_fileInit(fuzzyPS, 1, 2.3, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
-    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 2.0, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
-    fuzzyNS = MENU_fileInit(fuzzyNS, 1, 2.3, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
-    fuzzyNM = MENU_fileInit(fuzzyNM, 1, 2.6, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
-    fuzzyNB = MENU_fileInit(fuzzyNB, 1, 3.1, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
-    presentServoD = MENU_fileInit(presentServoD, 1, 4.9, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
+    presentVision = MENU_fileInit(presentVision, 92, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
+    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 3.7, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
+    fuzzyPM = MENU_fileInit(fuzzyPM, 1, 3.3, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
+    fuzzyPS = MENU_fileInit(fuzzyPS, 1, 2.8, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
+    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 2.3, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
+    fuzzyNS = MENU_fileInit(fuzzyNS, 1, 2.8, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
+    fuzzyNM = MENU_fileInit(fuzzyNM, 1, 3.3, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
+    fuzzyNB = MENU_fileInit(fuzzyNB, 1, 3.7, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
+    presentServoD = MENU_fileInit(presentServoD, 1, 5.3, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
     gap = MENU_fileInit(gap, 1, 1.0, "GAP", 7, datafloat, &presentServoD, &midLineKP, NULL, NULL);
     midLineKP = MENU_fileInit(midLineKP, 1, 0.14, "midlineKP", 2, datafloat, &gap, &gyroKP, NULL, NULL);
     gyroKP = MENU_fileInit(gyroKP, 1, 0.12, "gyroKP", 3, datafloat, &midLineKP, &gyroKD, NULL, NULL);
