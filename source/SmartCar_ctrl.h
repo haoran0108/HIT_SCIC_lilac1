@@ -63,7 +63,7 @@ extern int flagCircleForsee;
 extern int flagStop, delayStop;
 extern int testFlag;
 extern int speedFlag;
-
+extern uint8_t parkStraightCount;
 struct error
 {
     double delta;

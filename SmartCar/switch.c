@@ -51,6 +51,7 @@ void SW_readSwitch()
         startCount = 0;
 //        lastState[8] = 0;
         parkJudgeCount = 0;
+        parkStraightCount = 0;
 
         slowFlag = 0;
 

@@ -31,7 +31,7 @@ float currentKP_L, currentKI_L, currentKP_R, currentKI_R;
 double my_sin;//圆形前瞻
 int flagCircleForsee = 1;
 
-float fuzzy_PB = 3.2, fuzzy_PM = 3.0, fuzzy_PS = 2.9, fuzzy_ZO = 2.7, fuzzy_NS = 2.9, fuzzy_NM = 3.0, fuzzy_NB = 3.2, fuzzy_Dbig = 6.6, fuzzy_Dsmall = 5.8;
+float fuzzy_PB = 3.2, fuzzy_PM = 3.0, fuzzy_PS = 2.9, fuzzy_ZO = 2.7, fuzzy_NS = 2.9, fuzzy_NM = 3.0, fuzzy_NB = 3.2, fuzzy_D = 6.6;
 
 /*陀螺仪相关*/
 float deltaGyro[10] = {0}, currentGyro = 0, directionAngle = 0, lastGyro = 0;
@@ -44,7 +44,7 @@ float gyroK = 20;
 float dx = 0, dy = 0;
 int parkStart = 1;//陀螺仪进出车库
 int parkType = 1;//保存parkStart的值
-
+uint8_t parkStraightCount = 0;
 float expectGyro;//期望角速度
 
 /*电流环参数*/
@@ -225,73 +225,73 @@ float CTRL_FuzzyMemberShip(int midError)
 
     if(midError >= PB)
     {
-        servoKP = fuzzyPB.floatVal;
+        servoKP = fuzzy_PB;
     }
     else if(midError < PB && midError > PM)
     {
         membership[0] = fabs((midError - PM) / fuzzyWidth);
         membership[1] = fabs((midError - PB) / fuzzyWidth);
 
-        servoKP = fuzzyPB.floatVal * membership[0] + fuzzyPM.floatVal * membership[1];
+        servoKP = fuzzy_PB * membership[0] + fuzzy_PM * membership[1];
     }
     else if(midError == PM)
     {
-        servoKP = fuzzyPM.floatVal;
+        servoKP = fuzzy_PM;
     }
     else if(midError < PM && midError > PS)
     {
         membership[0] = fabs((midError - PS) / fuzzyWidth);
         membership[1] = fabs((midError - PM) / fuzzyWidth);
 
-        servoKP = fuzzyPM.floatVal * membership[0] + fuzzyPS.floatVal * membership[1];
+        servoKP = fuzzy_PM * membership[0] + fuzzy_PS * membership[1];
     }
     else if(midError == PS)
     {
-        servoKP = fuzzyPS.floatVal;
+        servoKP = fuzzy_PS;
     }
     else if(midError < PS && midError > ZO)
     {
         membership[0] = fabs((midError - ZO) / fuzzyWidth);
         membership[1] = fabs((midError - PS) / fuzzyWidth);
 
-        servoKP = fuzzyPS.floatVal * membership[0] + fuzzyZO.floatVal * membership[1];
+        servoKP = fuzzy_PS * membership[0] + fuzzy_ZO * membership[1];
     }
     else if(midError == ZO)
     {
-        servoKP = fuzzyZO.floatVal;
+        servoKP = fuzzy_ZO;
     }
     else if(midError < ZO && midError > NS)
     {
         membership[0] = fabs((midError - NS) / fuzzyWidth);
         membership[1] = fabs((midError - ZO) / fuzzyWidth);
 
-        servoKP = fuzzyZO.floatVal * membership[0] + fuzzyNS.floatVal * membership[1];
+        servoKP = fuzzy_ZO * membership[0] + fuzzy_NS * membership[1];
     }
     else if(midError == NS)
     {
-        servoKP = fuzzyNS.floatVal;
+        servoKP = fuzzy_NS;
     }
     else if(midError < NS && midError > NM)
     {
         membership[0] = fabs((midError - NM) / fuzzyWidth);
         membership[1] = fabs((midError - NS) / fuzzyWidth);
 
-        servoKP = fuzzyNS.floatVal * membership[0] + fuzzyNM.floatVal * membership[1];
+        servoKP = fuzzy_NS * membership[0] + fuzzy_NM * membership[1];
     }
     else if(midError == NM)
     {
-        servoKP = fuzzyNM.floatVal;
+        servoKP = fuzzy_NM;
     }
     else if(midError < NM && midError > NB)
     {
         membership[0] = fabs((midError - NB) / fuzzyWidth);
         membership[1] = fabs((midError - NM) / fuzzyWidth);
 
-        servoKP = fuzzyNM.floatVal * membership[0] + fuzzyNB.floatVal * membership[1];
+        servoKP = fuzzy_NM * membership[0] + fuzzy_NB * membership[1];
     }
     else if(midError <= NB)
     {
-        servoKP = fuzzyNB.floatVal;
+        servoKP = fuzzy_NB;
     }
 
 
@@ -314,7 +314,7 @@ void CTRL_fuzzyPID()
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
-    servoPwm = (uint32)(servoMidValue + presentServoD.floatVal * servoError.delta + fuzzyKP * servoError.currentError);
+    servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
     if(servoPwm > servoMax)
         servoPwm = servoMax;
     else if(servoPwm < servoMin)
@@ -432,11 +432,29 @@ void CTRL_servoMain()
     {
         if(parkStart == 1 || parkStart == 2)
         {
-            servoPwm = servoMin;//630
+            parkStraightCount += 1;
+            if(parkStraightCount <= parkCount.intVal)
+            {
+                servoPwm = servoMidValue;
+            }
+            else
+            {
+                servoPwm = servoMin;//630
+
+            }
         }
         else if(parkStart == -1 || parkStart == -2)
         {
-            servoPwm = servoMax;
+            parkStraightCount += 1;
+            if(parkStraightCount <= parkCount.intVal)
+            {
+                servoPwm = servoMidValue;
+            }
+            else
+            {
+                servoPwm = servoMax;//770
+
+            }
         }
         else if(parkStart == 0 && flagStop == 0)
         {
@@ -556,7 +574,7 @@ void CTRL_motor()
 
 void CTRL_motorMain()
 {
-    CTRL_gyroUpdate();
+//    CTRL_gyroUpdate();
     if(stopFlag == 0 && flagStop == 0)//flagStop=1为车库停车，stopFlag=1为出赛道停车
     {
         CTRL_CarParkStart();
@@ -780,7 +798,7 @@ void CTRL_motorDiffer()
 
 void CTRL_CarParkStart()
 {
-    if(GPIO_Read(P13, 2) && (parkStart == 1 || parkStart == -1 || parkStart == 2 || parkStart == -2))
+    if(GPIO_Read(P13, 2) && (parkStart == 1 || parkStart == -1 || parkStart == 2 || parkStart == -2) && parkStraightCount > parkCount.intVal)
     {
         CTRL_gyroUpdate();
         CTRL_directionAngleGet();
@@ -853,35 +871,23 @@ void CTRL_CircleForsee(int radius)
 
 void CTRL_ServoPID_Determine()
 {
-    if(state == stateStart)
-    {
-        fuzzy_PB = fuzzyPB.floatVal;
-        fuzzy_PM = fuzzyPM.floatVal;
-        fuzzy_PS = fuzzyPS.floatVal;
-        fuzzy_ZO = fuzzyZO.floatVal;
-        fuzzy_NS = fuzzyNS.floatVal;
-        fuzzy_NM = fuzzyNM.floatVal;
-        fuzzy_NB = fuzzyNB.floatVal;
-        fuzzy_Dsmall = presentServoD.floatVal;
-        fuzzy_Dbig = presentServoD.floatVal;
 
-    }
 
-    else if(state == 1 || state == 2)//cross
-    {
-        fuzzy_PB = Cross_PB.floatVal;
-        fuzzy_PM = Cross_PM.floatVal;
-        fuzzy_PS = Cross_PS.floatVal;
-        fuzzy_ZO = Cross_ZO.floatVal;
-        fuzzy_NS = Cross_NS.floatVal;
-        fuzzy_NM = Cross_NM.floatVal;
-        fuzzy_NB = Cross_NB.floatVal;
-        fuzzy_Dsmall = Cross_DS.floatVal;
-        fuzzy_Dbig = Cross_DB.floatVal;
+//    else if(state == 1 || state == 2)//cross
+//    {
+//        fuzzy_PB = Cross_PB.floatVal;
+//        fuzzy_PM = Cross_PM.floatVal;
+//        fuzzy_PS = Cross_PS.floatVal;
+//        fuzzy_ZO = Cross_ZO.floatVal;
+//        fuzzy_NS = Cross_NS.floatVal;
+//        fuzzy_NM = Cross_NM.floatVal;
+//        fuzzy_NB = Cross_NB.floatVal;
+//        fuzzy_Dsmall = Cross_DS.floatVal;
+//        fuzzy_Dbig = Cross_DB.floatVal;
+//
+//    }
 
-    }
-
-    else if(state == 4 || state == 5)//crossCircle
+    if((state == stateTIn || state == stateTOut || state == stateTover) && IslandPD.intVal == 1)//crossCircle
     {
         fuzzy_PB = circle_PB.floatVal;
         fuzzy_PM = circle_PM.floatVal;
@@ -890,12 +896,12 @@ void CTRL_ServoPID_Determine()
         fuzzy_NS = circle_NS.floatVal;
         fuzzy_NM = circle_NM.floatVal;
         fuzzy_NB = circle_NB.floatVal;
-        fuzzy_Dsmall = circle_DS.floatVal;
-        fuzzy_Dbig = circle_DB.floatVal;
+        fuzzy_D = circle_DS.floatVal;
+//        fuzzy_Dbig = circle_DB.floatVal;
 
     }
 
-    else if(state == 4)//island-45678
+    else if((state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut) && CrossCircle.intVal == 1)//island-45678
     {
         fuzzy_PB = Island_PB.floatVal;
         fuzzy_PM = Island_PM.floatVal;
@@ -904,24 +910,37 @@ void CTRL_ServoPID_Determine()
         fuzzy_NS = Island_NS.floatVal;
         fuzzy_NM = Island_NM.floatVal;
         fuzzy_NB = Island_NB.floatVal;
-        fuzzy_Dsmall = Island_DS.floatVal;
-        fuzzy_Dbig = Island_DB.floatVal;
+        fuzzy_D = Island_DS.floatVal;
+//        fuzzy_Dbig = Island_DB.floatVal;
 
     }
 
-    else if(state == 11)//folk
+    else
     {
-        fuzzy_PB = Folk_PB.floatVal;
-        fuzzy_PM = Folk_PM.floatVal;
-        fuzzy_PS = Folk_PS.floatVal;
-        fuzzy_ZO = Folk_ZO.floatVal;
-        fuzzy_NS = Folk_NS.floatVal;
-        fuzzy_NM = Folk_NM.floatVal;
-        fuzzy_NB = Folk_NB.floatVal;
-        fuzzy_Dsmall = Folk_DS.floatVal;
-        fuzzy_Dbig = Folk_DB.floatVal;
+        fuzzy_PB = fuzzyPB.floatVal;
+        fuzzy_PM = fuzzyPM.floatVal;
+        fuzzy_PS = fuzzyPS.floatVal;
+        fuzzy_ZO = fuzzyZO.floatVal;
+        fuzzy_NS = fuzzyNS.floatVal;
+        fuzzy_NM = fuzzyNM.floatVal;
+        fuzzy_NB = fuzzyNB.floatVal;
+        fuzzy_D = presentServoD.floatVal;
+    //        fuzzy_Dbig = presentServoD.floatVal;
 
     }
+//    else if(state == 11)//folk
+//    {
+//        fuzzy_PB = Folk_PB.floatVal;
+//        fuzzy_PM = Folk_PM.floatVal;
+//        fuzzy_PS = Folk_PS.floatVal;
+//        fuzzy_ZO = Folk_ZO.floatVal;
+//        fuzzy_NS = Folk_NS.floatVal;
+//        fuzzy_NM = Folk_NM.floatVal;
+//        fuzzy_NB = Folk_NB.floatVal;
+//        fuzzy_Dsmall = Folk_DS.floatVal;
+//        fuzzy_Dbig = Folk_DB.floatVal;
+//
+//    }
 }
 
 int foresee()

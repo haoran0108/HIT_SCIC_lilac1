@@ -102,19 +102,23 @@
 
 //////////////////////////////状态机的标志
 #define stateStart 0
-#define stateCrossIn 10
-#define stateFolkRoadIn 20
-#define stateTIslandIn 30
+#define stateCrossIn 10//十字
+
+#define stateFolkRoadIn 20//三叉
+
+#define stateTIslandIn 30//环岛 回环
 #define stateTIn 40
 #define stateTOut 50
-#define stateTover 60
-#define stateIslandIng 70
+#define stateTover 60//30 40 50 60回环
+
+#define stateIslandIng 70//30 70 80 90 100 110环岛
 #define stateIslandTurn 80
 #define stateIslandCircle 90
 #define stateIslandOut 100
 #define stateIslandFinal 110
-#define stateParkIn 120
-#define stateRampway 130
+
+#define stateParkIn 120 //车库
+#define stateRampway 130//坡道
 /////////////////////////////
 
 extern uint8_t IMG[CAMERA_H][CAMERA_W];//二值化后图像数组

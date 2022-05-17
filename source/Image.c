@@ -2376,7 +2376,7 @@ void T_island_in_start() {
 
 
         if (fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2
-            && sumL <= 18) {
+            && sumL <= 10) {
 
             int downPoint = 119;
             if (calculate_slope_struct(80, 95, j_mid, LEFT) <= 0) {
@@ -2433,7 +2433,7 @@ void T_island_in_start() {
                 if (upPoint < downPoint - 10) {
                     int sumU = 0;
                     for (int i = upPoint; i >= upPoint - 30; i--) {
-                        if (my_road[i].connected[j_mid[i]].width < my_road[downPoint + 2].connected[j_mid[downPoint + 2]].width + 15) {
+                        if (my_road[i].connected[j_mid[i]].width < my_road[downPoint + 2].connected[j_mid[downPoint + 2]].width + 10) {
                             sumU++;
                         }
 
@@ -2528,12 +2528,12 @@ void T_island_in_start() {
                         break;
                     }
                 }
-                ////printf("u=%d,d=%d\n", upPoint, downPoint);
+                //printf("u=%d,d=%d\n", upPoint, downPoint);
                 //根据找到的点，确定周围环岛点
                 if (upPoint < downPoint - 10) {
                     int sumU = 0;
                     for (int i = upPoint; i >= upPoint - 30; i--) {
-                        if (my_road[i].connected[j_mid[i]].width < my_road[downPoint + 2].connected[j_mid[downPoint + 2]].width + 15) {
+                        if (my_road[i].connected[j_mid[i]].width < my_road[downPoint + 2].connected[j_mid[downPoint + 2]].width + 10) {
                             sumU++;
                         }
 
@@ -2551,6 +2551,7 @@ void T_island_in_start() {
         }
     }
 }
+
 
 ////////////////////////////////////////////
 //功能：进T字路口或者环岛补线
@@ -2575,17 +2576,17 @@ void design_T_island_in() {
             }
             leftRoad[i] = my_road[i].connected[j_mid[i]].left;
         }
-        uint8_t xMin = right_line[110], yMin = 110;
+        uint8_t xMin = my_road[110].connected[j_mid[110]].right, yMin = 110;
         for (int i = 110; i > 2; i--) {
-            if (xMin >= right_line[i]) {
+            if (xMin >= my_road[i].connected[j_mid[i]].right) {
                 yMin = i;
-                xMin = right_line[i];
+                xMin = my_road[i].connected[j_mid[i]].right;
             }
         }
 
         double k = calculate_slope(80, 100, leftRoad);
 
-        for (int i = 113; i >= 30; i--) {
+        for (int i = 110; i >= 50; i--) {
 
             right_line[i] = k * (i - yMin) + xMin;
             left_line[i] = leftRoad[i];
@@ -2606,11 +2607,11 @@ void design_T_island_in() {
             rightRoad[i] = my_road[i].connected[j_mid[i]].right;
         }
 
-        uint8_t xMin = left_line[110], yMin = 110;
+        uint8_t xMin = my_road[110].connected[j_mid[110]].left, yMin = 110;
         for (int i = 110; i > 2; i--) {
-            if (xMin <= left_line[i]) {
+            if (xMin <= my_road[i].connected[j_mid[i]].left) {
                 yMin = i;
-                xMin = left_line[i];
+                xMin = my_road[i].connected[j_mid[i]].left;
             }
             if (my_road[i - 1].white_num == 0) {
                 break;
@@ -2619,7 +2620,7 @@ void design_T_island_in() {
 
         double k = calculate_slope(80, 100, rightRoad);
 
-        for (int i = 113; i >= 30; i--) {
+        for (int i = 110; i >= 50; i--) {
             left_line[i] = k * (i - yMin) + xMin;
             right_line[i] = rightRoad[i];
         }
@@ -3574,7 +3575,7 @@ void folk_road_in() {
             }
 //          ////printf("top=%d,minl=%d,minR=%d\n", top, minL, minR);
 
-            if (minL < NEAR_LINE - 7 && minR < NEAR_LINE - 7) {
+            if (minL < NEAR_LINE - 2 && minR < NEAR_LINE - 2) {
 
                 //先保证两个角找的是准的
 
