@@ -887,7 +887,7 @@ void CTRL_ServoPID_Determine()
 //
 //    }
 
-    if((state == stateTIn || state == stateTOut || state == stateTover) && IslandPD.intVal == 1)//crossCircle
+    if((state == stateTIslandIn || state == stateTIn || state == stateTOut || state == stateTover) && CrossCircle.intVal == 1)//crossCircle
     {
         fuzzy_PB = circle_PB.floatVal;
         fuzzy_PM = circle_PM.floatVal;
@@ -901,7 +901,7 @@ void CTRL_ServoPID_Determine()
 
     }
 
-    else if((state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut) && CrossCircle.intVal == 1)//island-45678
+    else if((state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut) && IslandPD.intVal == 1)//island-45678
     {
         fuzzy_PB = Island_PB.floatVal;
         fuzzy_PM = Island_PM.floatVal;

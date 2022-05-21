@@ -203,10 +203,12 @@ void get_mid_line(void);
 void IPM_map();
 void distortion();
 void my_memset(uint8_t* ptr, uint8_t num, uint8_t size);
-void transform();
+void transform(int wayThre);
+void transform_sd(int wayThre);
 void orinary_two_line_history();
 
 void protection();
+
 //道路规划
 void judge_type_road();
 
@@ -250,7 +252,7 @@ void cross_T_in_over();
 void cross_T_out_start();
 void design_cross_T_out();
 void cross_T_out_over();
-
+void design_cross_T_circle();
 //上下坡
 
 //入库
