@@ -141,6 +141,9 @@ extern int leftPark,rightPark;
 extern int parkJudgeCount;
 extern int crossCircleCount;
 extern int startCount;
+extern int laststate;
+extern uint8_t memoryFlag;
+extern uint16_t memoryState[20];
 typedef struct {
     int x;
     int y;
@@ -235,6 +238,7 @@ void design_island_ing();
 void island_turn();
 void design_island_turn();
 void island_circle();
+void design_island_circle();
 void island_out();
 void design_island_out();
 void island_straight();
@@ -272,6 +276,8 @@ int straight_variance(int istart, int iend,float varThreshold);
 int midMaxColumn(int istart, int iend, int param);
 void straight_define();
 
+//记忆赛道
+void roadMemory();
 
 //废案
 void cross_T_in_start();

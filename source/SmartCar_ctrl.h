@@ -61,9 +61,11 @@ extern int parkType;
 extern int flagCircleForsee;
 
 extern int flagStop, delayStop;
-extern int testFlag;
+extern uint8_t testFlag;
+extern uint8_t testStateTimes;
 extern int speedFlag;
 extern uint8_t parkStraightCount;
+
 struct error
 {
     double delta;
@@ -163,6 +165,8 @@ int foresee();
 void CTRL_lowpassFilter();//低通滤波
 void CTRL_currentAverageFilter();//电流环平均滑动滤波
 void CTRL_gyroAverageFilter();
+void CTRL_RoadTest();
+void speedDetermine();
 
 void motorParamDefine();
 

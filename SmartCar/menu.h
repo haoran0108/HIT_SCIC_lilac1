@@ -66,14 +66,31 @@ extern node_t Cross_PB, Cross_PM, Cross_PS, Cross_ZO, Cross_NS, Cross_NM, Cross_
 extern node_t circle_PB, circle_PM, circle_PS, circle_ZO, circle_NS, circle_NM, circle_NB, circle_DS, circle_DB;
 extern node_t Island_PB, Island_PM, Island_PS, Island_ZO, Island_NS, Island_NM, Island_NB, Island_DS, Island_DB;
 extern node_t Folk_PB, Folk_PM, Folk_PS, Folk_ZO, Folk_NS, Folk_NM, Folk_NB, Folk_DS, Folk_DB;
-
+extern node_t raceMemory;
+extern node_t memory1, memory2, memory3, memory4, memory5, memory6, memory7, memory8, memory9, memory10, memory11, memory12, memory13, memory14, memory15;
+extern node_t memorySpeed1, memoryVision1;
+extern node_t memorySpeed2, memoryVision2;
+extern node_t memorySpeed3, memoryVision3;
+extern node_t memorySpeed4, memoryVision4;
+extern node_t memorySpeed5, memoryVision5;
+extern node_t memorySpeed6, memoryVision6;
+extern node_t memorySpeed7, memoryVision7;
+extern node_t memorySpeed8, memoryVision8;
+extern node_t memorySpeed9, memoryVision9;
+extern node_t memorySpeed10, memoryVision10;
+extern node_t memorySpeed11, memoryVision11;
+extern node_t memorySpeed12, memoryVision12;
+extern node_t memorySpeed13, memoryVision13;
+extern node_t memorySpeed14, memoryVision14;
+extern node_t memorySpeed15, memoryVision15;
 
 extern node_t islandout_up, design_island_k, islandParam1, islandParam2, islandParam3, islandParam4, islandParam5;
 extern node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4, cross_circle_param5, cross_circle_param6;
 extern node_t parkCount, startGyro, endGyro, search_line, parkDelay;
 extern node_t rampCount, rampDistance, rampSpeed,rampMax, rampMin;
 extern node_t folkWay;
-extern node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6, folkParam7, folkParam8, folkParam9, folkParam10, folkBottom;
+extern node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6;
+//extern node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6, folkParam7, folkParam8, folkParam9, folkParam10, folkBottom;
 extern node_t speedFilter, currentFilter1, currentFilter2, currentKdLpf, speedKdLpf;
 
 extern node_t startWay;

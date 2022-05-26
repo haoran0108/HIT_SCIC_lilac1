@@ -39,7 +39,22 @@ node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circ
 node_t parkCount, startGyro, endGyro, search_line, parkDelay;
 node_t paramBottom;
 
-node_t raceMemory, memory1, memory2, memory3, memory4, memory5, memory6, memory7, memory8, memory9, memory10, memory11, memory12, memory13, memory14, memoryBottom;
+node_t raceMemory, memory1, memory2, memory3, memory4, memory5, memory6, memory7, memory8, memory9, memory10, memory11, memory12, memory13, memory14, memory15, memoryBottom;
+node_t memorySpeed1, memoryVision1;
+node_t memorySpeed2, memoryVision2;
+node_t memorySpeed3, memoryVision3;
+node_t memorySpeed4, memoryVision4;
+node_t memorySpeed5, memoryVision5;
+node_t memorySpeed6, memoryVision6;
+node_t memorySpeed7, memoryVision7;
+node_t memorySpeed8, memoryVision8;
+node_t memorySpeed9, memoryVision9;
+node_t memorySpeed10, memoryVision10;
+node_t memorySpeed11, memoryVision11;
+node_t memorySpeed12, memoryVision12;
+node_t memorySpeed13, memoryVision13;
+node_t memorySpeed14, memoryVision14;
+node_t memorySpeed15, memoryVision15;
 
 node_t rampCount, rampDistance, rampSpeed, rampMax, rampMin, rampBottom;
 node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6, folkParam7, folkParam8, folkParam9, folkParam10, folkBottom;
@@ -47,6 +62,7 @@ node_t startWay;
 
 node_t speedFilter, currentFilter1, currentFilter2, currentKdLpf, speedKdLpf, filterBottom;
 node_t bugFix1;
+//node_t roadTest;
 nodeptr_t filePrint;
 nodeptr_t tempFile;
 
@@ -83,7 +99,7 @@ node_t MENU_fileInit(node_t file, int16 valuei, float valuef, char name[10],uint
 void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 {
     //利用函数fileInit()初始化文件参数
-    file1 = MENU_fileInit(file1, 1, 1.0, "GEAR", 2, none, NULL, &file2, NULL, &gear1);
+    file1 = MENU_fileInit(file1, -1, 1.0, "GEAR", 2, dataint, NULL, &file2, NULL, &gear1);
     file2 = MENU_fileInit(file2, 1, 1.0, "PRESENT", 3, none, &file1, &file3, NULL, &presentSpeed);
     file3 = MENU_fileInit(file3, 1, 1.0, "param", 4, none, &file2, &display, NULL, &IslandPD);
     IslandPD = MENU_fileInit(IslandPD, 1, 0, "islandPD", 2, dataint, NULL, &CrossCircle, &file3, &Island_PB);
@@ -92,30 +108,76 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     CrossCircle = MENU_fileInit(CrossCircle, 1, 0.5, "circlePD", 3, dataint, &IslandPD, &param, NULL, &circle_PB);
 //    FolkPD = MENU_fileInit(FolkPD, 1, 1.0, "folk", 5, none, &IslandPD, &param, NULL, &Folk_PB);
     param = MENU_fileInit(param, 1, 1.0, "Param", 4, none, &CrossCircle, &raceMemory, NULL, &island);
-    raceMemory = MENU_fileInit(raceMemory, 0, 1.0, "memory", 5, dataint, &param, &bugFix1, NULL, &memory1);//0关闭 1打开
-    memory1 = MENU_fileInit(memory1, 0, 1.0, "memory1", 2, dataint, NULL, &memory2, &raceMemory, NULL);
-    memory2 = MENU_fileInit(memory2, 0, 1.0, "memory2", 3, dataint, &memory1, &memory3, NULL, NULL);
-    memory3 = MENU_fileInit(memory3, 0, 1.0, "memory3", 4, dataint, &memory2, &memory4, NULL, NULL);
-    memory4 = MENU_fileInit(memory4, 0, 1.0, "memory4", 5, dataint, &memory3, &memory5, NULL, NULL);
-    memory5 = MENU_fileInit(memory5, 0, 1.0, "memory5", 6, dataint, &memory4, &memory6, NULL, NULL);
-    memory6 = MENU_fileInit(memory6, 0, 1.0, "memory6", 7, dataint, &memory5, &memory7, NULL, NULL);
-    memory7 = MENU_fileInit(memory7, 0, 1.0, "memory7", 2, dataint, &memory6, &memory8, NULL, NULL);
-    memory8 = MENU_fileInit(memory8, 0, 1.0, "memory8", 3, dataint, &memory7, &memory9, NULL, NULL);
-    memory9 = MENU_fileInit(memory9, 0, 1.0, "memory9", 4, dataint, &memory8, &memory10, NULL, NULL);
-    memory10 = MENU_fileInit(memory10, 0, 1.0, "memory10", 5, dataint, &memory9, &memory11, NULL, NULL);
-    memory11 = MENU_fileInit(memory11, 0, 1.0, "memory11", 6, dataint, &memory10, &memory12, NULL, NULL);
-    memory12 = MENU_fileInit(memory12, 0, 1.0, "memory12", 7, dataint, &memory11, &memory13, NULL, NULL);
-    memory13 = MENU_fileInit(memory13, 0, 1.0, "memory13", 2, dataint, &memory12, &memory14, NULL, NULL);
-    memory14 = MENU_fileInit(memory14, 0, 1.0, "memory14", 3, dataint, &memory13, &memoryBottom, NULL, NULL);
-    memoryBottom = MENU_fileInit(memoryBottom, 0, 1.0, "bottom", 4, none, &memory14, NULL, NULL, NULL);
+    raceMemory = MENU_fileInit(raceMemory, 1, 1.0, "memory", 5, dataint, &param, &bugFix1, NULL, &memory1);//0关闭 1打开
+    memory1 = MENU_fileInit(memory1, 0, 1.0, "memory1", 2, dataint, NULL, &memory2, &raceMemory, &memorySpeed1);
+    memorySpeed1 = MENU_fileInit(memorySpeed1, 85, 1.0, "speed1", 2, dataint, NULL, &memoryVision1, &memory1, NULL);
+    memoryVision1 = MENU_fileInit(memoryVision1, 92, 1.0, "vision1", 3, dataint, &memorySpeed1, NULL, NULL, NULL);
+
+    memory2 = MENU_fileInit(memory2, 110, 1.0, "memory2", 3, dataint, &memory1, &memory3, NULL, &memorySpeed2);
+    memorySpeed2 = MENU_fileInit(memorySpeed2, 105, 1.0, "speed2", 2, dataint, NULL, &memoryVision2, &memory2, NULL);
+    memoryVision2 = MENU_fileInit(memoryVision2, 88, 1.0, "vision2", 3, dataint, &memorySpeed2, NULL, NULL, NULL);
+
+    memory3 = MENU_fileInit(memory3, 40, 1.0, "memory3", 4, dataint, &memory2, &memory4, NULL, &memorySpeed3);
+    memorySpeed3 = MENU_fileInit(memorySpeed3, 95, 1.0, "speed3", 2, dataint, NULL, &memoryVision3, &memory3, NULL);
+    memoryVision3 = MENU_fileInit(memoryVision3, 90, 1.0, "vision3", 3, dataint, &memorySpeed3, NULL, NULL, NULL);
+
+    memory4 = MENU_fileInit(memory4, 50, 1.0, "memory4", 5, dataint, &memory3, &memory5, NULL, &memorySpeed4);
+    memorySpeed4 = MENU_fileInit(memorySpeed4, 100, 1.0, "speed4", 2, dataint, NULL, &memoryVision4, &memory4, NULL);
+    memoryVision4 = MENU_fileInit(memoryVision4, 90, 1.0, "vision4", 3, dataint, &memorySpeed4, NULL, NULL, NULL);
+
+    memory5 = MENU_fileInit(memory5, 30, 1.0, "memory5", 6, dataint, &memory4, &memory6, NULL, &memorySpeed5);
+    memorySpeed5 = MENU_fileInit(memorySpeed5, 85, 1.0, "speed5", 2, dataint, NULL, &memoryVision5, &memory5, NULL);
+    memoryVision5 = MENU_fileInit(memoryVision5, 92, 1.0, "vision5", 3, dataint, &memorySpeed5, NULL, NULL, NULL);
+
+    memory6 = MENU_fileInit(memory6, 110, 1.0, "memory6", 7, dataint, &memory5, &memory7, NULL, &memorySpeed6);
+    memorySpeed6 = MENU_fileInit(memorySpeed6, 95, 1.0, "speed6", 2, dataint, NULL, &memoryVision6, &memory6, NULL);
+    memoryVision6 = MENU_fileInit(memoryVision6, 90, 1.0, "vision6", 3, dataint, &memorySpeed6, NULL, NULL, NULL);
+
+    memory7 = MENU_fileInit(memory7, 10, 1.0, "memory7", 2, dataint, &memory6, &memory8, NULL, &memorySpeed7);
+    memorySpeed7 = MENU_fileInit(memorySpeed7, 90, 1.0, "speed7", 2, dataint, NULL, &memoryVision7, &memory7, NULL);
+    memoryVision7 = MENU_fileInit(memoryVision7, 86, 1.0, "vision7", 3, dataint, &memorySpeed7, NULL, NULL, NULL);
+
+    memory8 = MENU_fileInit(memory8, 20, 1.0, "memory8", 3, dataint, &memory7, &memory9, NULL, &memorySpeed8);
+    memorySpeed8 = MENU_fileInit(memorySpeed8, 90, 1.0, "speed8", 2, dataint, NULL, &memoryVision8, &memory8, NULL);
+    memoryVision8 = MENU_fileInit(memoryVision8, 90, 1.0, "vision8", 3, dataint, &memorySpeed8, NULL, NULL, NULL);
+
+    memory9 = MENU_fileInit(memory9, 20, 1.0, "memory9", 4, dataint, &memory8, &memory10, NULL, &memorySpeed9);
+    memorySpeed9 = MENU_fileInit(memorySpeed9, 95, 1.0, "speed9", 2, dataint, NULL, &memoryVision9, &memory9, NULL);
+    memoryVision9 = MENU_fileInit(memoryVision9, 90, 1.0, "vision9", 3, dataint, &memorySpeed9, NULL, NULL, NULL);
+
+    memory10 = MENU_fileInit(memory10, 40, 1.0, "memory10", 5, dataint, &memory9, &memory11, NULL, &memorySpeed10);
+    memorySpeed10 = MENU_fileInit(memorySpeed10, 90, 1.0, "speed10", 2, dataint, NULL, &memoryVision10, &memory10, NULL);
+    memoryVision10 = MENU_fileInit(memoryVision10, 90, 1.0, "vision10", 3, dataint, &memorySpeed10, NULL, NULL, NULL);
+
+    memory11 = MENU_fileInit(memory11, 50, 1.0, "memory11", 6, dataint, &memory10, &memory12, NULL, &memorySpeed11);
+    memorySpeed11 = MENU_fileInit(memorySpeed11, 90, 1.0, "speed11", 2, dataint, NULL, &memoryVision11, &memory11, NULL);
+    memoryVision11 = MENU_fileInit(memoryVision11, 90, 1.0, "vision11", 3, dataint, &memorySpeed11, NULL, NULL, NULL);
+
+    memory12 = MENU_fileInit(memory12, 100, 1.0, "memory12", 7, dataint, &memory11, &memory13, NULL, &memorySpeed12);
+    memorySpeed12 = MENU_fileInit(memorySpeed12, 95, 1.0, "speed12", 2, dataint, NULL, &memoryVision12, &memory12, NULL);
+    memoryVision12 = MENU_fileInit(memoryVision12, 90, 1.0, "vision12", 3, dataint, &memorySpeed12, NULL, NULL, NULL);
+
+    memory13 = MENU_fileInit(memory13, 130, 1.0, "memory13", 2, dataint, &memory12, &memory14, NULL, &memorySpeed13);
+    memorySpeed13 = MENU_fileInit(memorySpeed13, 95, 1.0, "speed13", 2, dataint, NULL, &memoryVision13, &memory13, NULL);
+    memoryVision13 = MENU_fileInit(memoryVision13, 90, 1.0, "vision13", 3, dataint, &memorySpeed13, NULL, NULL, NULL);
+
+    memory14 = MENU_fileInit(memory14, 20, 1.0, "memory14", 3, dataint, &memory13, &memory15, NULL, &memorySpeed14);
+    memorySpeed14 = MENU_fileInit(memorySpeed14, 85, 1.0, "speed14", 2, dataint, NULL, &memoryVision14, &memory14, NULL);
+    memoryVision14 = MENU_fileInit(memoryVision14, 92, 1.0, "vision14", 3, dataint, &memorySpeed14, NULL, NULL, NULL);
+
+    memory15 = MENU_fileInit(memory15, 0, 1.0, "memory15", 4, dataint, &memory14, &memoryBottom, NULL, &memorySpeed15);
+    memorySpeed15 = MENU_fileInit(memorySpeed15, 85, 1.0, "speed15", 2, dataint, NULL, &memoryVision15, &memory15, NULL);
+    memoryVision15 = MENU_fileInit(memoryVision15, 92, 1.0, "vision15", 3, dataint, &memorySpeed15, NULL, NULL, NULL);
+
+    memoryBottom = MENU_fileInit(memoryBottom, 0, 1.0, "bottom", 5, none, &memory15, NULL, NULL, NULL);
 
     bugFix1 = MENU_fileInit(bugFix1, 1, 1.0, "nomean", 6, none, &raceMemory, NULL, NULL, NULL);
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
     islandout_up = MENU_fileInit(islandout_up, 65, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
-    design_island_k = MENU_fileInit(design_island_k, 1, -0.05, "fix-k", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
+    design_island_k = MENU_fileInit(design_island_k, 1, 0.05, "fix-k", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
     islandParam1 = MENU_fileInit(islandParam1, 1, 1.5, "kin_jiasu", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
-    islandParam2 = MENU_fileInit(islandParam2, 25, 1.8, "kout_jiasu", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
+    islandParam2 = MENU_fileInit(islandParam2, 34, 1.8, "width", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
     islandParam3 = MENU_fileInit(islandParam3, 80, 0.35, "xMin", 6, dataint, &islandParam2, &islandParam4, NULL, NULL);
     islandParam4 = MENU_fileInit(islandParam4, 100, 0.35, "xMax", 7, dataint, &islandParam3, &islandParam5, NULL, NULL);
     islandParam5 = MENU_fileInit(islandParam5, 64, 0.35, "param5", 2, dataint, &islandParam4, &islandBottom, NULL, NULL);
@@ -125,9 +187,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     cross_circle = MENU_fileInit(cross_circle, 1, 1.0, "crocircle", 3, none, &island, &carPark, NULL, &cross_circle_param1);
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 60, 1.0, "cc-count", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
     cross_circle_param2 = MENU_fileInit(cross_circle_param2, 90, 1.0, "rightX", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
-    cross_circle_param3 = MENU_fileInit(cross_circle_param3, 86, 1.0, "leftX", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
+    cross_circle_param3 = MENU_fileInit(cross_circle_param3, 85, 1.0, "leftX", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
     cross_circle_param4 = MENU_fileInit(cross_circle_param4, 32, 1.0, "width", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
-    cross_circle_param5 = MENU_fileInit(cross_circle_param5, 55, 0.1, "kfix", 6, datafloat, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
+    cross_circle_param5 = MENU_fileInit(cross_circle_param5, 55, 0.15, "kfix", 6, datafloat, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
     cross_circle_param6 = MENU_fileInit(cross_circle_param6, 55, 1.0, "param6", 7, dataint, &cross_circle_param5, &cross_circle_param7, NULL, NULL);
     cross_circle_param7 = MENU_fileInit(cross_circle_param7, 55, 1.0, "param7", 2, dataint, &cross_circle_param6, &ccBottom, NULL, NULL);
     ccBottom = MENU_fileInit(ccBottom, 55, 1.0, "bottom", 3, none, &cross_circle_param7, NULL, NULL, NULL);
@@ -142,7 +204,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkDelay, NULL, NULL, NULL);
 
     ramp = MENU_fileInit(ramp, 1, 1.0, "ramp", 5, none, &carPark, &folkWay, NULL, &rampCount);
-    rampCount = MENU_fileInit(rampCount, 150, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
+    rampCount = MENU_fileInit(rampCount, 120, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
     rampDistance = MENU_fileInit(rampDistance, 50, 1.0, "distance", 3, dataint, &rampCount, &rampSpeed, NULL, NULL);
     rampSpeed = MENU_fileInit(rampSpeed, 70, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampMax, NULL, NULL);
     rampMax = MENU_fileInit(rampMax, 55, 1.0, "Max", 5, dataint, &rampSpeed, &rampMin, NULL, NULL);
@@ -156,12 +218,12 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     folkParam2 = MENU_fileInit(folkParam2, 25, 1.0, "param2", 3, dataint, &folkParam1, &folkParam3, NULL, NULL);
     folkParam3 = MENU_fileInit(folkParam3, 95, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
     folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkBottom, NULL, NULL);
-    folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);
-    folkParam6 = MENU_fileInit(folkParam6, 1, 1.0, "param6", 7, dataint, &folkParam5, &folkParam7, NULL, NULL);
-    folkParam7 = MENU_fileInit(folkParam7, 1, 1.0, "param7", 2, dataint, &folkParam6, &folkParam8, NULL, NULL);
-    folkParam8 = MENU_fileInit(folkParam8, 1, 1.0, "param8", 3, dataint, &folkParam7, &folkParam9, NULL, NULL);
-    folkParam9 = MENU_fileInit(folkParam9, 1, 1.0, "param9", 4, dataint, &folkParam8, &folkParam10, NULL, NULL);
-    folkParam10 = MENU_fileInit(folkParam10, 1, 1.0, "param10", 5, dataint, &folkParam9, &folkBottom, NULL, NULL);
+//    folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);
+//    folkParam6 = MENU_fileInit(folkParam6, 1, 1.0, "param6", 7, dataint, &folkParam5, &folkParam7, NULL, NULL);
+//    folkParam7 = MENU_fileInit(folkParam7, 1, 1.0, "param7", 2, dataint, &folkParam6, &folkParam8, NULL, NULL);
+//    folkParam8 = MENU_fileInit(folkParam8, 1, 1.0, "param8", 3, dataint, &folkParam7, &folkParam9, NULL, NULL);
+//    folkParam9 = MENU_fileInit(folkParam9, 1, 1.0, "param9", 4, dataint, &folkParam8, &folkParam10, NULL, NULL);
+//    folkParam10 = MENU_fileInit(folkParam10, 1, 1.0, "param10", 5, dataint, &folkParam9, &folkBottom, NULL, NULL);
     folkBottom = MENU_fileInit(folkBottom, 1, 1.0, "bottom", 6, none, &folkParam4, NULL, NULL, NULL);
 
 //    Cross_PB = MENU_fileInit(Cross_PB, 1, 0.5, "crossPB", 2, datafloat, NULL, &Cross_PM, &CrossPD, NULL);
@@ -174,23 +236,23 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
 //    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
 
-    circle_PB = MENU_fileInit(circle_PB, 1, 3.5, "circlePB", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
-    circle_PM = MENU_fileInit(circle_PM, 1, 2.9, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
-    circle_PS = MENU_fileInit(circle_PS, 1, 2.5, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
-    circle_ZO = MENU_fileInit(circle_ZO, 1, 2.3, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
-    circle_NS = MENU_fileInit(circle_NS, 1, 2.5, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
-    circle_NM = MENU_fileInit(circle_NM, 1, 2.9, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
-    circle_NB = MENU_fileInit(circle_NB, 1, 3.5, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
-    circle_DS = MENU_fileInit(circle_DS, 1, 5.3, "D-SMALL", 3, datafloat, &circle_NB, NULL, NULL, NULL);
+    circle_PB = MENU_fileInit(circle_PB, 1, 3.9, "circlePB", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
+    circle_PM = MENU_fileInit(circle_PM, 1, 3.4, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
+    circle_PS = MENU_fileInit(circle_PS, 1, 2.8, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
+    circle_ZO = MENU_fileInit(circle_ZO, 1, 2.4, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
+    circle_NS = MENU_fileInit(circle_NS, 1, 2.7, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
+    circle_NM = MENU_fileInit(circle_NM, 1, 3.3, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
+    circle_NB = MENU_fileInit(circle_NB, 1, 3.9, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
+    circle_DS = MENU_fileInit(circle_DS, 1, 4.9, "D-SMALL", 3, datafloat, &circle_NB, NULL, NULL, NULL);
 //    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
 
-    Island_PB = MENU_fileInit(Island_PB, 1, 3, "IslandPB", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
-    Island_PM = MENU_fileInit(Island_PM, 1, 2.8, "IslandPM", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
-    Island_PS = MENU_fileInit(Island_PS, 1, 2.6, "IslandPS", 4, datafloat, &Island_PM, &Island_ZO, NULL, NULL);
-    Island_ZO = MENU_fileInit(Island_ZO, 1, 2.5, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
-    Island_NS = MENU_fileInit(Island_NS, 1, 2.6, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
-    Island_NM = MENU_fileInit(Island_NM, 1, 2.9, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
-    Island_NB = MENU_fileInit(Island_NB, 1, 3, "IslandNB", 2, datafloat, &Island_NM, &Island_DS, NULL, NULL);
+    Island_PB = MENU_fileInit(Island_PB, 1, 3.15, "IslandPB", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
+    Island_PM = MENU_fileInit(Island_PM, 1, 3, "IslandPM", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
+    Island_PS = MENU_fileInit(Island_PS, 1, 2.9, "IslandPS", 4, datafloat, &Island_PM, &Island_ZO, NULL, NULL);
+    Island_ZO = MENU_fileInit(Island_ZO, 1, 2.7, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
+    Island_NS = MENU_fileInit(Island_NS, 1, 2.9, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
+    Island_NM = MENU_fileInit(Island_NM, 1, 3.1, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
+    Island_NB = MENU_fileInit(Island_NB, 1, 3.2, "IslandNB", 2, datafloat, &Island_NM, &Island_DS, NULL, NULL);
     Island_DS = MENU_fileInit(Island_DS, 1, 4.2, "D-SMALL", 3, datafloat, &Island_NB, NULL, NULL, NULL);
 //    Island_DB = MENU_fileInit(Island_DB, 1, 0.5, "D-BIG", 4, datafloat, &Island_DS, NULL, NULL, NULL);
 
@@ -220,21 +282,21 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     gear2 = MENU_fileInit(gear2, 1, 1.0, "GearFast", 3, none, &gear1, &gear3, NULL, &g2_Data1);//快速档
     g2_Data1 = MENU_fileInit(g2_Data1, 85, 38.27, "speed2", 2, dataint, NULL, &g2_Data2, &gear2, NULL);
-    g2_Data2 = MENU_fileInit(g2_Data2, 140, 75.32, "THRE2", 3, dataint, &g2_Data1, &g2_Data3, NULL, NULL);
-    g2_Data3 = MENU_fileInit(g2_Data3, 30, 11.62, "Vision2", 4, dataint, &g2_Data2, &g2_Data4, NULL, NULL);
-    g2_Data4 = MENU_fileInit(g2_Data4, 119, 1.9, "servo-P", 5, datafloat, &g2_Data3, &g2_Data5, NULL, NULL);
-    g2_Data5 = MENU_fileInit(g2_Data5, 119, 6.0, "servo-D", 6, datafloat, &g2_Data4, &g2_Data6, NULL, NULL);
-    g2_Data6 = MENU_fileInit(g2_Data6, 119, 0.9, "GAP2", 7, datafloat, &g2_Data5, &g2_Data7, NULL, NULL);
-    g2_Data7 = MENU_fileInit(g2_Data7, 119, 1.1, "motor-I", 2, datafloat, &g2_Data6, &preGear2, NULL, NULL);
+//    g2_Data2 = MENU_fileInit(g2_Data2, 140, 75.32, "THRE2", 3, dataint, &g2_Data1, &g2_Data3, NULL, NULL);
+//    g2_Data3 = MENU_fileInit(g2_Data3, 30, 11.62, "Vision2", 4, dataint, &g2_Data2, &g2_Data4, NULL, NULL);
+//    g2_Data4 = MENU_fileInit(g2_Data4, 119, 1.9, "servo-P", 5, datafloat, &g2_Data3, &g2_Data5, NULL, NULL);
+//    g2_Data5 = MENU_fileInit(g2_Data5, 119, 6.0, "servo-D", 6, datafloat, &g2_Data4, &g2_Data6, NULL, NULL);
+//    g2_Data6 = MENU_fileInit(g2_Data6, 119, 0.9, "GAP2", 7, datafloat, &g2_Data5, &g2_Data7, NULL, NULL);
+//    g2_Data7 = MENU_fileInit(g2_Data7, 119, 1.1, "motor-I", 2, datafloat, &g2_Data6, &preGear2, NULL, NULL);
 
     gear3 = MENU_fileInit(gear3, 1, 1.0, "GearFast2", 4, none, &gear2, &currentK, NULL, &g3_Data1);//快速档，含g2四个数据
     g3_Data1 = MENU_fileInit(g3_Data1, 90, 38.27, "speed3", 2, dataint, NULL, &g3_Data2, &gear3, NULL);
-    g3_Data2 = MENU_fileInit(g3_Data2, 140, 75.32, "THRE3", 3, dataint, &g3_Data1, &g3_Data3, NULL, NULL);
-    g3_Data3 = MENU_fileInit(g3_Data3, 29, 11.62, "Vision3", 4, dataint, &g3_Data2, &g3_Data4, NULL, NULL);
-    g3_Data4 = MENU_fileInit(g3_Data4, 119, 1.9, "servo-P", 5, datafloat, &g3_Data3, &g3_Data5, NULL, NULL);
-    g3_Data5 = MENU_fileInit(g3_Data5, 119, 6.8, "servo-D", 6, datafloat, &g3_Data4, &g3_Data6, NULL, NULL);
-    g3_Data6 = MENU_fileInit(g3_Data6, 119, 0.9, "GAP3", 7, datafloat, &g3_Data5, &g3_Data7, NULL, NULL);
-    g3_Data7 = MENU_fileInit(g3_Data7, 119, 1.1, "motor-I", 2, datafloat, &g3_Data6, &preGear3, NULL, NULL);
+//    g3_Data2 = MENU_fileInit(g3_Data2, 140, 75.32, "THRE3", 3, dataint, &g3_Data1, &g3_Data3, NULL, NULL);
+//    g3_Data3 = MENU_fileInit(g3_Data3, 29, 11.62, "Vision3", 4, dataint, &g3_Data2, &g3_Data4, NULL, NULL);
+//    g3_Data4 = MENU_fileInit(g3_Data4, 119, 1.9, "servo-P", 5, datafloat, &g3_Data3, &g3_Data5, NULL, NULL);
+//    g3_Data5 = MENU_fileInit(g3_Data5, 119, 6.8, "servo-D", 6, datafloat, &g3_Data4, &g3_Data6, NULL, NULL);
+//    g3_Data6 = MENU_fileInit(g3_Data6, 119, 0.9, "GAP3", 7, datafloat, &g3_Data5, &g3_Data7, NULL, NULL);
+//    g3_Data7 = MENU_fileInit(g3_Data7, 119, 1.1, "motor-I", 2, datafloat, &g3_Data6, &preGear3, NULL, NULL);
 
     currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 5, none, &gear3, &Threshold, NULL, &currentRTKP);
     currentRTKP = MENU_fileInit(currentRTKP, 3, 4, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentK, NULL);
@@ -261,13 +323,13 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     presentSpeed = MENU_fileInit(presentSpeed, 85, 1.1, "speed", 2, dataint, NULL, &presentTHRE, &file2, NULL);
     presentTHRE = MENU_fileInit(presentTHRE, 175, 2.2, "THRE", 3, dataint, &presentSpeed, &presentVision, NULL, NULL);
     presentVision = MENU_fileInit(presentVision, 92, 3.3, "VISION", 4, dataint, &presentTHRE, &fuzzyPB, NULL, NULL);
-    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 4.1, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
-    fuzzyPM = MENU_fileInit(fuzzyPM, 1, 3.6, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
-    fuzzyPS = MENU_fileInit(fuzzyPS, 1, 3.4, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
-    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 3.1, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
-    fuzzyNS = MENU_fileInit(fuzzyNS, 1, 3.5, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
-    fuzzyNM = MENU_fileInit(fuzzyNM, 1, 3.7, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
-    fuzzyNB = MENU_fileInit(fuzzyNB, 1, 4, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
+    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 4.5, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
+    fuzzyPM = MENU_fileInit(fuzzyPM, 1, 4.1, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
+    fuzzyPS = MENU_fileInit(fuzzyPS, 1, 3.8, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
+    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 3.6, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
+    fuzzyNS = MENU_fileInit(fuzzyNS, 1, 3.9, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
+    fuzzyNM = MENU_fileInit(fuzzyNM, 1, 4.2, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
+    fuzzyNB = MENU_fileInit(fuzzyNB, 1, 4.5, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
     presentServoD = MENU_fileInit(presentServoD, 1, 5.3, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
     gap = MENU_fileInit(gap, 1, 1.0, "GAP", 7, datafloat, &presentServoD, &midLineKP, NULL, NULL);
     midLineKP = MENU_fileInit(midLineKP, 1, 0.14, "midlineKP", 2, datafloat, &gap, &gyroKP, NULL, NULL);
@@ -313,7 +375,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display6 = MENU_fileInit(display6, 2, 1, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);
     display7 = MENU_fileInit(display7, 100, 1, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
     display8 = MENU_fileInit(display8, 780, 7.91, "stopTHRE", 3, dataint, &display7, &display9, NULL, NULL);
-    display9 = MENU_fileInit(display9, 64, 9.02, "param1", 4, dataint, &display8, &display10, NULL, NULL);
+    display9 = MENU_fileInit(display9, 2, 9.02, "testTimes", 4, dataint, &display8, &display10, NULL, NULL);
     display10 = MENU_fileInit(display10, 70, 9.02, "param2", 5, dataint, &display9, NULL, NULL, NULL);
 
     //数据写入flash

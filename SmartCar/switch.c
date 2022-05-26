@@ -35,8 +35,8 @@ void SW_readSwitch()
 //        flagStop = 0;
         parkPosition = 0;
 
-        parkStart = startWay.intVal;
-        parkType = startWay.intVal;
+        parkStart = file1.intVal;
+//        parkType = startWay.intVal;
 
         state = 0;
 
@@ -65,6 +65,32 @@ void SW_readSwitch()
         GPIO_Set(P00, 8, 0);//电机开关
 
         GPIO_Set(P02, 8, 1);//图传SD
+
+        testFlag = 1;//赛道测试
+        testStateTimes = 0;
+
+        memoryFlag = 0;
+        memoryState[0] = 0;
+        memoryState[1] = 0;
+        memoryState[2] = 0;
+        memoryState[3] = 0;
+        memoryState[4] = 0;
+        memoryState[5] = 0;
+        memoryState[6] = 0;
+        memoryState[7] = 0;
+        memoryState[8] = 0;
+        memoryState[9] = 0;
+        memoryState[10] = 0;
+        memoryState[11] = 0;
+        memoryState[12] = 0;
+        memoryState[13] = 0;
+        memoryState[14] = 0;
+        memoryState[15] = 0;
+        memoryState[16] = 0;
+        memoryState[17] = 0;
+        memoryState[18] = 0;
+        memoryState[19] = 0;
+
 
     }
     else
