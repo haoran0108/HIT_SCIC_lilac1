@@ -500,7 +500,6 @@ void CTRL_servoMain()
         servoPwm = servoMax;
     else if(servoPwm < servoMin)
         servoPwm = servoMin;
-    test_varible[11] = servoGyroPwm;
 //    servoPwm = display8.intVal;
 
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//¶æ»ú¿ØÖÆ
