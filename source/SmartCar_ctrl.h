@@ -39,9 +39,9 @@
 #define NB -30
 
 /*¶æ»ú*/
-#define servoMidValue 747
-#define servoMin 837
-#define servoMax 660
+#define servoMidValue 895
+#define servoMin 805
+#define servoMax 990
 
 
 extern uint32 servoPwm;
