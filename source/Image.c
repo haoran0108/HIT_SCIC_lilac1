@@ -531,11 +531,11 @@ void OTSU() {
         float p_less, p_more;
         int count_less = 0, count_more = 0;
         int sum_less = 0, sum_more = 0;
-        for (int i = 0; i < k; i++) {
+        for (int i = minThre; i < k; i++) {
             count_less += thre[i];
             sum_less += thre[i] * i;
         }
-        for (int i = k; i < 255; i++) {
+        for (int i = k; i < maxThre; i++) {
             count_more += thre[i];
             sum_more += thre[i] * i;
         }
