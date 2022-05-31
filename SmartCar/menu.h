@@ -60,6 +60,7 @@ extern node_t display1, display2, display3, display4, display5, display6, displa
 extern node_t LFKP, LFKI, RTKP, RTKI, slowLFKP, slowLFKI, slowRTKP, slowRTKI, fastLFKP, fastLFKI, fastRTKP, fastRTKI;
 
 extern node_t currentRTKP, currentRTKI, currentLFKP, currentLFKI, expectC;
+extern node_t wayThre, OTSU_Klow, OTSU_Khigh, part_klow1, part_khigh1, part_klow2, part_khigh2;
 
 extern node_t CrossCircle, IslandPD;
 extern node_t Cross_PB, Cross_PM, Cross_PS, Cross_ZO, Cross_NS, Cross_NM, Cross_NB, Cross_DS, Cross_DB;

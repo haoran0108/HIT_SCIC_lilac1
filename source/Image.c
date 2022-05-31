@@ -514,35 +514,33 @@ void OTSU() {
     map = fullBuffer;
     uint8_t my_threshold = 0;
     long int sum = 0;
-    for (int i = 0; i <= 120 * 188; i++) {
+    uint8_t thre[255] = { 0 };
+    int maxThre = OTSU_Khigh.intVal;
+    int minThre = OTSU_Klow.intVal;
+    for (int i = 0; i < 86 * 188; i++) {
+        thre[*(map)]++;
         sum += *(map);
         map++;
     }
-
-    int averange = sum / (120 * 188);
+    int averange = sum / (86 * 188);
 
     uint8_t max_num = 0, num = 0;
 
-    map = fullBuffer;
-    for (int k = 75; k <= 100; k++) {
+    for (int k = minThre; k <= maxThre; k++) {
         int a_less, a_more;
         float p_less, p_more;
         int count_less = 0, count_more = 0;
         int sum_less = 0, sum_more = 0;
-        my_map = fullBuffer;
-        for (int i = 0; i < 120 * 188; i++) {
-            if (*(my_map) < k) {
-                count_less++;
-                sum_less += *(my_map);
-            }
-            else {
-                count_more++;
-                sum_more += *(my_map);
-            }
-            my_map++;
+        for (int i = 0; i < k; i++) {
+            count_less += thre[i];
+            sum_less += thre[i] * i;
         }
-        p_less = (float)sum_less / (120 * 188);
-        p_more = (float)sum_more / (120 * 188);
+        for (int i = k; i < 255; i++) {
+            count_more += thre[i];
+            sum_more += thre[i] * i;
+        }
+        p_less = (float)sum_less / (86 * 188);
+        p_more = (float)sum_more / (86 * 188);
         if (count_less == 0 || count_more == 0) {
             continue;
         }
@@ -553,8 +551,8 @@ void OTSU() {
             max_num = num;
             my_threshold = k;
         }
-        map++;
     }
+    //printf("thre:threshold=%d\n", my_threshold);
     threshold = my_threshold;
 }
 
@@ -580,9 +578,11 @@ void part_OUST() {
     int averange = sum / (60 * 188);
 
     uint8_t max_num = 0, num = 0;
+    int maxThre;
+    int minThre;
 
     map = fullBuffer;
-    for (int k = threshold - 10; k <= threshold + 30; k++) {
+    for (int k = minThre + 5; k <= maxThre + 5; k++) {
         int a_less, a_more;
         float p_less, p_more;
         int count_less = 0, count_more = 0;
@@ -628,7 +628,7 @@ void part_OUST() {
     num = 0;
 
     map = mapLine;
-    for (int k = threshold - 20; k <= threshold + 20; k++) {
+    for (int k = minThre; k <= maxThre; k++) {
         int a_less, a_more;
         float p_less, p_more;
         int count_less = 0, count_more = 0;
@@ -1366,7 +1366,7 @@ void get_mid_line(void)
 void image_main()
 {
     threshold = presentTHRE.intVal;
-    int wayThreshold = 0;
+    int wayThreshold = wayThre.intVal;
     protection();
     switch (wayThreshold) {
     case 0:break;
@@ -1618,7 +1618,7 @@ void judge_type_road() {
     }
     else if(state != stateRampway)
     {
-        GPIO_Set(P22, 0, 0);
+//        GPIO_Set(P22, 0, 0);
         rampWayCount = 0;
     }
     if(state != stateRampway && state != stateParkIn){
@@ -3109,7 +3109,7 @@ void design_T_island_in() {
 
         for (int i = 110; i >= 50; i--) {
 
-            right_line[i] = leftRoad[i] + 28;//xMin - leftRoad[yMin] - 20;
+            right_line[i] = leftRoad[i] + 30;//xMin - leftRoad[yMin] - 20;
             left_line[i] = leftRoad[i];
         }
     }
@@ -3142,7 +3142,7 @@ void design_T_island_in() {
         double k = calculate_slope(80, 100, rightRoad);
 
         for (int i = 110; i >= 50; i--) {
-            left_line[i] = rightRoad[i] - 28;//+ xMin - rightRoad[yMin] ;
+            left_line[i] = rightRoad[i] - 30;//+ xMin - rightRoad[yMin] ;
             right_line[i] = rightRoad[i];
         }
     }
@@ -3270,7 +3270,7 @@ void design_island_ing() {
 
             for (int i = 110; i >= 50; i--) {
 
-                right_line[i] = leftRoad[i] + 25;//xMin - leftRoad[yMin] - 20;
+                right_line[i] = leftRoad[i] + 30;//xMin - leftRoad[yMin] - 20;
                 left_line[i] = leftRoad[i];
             }
         }
@@ -3303,7 +3303,7 @@ void design_island_ing() {
             double k = calculate_slope(80, 100, rightRoad);
 
             for (int i = 110; i >= 50; i--) {
-                left_line[i] = rightRoad[i] - 25;//+ xMin - rightRoad[yMin] ;
+                left_line[i] = rightRoad[i] - 30;//+ xMin - rightRoad[yMin] ;
                 right_line[i] = rightRoad[i];
             }
         }
@@ -3408,10 +3408,10 @@ void design_island_turn() {
         int way = 1;
         if (way == 1) {
             //固定打角
-            double k = (double)(10 - ((NEAR_LINE - 5))) / (right_side[10] - left_line[(NEAR_LINE - 5)]) - dkRight;
+            double k = (double)(10 - ((NEAR_LINE - 3))) / (right_side[10] - left_line[(NEAR_LINE - 3)]) - dkRight;
 
-            for (int i = (NEAR_LINE - 5); i >= 2; i--) {
-                left_line[i] = k * (i - ((NEAR_LINE - 5))) + left_line[(NEAR_LINE - 5)];
+            for (int i = (NEAR_LINE - 3); i >= 2; i--) {
+                left_line[i] = (k)* (i - ((NEAR_LINE - 3))) + left_line[(NEAR_LINE - 3)];
                 right_line[i] = right_side[i];
             }
         }
@@ -3437,7 +3437,7 @@ void design_island_turn() {
                 double k = (double)(10 - ((NEAR_LINE - 5))) / (right_side[10] - left_line[(NEAR_LINE - 5)]) - dkRight;
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
-                    left_line[i] = k * (i - ((NEAR_LINE - 5))) + left_line[(NEAR_LINE - 5)];
+                    left_line[i] = (k ) * (i - ((NEAR_LINE - 5))) + left_line[(NEAR_LINE - 5)];
                     right_line[i] = right_side[i];
                 }
             }
@@ -3461,10 +3461,10 @@ void design_island_turn() {
         int way = 1;
         if (way == 1) {
             //固定打角
-            double k = (double)(10 - (NEAR_LINE - 5)) / (left_side[10] - right_line[(NEAR_LINE - 5)]) + dkLeft;
+            double k = (double)(10 - (NEAR_LINE - 3)) / (left_side[10] - right_line[(NEAR_LINE - 3)]) + dkLeft;
 
-            for (int i = (NEAR_LINE - 5); i >= 2; i--) {
-                right_line[i] = k * (i - (NEAR_LINE - 5)) + right_line[(NEAR_LINE - 5)];
+            for (int i = (NEAR_LINE - 3); i >= 2; i--) {
+                right_line[i] = k * (i - (NEAR_LINE - 3)) + right_line[(NEAR_LINE - 3)];
                 left_line[i] = left_side[i];
             }
         }
@@ -3524,11 +3524,12 @@ void design_island_circle(){
     while(i>=1 && left_line[i] != MISS){
         if(islandWhere == LEFT){
             left_line[i] = right_line[i] - distance;
-//            right_line[i] -= distance;
+            right_line[i] = left_line[i] + 30;
         }else if(islandWhere == RIGHT){
            right_line[i] = left_line[i] + distance;
-//            right_line[i] -= distance;
+           left_line[i] = right_line[i] - 30;
         }
+
         i--;
     }
 
@@ -4655,11 +4656,11 @@ void rampwayDown()
         }
     }
 
-    if(TFMINI_Distance < rampDistance.intVal && lastTwoState == 1 && inv_accl[2] < 9.4)
+    if(TFMINI_Distance < rampDistance.intVal && lastTwoState == 1 && inv_accl[2] < 9.45)
     {
         state = 0;
         rampJudgeCount = 0;
-        GPIO_Set(P22, 0, 0);
+//        GPIO_Set(P22, 0, 0);
     }
 
 }
@@ -4671,7 +4672,7 @@ int midMaxColumn(int istart, int iend, int param)
     int count2 = istart - iend - param;
     for(int i = istart; i > iend; i--)
     {
-        if(right_line[i] - left_line[i] < 32 && mid_line[i] > 78 && mid_line[i] < 108)
+        if(right_line[i] - left_line[i] < 32 && mid_line[i] > 80 && mid_line[i] < 103)
         {
             count1 += 1;
         }
@@ -4731,7 +4732,7 @@ void straight_define()
 
     }
 
-    if(straightFlag == 0 && straight_variance(vision+5, 65, 8) == 2 && midMaxColumn(vision, 65, 2) == 1)
+    if(straightFlag == 0 && ((straight_variance(vision+5, 65, 8) == 2 && midMaxColumn(vision, 40, 2) == 1) || straight_variance(vision+5, 40, 8) == 2))
     {
         if(state == 10)
         {
@@ -4742,18 +4743,13 @@ void straight_define()
             }
         }
 
-        if(state == 30)
-        {
-            if(fabs(calculate_slope_uint(55,85,right_line)) < islandParam5.floatVal || fabs(calculate_slope_uint(55,85,left_line)) < islandParam5.floatVal)
-            {
-                straightFlag = 1;
-            }
-        }
-        if(state == 110)
-        {
-
-                straightFlag = 1;
-        }
+//        if(state == 30)
+//        {
+//            if(fabs(calculate_slope_uint(55,85,right_line)) < islandParam5.floatVal || fabs(calculate_slope_uint(55,85,left_line)) < islandParam5.floatVal)
+//            {
+//                straightFlag = 1;
+//            }
+//        }
 
         if(state == 0)
         {
@@ -4784,9 +4780,9 @@ void straight_define()
             straightFlag = 1;
 
         }
-        else if(state == 0 || state == 30 || state == 110)
+        else if(state == 0)
         {
-            if((straight_variance(vision+5, 65, 20) == 2 && midMaxColumn(vision, 70, 6) == 1) || straight_variance(vision+5, 65, 16) == 2 || midMaxColumn(vision, 70, 5) == 1)
+            if((straight_variance(vision+5, 65, 20) == 2 && midMaxColumn(vision, 65, 6) == 1) || straight_variance(vision+5, 65, 14) == 2 || midMaxColumn(vision, 60, 5) == 1 || (straight_variance(vision+5, 75, 16) == 2 && straight_variance(75, 55, 14) == 2))
             {
 
                 straightFlag = 1;

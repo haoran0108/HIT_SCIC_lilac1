@@ -626,32 +626,140 @@ void CTRL_motorDiffer()
 
     delta = (double)(servoMidValue - servoPwm);
     FabsDelta = fabs(delta);
+    FabsDelta = FabsDelta / 100;
+
     /*内轮减速*/
-    float k;
+//    float k;
+//    if(delta > 0)
+//    {
+//        k = gap.floatVal * (1.0134 - 0.0044 * delta);
+//        if(k > 1) k = 1;
+//        if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+//        {
+//            expectL = (int32)(present_speed * display5.floatVal);
+//            expectR = (int32)(present_speed * display5.floatVal * k);
+////            GPIO_Set(P22, 0, 1);
+//        }
+//        else if(straightFlag == 1)
+//        {
+//            expectL = (int32)(present_speed * display6.floatVal);
+//            expectR = (int32)(present_speed * display6.floatVal * k);
+////            GPIO_Set(P22, 0, 1);
+//        }
+//        else if(straightFlag == 0)
+//        {
+//            if(state == 20 || state == 60)
+//            {
+//                expectL = (int32)(present_speed * display7.floatVal);
+//                expectR = (int32)(present_speed * display7.floatVal * k);
+//            }
+//            else if(state == 130)
+//            {
+//                expectL = rampSpeed.intVal;
+//                expectR = rampSpeed.intVal;
+//            }
+//            else
+//            {
+//                expectL = (int32)(present_speed);
+//                expectR = (int32)(present_speed * k);
+//            }
+////            GPIO_Set(P22, 0, 0);
+//        }
+//
+//    }
+//    else if(delta < 0)
+//    {
+//        k = gap.floatVal * (0.9994 + 0.0044 * delta);
+//        if(k > 1) k = 1;
+//        if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+//        {
+//            expectL = (int32)(present_speed * display5.floatVal);
+//            expectR = (int32)(present_speed * display5.floatVal * k);
+////            GPIO_Set(P22, 0, 1);
+//        }
+//
+//        else if(straightFlag == 1)
+//        {
+//            expectL = (int32)(present_speed * display6.floatVal * k);
+//            expectR = (int32)(present_speed * display6.floatVal);
+////            GPIO_Set(P22, 0, 1);
+//        }
+//        else if(straightFlag == 0)
+//        {
+//            if(state == 20 || state == 60)
+//            {
+//                expectL = (int32)(present_speed * display7.floatVal * k);
+//                expectR = (int32)(present_speed * display7.floatVal);
+//            }
+//            else if(state == 130)
+//            {
+//                expectL = rampSpeed.intVal;
+//                expectR = rampSpeed.intVal;
+//            }
+//            else
+//            {
+//                expectL = (int32)(present_speed * k);
+//                expectR = (int32)(present_speed);
+//            }
+////            GPIO_Set(P22, 0, 0);
+//        }
+//    }
+//    else if(delta == 0)
+//    {
+//        if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+//        {
+//            expectL = (int32)(present_speed * display5.floatVal);
+//            expectR = (int32)(present_speed * display5.floatVal * k);
+////            GPIO_Set(P22, 0, 1);
+//        }
+//        if(straightFlag == 1)
+//        {
+//            expectL = (int32)(present_speed * display6.floatVal);
+//            expectR = (int32)(present_speed * display6.floatVal);
+////            GPIO_Set(P22, 0, 1);
+//        }
+//        else if(straightFlag == 0)
+//        {
+//            if(state == 20 || state == 60)
+//            {
+//                expectL = (int32)(present_speed * display7.floatVal);
+//                expectR = (int32)(present_speed * display7.floatVal);
+//            }
+//            else if(state == 130)
+//            {
+//                expectL = rampSpeed.intVal;
+//                expectR = rampSpeed.intVal;
+//            }
+//            else
+//            {
+//                expectL = (int32)(present_speed);
+//                expectR = (int32)(present_speed);
+//            }
+////            GPIO_Set(P22, 0, 0);
+//        }
+//
+//    }
 
+    /*内减外加*/
+    double kIN, kOUT;
 
-    if(delta > 0)
+    if(delta > 0)//右转
     {
-        k = gap.floatVal * (1.0134 - 0.0044 * delta);
-        if(k > 1) k = 1;
-        if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
+        kIN = gap.floatVal * (0.9925 - 0.0885 * FabsDelta * FabsDelta - 0.2881 * FabsDelta);
+        kOUT = gap.floatVal * (1.0027 + 0.0265 * FabsDelta * FabsDelta + 0.067 * FabsDelta);
+
+        if(straightFlag == 1)
         {
-            expectL = (int32)(present_speed * display5.floatVal);
-            expectR = (int32)(present_speed * display5.floatVal * k);
-//            GPIO_Set(P22, 0, 1);
-        }
-        else if(straightFlag == 1)
-        {
-            expectL = (int32)(present_speed * display6.floatVal);
-            expectR = (int32)(present_speed * display6.floatVal * k);
-//            GPIO_Set(P22, 0, 1);
+            expectL = (int32)(present_speed * display6.floatVal * kOUT);
+            expectR = (int32)(present_speed * display6.floatVal * kIN);
+            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
             if(state == 20 || state == 60)
             {
-                expectL = (int32)(present_speed * display7.floatVal);
-                expectR = (int32)(present_speed * display7.floatVal * k);
+                expectL = (int32)(present_speed * display7.floatVal * kOUT);
+                expectR = (int32)(present_speed * display7.floatVal * kIN);
             }
             else if(state == 130)
             {
@@ -660,36 +768,31 @@ void CTRL_motorDiffer()
             }
             else
             {
-                expectL = (int32)(present_speed);
-                expectR = (int32)(present_speed * k);
+                expectL = (int32)(present_speed * kOUT);
+                expectR = (int32)(present_speed * kIN);
             }
-//            GPIO_Set(P22, 0, 0);
+            GPIO_Set(P22, 0, 0);
         }
 
     }
     else if(delta < 0)
     {
-        k = gap.floatVal * (0.9994 + 0.0044 * delta);
-        if(k > 1) k = 1;
-        if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
-        {
-            expectL = (int32)(present_speed * display5.floatVal);
-            expectR = (int32)(present_speed * display5.floatVal * k);
-//            GPIO_Set(P22, 0, 1);
-        }
+        kIN = gap.floatVal * (0.9808 - 0.0803 * FabsDelta * FabsDelta - 0.2924 * FabsDelta);
+        kOUT = gap.floatVal * (1.0042 + 0.0157 * FabsDelta * FabsDelta + 0.0771 * FabsDelta);
 
-        else if(straightFlag == 1)
+
+        if(straightFlag == 1)
         {
-            expectL = (int32)(present_speed * display6.floatVal * k);
-            expectR = (int32)(present_speed * display6.floatVal);
-//            GPIO_Set(P22, 0, 1);
+            expectL = (int32)(present_speed * display6.floatVal * kIN);
+            expectR = (int32)(present_speed * display6.floatVal *kOUT);
+                GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
             if(state == 20 || state == 60)
             {
-                expectL = (int32)(present_speed * display7.floatVal * k);
-                expectR = (int32)(present_speed * display7.floatVal);
+                expectL = (int32)(present_speed * display7.floatVal * kIN);
+                expectR = (int32)(present_speed * display7.floatVal * kOUT);
             }
             else if(state == 130)
             {
@@ -698,25 +801,20 @@ void CTRL_motorDiffer()
             }
             else
             {
-                expectL = (int32)(present_speed * k);
-                expectR = (int32)(present_speed);
+                expectL = (int32)(present_speed * kIN);
+                expectR = (int32)(present_speed * kOUT);
             }
-//            GPIO_Set(P22, 0, 0);
+            GPIO_Set(P22, 0, 0);
         }
     }
     else if(delta == 0)
     {
-        if(straightFlag == 2 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
-        {
-            expectL = (int32)(present_speed * display5.floatVal);
-            expectR = (int32)(present_speed * display5.floatVal * k);
-//            GPIO_Set(P22, 0, 1);
-        }
+
         if(straightFlag == 1)
         {
             expectL = (int32)(present_speed * display6.floatVal);
             expectR = (int32)(present_speed * display6.floatVal);
-//            GPIO_Set(P22, 0, 1);
+            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -735,78 +833,10 @@ void CTRL_motorDiffer()
                 expectL = (int32)(present_speed);
                 expectR = (int32)(present_speed);
             }
-//            GPIO_Set(P22, 0, 0);
+            GPIO_Set(P22, 0, 0);
         }
 
     }
-
-    /*内减外加*/
-//    double kIN, kOUT;
-//
-////    kOUT = gap.floatVal * (0.0018 * FabsDelta + 0.9769);
-////    kIN = gap.floatVal * (-0.004 * FabsDelta + 1.0487);
-////    if(kIN >= 1)
-////    {
-////        kIN = 1;
-////    }
-////    if(kOUT <= 1)
-////    {
-////        kOUT = 1;
-////    }
-////    kIN = gap.floatVal * ((-1e-5)* (fabsDelta * fabsDelta) - 0.0024 * fabsDelta + 1);
-////    kOUT = gap.floatVal * ((6e-6) * (fabsDelta * fabsDelta) + 0.001 * fabsDelta + 1);
-//    if(delta > 0)//右转
-//    {
-//        kIN = gap.floatVal * (1.037 - 0.0041 * delta);
-//        kOUT = gap.floatVal * (0.991 + 0.001 * delta);
-//        if(kIN > 1) kIN = 1;
-//        if(kOUT < 1) kOUT = 1;
-//
-//        expectL = (int32)(present_speed * kOUT);
-//        expectR = (int32)(present_speed * kIN);
-//    }
-//    else if(delta < 0)//左转
-//    {
-//        kIN = gap.floatVal * (1.0172 + 0.0045 * delta);
-//        kOUT = gap.floatVal * (0.9931 - 0.0012 * delta);
-//        if(kIN > 1) kIN = 1;
-//        if(kOUT < 1) kOUT = 1;
-//
-//        expectL = (int32)(present_speed * kIN);
-//        expectR = (int32)(present_speed * kOUT);
-//    }
-//    else if(delta == 0)
-//    {
-//        expectL = (int32)(present_speed);
-//        expectR = (int32)(present_speed);
-//    }
-//
-//
-//    if(straightFlag == 1 && (state == 0 || state == 14 || state == 1 || state == 4 || state == 8))
-//    {
-//        expectL = (int32)(expectL * display6.floatVal);
-//        expectR = (int32)(expectR * display6.floatVal);
-//    }
-//
-//    else if(straightFlag == 0 || state == 18)
-//    {
-//        if(state == 11 || state == 13)
-//        {
-//            expectL = (int32)(expectL * display7.floatVal);
-//            expectR = (int32)(expectR * display7.floatVal);
-//        }
-//        else if(state == 18)
-//        {
-//            expectL = rampSpeed.intVal;
-//            expectR = rampSpeed.intVal;
-//        }
-//        else
-//        {
-//            expectL = (int32)(expectL);
-//            expectR = (int32)(expectR);
-//        }
-//    }
-
 
     test_varible[9] = expectL;
     test_varible[10] = expectR;
