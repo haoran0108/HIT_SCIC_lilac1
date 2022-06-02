@@ -65,14 +65,6 @@ int core1_main(void)
 
 
         SmartCar_VarUpload(test_varible, transport_num);
-//        if(GPIO_Read(P13, 3))
-//        {
-//
-//
-//        }
-//        else{
-//
-//        }
 
 
     }

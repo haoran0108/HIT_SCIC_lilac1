@@ -62,7 +62,7 @@ extern node_t LFKP, LFKI, RTKP, RTKI, slowLFKP, slowLFKI, slowRTKP, slowRTKI, fa
 extern node_t currentRTKP, currentRTKI, currentLFKP, currentLFKI, expectC;
 extern node_t wayThre, OTSU_Klow, OTSU_Khigh, part_klow1, part_khigh1, part_klow2, part_khigh2;
 
-extern node_t CrossCircle, IslandPD;
+extern node_t CrossCircle, IslandPD, FolkPD;
 extern node_t Cross_PB, Cross_PM, Cross_PS, Cross_ZO, Cross_NS, Cross_NM, Cross_NB, Cross_DS, Cross_DB;
 extern node_t circle_PB, circle_PM, circle_PS, circle_ZO, circle_NS, circle_NM, circle_NB, circle_DS, circle_DB;
 extern node_t Island_PB, Island_PM, Island_PS, Island_ZO, Island_NS, Island_NM, Island_NB, Island_DS, Island_DB;

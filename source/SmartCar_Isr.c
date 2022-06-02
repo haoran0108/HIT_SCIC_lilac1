@@ -112,7 +112,11 @@ IFX_INTERRUPT(asclin0RxISR, 0, IFX_INTPRIO_ASCLIN0_RX)
     IfxCpu_enableInterrupts();//¿ªÆôÖÐ¶ÏÇ¶Ì×
     IfxAsclin_Asc_isrReceive(&uart[0]);
 
-    SmartCar_TFMINI_UARTCallBack();//tfmini
+    if(GPIO_Read(P13, 2) || GPIO_Read(P11, 3))
+    {
+        SmartCar_TFMINI_UARTCallBack();//tfmini
+
+    }
 //    test_varible[15] = TFMINI_Distance;
 //    test_varible[14] = TFMINI_Strength;
 

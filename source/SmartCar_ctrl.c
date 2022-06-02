@@ -70,15 +70,13 @@ void CTRL_gyroUpdate()
     CTRL_gyroAverageFilter();
 
     deltaAcc = inv_accl[0];//2俯仰 1左右反转 0左右转
-//    test_varible[15] = inv_gyro[2];
-//    test_varible[14] = deltaGyro[0];
+
 
 }
 
 void CTRL_directionAngleGet()
 {
     currentGyro += deltaGyro[0] * 0.005;
-//    test_varible[15] = deltaAcc;
 
 //    if(currentGyro > 180) currentGyro -= 360;
 //    else if(currentGyro < -180) currentGyro += 360;
@@ -106,6 +104,10 @@ void CTRL_speedLoopPID()
     speedR = CTRL_speedGetRight();
     CTRL_lowpassFilter();
 
+    expectL = expectL * 8;
+    expectR = expectR * 8;
+    test_varible[9] = expectL;
+    test_varible[10] = expectR;
 
     errorML.currentError = expectL + speedL;//取偏差
     sumErrorLF += errorML.currentError;
@@ -413,11 +415,12 @@ void CTRL_motorPID()
 
     CTRL_lowpassFilter();
 
+
+
     errorML.currentError = expectL + speedL;//取偏差
     errorML.delta = errorML.currentError - errorML.lastError;
     mySpeedL = (int32)(mySpeedL + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
-
 
     errorMR.currentError = expectR - speedR;//取偏差
     errorMR.delta = errorMR.currentError - errorMR.lastError;
@@ -501,7 +504,7 @@ void CTRL_servoMain()
     else if(servoPwm < servoMin)
         servoPwm = servoMin;
 //    servoPwm = display8.intVal;
-
+    test_varible[11] = servoPwm;
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//舵机控制
 
 
@@ -671,7 +674,7 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(present_speed * display6.floatVal * k);
             expectR = (int32)(present_speed * display6.floatVal);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -700,7 +703,7 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(present_speed * display6.floatVal);
             expectR = (int32)(present_speed * display6.floatVal);
-            GPIO_Set(P22, 0, 1);
+//            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -822,8 +825,7 @@ void CTRL_motorDiffer()
 //
 //    }
 
-    test_varible[9] = expectL;
-    test_varible[10] = expectR;
+
 }
 
 void CTRL_CarParkStart()
@@ -838,6 +840,8 @@ void CTRL_CarParkStart()
     //        {
     //            parkStart = 0;
     //        }
+
+
         if(currentGyro < (-startGyro.intVal) || currentGyro > startGyro.intVal)
         {
             parkStart = 0;
@@ -945,6 +949,17 @@ void CTRL_ServoPID_Determine()
 
     }
 
+    else if((FolkPD.intVal == 1 && (folkTimes == 1 || folkTimes == 3)) || straightFlag == 1)
+    {
+        fuzzy_PB = Folk_PB.floatVal;
+        fuzzy_PM = Folk_PM.floatVal;
+        fuzzy_PS = Folk_PS.floatVal;
+        fuzzy_ZO = Folk_ZO.floatVal;
+        fuzzy_NS = Folk_NS.floatVal;
+        fuzzy_NM = Folk_NM.floatVal;
+        fuzzy_NB = Folk_NB.floatVal;
+        fuzzy_D = Folk_DS.floatVal;
+    }
     else
     {
         fuzzy_PB = fuzzyPB.floatVal;
@@ -1099,10 +1114,10 @@ void motorParamDefine()
 //        }
 //        else
 //        {
-            motorLFKP = LFKP.intVal;
-            motorLFKI = LFKI.intVal;
-            motorRTKP = RTKP.intVal;
-            motorRTKI = RTKI.intVal;
+            motorLFKP = LFKP.floatVal;
+            motorLFKI = LFKI.floatVal;
+            motorRTKP = RTKP.floatVal;
+            motorRTKI = RTKI.floatVal;
 //        }
 
 
@@ -1196,10 +1211,16 @@ void speedDetermine()
 //        present_speed = memorySpeed2.intVal;
 //        present_vision = memoryVision2.intVal;
 //    }
-    else
+    else if(parkStart == 0)
     {
         present_speed = presentSpeed.intVal;
         present_vision = presentVision.intVal;
+    }
+
+    else if(parkStart != 0)
+    {
+        present_speed = presentSpeed.intVal - 10;
+        present_vision = presentVision.intVal - 10;
     }
 }
 

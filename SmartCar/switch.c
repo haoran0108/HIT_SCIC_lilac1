@@ -91,7 +91,7 @@ void SW_readSwitch()
         memoryState[18] = 0;
         memoryState[19] = 0;
 
-
+        folkTimes = 0;
     }
     else
     {

@@ -144,6 +144,7 @@ extern int startCount;
 extern int laststate;
 extern uint8_t memoryFlag;
 extern uint16_t memoryState[20];
+extern uint8_t folkTimes;
 typedef struct {
     int x;
     int y;
@@ -249,6 +250,8 @@ void island_final();
 void folk_road_in();
 void design_folk_road();
 void folk_road_out();
+//void small_s_road();
+void s_road_filter();
 
 //T字口
 
@@ -276,6 +279,8 @@ int straight_variance(int istart, int iend,float varThreshold);
 int midMaxColumn(int istart, int iend, int param);
 void straight_define();
 
+//滤波
+void mid_line_filter();
 //记忆赛道
 void roadMemory();
 
