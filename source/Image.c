@@ -73,6 +73,7 @@ int laststate = 0;
 uint8_t memoryFlag = 0;
 uint16_t memoryState[20] = {0};
 float p_last = 0;
+uint8_t averMidLine;
 //uint8_t ForeSee = 35;
 //coordinate foreSee[CAMERA_W];
 
@@ -1407,6 +1408,8 @@ void image_main()
     }
     get_mid_line();
     mid_line_filter();
+    averMidLine = mid_aver();
+
     for (int i = NEAR_LINE; i >= FAR_LINE; i--)
         if (mid_line[i] != MISS)
             IMG[i][mid_line[i]] = green;
@@ -4814,7 +4817,7 @@ void straight_define()
         }
         else if(state == 0)
         {
-            if((straight_variance(vision+5, 65, 20) == 2 && midMaxColumn(vision, 65, 6) == 1) || straight_variance(vision+5, 65, 14) == 2 || midMaxColumn(vision, 60, 5) == 1 || (straight_variance(vision+5, 75, 16) == 2 && straight_variance(75, 55, 14) == 2))
+            if((straight_variance(vision+5, 65, 20) == 2 && midMaxColumn(vision, 65, 6) == 1) || midMaxColumn(vision, 60, 5) == 1)
             {
 
                 straightFlag = 1;
@@ -4967,7 +4970,35 @@ void mid_line_filter() {
 
 }
 
+uint8_t mid_aver() {
+    uint8_t mid;
+    //最平均的算法
+    int way = 2;
+    if (way == 1) {
+        int sum = 0;
+        for (int i = NEAR_LINE; i > 30; i--) {
+            sum += mid_line[i];
+        }
+        mid = sum / (NEAR_LINE - 30);
+    }
+    else if (way == 2) {
+        int sumU = 0, sumM = 0, sumD = 0;
 
+        for (int i = NEAR_LINE; i > 75; i--) {
+            sumD += mid_line[i];
+        }
+        for (int i = 75; i > 50; i--) {
+            sumM += mid_line[i];
+        }
+        for (int i = 50; i > 30; i--) {
+            sumU += mid_line[i];
+        }
+
+        mid = (sumU * 0.1) / (50 - 30) + (sumM * 0.3) / (75 - 50) + (sumD * 0.6) / (NEAR_LINE - 75);
+    }
+
+    return mid;
+}
 
 // 以下是废案，没有成功的代码，以防万一需要使用的内容
 ////////////////////////////////////////////

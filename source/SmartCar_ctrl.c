@@ -336,70 +336,70 @@ void CTRL_fuzzyPID()
 
 }
 
-void CTRL_midLineLoopPID()
-{
-    int averageSpeed;
-    float fuzzyKP = 1;
-
-    averageSpeed = (speedR - speedL) / 2;
-    servoError.currentError = 92 - mid_line[presentVision.intVal];
-    test_varible[12] = servoError.currentError;
-    expectGyro = servoError.currentError * midLineKP.floatVal * averageSpeed;
-
-    servoError.delta = servoError.currentError - servoError.lastError;
-    fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
-    servoPwm = (uint32)(servoMidValue + presentServoD.floatVal * servoError.delta + fuzzyKP * servoError.currentError);
-    if(servoPwm > servoMax)
-        servoPwm = servoMax;
-    else if(servoPwm < servoMin)
-        servoPwm = servoMin;
-
-    servoError.lastError = servoError.currentError;
-//    test_varible[13] = servoPwm;
-//    test_varible[15] = expectGyro;
-
-}
-
-void CTRL_gyroLoopPID()
-{
-    CTRL_gyroUpdate();
-//    expectGyro = midLineKP.floatVal;
-    gyroError.currentError = expectGyro - deltaGyro[0];
-    gyroError.delta = gyroError.currentError - gyroError.lastError;
-    if(straightFlag == 0)
-    {
-        if(abs(servoError.currentError) > 10 || (state == 5 || state == 6 || state == 7 || state == 9 || state == 12 || state == 16))
-        {
-            servoGyroPwm = (uint32)(servoPwm + gyroKP.floatVal * gyroError.currentError + gyroKD.floatVal * gyroError.delta);
-
-            if(servoGyroPwm > servoPwm + 5)
-            {
-                servoGyroPwm = servoPwm + 5;
-            }
-            else if(servoGyroPwm < servoPwm - 5)
-            {
-                servoGyroPwm = servoPwm - 5;
-
-            }
-        }
-
-        else
-        {
-            servoGyroPwm = servoPwm;
-        }
-    }
-
-    else
-    {
-        servoGyroPwm = servoPwm;
-    }
-    if(servoGyroPwm > servoMax)
-        servoGyroPwm = servoMax;
-    else if(servoGyroPwm < servoMin)
-        servoGyroPwm = servoMin;
-
-    gyroError.lastError = gyroError.currentError;
-}
+//void CTRL_midLineLoopPID()
+//{
+//    int averageSpeed;
+//    float fuzzyKP = 1;
+//
+//    averageSpeed = (speedR - speedL) / 2;
+//    servoError.currentError = 92 - mid_line[presentVision.intVal];
+//    test_varible[12] = servoError.currentError;
+//    expectGyro = servoError.currentError * midLineKP.floatVal * averageSpeed;
+//
+//    servoError.delta = servoError.currentError - servoError.lastError;
+//    fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
+//    servoPwm = (uint32)(servoMidValue + presentServoD.floatVal * servoError.delta + fuzzyKP * servoError.currentError);
+//    if(servoPwm > servoMax)
+//        servoPwm = servoMax;
+//    else if(servoPwm < servoMin)
+//        servoPwm = servoMin;
+//
+//    servoError.lastError = servoError.currentError;
+////    test_varible[13] = servoPwm;
+////    test_varible[15] = expectGyro;
+//
+//}
+//
+//void CTRL_gyroLoopPID()
+//{
+//    CTRL_gyroUpdate();
+////    expectGyro = midLineKP.floatVal;
+//    gyroError.currentError = expectGyro - deltaGyro[0];
+//    gyroError.delta = gyroError.currentError - gyroError.lastError;
+//    if(straightFlag == 0)
+//    {
+//        if(abs(servoError.currentError) > 10 || (state == 5 || state == 6 || state == 7 || state == 9 || state == 12 || state == 16))
+//        {
+//            servoGyroPwm = (uint32)(servoPwm + gyroKP.floatVal * gyroError.currentError + gyroKD.floatVal * gyroError.delta);
+//
+//            if(servoGyroPwm > servoPwm + 5)
+//            {
+//                servoGyroPwm = servoPwm + 5;
+//            }
+//            else if(servoGyroPwm < servoPwm - 5)
+//            {
+//                servoGyroPwm = servoPwm - 5;
+//
+//            }
+//        }
+//
+//        else
+//        {
+//            servoGyroPwm = servoPwm;
+//        }
+//    }
+//
+//    else
+//    {
+//        servoGyroPwm = servoPwm;
+//    }
+//    if(servoGyroPwm > servoMax)
+//        servoGyroPwm = servoMax;
+//    else if(servoGyroPwm < servoMin)
+//        servoGyroPwm = servoMin;
+//
+//    gyroError.lastError = gyroError.currentError;
+//}
 
 void CTRL_motorPID()
 {
@@ -1210,7 +1210,7 @@ void speedDetermine()
         present_vision = cross_circle_param1.intVal;
     }
 
-    CTRL_speedDecision(present_speed, 85);
+    CTRL_speedDecision(present_speed, speedLow.intVal);
 }
 void CTRL_RoadTest()
 {
@@ -1238,7 +1238,8 @@ void CTRL_speedDecision(int32 speedHigh, int32 speedLow)
 
     if(speedHigh - speedLow >= 5)
     {
-        error = servoError.currentError;
+        error = 92 - averMidLine;
+;
         speedDelta = (float)(speedHigh - speedLow);
         param = speedDelta / (25*25);
 

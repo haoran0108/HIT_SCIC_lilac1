@@ -145,6 +145,8 @@ extern int laststate;
 extern uint8_t memoryFlag;
 extern uint16_t memoryState[20];
 extern uint8_t folkTimes;
+extern uint8_t averMidLine;
+
 typedef struct {
     int x;
     int y;
@@ -281,6 +283,7 @@ void straight_define();
 
 //滤波
 void mid_line_filter();
+uint8_t mid_aver();//加权平均
 //记忆赛道
 void roadMemory();
 
