@@ -167,6 +167,7 @@ void CTRL_currentAverageFilter();//电流环平均滑动滤波
 void CTRL_gyroAverageFilter();
 void CTRL_RoadTest();
 void speedDetermine();
+void CTRL_speedDecision(int32 speedHigh, int32 speedLow);
 
 void motorParamDefine();
 

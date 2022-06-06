@@ -104,8 +104,9 @@ void CTRL_speedLoopPID()
     speedR = CTRL_speedGetRight();
     CTRL_lowpassFilter();
 
-    expectL = expectL * 8;
-    expectR = expectR * 8;
+    speedL = speedL / 8;
+//    speedR = speedR / 8;
+
     test_varible[9] = expectL;
     test_varible[10] = expectR;
 
@@ -116,8 +117,8 @@ void CTRL_speedLoopPID()
 //    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
     currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
-    if(currentExpectLF < 800) currentExpectLF = 800;
-    else if(currentExpectLF > 4096) currentExpectLF = 4096;
+    if(currentExpectLF < 1000) currentExpectLF = 1000;
+    else if(currentExpectLF > 3800) currentExpectLF = 3800;
 
 
     errorMR.currentError = expectR - speedR;//取偏差
@@ -128,8 +129,8 @@ void CTRL_speedLoopPID()
 //    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
     currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
-    if(currentExpectRT < 800) currentExpectRT = 800;
-    else if(currentExpectRT > 4096) currentExpectRT = 4096;
+    if(currentExpectRT < 1000) currentExpectRT = 1000;
+    else if(currentExpectRT > 3800) currentExpectRT = 3800;
 
     test_varible[0] = -speedL;
     test_varible[1] = speedR;
@@ -642,7 +643,7 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(present_speed * display6.floatVal);
             expectR = (int32)(present_speed * display6.floatVal * k);
-//            GPIO_Set(P22, 0, 1);
+            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -661,7 +662,7 @@ void CTRL_motorDiffer()
                 expectL = (int32)(present_speed);
                 expectR = (int32)(present_speed * k);
             }
-//            GPIO_Set(P22, 0, 0);
+            GPIO_Set(P22, 0, 0);
         }
 
     }
@@ -674,7 +675,7 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(present_speed * display6.floatVal * k);
             expectR = (int32)(present_speed * display6.floatVal);
-//            GPIO_Set(P22, 0, 1);
+            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -703,7 +704,7 @@ void CTRL_motorDiffer()
         {
             expectL = (int32)(present_speed * display6.floatVal);
             expectR = (int32)(present_speed * display6.floatVal);
-//            GPIO_Set(P22, 0, 1);
+            GPIO_Set(P22, 0, 1);
         }
         else if(straightFlag == 0)
         {
@@ -907,20 +908,6 @@ void CTRL_ServoPID_Determine()
 {
 
 
-//    else if(state == 1 || state == 2)//cross
-//    {
-//        fuzzy_PB = Cross_PB.floatVal;
-//        fuzzy_PM = Cross_PM.floatVal;
-//        fuzzy_PS = Cross_PS.floatVal;
-//        fuzzy_ZO = Cross_ZO.floatVal;
-//        fuzzy_NS = Cross_NS.floatVal;
-//        fuzzy_NM = Cross_NM.floatVal;
-//        fuzzy_NB = Cross_NB.floatVal;
-//        fuzzy_Dsmall = Cross_DS.floatVal;
-//        fuzzy_Dbig = Cross_DB.floatVal;
-//
-//    }
-
     if((state == stateTIslandIn || state == stateTIn || state == stateTOut || state == stateTover) && CrossCircle.intVal == 1)//crossCircle
     {
         fuzzy_PB = circle_PB.floatVal;
@@ -938,12 +925,12 @@ void CTRL_ServoPID_Determine()
     else if((state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal) && IslandPD.intVal == 1)//island-45678
     {
         fuzzy_PB = Island_PB.floatVal;
-        fuzzy_PM = Island_PM.floatVal;
-        fuzzy_PS = Island_PS.floatVal;
-        fuzzy_ZO = Island_ZO.floatVal;
-        fuzzy_NS = Island_NS.floatVal;
-        fuzzy_NM = Island_NM.floatVal;
-        fuzzy_NB = Island_NB.floatVal;
+        fuzzy_PM = Island_PB.floatVal;
+        fuzzy_PS = Island_PB.floatVal;
+        fuzzy_ZO = Island_PB.floatVal;
+        fuzzy_NS = Island_PB.floatVal;
+        fuzzy_NM = Island_PB.floatVal;
+        fuzzy_NB = Island_PB.floatVal;
         fuzzy_D = Island_DS.floatVal;
 //        fuzzy_Dbig = Island_DB.floatVal;
 
@@ -973,19 +960,7 @@ void CTRL_ServoPID_Determine()
     //        fuzzy_Dbig = presentServoD.floatVal;
 
     }
-//    else if(state == 11)//folk
-//    {
-//        fuzzy_PB = Folk_PB.floatVal;
-//        fuzzy_PM = Folk_PM.floatVal;
-//        fuzzy_PS = Folk_PS.floatVal;
-//        fuzzy_ZO = Folk_ZO.floatVal;
-//        fuzzy_NS = Folk_NS.floatVal;
-//        fuzzy_NM = Folk_NM.floatVal;
-//        fuzzy_NB = Folk_NB.floatVal;
-//        fuzzy_Dsmall = Folk_DS.floatVal;
-//        fuzzy_Dbig = Folk_DB.floatVal;
-//
-//    }
+
 }
 
 int foresee()
@@ -1114,10 +1089,10 @@ void motorParamDefine()
 //        }
 //        else
 //        {
-            motorLFKP = LFKP.floatVal;
-            motorLFKI = LFKI.floatVal;
-            motorRTKP = RTKP.floatVal;
-            motorRTKI = RTKI.floatVal;
+            motorLFKP = LFKP.intVal;
+            motorLFKI = LFKI.intVal;
+            motorRTKP = RTKP.intVal;
+            motorRTKI = RTKI.intVal;
 //        }
 
 
@@ -1131,6 +1106,8 @@ void motorParamDefine()
 
 void speedDetermine()
 {
+
+
     if(memoryState[0] == 1)
     {
         present_speed = memorySpeed1.intVal;
@@ -1222,9 +1199,19 @@ void speedDetermine()
         present_speed = presentSpeed.intVal - 10;
         present_vision = presentVision.intVal - 10;
     }
+
+    if(state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
+    {
+        present_vision = islandParam2.intVal;
+    }
+
+    if(state == stateTIslandIn || state == stateTIn || state == stateTOut)
+    {
+        present_vision = cross_circle_param1.intVal;
+    }
+
+    CTRL_speedDecision(present_speed, 85);
 }
-
-
 void CTRL_RoadTest()
 {
     if(file1.intVal == 0)
@@ -1241,3 +1228,32 @@ void CTRL_RoadTest()
         }
     }
 }
+
+
+void CTRL_speedDecision(int32 speedHigh, int32 speedLow)
+{
+    float speedDelta;
+    float param;
+    int error;
+
+    if(speedHigh - speedLow >= 5)
+    {
+        error = servoError.currentError;
+        speedDelta = (float)(speedHigh - speedLow);
+        param = speedDelta / (25*25);
+
+        present_speed = (uint8_t)(speedHigh - (int)(param * error * error));
+        if(present_speed < speedLow)
+        {
+            present_speed = speedLow;
+        }
+    }
+    else
+    {
+        present_speed = speedHigh;
+    }
+
+
+
+}
+

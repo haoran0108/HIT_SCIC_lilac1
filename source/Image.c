@@ -1487,7 +1487,7 @@ void judge_type_road() {
         design_island_turn();
     }
     if (state == stateIslandCircle) {
-//        design_island_circle();
+        design_island_circle();
     }
     if (state == stateIslandOut) {
         design_island_out();
@@ -1495,9 +1495,9 @@ void judge_type_road() {
     if (state == stateIslandFinal) {
         design_island_straight();
     }
-    if (state == stateTIn) {
+//    if (state == stateTIn) {
 //        design_cross_T_circle();
-    }
+//    }
     if (state == stateTOut) {
         design_cross_T_out();
     }
@@ -1618,7 +1618,7 @@ void judge_type_road() {
         if(rampWayCount > rampCount.intVal)
         {
 
-                   // state = 0;
+            state = 0;
             rampWayCount=0;
         }
     }
@@ -3415,7 +3415,7 @@ void design_island_turn() {
 
             }
         }
-        int way = 1;
+        int way = 2;
         if (way == 1) {
             //固定打角
             double k = (double)(10 - ((NEAR_LINE - 3))) / (right_side[10] - left_line[(NEAR_LINE - 3)]) - dkRight;
@@ -3437,14 +3437,14 @@ void design_island_turn() {
                 }
             }
             if (upPoint <= 95) {
-                double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[100].connected[j_mid[100]].left) / (upPoint - 100);
+                double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[100].connected[j_mid[100]].left) / (upPoint - 100) - dkRight;
                 for (int i = 100; i >= 2; i--) {
                     left_line[i] = k * (i - (100)) + my_road[100].connected[j_mid[100]].left;
                     right_line[i] = right_side[i];
                 }
             }
             else if (upPoint >= 95) {
-                double k = (double)(10 - ((NEAR_LINE - 5))) / (right_side[10] - left_line[(NEAR_LINE - 5)]) - dkRight;
+                double k = (double)(right_side[10] - left_line[(NEAR_LINE - 5)])/(10 - ((NEAR_LINE - 5))) - dkRight;
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
                     left_line[i] = (k ) * (i - ((NEAR_LINE - 5))) + left_line[(NEAR_LINE - 5)];
@@ -3468,7 +3468,7 @@ void design_island_turn() {
 
             }
         }
-        int way = 1;
+        int way = 2;
         if (way == 1) {
             //固定打角
             double k = (double)(10 - (NEAR_LINE - 3)) / (left_side[10] - right_line[(NEAR_LINE - 3)]) + dkLeft;
@@ -3491,14 +3491,14 @@ void design_island_turn() {
             }
         //  printf("upp=%d\n", upPoint);
             if (upPoint <= 95) {
-                double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].left - my_road[100].connected[j_mid[100]].right) / (upPoint - 100);
+                double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].left - my_road[100].connected[j_mid[100]].right) / (upPoint - 100) + dkLeft;
                 for (int i = 100; i >= 2; i--) {
                     right_line[i] = k * (i - (100)) + my_road[100].connected[j_mid[100]].right;
                     left_line[i] = left_side[i];
                 }
             }
             else if (upPoint >= 95) {
-                double k = (double)(10 - (NEAR_LINE - 5)) / (left_side[10] - right_line[(NEAR_LINE - 5)]) + dkLeft;
+                double k = (double)(left_side[10] - right_line[(NEAR_LINE - 5)])/(10 - (NEAR_LINE - 5))  + dkLeft;
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
                     right_line[i] = k * (i - (NEAR_LINE - 5)) + right_line[(NEAR_LINE - 5)];
@@ -3530,7 +3530,7 @@ void island_circle() {
 ///////////////////////////////////////////
 void design_island_circle(){
     int i=NEAR_LINE;
-    int distance=islandParam2.intVal;
+    int distance=islandParam6.intVal;
     while(i>=1 && left_line[i] != MISS){
         if(islandWhere == LEFT){
             left_line[i] = right_line[i] - distance;
@@ -4096,7 +4096,7 @@ void design_cross_T_circle() {
             left_line[i] = my_road[i].connected[j_mid[i]].left;
         }
         int i=NEAR_LINE;
-        int distance = 34;
+        int distance = cross_circle_param6.intVal;
         while(i>=1 && left_line[i] != MISS){
 
             right_line[i] = left_line[i] + distance;
@@ -4340,6 +4340,7 @@ void design_folk_road() {
     FolkRoadWhere = folkWay.intVal;
     j_left[NEAR_LINE] = j_continue[NEAR_LINE];
     j_right[NEAR_LINE] = j_continue[NEAR_LINE];
+
     for (int i = NEAR_LINE - 1; i >= FAR_LINE; i--) {
         j_left[NEAR_LINE] = j_continue[NEAR_LINE];
         j_right[NEAR_LINE] = j_continue[NEAR_LINE];
@@ -4356,16 +4357,20 @@ void design_folk_road() {
 
     }
 
+    int distance=folkParam1.intVal;
+
+    double k=folkParam2.floatVal;
+
     if (FolkRoadWhere == RIGHT) {
         for (int i = NEAR_LINE; i >= 20; i--) {
             right_line[i] = my_road[i].connected[j_right[i]].right;
-            left_line[i] = right_line[i] - 25;
+            left_line[i] = right_line[i] - distance + k * (i - 100);
         }
     }
     else if (FolkRoadWhere == LEFT) {
         for (int i = NEAR_LINE; i >= 20; i--) {
             left_line[i] = my_road[i].connected[j_left[i]].left;
-            right_line[i] = left_line[i] + 25;
+            right_line[i] = left_line[i] + distance - k * (i - 100);
         }
     }
 
