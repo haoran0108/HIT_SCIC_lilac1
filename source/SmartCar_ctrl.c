@@ -322,7 +322,7 @@ void CTRL_fuzzyPID()
 
     }
     else servoError.currentError = 92 - mid_line[present_vision];
-    test_varible[12] = servoError.currentError;
+    test_varible[12] = mid_line[70];
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
