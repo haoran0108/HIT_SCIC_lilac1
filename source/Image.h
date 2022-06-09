@@ -146,6 +146,7 @@ extern uint8_t memoryFlag;
 extern uint16_t memoryState[20];
 extern uint8_t folkTimes;
 extern uint8_t averMidLine;
+extern uint8_t sRoadFlag;
 
 typedef struct {
     int x;
@@ -252,7 +253,7 @@ void island_final();
 void folk_road_in();
 void design_folk_road();
 void folk_road_out();
-//void small_s_road();
+void small_s_road();
 void s_road_filter();
 
 //T字口
@@ -283,9 +284,13 @@ void straight_define();
 
 //滤波
 void mid_line_filter();
-uint8_t mid_aver();//加权平均
-//记忆赛道
+void big_mid_line_filter();
+
+//奇怪的函数
 void roadMemory();
+uint8_t valid_row();//弯道有效行
+void TcircleFix();
+uint8_t mid_aver();//加权平均
 
 //废案
 void cross_T_in_start();

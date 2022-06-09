@@ -20,6 +20,7 @@ error errorML = {1, 1, 1}, errorMR = {1, 1, 1};
 error gyroError = {1, 1, 1};
 int sumErrorRT = 0, sumErrorLF = 0;
 error currentErrorL = {1, 1, 1}, currentErrorR = {1, 1, 1};
+uint32 pwmFix;
 uint32 servoPwm;
 uint32 servoGyroPwm;
 uint32 motorPwm;
@@ -103,9 +104,6 @@ void CTRL_speedLoopPID()
     speedL = CTRL_speedGetLeft();
     speedR = CTRL_speedGetRight();
     CTRL_lowpassFilter();
-
-    speedL = speedL / 8;
-//    speedR = speedR / 8;
 
     test_varible[9] = expectL;
     test_varible[10] = expectR;
@@ -318,15 +316,21 @@ void CTRL_fuzzyPID()
 //    servoError.currentError = 92 - mid_line[presentVision.intVal];
     if(state == stateRampway)
     {
-        servoError.currentError = 92 - mid_line[present_vision+10];
+        servoError.currentError = 93 - mid_line[present_vision+10];
 
     }
-    else servoError.currentError = 92 - mid_line[present_vision];
-    test_varible[12] = mid_line[70];
+    else servoError.currentError = 93 - mid_line[present_vision];
+    test_varible[12] = mid_line[present_vision];
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
     servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
+
+//    if(state == stateTIn)
+//    {
+//        servoPwm += pwmFix;
+//    }
+
     if(servoPwm > servoMax)
         servoPwm = servoMax;
     else if(servoPwm < servoMin)
@@ -413,6 +417,7 @@ void CTRL_motorPID()
 
     speedL = CTRL_speedGetLeft();
     speedR = CTRL_speedGetRight();
+    speedL = speedL / 8;
 
     CTRL_lowpassFilter();
 
@@ -911,12 +916,12 @@ void CTRL_ServoPID_Determine()
     if((state == stateTIslandIn || state == stateTIn || state == stateTOut || state == stateTover) && CrossCircle.intVal == 1)//crossCircle
     {
         fuzzy_PB = circle_PB.floatVal;
-        fuzzy_PM = circle_PM.floatVal;
-        fuzzy_PS = circle_PS.floatVal;
-        fuzzy_ZO = circle_ZO.floatVal;
-        fuzzy_NS = circle_NS.floatVal;
-        fuzzy_NM = circle_NM.floatVal;
-        fuzzy_NB = circle_NB.floatVal;
+        fuzzy_PM = circle_PB.floatVal;
+        fuzzy_PS = circle_PB.floatVal;
+        fuzzy_ZO = circle_PB.floatVal;
+        fuzzy_NS = circle_PB.floatVal;
+        fuzzy_NM = circle_PB.floatVal;
+        fuzzy_NB = circle_PB.floatVal;
         fuzzy_D = circle_DS.floatVal;
 //        fuzzy_Dbig = circle_DB.floatVal;
 
@@ -1196,8 +1201,8 @@ void speedDetermine()
 
     else if(parkStart != 0)
     {
-        present_speed = presentSpeed.intVal - 10;
-        present_vision = presentVision.intVal - 10;
+        present_speed = 60;
+        present_vision = 60;
     }
 
     if(state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
@@ -1238,7 +1243,7 @@ void CTRL_speedDecision(int32 speedHigh, int32 speedLow)
 
     if(speedHigh - speedLow >= 5)
     {
-        error = 92 - averMidLine;
+        error = 93 - averMidLine;
 ;
         speedDelta = (float)(speedHigh - speedLow);
         param = speedDelta / (25*25);

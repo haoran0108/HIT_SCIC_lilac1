@@ -92,6 +92,8 @@ void SW_readSwitch()
         memoryState[19] = 0;
 
         folkTimes = 0;
+        sRoadFlag = 0;
+
     }
     else
     {

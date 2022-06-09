@@ -87,7 +87,7 @@ extern node_t memorySpeed14, memoryVision14;
 extern node_t memorySpeed15, memoryVision15;
 
 extern node_t islandout_up, design_island_k, islandParam1, islandParam2, islandParam3, islandParam4, islandParam5, islandParam6;
-extern node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4, cross_circle_param5, cross_circle_param6;
+extern node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4, cross_circle_param5, cross_circle_param6, cross_circle_param7, cross_circle_param8;
 extern node_t parkCount, startGyro, endGyro, search_line, parkDelay;
 extern node_t rampCount, rampDistance, rampSpeed,rampMax, rampMin;
 extern node_t folkWay;

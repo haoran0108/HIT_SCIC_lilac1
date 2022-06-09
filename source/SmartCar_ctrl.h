@@ -65,6 +65,7 @@ extern uint8_t testFlag;
 extern uint8_t testStateTimes;
 extern int speedFlag;
 extern uint8_t parkStraightCount;
+extern uint32 pwmFix;
 
 struct error
 {
