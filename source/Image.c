@@ -1326,38 +1326,53 @@ void my_memset(uint8_t* ptr, uint8_t num, uint8_t size)
 void get_mid_line(void)
 {
     my_memset(mid_line, MISS, CAMERA_H);
-    for (int i = NEAR_LINE; i >= FAR_LINE; i--){
-        if (left_line[i] != MISS)
-        {
-            mid_line[i] = (left_line[i] + right_line[i]) / 2;
-        }
-        else if (left_line[i] == MISS && state != stateRampway)
-        {
-
-            mid_line[i] = mid_line[i + 1];
-        }
-        else if(left_line[i] == MISS && state == stateRampway)
-        {
-            int way=1;
-            if(way == 1){
-                mid_line[i] = 92;
-            }else if(way == 2){
-                if(my_road[i].white_num!=0){
-                    mid_line[i]=(my_road[i].connected[1].left+my_road[i].connected[1].right)/2;
-                    for(int j=1;j<=my_road[i].white_num;j++){
-                        if(abs((my_road[i].connected[j].left+my_road[i].connected[j].right)/2-92)<abs(mid_line[i]-92)){
-                            mid_line[i]=(my_road[i].connected[j].left+my_road[i].connected[j].right)/2;
-                        }
-                    }
-                }else{
-                    mid_line[i] = mid_line[i + 1];
-                }
-
+        for (int i = NEAR_LINE; i >= FAR_LINE; i--) {
+            if (left_line[i] != MISS && my_road[i].white_num!=0)
+            {
+                mid_line[i] = (left_line[i] + right_line[i]) / 2;
             }
+            else
+            {
 
+                mid_line[i] = mid_line[i + 1];
+            }
+            last_mid_line[i] = mid_line[i];
         }
-        last_mid_line[i] = mid_line[i];
-    }
+//    my_memset(mid_line, MISS, CAMERA_H);
+//
+//    for (int i = NEAR_LINE; i >= FAR_LINE; i--){
+//        if (left_line[i] != MISS && my_road[i].white_num!=0)
+//        {
+//            mid_line[i] = (left_line[i] + right_line[i]) / 2;
+//        }
+//        else if (left_line[i] == MISS && state != stateRampway)
+//        {
+//
+//            mid_line[i] = mid_line[i + 1];
+//        }
+//        else if(left_line[i] == MISS && state == stateRampway)
+//        {
+//            int way=1;
+//            if(way == 1){
+//                mid_line[i] = 92;
+//            }else if(way == 2){
+//                if(my_road[i].white_num!=0){
+//                    mid_line[i]=(my_road[i].connected[1].left+my_road[i].connected[1].right)/2;
+//                    for(int j=1;j<=my_road[i].white_num;j++){
+//                        if(abs((my_road[i].connected[j].left+my_road[i].connected[j].right)/2-92)<abs(mid_line[i]-92)){
+//                            mid_line[i]=(my_road[i].connected[j].left+my_road[i].connected[j].right)/2;
+//                        }
+//                    }
+//                }else{
+//                    mid_line[i] = mid_line[i + 1];
+//                }
+//
+//            }
+//
+//        }
+//        last_mid_line[i] = mid_line[i];
+//    }
+
 
 }
 
@@ -3645,7 +3660,7 @@ void design_island_out() {
     double dk = islandParam5.floatVal;
     if (islandWhere == RIGHT) {
 
-        double k = (double)(15 - NEAR_LINE) / (right_side[15] - left_line[NEAR_LINE]);
+        double k = (double)(30 - NEAR_LINE) / (right_side[30] - left_line[NEAR_LINE]);
 
         for (int i = NEAR_LINE; i >= 2; i--) {
             left_line[i] = (k - dk) * (i - NEAR_LINE) + left_line[NEAR_LINE];
@@ -3654,7 +3669,7 @@ void design_island_out() {
 
     }
     else if (islandWhere == LEFT) {
-        double k = (double)(15 - NEAR_LINE) / (left_side[15] - right_line[NEAR_LINE]);
+        double k = (double)(30 - NEAR_LINE) / (left_side[30] - right_line[NEAR_LINE]);
 
         for (int i = NEAR_LINE; i >= 2; i--) {
             right_line[i] = (k + dk) * (i - NEAR_LINE) + right_line[NEAR_LINE];
@@ -5098,25 +5113,41 @@ uint8_t valid_row()
 
 void TcircleFix()
 {
-//    uint8_t validRow;
-//
-//    validRow = valid_row();
-//
-//    if(state == stateTIn && validRow > 70)
-//    {
-//        if(TWhere == LEFT)
-//        {
-//            pwmFix = (uint32)((validRow - cross_circle_param8.intVal) * cross_circle_param7.floatVal);
-//        }
-//
-//        else if(TWhere == RIGHT)
-//        {
-//            pwmFix = (uint32)((cross_circle_param8.intVal - validRow) * cross_circle_param7.floatVal);
-//
-//        }
-//    }
-//    else pwmFix = 0;
+    uint8_t validRow;
 
+    validRow = valid_row();
+
+    if(state == stateTIn && validRow > 70)
+    {
+        if(TWhere == LEFT)
+        {
+            pwmFix = (uint32)((validRow - cross_circle_param8.intVal) * cross_circle_param7.floatVal);
+        }
+
+        else if(TWhere == RIGHT)
+        {
+            pwmFix = (uint32)((cross_circle_param8.intVal - validRow) * cross_circle_param7.floatVal);
+
+        }
+    }
+
+
+
+    else if(state == stateIslandCircle && validRow > 70)
+    {
+        if(islandWhere == LEFT)
+        {
+            pwmFix = (uint32)((validRow - cross_circle_param8.intVal) * cross_circle_param7.floatVal);
+        }
+
+        else if(islandWhere == RIGHT)
+        {
+            pwmFix = (uint32)((cross_circle_param8.intVal - validRow) * cross_circle_param7.floatVal);
+
+        }
+    }
+
+    else pwmFix = 0;
 }
 // 以下是废案，没有成功的代码，以防万一需要使用的内容
 ////////////////////////////////////////////

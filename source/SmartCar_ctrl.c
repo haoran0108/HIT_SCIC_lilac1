@@ -326,10 +326,16 @@ void CTRL_fuzzyPID()
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
     servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
 
-//    if(state == stateTIn)
-//    {
-//        servoPwm += pwmFix;
-//    }
+    if(state == stateTIn)
+    {
+        servoPwm += pwmFix;
+    }
+
+    else if(state == stateIslandCircle)
+    {
+        servoPwm += pwmFix;
+
+    }
 
     if(servoPwm > servoMax)
         servoPwm = servoMax;
