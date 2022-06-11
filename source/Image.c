@@ -5098,7 +5098,7 @@ uint8_t mid_aver() {
 uint8_t valid_row()
 {
     uint8_t row;
-    for(row = NEAR_LINE; row > 70; row--)
+    for(row = NEAR_LINE-2; row > 70; row--)
     {
         if(my_road[row].white_num != 0 && my_road[row-1].white_num == 0)
         {
@@ -5117,9 +5117,9 @@ int8 valid_row_direction()
     uint8_t rowDelta;
 
     validRow = valid_row();
-    rowDelta = NEAR_LINE - validRow - 1;
+    rowDelta = NEAR_LINE - validRow - 2;
 
-    for(int i = NEAR_LINE-1; i > validRow; i--)
+    for(int i = NEAR_LINE-2; i > validRow; i--)
     {
         if(mid_line[i] < 94)
         {
@@ -5134,12 +5134,34 @@ int8 valid_row_direction()
     }
     if(rowDelta > 20)//有效行在92行之前
     {
-        if(leftRowCount >= (rowDelta - 3) && rightRowCount <= 4)//左
+        if((leftRowCount >= (rowDelta - 5) && rightRowCount <= 5) || leftRowCount - rightRowCount > (rowDelta / 2))//左
         {
-
+            return 1;
         }
 
+        else if((rightRowCount >= (rowDelta - 5) && leftRowCount <= 5) || rightRowCount - leftRowCount > (rowDelta / 2))
+        {
+            return 2;
+        }
+        else return 0;
+
     }
+
+    else if(rowDelta <= 20 && rowDelta >= 2)
+    {
+        if((leftRowCount >= (rowDelta - 5) && rightRowCount <= 5) || leftRowCount - rightRowCount > (rowDelta / 2))//左
+        {
+            return 1;
+        }
+
+        else if((rightRowCount >= (rowDelta - 5) && leftRowCount <= 5) || rightRowCount - leftRowCount > (rowDelta / 2))
+        {
+            return 2;
+        }
+        else return 0;
+    }
+
+    else return 0;
 }
 
 void TcircleFix()
@@ -5151,17 +5173,18 @@ void TcircleFix()
 
     if(state == stateTIn && validRow > 70)
     {
-        direction = TWhere;
-        if(direction == LEFT)
+        direction = valid_row_direction();
+        if(direction == 1)
         {
             pwmFix = (uint32)((validRow - cross_circle_param8.intVal) * cross_circle_param7.floatVal);
         }
 
-        else if(direction == RIGHT)
+        else if(direction == 2)
         {
             pwmFix = (uint32)((cross_circle_param8.intVal - validRow) * cross_circle_param7.floatVal);
 
         }
+
     }
 
 
@@ -5183,8 +5206,19 @@ void TcircleFix()
 
     else if(validRow > 75)
     {
+        direction = valid_row_direction();
+        if(direction == 1)//左
+        {
+            pwmFix = (uint32)((validRow - cross_circle_param8.intVal) * cross_circle_param7.floatVal);
 
+        }
 
+        else if(direction == 2)//右
+        {
+            pwmFix = (uint32)((cross_circle_param8.intVal - validRow) * cross_circle_param7.floatVal);
+
+        }
+        else pwmFix = 0;
     }
 
     else pwmFix = 0;
