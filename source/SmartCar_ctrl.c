@@ -638,7 +638,7 @@ void CTRL_motorDiffer()
 {
 
     double delta, FabsDelta;
-
+    int32 speedDelta;
     delta = (double)(servoMidValue - servoPwm);
     FabsDelta = fabs(delta);
     FabsDelta = FabsDelta / 100;
@@ -647,7 +647,7 @@ void CTRL_motorDiffer()
     float k;
     if(delta > 0)
     {
-        k = gap.floatVal * (0.9912 - 0.0517 * FabsDelta * FabsDelta - 0.3753 * FabsDelta);
+        k = 0.9912 - 0.0517 * FabsDelta * FabsDelta - 0.3753 * FabsDelta;
 
 
         if(straightFlag == 1)
@@ -676,10 +676,16 @@ void CTRL_motorDiffer()
             GPIO_Set(P22, 0, 0);
         }
 
+        speedDelta = (int32)((expectL - expectR) * gap.floatVal);
+        if(speedDelta >= 0)
+        {
+            expectR = expectL - speedDelta;
+
+        }
     }
     else if(delta < 0)
     {
-        k = gap.floatVal * (0.9761 - 0.0577 * FabsDelta * FabsDelta - 0.3661 * FabsDelta);
+        k = 0.9761 - 0.0577 * FabsDelta * FabsDelta - 0.3661 * FabsDelta;
 
 
         if(straightFlag == 1)
@@ -706,6 +712,13 @@ void CTRL_motorDiffer()
                 expectR = (int32)(present_speed);
             }
             GPIO_Set(P22, 0, 0);
+        }
+
+        speedDelta = (int32)((expectR - expectL) * gap.floatVal);
+        if(speedDelta >= 0)
+        {
+            expectL = expectR - speedDelta;
+
         }
     }
     else if(delta == 0)
@@ -738,6 +751,7 @@ void CTRL_motorDiffer()
         }
 
     }
+
 
     /*ÄÚ¼õÍâ¼Ó*/
 //    double kIN, kOUT;

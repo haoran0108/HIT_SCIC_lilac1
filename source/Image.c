@@ -5110,21 +5110,54 @@ uint8_t valid_row()
 
 }
 
+int8 valid_row_direction()
+{
+    uint8_t validRow;
+    uint8_t leftRowCount = 0,rightRowCount = 0;
+    uint8_t rowDelta;
+
+    validRow = valid_row();
+    rowDelta = NEAR_LINE - validRow - 1;
+
+    for(int i = NEAR_LINE-1; i > validRow; i--)
+    {
+        if(mid_line[i] < 94)
+        {
+            leftRowCount += 1;
+
+        }
+        else if(mid_line[i] > 94)
+        {
+            rightRowCount += 1;
+        }
+
+    }
+    if(rowDelta > 20)//有效行在92行之前
+    {
+        if(leftRowCount >= (rowDelta - 3) && rightRowCount <= 4)//左
+        {
+
+        }
+
+    }
+}
 
 void TcircleFix()
 {
+    int8 direction;
     uint8_t validRow;
 
     validRow = valid_row();
 
     if(state == stateTIn && validRow > 70)
     {
-        if(TWhere == LEFT)
+        direction = TWhere;
+        if(direction == LEFT)
         {
             pwmFix = (uint32)((validRow - cross_circle_param8.intVal) * cross_circle_param7.floatVal);
         }
 
-        else if(TWhere == RIGHT)
+        else if(direction == RIGHT)
         {
             pwmFix = (uint32)((cross_circle_param8.intVal - validRow) * cross_circle_param7.floatVal);
 
@@ -5135,16 +5168,23 @@ void TcircleFix()
 
     else if(state == stateIslandCircle && validRow > 70)
     {
-        if(islandWhere == LEFT)
+        direction = islandWhere;
+        if(direction == LEFT)
         {
             pwmFix = (uint32)((validRow - cross_circle_param8.intVal) * cross_circle_param7.floatVal);
         }
 
-        else if(islandWhere == RIGHT)
+        else if(direction == RIGHT)
         {
             pwmFix = (uint32)((cross_circle_param8.intVal - validRow) * cross_circle_param7.floatVal);
 
         }
+    }
+
+    else if(validRow > 75)
+    {
+
+
     }
 
     else pwmFix = 0;
