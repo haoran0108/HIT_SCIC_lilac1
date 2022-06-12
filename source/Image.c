@@ -4688,6 +4688,9 @@ void rampwayOn()
 {
     int rampFlag1 = 0;
     uint8_t mid_line[120];
+    double k1, k2;
+    k1 = calculate_two_point_slope(90, my_road[90].connected[j_continue[90]].left, 20, my_road[20].connected[j_continue[20]].left);
+    k2 = calculate_two_point_slope(90, my_road[90].connected[j_continue[90]].right, 20, my_road[20].connected[j_continue[20]].right);
 
     for(int i=100;i>=10;i--){
         if(left_line[i]!=MISS){
@@ -4711,12 +4714,15 @@ void rampwayOn()
     {
         if(TFMINI_Distance < rampDistance.intVal && straight_variance(90, 30, 16) == 2)
         {
-            if(width_max - width_min >= rampMin.intVal && width_max - width_min <= rampMax.intVal)
+            if(k1 > (-0.5) && k1 < 0.5 && k2 > (-0.5) && k2 < 0.5)
             {
-                rampFlag1 = 1;
+                if(width_max - width_min >= rampMin.intVal && width_max - width_min <= rampMax.intVal)
+                {
+                    rampFlag1 = 1;
 
+                }
             }
-//            }
+
 
         }
 
