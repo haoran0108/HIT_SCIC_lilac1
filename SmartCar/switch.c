@@ -105,7 +105,6 @@ void SW_readSwitch()
 
         GPIO_Set(P00, 8, 1);//µç»ú
 
-//        GPIO_Set(P02, 8, 0);
 
         if(stopFlag == 0 && flagStop == 0)
         {
@@ -115,6 +114,7 @@ void SW_readSwitch()
         else GPIO_Set(P02, 8, 1);
 
     }
+
 
     if(GPIO_Read(P13, 3))
     {

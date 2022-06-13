@@ -38,6 +38,13 @@
 #define NM -20
 #define NB -30
 
+/*速度环模糊pid*/
+#define speedPB 20
+#define speedPM 10
+#define speedZO 0
+#define speedNM 10
+#define speedNB 20
+
 /*舵机*/
 #define servoMidValue 728
 #define servoMin 645
@@ -92,6 +99,8 @@ void CTRL_directionAngleGet();
 /*电流环*/
 void CTRL_curLoopPID();
 void CTRL_speedLoopPID();
+uint8_t CTRL_fuzzySpeedKp(int speedError);
+
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      计算pid
 //  @param

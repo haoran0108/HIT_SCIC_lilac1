@@ -95,7 +95,65 @@ void CTRL_rampGyroUpdate()
 
 }
 
+uint8_t CTRL_fuzzySpeedKp(int speedError)
+{
+    float membership[2] = {1, 0};
+    uint8_t motorKP = 0;
+    float fuzzyWidth = 10;
 
+    if(speedError >= speedPB)
+    {
+        motorKP = LFKP.intVal;
+    }
+    else if(speedError < speedPB && speedError > speedPM)
+    {
+        membership[0] = fabs((speedError - speedPM) / fuzzyWidth);
+        membership[1] = fabs((speedError - speedPB) / fuzzyWidth);
+
+        motorKP = LFKP.intVal * membership[0] + LFKI.intVal * membership[1];
+    }
+    else if(speedError == PM)
+    {
+        motorKP = LFKI.intVal;
+    }
+
+    else if(speedError < speedPM && speedError > speedZO)
+    {
+        membership[0] = fabs((speedError - speedZO) / fuzzyWidth);
+        membership[1] = fabs((speedError - speedPM) / fuzzyWidth);
+
+        motorKP = LFKI.intVal * membership[0] + RTKP.intVal * membership[1];
+    }
+    else if(speedError == ZO)
+    {
+        motorKP = RTKP.intVal;
+    }
+    else if(speedError < speedZO && speedError > speedNM)
+    {
+            membership[0] = fabs((speedError - speedNM) / fuzzyWidth);
+            membership[1] = fabs((speedError - speedZO) / fuzzyWidth);
+
+            motorKP = RTKP.intVal * membership[0] + RTKI.intVal * membership[1];
+        }
+        else if(speedError == speedNM)
+        {
+            motorKP = RTKI.intVal;
+        }
+        else if(speedError < speedNM && speedError > speedNB)
+        {
+            membership[0] = fabs((speedError - speedNB) / fuzzyWidth);
+            membership[1] = fabs((speedError - speedNM) / fuzzyWidth);
+
+            motorKP = RTKI.intVal * membership[0] + fastLFKP.intVal * membership[1];
+        }
+
+        else if(speedError <= speedNB)
+        {
+            motorKP = fastLFKI.intVal;
+        }
+
+    return motorKP;
+}
 
 void CTRL_speedLoopPID()
 {
@@ -109,23 +167,26 @@ void CTRL_speedLoopPID()
     test_varible[10] = expectR;
 
     errorML.currentError = expectL + speedL;//取偏差
-    sumErrorLF += errorML.currentError;
+    errorMR.currentError = expectR - speedR;//取偏差
+    motorLFKI = CTRL_fuzzySpeedKp(errorML.currentError);
+    motorRTKI = CTRL_fuzzySpeedKp(errorMR.currentError);
+
+//    sumErrorLF += errorML.currentError;
 //    errorML.delta = errorML.currentError - errorML.lastError;
     errorML.delta = (errorML.currentError - errorML.lastError) * speedKdLpf.floatVal + errorML.delta * (1 - speedKdLpf.floatVal);
 //    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
-    currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
+    currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + fastLFKI.intVal * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
     if(currentExpectLF < 1000) currentExpectLF = 1000;
     else if(currentExpectLF > 3800) currentExpectLF = 3800;
 
 
-    errorMR.currentError = expectR - speedR;//取偏差
-    sumErrorRT += errorMR.currentError;
+//    sumErrorRT += errorMR.currentError;
 //    errorMR.delta = errorMR.currentError - errorMR.lastError;
     errorMR.delta = (errorMR.currentError - errorMR.lastError) * speedKdLpf.floatVal + errorMR.delta * (1 - speedKdLpf.floatVal);
 
 //    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
-    currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
+    currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + fastLFKI.intVal * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
     if(currentExpectRT < 1000) currentExpectRT = 1000;
     else if(currentExpectRT > 3800) currentExpectRT = 3800;
@@ -169,8 +230,6 @@ void CTRL_curLoopPID()
 
     mySpeedL = (int32)(mySpeedL + currentErrorL.currentError * currentKI_L + currentErrorL.delta * currentKP_L);
     currentErrorL.lastError = currentErrorL.currentError;
-
-
 
 
 }
@@ -326,16 +385,16 @@ void CTRL_fuzzyPID()
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
     servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
 
-    if(state == stateTIn)
-    {
+//    if(state == stateTIn)
+//    {
         servoPwm += pwmFix;
-    }
+//    }
 
-    else if(state == stateIslandCircle)
-    {
+//    else if(state == stateIslandCircle)
+//    {
         servoPwm += pwmFix;
 
-    }
+//    }
 
     if(servoPwm > servoMax)
         servoPwm = servoMax;
@@ -495,22 +554,7 @@ void CTRL_servoMain()
             servoPwm = servoMax;//770
         }
     }
-//    if(GPIO_Read(P13, 2) && parkStart == 1)
-//    {
-//        servoPwm = 630;
-//    }
-//
-//    else if(GPIO_Read(P13, 2) && parkStart == 0 && flagStop == 0)
-//    {
-//        CTRL_fuzzyPID();
-//    }
-//
-//    else if(flagStop == 1)
-//    {
-//
-//        servoPwm = 630;
-//
-//    }
+
     if(servoPwm > servoMax)
         servoPwm = servoMax;
     else if(servoPwm < servoMin)
@@ -995,34 +1039,29 @@ int foresee()
     int realForesee;
     speedAve = (expectL + expectR) / 2;
     speedDelta = speedAve - present_speed;
-    if(speedDelta < 5 && speedDelta > -5)
+    if(speedDelta < 10 && speedDelta > -10)
     {
-        realForesee = presentTHRE.intVal;
+        realForesee = present_vision;
     }
-    else if(speedDelta >= 5 && speedDelta < 10)
+    else if(speedDelta >= 10 && speedDelta < 20)
     {
-        realForesee = presentTHRE.intVal - 1;
+        realForesee = present_vision - 1;
     }
-    else if(speedDelta >= 10 && speedDelta < 15)
+
+    else if(speedDelta >= 20)
     {
-        realForesee = presentTHRE.intVal - 2;
+        realForesee = present_vision - 2;
     }
-    else if(speedDelta >= 15)
+    else if(speedDelta <= -10 && speedDelta > -20)
     {
-        realForesee = presentTHRE.intVal - 3;
+        realForesee = present_vision + 1;
     }
-    else if(speedDelta <= -5 && speedDelta > -10)
+
+    else if(speedDelta <= -20)
     {
-        realForesee = presentTHRE.intVal + 1;
+        realForesee = present_vision + 2;
     }
-    else if(speedDelta <= -10 && speedDelta > -15)
-    {
-        realForesee = presentTHRE.intVal + 2;
-    }
-    else if(speedDelta <= -15)
-    {
-        realForesee = presentTHRE.intVal + 3;
-    }
+
     return realForesee;
 }
 
@@ -1114,10 +1153,10 @@ void motorParamDefine()
 //        }
 //        else
 //        {
-            motorLFKP = LFKP.intVal;
-            motorLFKI = LFKI.intVal;
-            motorRTKP = RTKP.intVal;
-            motorRTKI = RTKI.intVal;
+//            motorLFKP = LFKP.intVal;
+//            motorLFKI = LFKI.intVal;
+//            motorRTKP = RTKP.intVal;
+//            motorRTKI = RTKI.intVal;
 //        }
 
 
@@ -1236,6 +1275,7 @@ void speedDetermine()
     }
 
     CTRL_speedDecision(present_speed, speedLow.intVal);
+//    present_vision = foresee();
 }
 void CTRL_RoadTest()
 {
