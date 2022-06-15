@@ -1375,6 +1375,40 @@ void get_mid_line(void)
 
 
 }
+////////////////////////////////////////////
+//功能：增强对比度
+//输入：灰度图片
+//输出：fullBuffer
+//备注：
+///////////////////////////////////////////
+void strenghen_contrast_ratio() {
+
+    double a;
+    double b;
+    double c;
+    int threA=80, threB=200;       //调节的参数
+    int threNewA=60, threNewB=60;  //调节的参数
+    a = (double)threNewA / (double)threA;
+    b = (double)(threNewB - threNewA) / (double)(threB - threA);
+    c = (double)(255 - threNewB) / (double)(255 - threB);
+    uint8_t* map = fullBuffer;
+    for (int i = 0; i < 69 * 188; i++, map++) {
+        if (*(map) < threA) {
+            *(map) = a * (*(map));
+        }
+        else if (threA <= *(map) && threB > *(map)){
+            *(map) = b * (*(map)-threA) + threNewA;
+        }
+        else if (threB <= *(map)) {
+            int tem = c * (int)( (int) (*(map)) - (int)threB) + (int)threNewB;
+            if (tem >= 255) {
+                *map = 255;
+            }
+        }
+    }
+
+
+}
 
 ////////////////////////////////////////////
 //功能：图像处理主程序
@@ -1387,6 +1421,7 @@ void image_main()
     threshold = presentTHRE.intVal;
     int wayThreshold = wayThre.intVal;
     protection();
+//    strenghen_contrast_ratio();
     switch (wayThreshold) {
     case 0:break;
     case 1:OTSU();
