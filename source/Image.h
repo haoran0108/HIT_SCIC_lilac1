@@ -292,7 +292,7 @@ uint8_t valid_row();//弯道有效行
 void TcircleFix();
 uint8_t mid_aver();//加权平均
 int8 valid_row_direction();
-
+uint8_t aver_mid_line_foresee();//前瞻
 
 //废案
 void cross_T_in_start();
