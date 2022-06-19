@@ -39,8 +39,9 @@
 #define NB -30
 
 /*速度环模糊pid*/
-#define speedPB 20
-#define speedPM 10
+#define speedPB 30
+#define speedPM 20
+#define speedPS 10
 #define speedZO 0
 #define speedNM 10
 #define speedNB 20
@@ -74,7 +75,9 @@ extern int speedFlag;
 extern uint8_t parkStraightCount;
 extern uint32 pwmFix;
 extern uint8_t present_speed, present_vision;
-
+extern uint8_t duzhuanCount, duzhuanFlag, duzhuanTime;
+extern uint32_t startCount;
+extern uint8_t startFlag;
 struct error
 {
     double delta;
@@ -181,5 +184,12 @@ void speedDetermine();
 void CTRL_speedDecision(int32 speedHigh, int32 speedLow);
 
 void motorParamDefine();
+
+/*撞车倒退*/
+void CTRL_duzhuan();
+void CTRL_duzhuanTest();
+void CTRL_duzhuanZhuanWan();//堵转转弯
+
+
 
 #endif /* SOURCE_SMARTCAR_CTRL_H_ */

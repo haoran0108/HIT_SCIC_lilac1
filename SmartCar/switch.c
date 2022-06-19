@@ -7,6 +7,7 @@
 
 #include "switch.h"
 int delayFlag = 0;
+
 void SW_readSwitch()
 {
 
@@ -36,6 +37,23 @@ void SW_readSwitch()
         parkPosition = 0;
 
         parkStart = file1.intVal;
+        if(parkStart == -1)
+        {
+            leftPark = 0;
+            rightPark = 1;
+        }
+
+        else if(parkStart == 0)
+        {
+            leftPark = 1;
+            rightPark = 0;
+        }
+
+        else if(parkStart == 1)
+        {
+            leftPark = 1;
+            rightPark = 0;
+        }
 //        parkType = startWay.intVal;
 
         state = 0;
@@ -44,7 +62,7 @@ void SW_readSwitch()
         stopFlag = 0;
         carParkTimes = 0;
         carParkDelay = 0;
-        servoPwm = servoMin;
+        servoPwm = servoMidValue;
 
         crossCircleCount = 0;
         rampWayCount = 0;
@@ -94,6 +112,13 @@ void SW_readSwitch()
         folkTimes = 0;
         sRoadFlag = 0;
 
+        duzhuanFlag = 0;
+        duzhuanTime = 0;
+        duzhuanCount = 0;
+
+        startCount = 0;
+        startFlag = 0;
+        stopCount = 0;
     }
     else
     {
@@ -102,6 +127,8 @@ void SW_readSwitch()
             Delay_ms(STM0,1000);
             delayFlag = 1;
         }
+
+
 
         GPIO_Set(P00, 8, 1);//µç»ú
 

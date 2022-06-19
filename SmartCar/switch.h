@@ -12,6 +12,7 @@
 #define SMARTCAR_SWITCH_H_
 extern int delayFlag;
 
+
 void SW_readSwitch();
 
 #endif /* SMARTCAR_COMMON_H_ */

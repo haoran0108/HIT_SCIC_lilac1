@@ -56,6 +56,10 @@ int currentExpectLF = 2280, currentExpectRT = 2280;
 
 uint8_t testFlag = 1;
 uint8_t testStateTimes = 0;
+uint8_t duzhuanCount = 0, duzhuanFlag = 0, duzhuanTime = 0;
+uint32_t startCount = 0;
+uint8_t startFlag = 0;
+
 void CTRL_gyroInit()
 {
     inv_imuGyroyQuene = INV_DataQueueInit(CTRL_IMU_QUENE_SIZE);
@@ -117,34 +121,46 @@ uint8_t CTRL_fuzzySpeedKp(int speedError)
         motorKP = LFKI.intVal;
     }
 
-    else if(speedError < speedPM && speedError > speedZO)
+    else if(speedError < speedPM && speedError > speedPS)
     {
-        membership[0] = fabs((speedError - speedZO) / fuzzyWidth);
+        membership[0] = fabs((speedError - speedPS) / fuzzyWidth);
         membership[1] = fabs((speedError - speedPM) / fuzzyWidth);
 
         motorKP = LFKI.intVal * membership[0] + RTKP.intVal * membership[1];
     }
-    else if(speedError == ZO)
+    else if(speedError == PS)
     {
         motorKP = RTKP.intVal;
+    }
+
+    else if(speedError < speedPS && speedError > speedZO)
+    {
+        membership[0] = fabs((speedError - speedZO) / fuzzyWidth);
+        membership[1] = fabs((speedError - speedPM) / fuzzyWidth);
+
+        motorKP = RTKP.intVal * membership[0] + RTKI.intVal * membership[1];
+    }
+    else if(speedError == ZO)
+    {
+        motorKP = RTKI.intVal;
     }
     else if(speedError < speedZO && speedError > speedNM)
     {
             membership[0] = fabs((speedError - speedNM) / fuzzyWidth);
             membership[1] = fabs((speedError - speedZO) / fuzzyWidth);
 
-            motorKP = RTKP.intVal * membership[0] + RTKI.intVal * membership[1];
+            motorKP = RTKI.intVal * membership[0] + fastLFKP.intVal * membership[1];
         }
         else if(speedError == speedNM)
         {
-            motorKP = RTKI.intVal;
+            motorKP = fastLFKP.intVal;
         }
         else if(speedError < speedNM && speedError > speedNB)
         {
             membership[0] = fabs((speedError - speedNB) / fuzzyWidth);
             membership[1] = fabs((speedError - speedNM) / fuzzyWidth);
 
-            motorKP = RTKI.intVal * membership[0] + fastLFKP.intVal * membership[1];
+            motorKP = fastLFKP.intVal * membership[0] + fastLFKI.intVal * membership[1];
         }
 
         else if(speedError <= speedNB)
@@ -175,7 +191,7 @@ void CTRL_speedLoopPID()
 //    errorML.delta = errorML.currentError - errorML.lastError;
     errorML.delta = (errorML.currentError - errorML.lastError) * speedKdLpf.floatVal + errorML.delta * (1 - speedKdLpf.floatVal);
 //    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
-    currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + fastLFKI.intVal * errorML.delta);
+    currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + fastRTKP.intVal * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
     if(currentExpectLF < 1000) currentExpectLF = 1000;
     else if(currentExpectLF > 3800) currentExpectLF = 3800;
@@ -186,7 +202,7 @@ void CTRL_speedLoopPID()
     errorMR.delta = (errorMR.currentError - errorMR.lastError) * speedKdLpf.floatVal + errorMR.delta * (1 - speedKdLpf.floatVal);
 
 //    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
-    currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + fastLFKI.intVal * errorMR.delta);
+    currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + fastRTKP.intVal * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
     if(currentExpectRT < 1000) currentExpectRT = 1000;
     else if(currentExpectRT > 3800) currentExpectRT = 3800;
@@ -381,7 +397,7 @@ void CTRL_fuzzyPID()
 
     }
     else servoError.currentError = 93 - myMidLine;
-    test_varible[12] = mid_line[present_vision];
+    test_varible[12] = myMidLine;
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
@@ -394,7 +410,7 @@ void CTRL_fuzzyPID()
 
 //    else if(state == stateIslandCircle)
 //    {
-        servoPwm += pwmFix;
+//        servoPwm += pwmFix;
 
 //    }
 
@@ -543,9 +559,17 @@ void CTRL_servoMain()
         }
         else if(parkStart == 0 && flagStop == 0)
         {
-            CTRL_fuzzyPID();
-//            CTRL_midLineLoopPID();
-//            CTRL_gyroLoopPID();
+            if(duzhuanFlag == 0)
+            {
+                CTRL_fuzzyPID();
+
+            }
+            else if(duzhuanFlag == 1)
+            {
+                CTRL_duzhuanZhuanWan();
+
+            }
+//
         }
         else if(flagStop == 1 && leftPark == 0 && rightPark == 1)
         {
@@ -644,22 +668,23 @@ void CTRL_motor()
 void CTRL_motorMain()
 {
 //    CTRL_gyroUpdate();
-    if(stopFlag == 0 && flagStop == 0 && testFlag == 1)//flagStop=1为车库停车，stopFlag=1为出赛道停车,testFlag=1为赛道测试
+    if(stopFlag == 0 && flagStop == 0 && testFlag == 1 && duzhuanFlag == 0)//flagStop=1为车库停车，stopFlag=1为出赛道停车,testFlag=1为赛道测试
     {
         CTRL_CarParkStart();
 
+        CTRL_duzhuanTest();
 
         speedDetermine();
         CTRL_motorDiffer();
         CTRL_RoadTest();
 
     }
-    else if(flagStop == 1)
+    else if(flagStop == 1 && duzhuanFlag == 0)
     {
         CTRL_CarParkStop();
 
     }
-    else if(stopFlag == 1)
+    else if(stopFlag == 1 && duzhuanFlag == 0)
     {
         expectL = 0;
         expectR = 0;
@@ -670,6 +695,12 @@ void CTRL_motorMain()
         expectR = 0;
     }
 
+    if(duzhuanFlag == 1)
+    {
+        CTRL_duzhuan();
+    }
+    test_varible[14] = duzhuanFlag;
+    test_varible[15] = duzhuanCount;
     motorParamDefine();
 
 //    CTRL_motorPID();
@@ -1021,6 +1052,19 @@ void CTRL_ServoPID_Determine()
         fuzzy_NB = Folk_NB.floatVal;
         fuzzy_D = Folk_DS.floatVal;
     }
+
+    else if(straightPD.intVal == 1 && straightFlag == 1)
+    {
+        fuzzy_PB = straight_KP.floatVal;
+        fuzzy_PM = straight_KP.floatVal;
+        fuzzy_PS = straight_KP.floatVal;
+        fuzzy_ZO = straight_KP.floatVal;
+        fuzzy_NS = straight_KP.floatVal;
+        fuzzy_NM = straight_KP.floatVal;
+        fuzzy_NB = straight_KP.floatVal;
+        fuzzy_D = straight_KD.floatVal;
+    }
+
     else
     {
         fuzzy_PB = fuzzyPB.floatVal;
@@ -1288,17 +1332,17 @@ void speedDetermine()
         if(state == 20 || state == 50)
         {
             present_speed = (uint8_t)(present_speed * display7.floatVal);
-            present_speed = (uint8_t)(present_speed * display7.floatVal);
+//            present_speed = (uint8_t)(present_speed * display7.floatVal);
         }
         else if(state == 130)
         {
             present_speed = rampSpeed.intVal;
-            present_speed = rampSpeed.intVal;
+//            present_speed = rampSpeed.intVal;
         }
         else
         {
-            present_speed = present_speed;
-            present_speed = present_speed;
+            present_speed = presentSpeed.intVal;
+//            present_speed = present_speed;
         }
 //        GPIO_Set(P22, 0, 0);
     }
@@ -1361,4 +1405,118 @@ void CTRL_speedDecision(int32 speedHigh, int32 speedLow)
 }
 
 
+void CTRL_duzhuanTest()
+{
+    if(startCount < 1000)
+    {
+        startCount += 1;
+    }
 
+    else if(startCount >= 1000)
+    {
+        startFlag = 1;
+    }
+
+
+    if(delayFlag == 1)//延迟发车1s后变为1
+    {
+        if(parkStart == 0 && startFlag == 1)//转出车库
+        {
+            if(abs(speedL) < 30 || abs(speedR) < 30)
+            {
+                duzhuanCount += 1;
+            }
+
+            else if(abs(speedL) < 20 && abs(speedR) < 20 && mySpeedL > 5000 && mySpeedR > 5000)
+            {
+                duzhuanCount += 1;
+
+            }
+//            else
+//            {
+//                duzhuanCount = 0;
+//            }
+
+        }
+
+    }
+
+    if(duzhuanCount > 15)
+    {
+        duzhuanFlag = 1;
+    }
+
+    else
+    {
+        duzhuanFlag = 0;
+    }
+
+}
+
+
+void CTRL_duzhuan()
+{
+    duzhuanTime += 1;
+    test_varible[6] = duzhuanTime;
+
+//    if(duzhuanTime <= 100)
+//    {
+//        expectR = -20;
+//        expectL = -20;
+//
+//    }
+//    else
+//    {
+//        duzhuanFlag = 0;
+//        duzhuanTime = 0;
+//        duzhuanCount = 0;
+//    }
+
+//    if(servoError.currentError >= 90 && servoError.currentError <= 98)
+//    {
+////        servoPwm = servoMidValue;
+//        duzhuanFlag = 0;
+//        duzhuanTime = 0;
+//        duzhuanCount = 0;
+//    }
+//
+//    else if(servoError.currentError > 98) //偏差在右
+//    {
+//        expectR = -20;
+//        expectL = -20;
+//    }
+//
+//    else if(servoError.currentError < 90)
+//    {
+        expectR = -20;
+        expectL = -20;
+//    }
+
+}
+
+void CTRL_duzhuanZhuanWan()
+{
+    float fuzzyKP = 1;
+
+    uint8_t myMidLine;
+    myMidLine = aver_mid_line_foresee();
+
+    if(myMidLine >= 83 && myMidLine <= 103)
+    {
+//        servoPwm = servoMidValue;
+        duzhuanFlag = 0;
+        duzhuanTime = 0;
+        duzhuanCount = 0;
+    }
+
+    else if(myMidLine > 103) //偏差在右
+    {
+        servoPwm = servoMax;//轮子左转
+    }
+
+    else if(myMidLine < 103)
+    {
+        servoPwm = servoMin;
+    }
+
+}

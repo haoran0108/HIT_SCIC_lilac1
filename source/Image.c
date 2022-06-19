@@ -39,6 +39,7 @@ int TIslandWhere;
 int TFlag = 0;
 
 int stopFlag = 0;
+uint8_t stopCount = 0;
 uint8_t j_continue[CAMERA_H];
 
 int leftDownJumpPoint;//寻找左下角的拐点的行数
@@ -60,7 +61,7 @@ int leftPark = 0, rightPark = 0;
 //uint8_t missRight[CAMERA_H];
 
 int crossCircleCount = 0;
-int startCount = 0;
+
 
 int straightFlag = 0, lastStraightFlag = 0;
 int slowFlag = 0;
@@ -76,6 +77,7 @@ float p_last = 0;
 uint8_t averMidLine;
 uint8_t sRoadFlag = 0;
 uint8_t sRoadCount = 0;
+uint8_t thresholdAdapt[8];
 //uint8_t ForeSee = 35;
 //coordinate foreSee[CAMERA_W];
 
@@ -405,12 +407,12 @@ void transform_sd(int wayThre)
     //mapFullBuffer = map;
 
     if (wayThre == 2) {
-        map = fullBuffer;
+        //map = fullBuffer;
         threMap = fullBuffer;
         //mapFullBuffer = map;
 
-        for (int i = 0; i < 68; i++) {
-            if (i <= 40) {
+        for (int i = 0; i < 86; i++) {
+            if (i < 30) {
                 for (int j = 0; j < 188; j++) {
                     if (*(threMap) > thresholdUp) {
                         *(threMap) = 255;
@@ -436,8 +438,8 @@ void transform_sd(int wayThre)
 
             }
         }
-        for (int i = 0; i < 68; i++) {
-            if (i <= 40) {
+        for (int i = 0; i < 120; i++) {
+            if (i < 30) {
                 for (int j = 0; j < 188; j++) {
                     if (*(map + 188 * transform_x[i][j] + transform_y[i][j]) > thresholdUp) {
                         IMG[i][j] = white;
@@ -466,12 +468,46 @@ void transform_sd(int wayThre)
 
         }
     }
+    else if (wayThre == 4) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 4; j++) {
+                map = fullBuffer + 188 * 43 * i + j * 47;
+                for (int m = 0; m < 43; m++) {
+                    threMap = map + 188 * m;
+                    for (int n = 0; n < 47; n++) {
+                        if (*threMap > thresholdAdapt[4 * i + j]) {
+                            *threMap = 255;
+                        }
+                        else {
+                            *threMap = 0;
+                        }
+                        threMap++;
+                    }
+                }
+
+
+            }
+        }
+        for (int i = 0; i < 120; i++) {
+            for (int j = 0; j < 188; j++) {
+                if (*(fullBuffer + 188 * transform_x[i][j] + transform_y[i][j]) > 100)
+                    IMG[i][j] = white;
+                else if (*(fullBuffer + 188 * transform_x[i][j] + transform_y[i][j]) <= 100)
+                    IMG[i][j] = black;
+
+                if (j<left_side[i] || j>right_side[i]) {
+                    IMG[i][j] = gray;
+                }
+            }
+        }
+
+    }
     else {
-        map = fullBuffer;
+    //  map = fullBuffer;
         threMap = fullBuffer;
         //mapFullBuffer = fullBuffer;
         //printf("thre:\n");
-        for (int i = 0; i < 120; i++) {
+        for (int i = 0; i < 86; i++) {
             for (int j = 0; j < 188; j++) {
                 if (*(threMap) > threshold) {
                     *(threMap) = 255;
@@ -489,12 +525,11 @@ void transform_sd(int wayThre)
         //map = mapFullBuffer;
         for (int i = 0; i < 120; i++) {
             for (int j = 0; j < 188; j++) {
-                if (*(map + 188 * transform_x[i][j] + transform_y[i][j]) > threshold) {
+                if (*(map + 188 * transform_x[i][j] + transform_y[i][j]) > threshold)
                     IMG[i][j] = white;
-                }
-                else {
+                else if (*(map + 188 * transform_x[i][j] + transform_y[i][j]) <= threshold)
                     IMG[i][j] = black;
-                }
+
                 if (j<left_side[i] || j>right_side[i]) {
                     IMG[i][j] = gray;
                 }
@@ -504,7 +539,101 @@ void transform_sd(int wayThre)
 
 }
 
+////////////////////////////////////////////
+//功能：局部阈值分割
+//输入：
+//输出：
+//备注：
+///////////////////////////////////////////
+void adapt_threshold() {
 
+    uint8_t* map;
+    uint8_t* map1;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 4; j++) {
+            map = fullBuffer + 188 * 43 * i + j * 47;
+            uint8_t my_threshold = 0;
+            long int sum = 0;
+            uint8_t thre[256] = { 0 };
+
+            for (int m = 0; m < 43; m++) {
+                map1 = map + 188 * m;
+                for (int n = 0; n < 47; n++) {
+                    thre[*(map1)]++;
+                    sum += *(map1);
+                    map1++;
+                }
+            }
+            int averange = sum / (43 * 47);
+
+            uint8_t max_num = 0, num = 0;
+
+            int min = 160;
+            int max = 200;
+            // 对不同区域max min 修改,最好使用 “比例”，这样调好之后就不要过多干涉
+            if (4 * i + j == 0) {
+
+            }
+            else if (4 * i + j == 1) {
+
+            }
+            else if (4 * i + j == 2) {
+
+            }
+            else if (4 * i + j == 3) {
+
+            }
+            else if (4 * i + j == 4) {
+
+            }
+            else if (4 * i + j == 5) {
+
+            }
+            else if (4 * i + j == 6) {
+
+            }
+            else if (4 * i + j == 7) {
+
+            }
+
+
+            for (int k = 160; k <= 200; k++) {
+                int a_less, a_more;
+                float p_less, p_more;
+                int count_less = 0, count_more = 0;
+                int sum_less = 0, sum_more = 0;
+                for (int i = 0; i < k; i++) {
+                    count_less += thre[i];
+                    sum_less += thre[i] * i;
+                }
+                for (int i = k; i < 255; i++) {
+                    count_more += thre[i];
+                    sum_more += thre[i] * i;
+                }
+                p_less = (float)sum_less / (43 * 47);
+                p_more = (float)sum_more / (43 * 47);
+                if (count_less == 0 || count_more == 0) {
+                    continue;
+                }
+                a_less = sum_less / (count_less);
+                a_more = sum_more / (count_more);
+                num = count_less * count_more * (a_less - a_more) * (a_less - a_more);
+                if (num >= max_num) {
+                    max_num = num;
+                    my_threshold = k;
+                }
+            }
+            if (my_threshold == 0) {
+                my_threshold = threshold;
+            }
+            //printf("thre:threshold=%d\n", my_threshold);
+            thresholdAdapt[i * 4+j] = my_threshold;
+//            printf("%d=%d\n", i * 4 + j, my_threshold);
+        }
+    }
+
+
+}
 ////////////////////////////////////////////
 //功能：阈值的确定
 //输入：
@@ -1461,7 +1590,7 @@ void image_main()
     get_mid_line();
     mid_line_filter();
     averMidLine = mid_aver();
-    test_varible[15] = valid_row();
+//    test_varible[15] = valid_row();
 
     for (int i = NEAR_LINE; i >= FAR_LINE; i--)
         if (mid_line[i] != MISS)
@@ -4657,10 +4786,13 @@ void protection() {
         }
         pmap = pmap + 40;
     }
-    ////////////////printf("count1=%d  ", count1);
-    /*if (count1 >= 108 * 8) //////////////printf("1111");
-    else //////////////printf("0000");*/
-    if(count1 > 8 *108) stopFlag = 1;
+
+    if(count1 > 8 *108) stopCount += 1;
+
+    if(stopCount > 5) stopFlag = 1;
+
+
+
 }
 
 
@@ -4673,7 +4805,9 @@ void protection() {
 void carpark_in()
 {
     int flag = 0;
-    int gapNumber = 0;
+    int gapNumber = 0, gapNumber1 = 0, gapNumber2 = 0, gapNumber3 = 0;
+    uint8_t i, j;
+    uint8_t upPoint = 1, downPoint = 1, averPoint, updownDelta = 0;
 
     for (carParkX = 55; carParkX < 95; carParkX++)
     {
@@ -4709,6 +4843,133 @@ void carpark_in()
         }
     }
     //    }
+
+//    for (i = 110; i > 55; i--)
+//    {
+//        if (my_road[i].white_num >= 2 && my_road[i - 1].white_num >= 3 && my_road[i - 2].white_num >= 3)
+//        {
+//            gapNumber1 = 0;
+//            gapNumber2 = 0;
+//            for (int gap1 = 1; gap1 <= my_road[i - 1].white_num; gap1++)
+//            {
+//
+//                if (my_road[i-1].connected[gap1].width <= 4)
+//                {
+//                    if (my_road[20].white_num != 0) {
+//                        gapNumber1++;
+//                    }
+//
+//                }
+//
+//
+//            }
+//
+//            for (int gap2 = 1; gap2 <= my_road[i - 2].white_num; gap2++)
+//            {
+//                if (my_road[i - 2].connected[gap2].width <= 4)
+//                {
+//                    if (my_road[20].white_num != 0) {
+//                        gapNumber2++;
+//                    }
+//
+//                }
+//            }
+//
+//            if (gapNumber1 >= 1 && gapNumber2 >= 1)
+//            {
+//                downPoint = i;
+//                break;
+//            }
+//        }
+//    }
+//
+//        for (j = i; j >= (i - 22); j--)
+//        {
+//            if (my_road[j + 1].white_num >= 2 && my_road[j].white_num >= 2 && my_road[j - 1].white_num == 1)
+//            {
+//                upPoint = j;
+//                break;
+//            }
+//        }
+//
+//
+//        if (downPoint != 1 && upPoint != 1)
+//        {
+//            averPoint = (uint8_t)((downPoint + upPoint) / 2);
+//            updownDelta = downPoint - upPoint;
+//            if (updownDelta % 2 != 0)
+//            {
+//                updownDelta = (updownDelta + 1) / 2;
+//            }
+//
+//            else updownDelta = updownDelta / 2;
+//        }
+//
+//        if (updownDelta <= 12 && updownDelta != 0)
+//        {
+//            if (my_road[i - updownDelta].white_num >= 4)
+//            {
+//                gapNumber3 = 0;
+//                for (int gap3 = 1; gap3 <= my_road[i - updownDelta].white_num; gap3++)
+//                {
+//                    if (my_road[i - updownDelta].connected[gap3].width <= 3)
+//                    {
+//                        if (my_road[20].white_num != 0)
+//                        {
+//                            gapNumber3++;
+//                        }
+//
+//                    }
+//
+//
+//                }
+//
+//                if (gapNumber3 >= my_road[i - updownDelta].white_num - 3)
+//                {
+//                    flag = 1;
+//                    for(int mid = downPoint; mid > upPoint; mid--)
+//                    {
+//
+//                        if(my_road[mid].white_num < 2)
+//                        {
+//                            flag = 0;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            else if (my_road[i - updownDelta - 1].white_num >= 4)
+//            {
+//                gapNumber3 = 0;
+//                for (int gap3 = 1; gap3 <= my_road[i - updownDelta - 1].white_num; gap3++)
+//                {
+//                    if (my_road[i - updownDelta - 1].connected[gap3].width <= 3)
+//                    {
+//                        if (my_road[20].white_num != 0)
+//                        {
+//                            gapNumber3++;
+//                        }
+//
+//                    }
+//                }
+//
+//                if (gapNumber3 >= my_road[i - updownDelta].white_num - 3)
+//                {
+//                    flag = 1;
+//
+//                    for(int mid = downPoint; mid > upPoint; mid--)
+//                    {
+//
+//                        if(my_road[mid].white_num < 2)
+//                        {
+//                            flag = 0;
+//                        }
+//                    }
+//                }
+//            }
+//
+//        }
+
     if (flag == 1) {
         state = stateParkIn;
         carParkDelay = 0;
@@ -4794,7 +5055,9 @@ void design_carpark()
             right_line[i] = left_line[i] + 28;
         }
 
-    }else if(leftPark == 1 && rightPark == 0){
+    }
+
+    else if(leftPark == 1 && rightPark == 0){
         uint8_t j_mid[CAMERA_H];
         for (int i = NEAR_LINE; i >= 2; i--) {
             j_mid[i] = j_continue[i];
@@ -4897,7 +5160,11 @@ void rampwayOn()
             {
                 if(width_max - width_min >= rampMin.intVal && width_max - width_min <= rampMax.intVal)
                 {
-                    rampFlag1 = 1;
+                    if(my_road[80].connected[j_continue[80]].width < my_road[40].connected[j_continue[40]].width && my_road[50].connected[j_continue[50]].width < my_road[20].connected[j_continue[20]].width)
+                    {
+                        rampFlag1 = 1;
+
+                    }
 
                 }
             }
@@ -5069,7 +5336,7 @@ void straight_define()
         else straightFlag = 0;
     }
 
-    test_varible[6] = straightFlag;
+//    test_varible[6] = straightFlag;
 }
 
 
@@ -5211,7 +5478,7 @@ void s_road_filter()
 
 void mid_line_filter() {
 
-    for (int i = NEAR_LINE - 2; i > 3; i--)
+    for (int i = NEAR_LINE - 4; i > 3; i--)
     {
         if (left_line[i] != MISS) {
             if (abs(mid_line[i] - mid_line[i + 1]) > 20)
@@ -5431,7 +5698,7 @@ void TcircleFix()
 
     else pwmFix = 0;
 
-    test_varible[14] = pwmFix;
+//    test_varible[14] = pwmFix;
 }
 
 
@@ -5439,7 +5706,9 @@ void TcircleFix()
 uint8_t aver_mid_line_foresee()
 {
     uint8_t averageMidLine;
-    averageMidLine = mid_line[present_vision] * 0.4 + mid_line[present_vision - 1] * 0.2 + mid_line[present_vision + 1] * 0.2 + mid_line[present_vision - 2] * 0.1 + mid_line[present_vision + 2] * 0.1;
+    float vision1 = mid_line[present_vision], vision2 = mid_line[present_vision - 1], vision3 = mid_line[present_vision + 1];
+
+    averageMidLine = vision1 * 0.6 + vision2 * 0.2 + vision3 * 0.2;
     return averageMidLine;
 }
 

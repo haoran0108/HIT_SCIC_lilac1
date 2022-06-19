@@ -63,11 +63,12 @@ extern node_t LFKP, LFKI, RTKP, RTKI, slowLFKP, slowLFKI, slowRTKP, slowRTKI, fa
 extern node_t currentRTKP, currentRTKI, currentLFKP, currentLFKI, expectC;
 extern node_t wayThre, OTSU_Klow, OTSU_Khigh, part_klow1, part_khigh1, part_klow2, part_khigh2;
 
-extern node_t CrossCircle, IslandPD, FolkPD;
+extern node_t CrossCircle, IslandPD, FolkPD, straightPD;
 extern node_t Cross_PB, Cross_PM, Cross_PS, Cross_ZO, Cross_NS, Cross_NM, Cross_NB, Cross_DS, Cross_DB;
 extern node_t circle_PB, circle_PM, circle_PS, circle_ZO, circle_NS, circle_NM, circle_NB, circle_DS, circle_DB;
 extern node_t Island_PB, Island_PM, Island_PS, Island_ZO, Island_NS, Island_NM, Island_NB, Island_DS, Island_DB;
 extern node_t Folk_PB, Folk_PM, Folk_PS, Folk_ZO, Folk_NS, Folk_NM, Folk_NB, Folk_DS, Folk_DB;
+extern node_t straight_KP, straight_KD;
 extern node_t raceMemory;
 extern node_t memory1, memory2, memory3, memory4, memory5, memory6, memory7, memory8, memory9, memory10, memory11, memory12, memory13, memory14, memory15;
 extern node_t memorySpeed1, memoryVision1;

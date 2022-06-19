@@ -140,13 +140,15 @@ extern int rampJudgeCount;
 extern int leftPark,rightPark;
 extern int parkJudgeCount;
 extern int crossCircleCount;
-extern int startCount;
+
 extern int laststate;
 extern uint8_t memoryFlag;
 extern uint16_t memoryState[20];
 extern uint8_t folkTimes;
 extern uint8_t averMidLine;
 extern uint8_t sRoadFlag;
+extern uint8_t stopCount;
+
 
 typedef struct {
     int x;
