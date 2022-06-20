@@ -240,6 +240,7 @@ void cross_over();
 void T_island_in_start();
 void design_T_island_in();
 void T_or_island();
+void island_radius();
 //»·µº
 void design_island_ing();
 void island_turn();

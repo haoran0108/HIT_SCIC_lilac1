@@ -146,27 +146,27 @@ uint8_t CTRL_fuzzySpeedKp(int speedError)
     }
     else if(speedError < speedZO && speedError > speedNM)
     {
-            membership[0] = fabs((speedError - speedNM) / fuzzyWidth);
-            membership[1] = fabs((speedError - speedZO) / fuzzyWidth);
+        membership[0] = fabs((speedError - speedNM) / fuzzyWidth);
+        membership[1] = fabs((speedError - speedZO) / fuzzyWidth);
 
-            motorKP = RTKI.intVal * membership[0] + fastLFKP.intVal * membership[1];
-        }
-        else if(speedError == speedNM)
-        {
-            motorKP = fastLFKP.intVal;
-        }
-        else if(speedError < speedNM && speedError > speedNB)
-        {
-            membership[0] = fabs((speedError - speedNB) / fuzzyWidth);
-            membership[1] = fabs((speedError - speedNM) / fuzzyWidth);
+        motorKP = RTKI.intVal * membership[0] + fastLFKP.intVal * membership[1];
+    }
+    else if(speedError == speedNM)
+    {
+        motorKP = fastLFKP.intVal;
+    }
+    else if(speedError < speedNM && speedError > speedNB)
+    {
+        membership[0] = fabs((speedError - speedNB) / fuzzyWidth);
+        membership[1] = fabs((speedError - speedNM) / fuzzyWidth);
 
-            motorKP = fastLFKP.intVal * membership[0] + fastLFKI.intVal * membership[1];
-        }
+        motorKP = fastLFKP.intVal * membership[0] + fastLFKI.intVal * membership[1];
+    }
 
-        else if(speedError <= speedNB)
-        {
-            motorKP = fastLFKI.intVal;
-        }
+    else if(speedError <= speedNB)
+    {
+        motorKP = fastLFKI.intVal;
+    }
 
     return motorKP;
 }
@@ -194,7 +194,7 @@ void CTRL_speedLoopPID()
     currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + fastRTKP.intVal * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
     if(currentExpectLF < 1000) currentExpectLF = 1000;
-    else if(currentExpectLF > 3800) currentExpectLF = 3800;
+    else if(currentExpectLF > 4095) currentExpectLF = 4095;
 
 
 //    sumErrorRT += errorMR.currentError;
@@ -205,7 +205,7 @@ void CTRL_speedLoopPID()
     currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + fastRTKP.intVal * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
     if(currentExpectRT < 1000) currentExpectRT = 1000;
-    else if(currentExpectRT > 3800) currentExpectRT = 3800;
+    else if(currentExpectRT > 4095) currentExpectRT = 4095;
 
     test_varible[0] = -speedL;
     test_varible[1] = speedR;
@@ -699,8 +699,7 @@ void CTRL_motorMain()
     {
         CTRL_duzhuan();
     }
-    test_varible[14] = duzhuanFlag;
-    test_varible[15] = duzhuanCount;
+
     motorParamDefine();
 
 //    CTRL_motorPID();
@@ -1396,7 +1395,7 @@ void CTRL_speedDecision(int32 speedHigh, int32 speedLow)
     }
 
 
-    speedRatio = (present_speed / lowSpeed) - 1;
+    speedRatio = (double)(present_speed / lowSpeed) - 1;
 
     if(speedRatio > 1e-5)
     {
@@ -1457,7 +1456,6 @@ void CTRL_duzhuanTest()
 void CTRL_duzhuan()
 {
     duzhuanTime += 1;
-    test_varible[6] = duzhuanTime;
 
 //    if(duzhuanTime <= 100)
 //    {
