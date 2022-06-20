@@ -4852,13 +4852,15 @@ void folk_road_in() {
             if (my_road[i - 1].connected[j_right[i - 1]].left - my_road[i - 1].connected[j_left[i - 1]].right < 20 && my_road[i - 1].connected[j_right[i - 1]].left - my_road[i - 1].connected[j_left[i - 1]].right >= 2
                 && my_road[i].connected[j_right[i]].left - my_road[i].connected[j_left[i]].right < 20 && my_road[i].connected[j_right[i]].left - my_road[i].connected[j_left[i]].right >= 1
                 && my_road[i + 1].connected[j_right[i + 1]].left - my_road[i + 1].connected[j_left[i + 1]].right < 0
-                && my_road[i + 2].connected[j_right[i + 2]].left - my_road[i + 2].connected[j_left[i + 2]].right < 0) {
+                && my_road[i + 2].connected[j_right[i + 2]].left - my_road[i + 2].connected[j_left[i + 2]].right < 0
+                && my_road[i - 1].connected[j_right[i - 1]].left - my_road[i - 1].connected[j_left[i - 1]].right > 0
+                && my_road[i - 2].connected[j_right[i - 2]].left - my_road[i - 2].connected[j_left[i - 2]].right > 0) {
                 top = i;
                 break;
             }
 
         }
-        //////printf("top=%d\n", top);
+        //printf("top=%d\n", top);
         if (top != 119) {
 
             int dSumL = 0;
@@ -4872,7 +4874,7 @@ void folk_road_in() {
 
                 dSumR += my_road[i].connected[j_right[i]].right - my_road[i + 1].connected[j_right[i + 1]].right;
                 dAverR = (double)dSumR / (NEAR_LINE - 1 - i);
-                // ////printf("%d:L:d=%d,da=%f, d-da=%f   R:d=%d,da=%f,d-da=%f \n", i, my_road[i - 1].connected[j_left[i - 1]].left - my_road[i].connected[j_left[i]].left, dAverL, my_road[i - 1].connected[j_left[i - 1]].left - my_road[i].connected[j_left[i]].left - dAverL, my_road[i - 1].connected[j_right[i - 1]].right - my_road[i].connected[j_right[i]].right, dAverR, my_road[i - 1].connected[j_right[i - 1]].right - my_road[i].connected[j_right[i]].right - dAverR);
+                // printf("%d:L:d=%d,da=%f, d-da=%f   R:d=%d,da=%f,d-da=%f \n", i, my_road[i - 1].connected[j_left[i - 1]].left - my_road[i].connected[j_left[i]].left, dAverL, my_road[i - 1].connected[j_left[i - 1]].left - my_road[i].connected[j_left[i]].left - dAverL, my_road[i - 1].connected[j_right[i - 1]].right - my_road[i].connected[j_right[i]].right, dAverR, my_road[i - 1].connected[j_right[i - 1]].right - my_road[i].connected[j_right[i]].right - dAverR);
 
             }
 
@@ -4913,24 +4915,25 @@ void folk_road_in() {
                     }
                 }
             }
-//          ////printf("top=%d,minl=%d,minR=%d\n", top, minL, minR);
+            //printf("top=%d,minl=%d,minR=%d\n", top, minL, minR);
 
             if (minL < NEAR_LINE - 2 && minR < NEAR_LINE - 2) {
 
                 //先保证两个角找的是准的
 
-                if (fabs(calculate_slope_struct(minL + 1, minL + 15, j_left, LEFT) - calculate_slope_struct(minR + 1, minR + 15, j_right, RIGHT)) < 0.2) {
+                if (fabs(calculate_slope_struct(minL + 1, minL + 15, j_left, LEFT) - calculate_slope_struct(minR + 1, minR + 15, j_right, RIGHT)) < 0.2
+                    && calculate_slope_struct(minL - 13, minL - 1, j_left, LEFT)* calculate_slope_struct(minR - 13, minR - 1, j_right, RIGHT)) {
 
                     //区分十字
                     int flag1 = 0;
                     if (minR <= minL) {
-                        // ////printf("k1=%f,k2=%f\n", calculate_slope_struct(top - 17, top - 2, j_left, RIGHT), calculate_slope_struct(minR + 1, minR + 15, j_right, RIGHT));
+                        // printf("k1=%f,k2=%f\n", calculate_slope_struct(top - 17, top - 2, j_left, RIGHT), calculate_slope_struct(minR + 1, minR + 15, j_right, RIGHT));
                         if (fabs(calculate_slope_struct(top - 17, top - 2, j_left, RIGHT) - calculate_slope_struct(minR + 1, minR + 15, j_right, RIGHT)) > 0.6) {
                             flag1 = 1;
                         }
                     }
                     else {
-                        //////printf("k1=%f,k2=%f\n", calculate_slope_struct(top - 17, top - 2, j_right, LEFT), calculate_slope_struct(minL + 1, minL + 15, j_left, LEFT));
+                        //printf("k1=%f,k2=%f\n", calculate_slope_struct(top - 17, top - 2, j_right, LEFT), calculate_slope_struct(minL + 1, minL + 15, j_left, LEFT));
                         if (fabs(calculate_slope_struct(top - 17, top - 2, j_right, LEFT) - calculate_slope_struct(minL + 1, minL + 15, j_left, LEFT)) > 0.6) {
                             flag1 = 1;
                         }
@@ -4974,9 +4977,8 @@ void folk_road_in() {
                             }
                         }
                         if (sumN >= 15) {
-                            //////printf("11\n");
+                            //printf("11\n");
                             state = stateFolkRoadIn;
-                            folkTimes += 1;
                         }
 
 
@@ -4994,7 +4996,6 @@ void folk_road_in() {
 
 
 }
-
 ////////////////////////////////////////////
 //功能：进三叉补线
 //输入：
