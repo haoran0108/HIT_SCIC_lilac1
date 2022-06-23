@@ -191,7 +191,7 @@ void CTRL_speedLoopPID()
 //    errorML.delta = errorML.currentError - errorML.lastError;
     errorML.delta = (errorML.currentError - errorML.lastError) * speedKdLpf.floatVal + errorML.delta * (1 - speedKdLpf.floatVal);
 //    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
-    currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + fastRTKP.intVal * errorML.delta);
+    currentExpectLF = (int32)(currentExpectLF + LFKI.intVal * errorML.currentError + LFKP.intVal * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
     if(currentExpectLF < 1000) currentExpectLF = 1000;
     else if(currentExpectLF > 4095) currentExpectLF = 4095;
@@ -202,7 +202,7 @@ void CTRL_speedLoopPID()
     errorMR.delta = (errorMR.currentError - errorMR.lastError) * speedKdLpf.floatVal + errorMR.delta * (1 - speedKdLpf.floatVal);
 
 //    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
-    currentExpectRT = (int32)(currentExpectRT + motorRTKI * errorMR.currentError + fastRTKP.intVal * errorMR.delta);
+    currentExpectRT = (int32)(currentExpectRT + LFKI.intVal * errorMR.currentError + LFKP.intVal * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
     if(currentExpectRT < 1000) currentExpectRT = 1000;
     else if(currentExpectRT > 4095) currentExpectRT = 4095;
@@ -403,10 +403,10 @@ void CTRL_fuzzyPID()
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
     servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
 
-//    if(state == stateTIn)
-//    {
+    if(state == stateTIn)
+    {
         servoPwm += pwmFix;
-//    }
+    }
 
 //    else if(state == stateIslandCircle)
 //    {
@@ -676,6 +676,8 @@ void CTRL_motorMain()
 
         speedDetermine();
         CTRL_motorDiffer();
+        CTRL_visionDecision();
+
         CTRL_RoadTest();
 
     }
@@ -1346,7 +1348,7 @@ void speedDetermine()
 //        GPIO_Set(P22, 0, 0);
     }
 
-    CTRL_speedDecision(present_speed, speedLow.intVal);
+    CTRL_speedDecision(speedLow.intVal, present_speed);
 //    present_vision = foresee();
 }
 void CTRL_RoadTest()
@@ -1373,7 +1375,7 @@ void CTRL_speedDecision(int32 speedHigh, int32 speedLow)
     float param;
     int error;
     double speedRatio;
-    double lowSpeed;
+    int32 lowSpeed;
     lowSpeed = speedLow;
 
     if(speedHigh - speedLow >= 5)
@@ -1384,25 +1386,47 @@ void CTRL_speedDecision(int32 speedHigh, int32 speedLow)
         param = speedDelta / (25*25);
 
         present_speed = (uint8_t)(speedHigh - (int)(param * error * error));
-        if(present_speed < speedLow)
+        if(present_speed <= lowSpeed)
         {
-            present_speed = speedLow;
+            present_speed = lowSpeed;
         }
     }
     else
     {
-        present_speed = speedHigh;
+        present_speed = lowSpeed;
     }
 
 
-    speedRatio = (double)(present_speed / lowSpeed) - 1;
-
-    if(speedRatio > 1e-5)
-    {
-        present_vision = present_vision - (uint8_t)(speedRatio * speedRatio * 100);
-    }
+//    speedRatio = (double)(present_speed / lowSpeed) - 1;
+//
+//    if(speedRatio > 1e-5)
+//    {
+//        present_vision = present_vision - (uint8_t)(speedRatio * speedRatio * 100);
+//    }
 }
 
+void CTRL_visionDecision()
+{
+    float averSpeed;
+    float speed;
+    float speedRatio;
+    speed = (float)(presentSpeed.intVal);
+    averSpeed = (float)(expectL + expectR) / 2;
+
+    speedRatio = (averSpeed / speed) - 1;
+
+    if(speedRatio < -1e-5)
+    {
+        present_vision = present_vision + (uint8_t)(speedRatio * speedRatio * 60);
+    }
+
+    else if(speedRatio > 1e-5)
+    {
+        present_vision = present_vision - (uint8_t)(speedRatio * speedRatio * 80);
+    }
+
+    test_varible[6] = present_vision;
+}
 
 void CTRL_duzhuanTest()
 {
