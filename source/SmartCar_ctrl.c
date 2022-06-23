@@ -561,6 +561,8 @@ void CTRL_servoMain()
         {
             if(duzhuanFlag == 0)
             {
+                CTRL_ServoPID_Determine();
+
                 CTRL_fuzzyPID();
 
             }
@@ -676,7 +678,7 @@ void CTRL_motorMain()
 
         speedDetermine();
         CTRL_motorDiffer();
-        CTRL_visionDecision();
+//        CTRL_visionDecision();
 
         CTRL_RoadTest();
 

@@ -185,6 +185,7 @@ void CTRL_speedDecision(int32 speedHigh, int32 speedLow);
 void CTRL_visionDecision();
 
 void motorParamDefine();
+void CTRL_ServoPID_Determine();
 
 /*×²³µµ¹ÍË*/
 void CTRL_duzhuan();

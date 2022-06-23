@@ -276,8 +276,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     Folk_DS = MENU_fileInit(Folk_DS, 1, 3, "D-SMALL", 3, datafloat, &Folk_NB, &Folk_DB, NULL, NULL);
 //    Folk_DB = MENU_fileInit(Folk_DB, 1, 0.5, "D-BIG", 4, datafloat, &Folk_DS, NULL, NULL, NULL);
 
-    straight_KP = MENU_fileInit(straight_KP, 1, 0.8, "str-KP", 2, datafloat, NULL, &straight_KD, &straightPD, NULL);
-    straight_KD = MENU_fileInit(straight_KD, 1, 0.8, "str-KD", 3, datafloat, &straight_KP, NULL, NULL, NULL);
+    straight_KP = MENU_fileInit(straight_KP, 1, 1.6, "str-KP", 2, datafloat, NULL, &straight_KD, &straightPD, NULL);
+    straight_KD = MENU_fileInit(straight_KD, 1, 1.4, "str-KD", 3, datafloat, &straight_KP, NULL, NULL, NULL);
 
 
     gear1 = MENU_fileInit(gear1, 1, 1.0, "GearSlow", 2, none, NULL, &gear2, &file1, &g1_Data1);//慢速档
@@ -313,9 +313,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 5, none, &gear3, &Threshold, NULL, &currentRTKP);
     currentRTKP = MENU_fileInit(currentRTKP, 3, 3.6, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentK, NULL);
-    currentRTKI = MENU_fileInit(currentRTKI, 2, 2.8, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
+    currentRTKI = MENU_fileInit(currentRTKI, 2, 3, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
     currentLFKP = MENU_fileInit(currentLFKP, 3, 3.6, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
-    currentLFKI = MENU_fileInit(currentLFKI, 2, 2.8, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
+    currentLFKI = MENU_fileInit(currentLFKI, 2, 3, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
 //    currentKD = MENU_fileInit(currentKD, 2, 3.0, "motorKD", 4, datafloat, &currentRTKI, &expectC, NULL, NULL);
     expectC = MENU_fileInit(expectC, 2200, 9.5, "expect", 6, dataint, &currentLFKI, NULL, NULL, NULL);
 
@@ -361,8 +361,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display1 = MENU_fileInit(display1, 40, 133.03, "motor", 2, none, NULL, &display2, &display, &LFKP);
     display2 = MENU_fileInit(display2, 25, 0.1, "rowKp", 3, datafloat, &display1, &display3, NULL, NULL);
 
-    LFKP = MENU_fileInit(LFKP, 30, 3.8, "KP", 2, dataint, NULL, &LFKI, &display1, NULL);
-    LFKI = MENU_fileInit(LFKI, 15, 1.5, "KI", 3, dataint, &LFKP, &RTKP, NULL, NULL);
+    LFKP = MENU_fileInit(LFKP, 20, 3.8, "KP", 2, dataint, NULL, &LFKI, &display1, NULL);
+    LFKI = MENU_fileInit(LFKI, 20, 1.5, "KI", 3, dataint, &LFKP, &RTKP, NULL, NULL);
     RTKP = MENU_fileInit(RTKP, 8, 3.8, "motorPS", 4, dataint, &LFKI, &RTKI, NULL, NULL);
     RTKI = MENU_fileInit(RTKI, 4, 1.5, "motorZO", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
     fastLFKP = MENU_fileInit(fastLFKP, 5, 133.03, "motorNM", 6, dataint, &RTKI, &fastLFKI, NULL, NULL);
