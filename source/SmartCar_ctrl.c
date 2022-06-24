@@ -529,7 +529,7 @@ void CTRL_motorPID()
 void CTRL_servoMain()
 {
 
-    if(GPIO_Read(P13, 2))
+    if(GPIO_Read(P11, 6))
     {
         if(parkStart == 1 || parkStart == 2)
         {
@@ -939,7 +939,7 @@ void CTRL_motorDiffer()
 
 void CTRL_CarParkStart()
 {
-    if(GPIO_Read(P13, 2) && (parkStart == 1 || parkStart == -1 || parkStart == 2 || parkStart == -2) && parkStraightCount > parkCount.intVal)
+    if(GPIO_Read(P11, 6) && (parkStart == 1 || parkStart == -1 || parkStart == 2 || parkStart == -2) && parkStraightCount > parkCount.intVal)
     {
         CTRL_gyroUpdate();
         CTRL_directionAngleGet();

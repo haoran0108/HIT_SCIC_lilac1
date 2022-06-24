@@ -525,12 +525,12 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
     nodeptr_t printTemp;
     nodeptr_t dataRead;
 
-    if(GPIO_Read(P13, 2))
+    if(GPIO_Read(P11, 6))
     {
         SmartCar_OLED_Fill(0);
         MENU_showIMG();
     }
-    else if(!GPIO_Read(P13, 2)){
+    else if(!GPIO_Read(P11, 6)){
     if (!GPIO_Read(P11, 2))//ио
     {
         SmartCar_OLED_Fill(0);
@@ -937,7 +937,7 @@ void MENU_showIMG()
 #endif
 #endif
         }
-        if (!GPIO_Read(P13, 2))
+        if (!GPIO_Read(P11, 6))
         {
             if(!GPIO_Read(P11, 12) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
                     !GPIO_Read(P11, 11) || !GPIO_Read(P11, 2))
