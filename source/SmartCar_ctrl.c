@@ -727,7 +727,7 @@ void CTRL_motorDiffer()
     float k;
     if(delta > 0)
     {
-        k = 0.9912 - 0.0517 * FabsDelta * FabsDelta - 0.3753 * FabsDelta;
+        k = 0.9459 - 0.2679 * FabsDelta * FabsDelta - 0.1511 * FabsDelta;
 
         expectL = (int32)(present_speed);
         expectR = (int32)(present_speed * k);
@@ -766,7 +766,7 @@ void CTRL_motorDiffer()
     }
     else if(delta < 0)
     {
-        k = 0.9761 - 0.0577 * FabsDelta * FabsDelta - 0.3661 * FabsDelta;
+        k = 0.9621 - 0.3967 * FabsDelta;
 
         expectL = (int32)(present_speed * k);
         expectR = (int32)(present_speed);
@@ -1150,18 +1150,20 @@ void CTRL_currentAverageFilter()
 //    currentLF[0] = (currentLF[4] + currentLF[3] + currentLF[2] + currentLF[1] + currentLF[0]) / 5;
 //    currentRT[0] = (currentRT[2] + currentRT[1] + currentRT[0]) / 3;
 //    currentLF[0] = (currentLF[2] + currentLF[1] + currentLF[0]) / 3;
-    if((currentFilter1.floatVal + currentFilter2.floatVal) < 1)
-    {
-        currentRT[0] = currentRT[2] * (1 - currentFilter1.floatVal - currentFilter2.floatVal) + currentRT[1] * currentFilter2.floatVal + currentRT[0] * currentFilter1.floatVal;
-        currentLF[0] = currentLF[2] * (1 - currentFilter1.floatVal - currentFilter2.floatVal) + currentLF[1] * currentFilter2.floatVal + currentLF[0] * currentFilter1.floatVal;
-
-    }
-
-    else
-    {
-        currentRT[0] = (currentRT[2] + currentRT[1] + currentRT[0]) / 3;
-        currentLF[0] = (currentLF[2] + currentLF[1] + currentLF[0]) / 3;
-    }
+//    if((currentFilter1.floatVal + currentFilter2.floatVal) < 1)
+//    {
+//        currentRT[0] = currentRT[2] * (1 - currentFilter1.floatVal - currentFilter2.floatVal) + currentRT[1] * currentFilter2.floatVal + currentRT[0] * currentFilter1.floatVal;
+//        currentLF[0] = currentLF[2] * (1 - currentFilter1.floatVal - currentFilter2.floatVal) + currentLF[1] * currentFilter2.floatVal + currentLF[0] * currentFilter1.floatVal;
+//
+//    }
+//
+//    else
+//    {
+//        currentRT[0] = (currentRT[2] + currentRT[1] + currentRT[0]) / 3;
+//        currentLF[0] = (currentLF[2] + currentLF[1] + currentLF[0]) / 3;
+//    }
+    currentRT[0] = currentRT[1] * (1 - currentFilter1.floatVal) + currentRT[0] * currentFilter1.floatVal;
+    currentLF[0] = currentLF[1] * (1 - currentFilter1.floatVal) + currentLF[0] * currentFilter1.floatVal;
 //    currentRT[4] = currentRT[3];
 //    currentRT[3] = currentRT[2];
     currentRT[2] = currentRT[1];

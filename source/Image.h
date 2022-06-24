@@ -221,7 +221,9 @@ void protection();
 
 //道路规划
 void judge_type_road();
-
+int My_Max(signed int i, signed int j);
+int My_Min(signed int i, signed int j);
+void ZHAO_THRE();
 //数据处理函数
 double calculate_slope(int start, int end, int side[CAMERA_H]);
 double calculate_slope_uint(int start, int end, uint8_t side[CAMERA_H]);
