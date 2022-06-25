@@ -149,7 +149,9 @@ extern uint8_t averMidLine;
 extern uint8_t sRoadFlag;
 extern uint8_t stopCount;
 
-
+extern uint8_t thresholdUp;
+extern uint8_t thresholdDown;
+extern uint8_t islandTimes, IslandRadius;
 typedef struct {
     int x;
     int y;

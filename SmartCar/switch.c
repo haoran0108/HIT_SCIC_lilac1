@@ -119,6 +119,8 @@ void SW_readSwitch()
         startCount = 0;
         startFlag = 0;
         stopCount = 0;
+
+        islandTimes = 0;
     }
     else
     {

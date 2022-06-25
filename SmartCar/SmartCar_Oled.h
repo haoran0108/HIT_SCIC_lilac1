@@ -63,6 +63,8 @@ void OLED_WrtCmd(uint8 cmd);
 void OLED_WrtData(uint8 data);
 
 void SmartCar_OLED_Fill(uint8 bmp_data);
+void SmartCar_OLED_Fillpart(uint8 bmp_data);
+
 void OLED_Set_Pos(uint8 x,uint8 y);
 
 /*
