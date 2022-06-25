@@ -5385,13 +5385,21 @@ void folk_road_in() {
                     //Çø·ÖÊ®×Ö
                     int flag1 = 0;
                     if (1) {
+                        for (int i = 0; i <= 13; i++) {
+                            if (my_road[top - i].connected[j_left[top - i]].right == my_road[top - i].connected[j_right[top - i]].right) {
+                                flag1 = -1;
+                                break;
+                            }
+                        }
+
                         // printf("k1=%f,k2=%f\n", calculate_slope_struct(top - 17, top - 2, j_left, RIGHT), calculate_slope_struct(minR + 1, minR + 15, j_right, RIGHT));
-                        if (fabs(calculate_slope_struct(top - 15, top - 2, j_left, RIGHT) - calculate_slope_struct(minR + 1, minR + 15, j_right, RIGHT)) > 0.6
-                            && fabs(calculate_slope_struct(top - 15, top - 2, j_right, LEFT) - calculate_slope_struct(minL + 1, minL + 15, j_left, LEFT)) > 0.6
-                            && fabs(calculate_slope_struct(top - 15, top - 2, j_right, LEFT) - calculate_slope_struct(minR + 1, minR + 15, j_right, RIGHT)) > 0.6
-                            && fabs(calculate_slope_struct(top - 15, top - 2, j_left, RIGHT) - calculate_slope_struct(minL + 1, minL + 15, j_left, LEFT)) > 0.6
+                        if (fabs(calculate_slope_struct(top - 13, top - 2, j_left, RIGHT) - calculate_slope_struct(minR + 1, minR + 13, j_right, RIGHT)) > 0.6
+                            && fabs(calculate_slope_struct(top - 13, top - 2, j_right, LEFT) - calculate_slope_struct(minL + 1, minL + 13, j_left, LEFT)) > 0.6
+                            && fabs(calculate_slope_struct(top - 13, top - 2, j_right, LEFT) - calculate_slope_struct(minR + 1, minR + 13, j_right, RIGHT)) > 0.6
+                            && fabs(calculate_slope_struct(top - 13, top - 2, j_left, RIGHT) - calculate_slope_struct(minL + 1, minL + 13, j_left, LEFT)) > 0.6
                             //  && fabs(calculate_slope_struct(top - 17, top - 2, j_left, RIGHT) - calculate_slope_struct(minL - 13, minL - 1, j_left, LEFT)) <0.25
                             && calculate_slope_struct(top - 10,top - 2,j_left,RIGHT) * calculate_slope_struct(top - 10, top - 2, j_right, LEFT) < 0
+                            && flag1 == 0
                             ) {
                             flag1 = 1;
                             //printf("top=%f,%f\n", calculate_slope_struct(top - 15, top - 2, j_left, RIGHT), calculate_slope_struct(minR + 1, minR + 15, j_right, RIGHT));
