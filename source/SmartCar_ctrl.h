@@ -47,9 +47,9 @@
 #define speedNB 20
 
 /*¶æ»ú*/
-#define servoMidValue 728
-#define servoMin 645
-#define servoMax 815
+#define servoMidValue 721
+#define servoMin 642
+#define servoMax 821
 
 
 extern uint32 servoPwm;

@@ -258,14 +258,14 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     circle_DS = MENU_fileInit(circle_DS, 1, 2.9, "D-SMALL", 3, datafloat, &circle_PB, NULL, NULL, NULL);
 //    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
 
-    Island_PB = MENU_fileInit(Island_PB, 1, 3.4, "IslandPB", 2, datafloat, NULL, &Island_NB, &IslandPD, NULL);
-//    Island_PM = MENU_fileInit(Island_PM, 1, 3.3, "IslandPM", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
-//    Island_PS = MENU_fileInit(Island_PS, 1, 3, "IslandPS", 4, datafloat, &Island_PM, &Island_ZO, NULL, NULL);
+    Island_PB = MENU_fileInit(Island_PB, 1, 2.4, "BIG-I", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
+    Island_PM = MENU_fileInit(Island_PM, 1, 2.6, "MID-I", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
+    Island_PS = MENU_fileInit(Island_PS, 1, 3, "SMALL-I", 4, datafloat, &Island_PM, &Island_DS, NULL, NULL);
 //    Island_ZO = MENU_fileInit(Island_ZO, 1, 2.8, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
 //    Island_NS = MENU_fileInit(Island_NS, 1, 3, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
 //    Island_NM = MENU_fileInit(Island_NM, 1, 3.3, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
-    Island_NB = MENU_fileInit(Island_NB, 1, 3.7, "IslandNB", 3, datafloat, &Island_PB, &Island_DS, NULL, NULL);
-    Island_DS = MENU_fileInit(Island_DS, 1, 2.5, "D-SMALL", 4, datafloat, &Island_NB, NULL, NULL, NULL);
+//    Island_NB = MENU_fileInit(Island_NB, 1, 3.7, "IslandNB", 3, datafloat, &Island_PB, &Island_DS, NULL, NULL);
+    Island_DS = MENU_fileInit(Island_DS, 1, 2.5, "D-SMALL", 5, datafloat, &Island_PS, NULL, NULL, NULL);
 //    Island_DB = MENU_fileInit(Island_DB, 1, 0.5, "D-BIG", 4, datafloat, &Island_DS, NULL, NULL, NULL);
 
     Folk_PB = MENU_fileInit(Folk_PB, 1, 3.6, "FolkPB", 2, datafloat, NULL, &Folk_PM, &FolkPD, NULL);

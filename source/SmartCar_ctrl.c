@@ -1032,14 +1032,42 @@ void CTRL_ServoPID_Determine()
 
     else if((state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal) && IslandPD.intVal == 1)//island-45678
     {
-        fuzzy_PB = Island_PB.floatVal;
-        fuzzy_PM = Island_PB.floatVal;
-        fuzzy_PS = Island_PB.floatVal;
-        fuzzy_ZO = Island_PB.floatVal;
-        fuzzy_NS = Island_NB.floatVal;
-        fuzzy_NM = Island_NB.floatVal;
-        fuzzy_NB = Island_NB.floatVal;
-        fuzzy_D = Island_DS.floatVal;
+        if(IslandRadius == 50)
+        {
+            fuzzy_PB = Island_PS.floatVal;
+            fuzzy_PM = Island_PS.floatVal;
+            fuzzy_PS = Island_PS.floatVal;
+            fuzzy_ZO = Island_PS.floatVal;
+            fuzzy_NS = Island_PS.floatVal;
+            fuzzy_NM = Island_PS.floatVal;
+            fuzzy_NB = Island_PS.floatVal;
+            fuzzy_D = Island_DS.floatVal;
+        }
+
+        else if(IslandRadius >= 60 && IslandRadius <= 70)
+        {
+            fuzzy_PB = Island_PM.floatVal;
+            fuzzy_PM = Island_PM.floatVal;
+            fuzzy_PS = Island_PM.floatVal;
+            fuzzy_ZO = Island_PM.floatVal;
+            fuzzy_NS = Island_PM.floatVal;
+            fuzzy_NM = Island_PM.floatVal;
+            fuzzy_NB = Island_PM.floatVal;
+            fuzzy_D = Island_DS.floatVal;
+        }
+
+        else if(IslandRadius >= 70 && IslandRadius <= 100)
+        {
+            fuzzy_PB = Island_PB.floatVal;
+            fuzzy_PM = Island_PB.floatVal;
+            fuzzy_PS = Island_PB.floatVal;
+            fuzzy_ZO = Island_PB.floatVal;
+            fuzzy_NS = Island_PB.floatVal;
+            fuzzy_NM = Island_PB.floatVal;
+            fuzzy_NB = Island_PB.floatVal;
+            fuzzy_D = Island_DS.floatVal;
+        }
+
 //        fuzzy_Dbig = Island_DB.floatVal;
 
     }

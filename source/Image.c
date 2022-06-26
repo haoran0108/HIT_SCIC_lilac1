@@ -1771,16 +1771,16 @@ void judge_type_road() {
         islandTimes++;
     }
     if (islandTimes == 1) {
-        IslandRadius = 70;
+        IslandRadius = 50;
     }
     else if (islandTimes == 2) {
-        IslandRadius = 70;
+        IslandRadius = 50;
     }
     else if(islandTimes == 3) {
-        IslandRadius = 70;
+        IslandRadius = 50;
     }
     else if (islandTimes == 4) {
-        IslandRadius = 70;
+        IslandRadius = 50;
     }
 //        else if (islandTimes == 5) {
 //            IslandRadius;
@@ -2011,7 +2011,7 @@ void judge_type_road() {
 
 
 
-    if (state == 10 || state == 20 || state == 50 || state == 110) {
+    if (state == 10 || state == 20 ) {
         forceOut++;
         if (state == 10 || state == 20) {
             if (forceOut >= 50) {
@@ -2019,12 +2019,12 @@ void judge_type_road() {
                 forceOut = 0;
             }
         }
-        if (state == 50 || state == 110) {
-            if (forceOut >= 50) {
-                state = 0;
-                forceOut = 0;
-            }
-        }
+//        if (state == 50 || state == 110) {
+//            if (forceOut >= 50) {
+//                state = 0;
+//                forceOut = 0;
+//            }
+//        }
     }
     else {
         forceOut = 0;
@@ -4220,11 +4220,11 @@ void island_turn() {
             }
             else if(IslandRadius == 50)
             {
-                upTurn = 65;
+                upTurn = 72;
             }
             else if(IslandRadius == 100)
             {
-                upTurn = 68;
+                upTurn = 66;
             }
             if (upTurn + D<= upPoint && upPoint <= 110) {
                 state = stateIslandTurn;
@@ -4266,11 +4266,11 @@ void island_turn() {
             }
             else if(IslandRadius == 50)
             {
-                upTurn = 65;
+                upTurn = 72;
             }
             else if(IslandRadius == 100)
             {
-                upTurn = 68;
+                upTurn = 66;
             }
             if (upTurn + D <= upPoint && upPoint < 100) {
                 state = stateIslandTurn;
@@ -4660,7 +4660,7 @@ void design_island_out() {
         }
         else if(IslandRadius == 50)
         {
-            up = 10;
+            up = 14;
         }
         else if(IslandRadius == 100)
         {
@@ -4683,7 +4683,7 @@ void design_island_out() {
         }
         else if(IslandRadius == 50)
         {
-            up = 10;
+            up = 20;
         }
         else if(IslandRadius == 100)
         {
@@ -6441,7 +6441,7 @@ void mid_line_filter() {
 
     for (int i = NEAR_LINE - 4; i > 3; i--)
     {
-        if (left_line[i] != MISS) {
+        if (left_line[i] != MISS && my_road[i].white_num != 0) {
             if (abs(mid_line[i] - mid_line[i + 1]) > 20)
             {
                 mid_line[i] = mid_line[i + 1];
@@ -6461,7 +6461,7 @@ void big_mid_line_filter() {
 
     for (int i = NEAR_LINE - 3; i > 4; i--)
     {
-        if (left_line[i] != MISS) {
+        if (left_line[i] != MISS && my_road[i].white_num != 0) {
             if (abs(mid_line[i] - mid_line[i + 1]) > 10)
             {
                 mid_line[i] = mid_line[i + 1] - (mid_line[i + 1] - mid_line[i]) * 0.1;
