@@ -1036,9 +1036,9 @@ void CTRL_ServoPID_Determine()
         fuzzy_PM = Island_PB.floatVal;
         fuzzy_PS = Island_PB.floatVal;
         fuzzy_ZO = Island_PB.floatVal;
-        fuzzy_NS = Island_PB.floatVal;
-        fuzzy_NM = Island_PB.floatVal;
-        fuzzy_NB = Island_PB.floatVal;
+        fuzzy_NS = Island_NB.floatVal;
+        fuzzy_NM = Island_NB.floatVal;
+        fuzzy_NB = Island_NB.floatVal;
         fuzzy_D = Island_DS.floatVal;
 //        fuzzy_Dbig = Island_DB.floatVal;
 

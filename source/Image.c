@@ -4174,7 +4174,7 @@ void design_island_ing() {
             double k = calculate_slope(80, 100, rightRoad);
 
             for (int i = 110; i >= 50; i--) {
-                left_line[i] = rightRoad[i] - 30;//+ xMin - rightRoad[yMin] ;
+                left_line[i] = rightRoad[i] - 24;//+ xMin - rightRoad[yMin] ;
                 right_line[i] = rightRoad[i];
             }
         }
@@ -4262,7 +4262,7 @@ void island_turn() {
             }
             uint8_t upTurn = 60;
             if(IslandRadius == 70){
-                upTurn = 65;
+                upTurn = 67;
             }
             else if(IslandRadius == 50)
             {
@@ -4283,15 +4283,10 @@ void island_turn() {
 
 }
 
-////////////////////////////////////////////
-//功能：环岛拐弯补线
-//输入：
-//输出：
-//备注：
-///////////////////////////////////////////
 void design_island_turn() {
     double dk = 0.3;
     double dkRight = islandParam1.floatVal, dkLeft = design_island_k.floatVal;
+
     if (islandWhere == RIGHT) {
         uint8_t j_mid[CAMERA_H];
         uint8_t j_mid2[CAMERA_H];
@@ -4318,13 +4313,13 @@ void design_island_turn() {
 
             for (int i = (NEAR_LINE - 5); i >= 2; i--) {
                 left_line[i] = k * (i - ((NEAR_LINE - 5))) + left_line[(NEAR_LINE - 5)];
-                right_line[i] = my_road[i].connected[j_mid2[i]].right;  //right_side[i];
+                right_line[i] = right_side[i];
             }
         }
         else if (way == 2) {
             //连接顶点
             int upPoint = 119;
-            for (int i = 40; i <= 110; i++) {
+            for (int i = 50; i <= 110; i++) {
                 if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 35
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 40 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -2) {
@@ -4336,21 +4331,24 @@ void design_island_turn() {
                 lastUpPoint = upPoint;
             }
             else {
-                if (upPoint < lastUpPoint - 5 && (upPoint > 100 || upPoint < 50)) {
-                    upPoint = lastUpPoint;
-                    lastUpPoint = upPoint;
+                //printf("up1=%d\n", upPoint);
+                if (upPoint < lastUpPoint - 5) {
+
+                    upPoint = lastUpPoint + 1;
+                    lastUpPoint++;
                 }
+            //  printf("up2=%d\n", upPoint);
             }
-            if (upPoint <= 90) {
-                double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[100].connected[j_mid[100]].left) / (upPoint - 100);
-                for (int i = 100; i >= 2; i--) {
-                    left_line[i] = (k -dkRight) * (i - (100)) + my_road[100].connected[j_mid[100]].left;
-                    //right_line[i]=right_side[i];
+
+            if (upPoint <= 95) {
+                double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[107].connected[j_mid[107]].left) / (upPoint - 107);
+                for (int i = 107; i >= 2; i--) {
+                    left_line[i] = (k - dkRight) * (i - (107)) + my_road[107].connected[j_mid[107]].left;
                     right_line[i] = my_road[i].connected[j_mid2[i]].right;
                 }
             }
-            else if (upPoint >= 90) {
-                double k = (double) (right_side[10] - left_line[(NEAR_LINE - 5)])/(10 - ((NEAR_LINE - 5))) - 0.6;
+            else if (upPoint >= 95) {
+                double k = (double)(right_side[10] - left_line[(NEAR_LINE - 5)]) / (10 - ((NEAR_LINE - 5))) + 0.2;
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
                     left_line[i] = (k - dkRight) * (i - ((NEAR_LINE - 5))) + left_line[(NEAR_LINE - 5)];
@@ -4393,10 +4391,10 @@ void design_island_turn() {
         else if (way == 2) {
             //连接顶点
             int upPoint = 119;
-            for (int i = 40; i <= 110; i++) {
+            for (int i = 50; i <= 110; i++) {
                 if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 35
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 35 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
-                    && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 2) {
+                    && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 4) {
                     upPoint = i;
                     break;
                 }
@@ -4405,26 +4403,26 @@ void design_island_turn() {
                 lastUpPoint = upPoint;
             }
             else {
-                if (upPoint < lastUpPoint - 5 && (upPoint > 100 || upPoint < 50)) {
+            //  printf("up1=%d\n", upPoint);
+                if (upPoint < lastUpPoint - 5 && (upPoint < 50 || upPoint > 100)) {
                     upPoint = lastUpPoint;
-                    lastUpPoint = upPoint;
+                    lastUpPoint++;
                 }
+            //  printf("up2=%d\n", upPoint);
             }
-            test_varible[15]=upPoint;
         //  printf("upp=%d\n", upPoint);
-            if (upPoint <= 90) {
+            if (upPoint <= 95) {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].left - my_road[100].connected[j_mid[100]].right) / (upPoint - 100);
-                for (int i = 100; i >= 2; i--) {
-                    right_line[i] = (k + dkLeft) * (i - (100)) + my_road[100].connected[j_mid[100]].right;
+                for (int i = 107; i >= 2; i--) {
+                    right_line[i] = (k+dkLeft) * (i - (100)) + my_road[100].connected[j_mid[100]].right;
                     left_line[i] = my_road[i].connected[j_mid2[i]].left;
                 }
             }
-            else if (upPoint >= 90) {
-                double k = (double) (left_side[10] - right_line[(NEAR_LINE - 5)])/(10 - (NEAR_LINE - 5)) + 0.6;
+            else if (upPoint >= 95) {
+                double k = (double) (left_side[10] - right_line[(NEAR_LINE - 5)])/ (10 - (NEAR_LINE - 5)) - 0.2;
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
-                    right_line[i] = (k + dkLeft) * (i - (NEAR_LINE - 5)) + right_line[(NEAR_LINE - 5)];
-                    //left_line[i]=left_side[i];
+                    right_line[i] = (k+dkLeft) * (i - (NEAR_LINE - 5)) + right_line[(NEAR_LINE - 5)];
                     left_line[i] = my_road[i].connected[j_mid2[i]].left;
                 }
             }
@@ -4432,6 +4430,7 @@ void design_island_turn() {
 
     }
 }
+
 ////////////////////////////////////////////
 //功能：环岛弯道
 //输入：
@@ -4463,7 +4462,7 @@ void island_circle() {
                 }
             }
 
-            if (100 <= upPoint && upPoint < NEAR_LINE) {
+            if (93 <= upPoint && upPoint < NEAR_LINE) {
                 state = stateIslandCircle;
             }
 
@@ -4496,7 +4495,7 @@ void island_circle() {
                 }
             }
 
-            if (100 <= upPoint && upPoint < NEAR_LINE) {
+            if (93 <= upPoint && upPoint < NEAR_LINE) {
                 state = stateIslandCircle;
             }
 
