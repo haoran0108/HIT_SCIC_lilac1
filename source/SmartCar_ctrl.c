@@ -1346,10 +1346,10 @@ void speedDetermine()
 //        present_vision = 60;
     }
 
-    if(state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
-    {
-        present_vision = islandParam2.intVal;
-    }
+//    if(state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
+//    {
+//        present_vision = islandParam2.intVal;
+//    }
 
     if(state == stateTIslandIn || state == stateTIn || state == stateTOut)
     {

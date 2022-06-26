@@ -1771,16 +1771,16 @@ void judge_type_road() {
         islandTimes++;
     }
     if (islandTimes == 1) {
-        IslandRadius = 50;
+        IslandRadius = islandParam2.intVal;
     }
     else if (islandTimes == 2) {
-        IslandRadius = 50;
+        IslandRadius = islandParam2.intVal;
     }
     else if(islandTimes == 3) {
-        IslandRadius = 50;
+        IslandRadius = islandParam2.intVal;
     }
     else if (islandTimes == 4) {
-        IslandRadius = 50;
+        IslandRadius = islandParam2.intVal;
     }
 //        else if (islandTimes == 5) {
 //            IslandRadius;
@@ -4220,7 +4220,7 @@ void island_turn() {
             }
             else if(IslandRadius == 50)
             {
-                upTurn = 72;
+                upTurn = 80;
             }
             else if(IslandRadius == 100)
             {
@@ -4266,7 +4266,7 @@ void island_turn() {
             }
             else if(IslandRadius == 50)
             {
-                upTurn = 72;
+                upTurn = 80;
             }
             else if(IslandRadius == 100)
             {
@@ -4587,7 +4587,7 @@ void island_out() {
 //             printf("y=%d,x=%d\n", yMax, xMax);
             // printf("xMax=%d,y=%d\n", xMax,yMax);
             if (left_line[yMax - 15] != MISS  < 0) {
-                if (xMax < xmax && yMax >= 40 && yMax <= 110) {
+                if (xMax < xmax - islandParam4.intVal && yMax >= 40 && yMax <= 110) {
                   state = stateIslandOut;
                 }
             }
@@ -4634,7 +4634,7 @@ void island_out() {
                 xmin = 95;
             }
             if (left_line[yMin - 15]!=MISS ) {
-                if (xMin > xmin && yMin >= 40 && yMin <= 110) {
+                if (xMin > xmin + islandParam3.intVal && yMin >= 40 && yMin <= 110) {
                   state = stateIslandOut;
                 }
             }
@@ -4650,34 +4650,78 @@ void island_out() {
 //备注：
 ///////////////////////////////////////////
 void design_island_out() {
-    double dk = islandParam5.floatVal;
+    double dk = 0;
+    dk = islandParam5.floatVal;
     if (islandWhere == RIGHT) {
-        int up=10;
-
-
+        int up = 10;
         if(IslandRadius == 70){
             up = 5;
         }
         else if(IslandRadius == 50)
         {
-            up = 14;
+            up = 12;
         }
         else if(IslandRadius == 100)
         {
             up = 3;
         }
-        double k = (double)(right_side[up] - left_line[NEAR_LINE])/(up - NEAR_LINE) + 0.35;
 
-        for (int i = NEAR_LINE; i >= 2; i--) {
-            left_line[i] = (k - dk) * (i - NEAR_LINE) + left_line[NEAR_LINE];
-           // right_line[i] = right_side[i];
+
+        int xMax = 0;
+        int yMax = NEAR_LINE;
+        int start = NEAR_LINE;
+        if (left_line[NEAR_LINE] != left_side[NEAR_LINE]) {
+
+            while (start >= 50 && left_line[start] >= left_line[NEAR_LINE] - 10) {
+                if (my_road[start - 1].white_num != 0) {
+                    if (left_line[start] >= xMax) {
+                        xMax = left_line[start];
+                        yMax = start;
+                    }
+                }
+                else {
+                    break;
+                }
+                start--;
+            }
         }
+
+        if (yMax <= 105) {
+            double k = (double)(right_side[up] - left_line[yMax]) / (up - yMax) + 0.3;
+
+            for (int i = NEAR_LINE; i >= 2; i--) {
+                if (i <= yMax) {
+                    left_line[i] = (k - dk) * (i - NEAR_LINE) + left_line[NEAR_LINE];
+                }
+                if (right_line[i + 1] == right_side[i + 1]) {
+                    right_line[i] = right_side[i];
+                }
+                //right_line[i] = right_side[i];
+            }
+        }
+        else {
+            double k = (double)(right_side[up] - left_line[NEAR_LINE]) / (up - NEAR_LINE) + 0.3;
+
+            for (int i = NEAR_LINE; i >= 2; i--) {
+                left_line[i] = (k - dk) * (i - NEAR_LINE) + left_line[NEAR_LINE];
+
+                if (right_line[i + 1] == right_side[i + 1]) {
+                    right_line[i] = right_side[i];
+                }
+                else {
+                    if (right_line[i] < right_line[i + 1]) {
+                        right_line[i] = right_line[i + 1];
+                    }
+                }
+                        //right_line[i] = right_side[i];
+            }
+        }
+
+
 
     }
     else if (islandWhere == LEFT) {
-        int up=10;
-
-
+        int up = 10;
         if(IslandRadius == 70){
             up = 5;
         }
@@ -4689,18 +4733,59 @@ void design_island_out() {
         {
             up = 3;
         }
-        double k = (double)(left_side[up] - right_line[NEAR_LINE])/(up - NEAR_LINE) - 0.35;
 
-        for (int i = NEAR_LINE; i >= 2; i--) {
-            right_line[i] = (k + dk) * (i - NEAR_LINE) + right_line[NEAR_LINE];
-            //left_line[i] = left_side[i];
+
+        int xMin = 188;
+        int yMin = 110;
+        int start = 110;
+        if (right_line[NEAR_LINE] != right_side[NEAR_LINE]) {
+            while (start >= 50 && right_line[start] <= right_line[NEAR_LINE] + 10) {
+                if (my_road[start - 1].white_num != 0) {
+                    if (right_line[start] <= xMin) {
+                        xMin = right_line[start];
+                        yMin = start;
+                    }
+                }
+                else {
+                    break;
+                }
+                start--;
+            }
         }
+
+//                    printf("ym=%d\n", yMin);
+        if (yMin <= 105) {
+            double k = (double)(left_side[up] - right_line[yMin]) / (up - yMin) - 0.3;
+            for (int i = NEAR_LINE; i >= 2; i--) {
+                if (i <= yMin) {
+                    right_line[i] = (k + dk) * (i - yMin) + right_line[yMin];
+                }
+                //left_line[i] = left_side[i];
+                if (left_side[i + 1] == left_line[i + 1]) {
+                    left_line[i] = left_side[i];
+                }
+            }
+        }
+        else {
+            double k = (double)(left_side[up] - right_line[NEAR_LINE]) / (up - NEAR_LINE) - 0.3;
+            for (int i = NEAR_LINE; i >= 2; i--) {
+                right_line[i] = (k + dk) * (i - NEAR_LINE) + right_line[NEAR_LINE];
+                //left_line[i] = left_side[i];
+                if (left_side[i + 1] == left_line[i + 1]) {
+                    left_line[i] = left_side[i];
+                }
+                else {
+                    if (left_line[i] > left_line[i + 1]) {
+                        left_line[i] = left_line[i + 1];
+                    }
+                }
+            }
+        }
+
     }
 
 
 }
-
-
 ////////////////////////////////////////////
 //功能：出环岛直线
 //输入：
