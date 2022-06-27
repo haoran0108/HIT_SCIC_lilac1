@@ -5459,9 +5459,10 @@ void design_cross_T_out() {
 void cross_T_out_over() {
     int flag = 0;
     int sumM = 0;
-    for (int i = 105; i >= 70; i--) {
+    for (int i = 105; i >= 85; i--) {
         if (my_road[i].white_num != 0) {
-            if (right_line[i] - left_line[i] > 35) {
+            if (right_line[i] - left_line[i] > 50) {
+            //  printf(">=%d\n", i);
                 sumM++;
             }
         }
@@ -5476,57 +5477,74 @@ void cross_T_out_over() {
 
         if (TWhere == LEFT) {
             int flag2 = 0;
-            int start = 110;
-            while (start >= 70 && left_line[start] <= left_side[start] + 1) {
-                start--;
-            }
-            int sumC = 0;
-            for (int i = start; i >= start - 20; i--) {
-                if (left_line[i] < left_line[i + 1] - 1 || left_line[i] > left_line[i + 1] + 5) {
-                    sumC++;
+            int ymin = NEAR_LINE;
+            for (int i = NEAR_LINE; i >= 80; i--) {
+                if (left_line[i] <= left_line[ymin]) {
+                    ymin = i;
+                }
 
+            }
+
+
+        //  printf("ym=%d\n", ymin);
+            if (ymin >= 107) {
+                int start = ymin;
+                int sumC = 0;
+                for (int i = start; i >= start - 15; i--) {
+                    if (left_line[i] < left_line[i + 1] - 1 || left_line[i] > left_line[i + 1] + 5) {
+                        sumC++;
+
+                    }
+                }
+                if (sumC >= 3) {
+                    flag2 = 1;
+                }
+                //printf("%f,%f,%f,%f,%f\n", calculate_slope_uint(start - 15, start - 7, left_line), calculate_slope_uint(start - 7, start - 1, left_line), calculate_slope_uint(start - 13, start, left_line), calculate_slope_uint(start - 10, start - 1, right_line), calculate_slope_uint(start - 11, start - 1, left_line));
+                if (fabs(calculate_slope_uint(start - 20, start - 5, left_line) - calculate_slope_uint(start - 13, start - 1, left_line)) < 0.25
+                    && calculate_slope_uint(start - 13, start, left_line) > -2.5
+                    && calculate_slope_uint(start - 13, start, left_line) <= 0
+                    && fabs(calculate_slope_uint(start - 11, start - 1, right_line) - calculate_slope_uint(start - 11, start - 1, left_line)) < 0.25
+                    && flag2 == 0) {
+                    state = 0;
+                    TWhere = 0;
                 }
             }
-            if (sumC >= 2) {
-                flag2 = 1;
-            }
 
-            if (fabs(calculate_slope_uint(start - 20, start - 10, left_line) - calculate_slope_uint(start - 12, start - 1, left_line)) < 0.2
-                && calculate_slope_uint(start - 13, start, left_line) > -2.5
-                && calculate_slope_uint(start - 13, start, left_line) <= 0
-                && fabs(calculate_slope_uint(start - 14, start - 3, right_line) - calculate_slope_uint(start - 11, start - 1, left_line)) < 0.2
-                && flag2 == 0) {
-                state = 0;
-                TWhere = 0;
-            }
         }
         else if (TWhere == RIGHT) {
             //printf("k=%f\n", calculate_slope_uint(90, 105, right_line));
             int flag2 = 0;
 
-            int start = 110;
-            while (start >= 70 && right_line[start] >= right_side[start] - 1) {
-                start--;
-            }
-            int sumC = 0;
-            for (int i = start; i >= start - 20; i--) {
-                if (right_line[i] > right_line[i + 1] + 1 || right_line[i] < right_line[i + 1] - 5) {
-                    sumC ++;
+            int ymax = NEAR_LINE;
+            for (int i = NEAR_LINE; i >= 80; i--) {
+                if (right_line[i] >= right_line[ymax]) {
+                    ymax = i;
+                }
 
+            }
+            if (ymax >= 107) {
+                int start = ymax;
+                int sumC = 0;
+                for (int i = start; i >= start - 20; i--) {
+                    if (right_line[i] > right_line[i + 1] + 1 || right_line[i] < right_line[i + 1] - 5) {
+                        sumC++;
+
+                    }
+                }
+                if (sumC >= 2) {
+                    flag2 = 1;
+                }
+
+                if (fabs(calculate_slope_uint(start - 20, start - 5, right_line) - calculate_slope_uint(start - 12, start - 1, right_line)) < 0.25
+                    && calculate_slope_uint(start - 13, start, right_line) < 2.5
+                    && calculate_slope_uint(start - 13, start, right_line) >= 0
+                    && fabs(calculate_slope_uint(start - 11, start - 1, left_line) - calculate_slope_uint(start - 11, start - 1, right_line)) < 0.2
+                    && flag2 == 0) {
+                    state = 0;
+                    TWhere = 0;
                 }
             }
-            if (sumC >= 2) {
-                flag2 = 1;
-            }
 
-            if (fabs(calculate_slope_uint(start - 20, start - 10, right_line) - calculate_slope_uint(start - 12, start - 1, right_line)) < 0.2
-                && calculate_slope_uint(start - 13, start, right_line) < 2.5
-                && calculate_slope_uint(start - 13, start, right_line) >= 0
-                && fabs(calculate_slope_uint(start - 14, start - 3, left_line) - calculate_slope_uint(start - 11, start - 1, right_line)) < 0.2
-                && flag2 == 0){
-                state = 0;
-                TWhere = 0;
-            }
 
 
         }

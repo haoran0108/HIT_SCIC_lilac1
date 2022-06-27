@@ -49,7 +49,7 @@
 /*¶æ»ú*/
 #define servoMidValue 721
 #define servoMin 642
-#define servoMax 821
+#define servoMax 805
 
 
 extern uint32 servoPwm;
