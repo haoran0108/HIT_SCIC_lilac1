@@ -727,8 +727,8 @@ void CTRL_motorDiffer()
     float k;
     if(delta > 0)
     {
-        k = 0.9459 - 0.2679 * FabsDelta * FabsDelta - 0.1511 * FabsDelta;
-
+//        k = 0.9459 - 0.2679 * FabsDelta * FabsDelta - 0.1511 * FabsDelta;
+        k = 0.9997 - 0.4404 * FabsDelta;
         expectL = (int32)(present_speed);
         expectR = (int32)(present_speed * k);
 //        if(straightFlag == 1)
@@ -766,7 +766,7 @@ void CTRL_motorDiffer()
     }
     else if(delta < 0)
     {
-        k = 0.9621 - 0.3967 * FabsDelta;
+        k = 0.9927 - 0.4257 * FabsDelta;
 
         expectL = (int32)(present_speed * k);
         expectR = (int32)(present_speed);
