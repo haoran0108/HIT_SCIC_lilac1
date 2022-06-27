@@ -4220,7 +4220,7 @@ void island_turn() {
             }
             else if(IslandRadius == 50)
             {
-                upTurn = 66;
+                upTurn = 64;
             }
             else if(IslandRadius == 100)
             {
@@ -4577,7 +4577,7 @@ void island_out() {
            }
            else if(IslandRadius == 50)
            {
-               xmax = 100;
+               xmax = 102;
            }
            else if(IslandRadius == 100)
            {
@@ -4693,7 +4693,7 @@ void design_island_out() {
             }
             else if(IslandRadius == 50)
             {
-                k = k + 0.4;
+                k = k + 0.6;
             }
             else if(IslandRadius == 100)
             {
