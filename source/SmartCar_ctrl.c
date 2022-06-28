@@ -1020,7 +1020,7 @@ void CTRL_ServoPID_Determine()
 {
 
 
-    if((state == stateTIslandIn || state == stateTIn || state == stateTOut || state == stateTover) && CrossCircle.intVal == 1)//crossCircle
+    if((state == stateTIslandIn || state == stateTIn || state == stateTOut || state == stateSTIsland) && CrossCircle.intVal == 1)//crossCircle
     {
         fuzzy_PB = circle_PB.floatVal;
         fuzzy_PM = circle_PB.floatVal;
