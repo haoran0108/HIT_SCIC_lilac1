@@ -87,6 +87,7 @@ int forceOut = 0;
 //coordinate foreSee[CAMERA_W];
 uint8_t Loud=0;
 uint8_t islandTimes = 0, IslandRadius = 0;
+uint8_t minThre, maxThre;
 //uint8_t zebraFlag;
 //uint8_t zebraCircle;
 const uint8_t left_side[CHANGED_H] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,4,4,4,8,8,8,8,12,12,12,12,16,16,16,16,20,20,20,23,23,23,25,25,25,28,28,31,31,31,33,33,35,35,37,37,39,39,40,42,42,43,45,45,46,47,49,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80 };
@@ -695,12 +696,6 @@ void OTSU() {
     threshold = my_threshold;
 }
 
-/////////////////////////////////////////////
-//功能：分区阈值的确定
-//输入：
-//输出：
-//备注：大津算法
-///////////////////////////////////////////
 ////////////////////////////////////////////
 //功能：分区阈值的确定
 //输入：
@@ -735,7 +730,7 @@ void part_OUST() {
         pthre1[i] = (double)thre1[i] / (30 * 188);
         pthre2[i] = (double)thre2[i] / (56 * 188);
     }
-    uint8_t min_thre = part_klow1.intVal, max_thre =  part_khigh1.intVal;
+    uint8_t min_thre = minThre, max_thre =  maxThre;
     double num = 0, max_num = 0;
 
     for (int k = min_thre * part_klow2.floatVal; k <= max_thre * part_klow2.floatVal; k++) {
@@ -4421,14 +4416,52 @@ void design_island_turn() {
                     right_line[i] = (k+dkLeft) * (i - (100)) + my_road[100].connected[j_mid[100]].right;
                     left_line[i] = my_road[i].connected[j_mid2[i]].left;
                 }
+                //pxy
+                for (int i = upPoint + 4; i >= 2; i--)
+                {
+                    if (left_line[i] >= left_line[i + 1] &&
+                            left_line[i] >= left_line[i + 2] &&
+                            left_line[i] - left_line[i + 1] >= 1 &&
+                            left_line[i] - left_line[i + 2] >= 1)
+                    {
+                        for (int j = i; j >= 2; j--)
+                        {
+                            left_line[j] = left_line[i + 1];
+                        }
+                    }
+                }
+                //pxy
             }
             else if (upPoint >= 95) {
+
                 double k = (double) (left_side[10] - right_line[(NEAR_LINE - 5)])/ (10 - (NEAR_LINE - 5)) - 0.2;
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
                     right_line[i] = (k+dkLeft) * (i - (NEAR_LINE - 5)) + right_line[(NEAR_LINE - 5)];
                     left_line[i] = my_road[i].connected[j_mid2[i]].left;
                 }
+                //pxy
+//                double k = calculate_slope_uint(upPoint - 6, upPoint, right_line);
+//
+//                for (int i = (NEAR_LINE - 5); i >= 2; i--) {
+//
+//                    right_line[i] = k * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].left;
+//                    left_line[i] = my_road[i].connected[j_mid2[i]].left;
+//                }
+                for (int i = upPoint + 4; i >= 2; i--)
+                {
+                    if (left_line[i] >= left_line[i + 1] &&
+                            left_line[i] >= left_line[i + 2] &&
+                            left_line[i] - left_line[i + 1] >= 1 &&
+                            left_line[i] - left_line[i + 2] >= 1)
+                    {
+                        for (int j = i; j >= 2; j--)
+                        {
+                            left_line[j] = left_line[i + 1];
+                        }
+                    }
+                }
+                //pxy
             }
         }
 
@@ -4466,7 +4499,7 @@ void island_circle() {
                 }
             }
 
-            if (93 <= upPoint && upPoint < NEAR_LINE) {
+            if (93 <= upPoint && upPoint < NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].right < 94) {
                 state = stateIslandCircle;
             }
 
@@ -4499,7 +4532,7 @@ void island_circle() {
                 }
             }
 
-            if (93 <= upPoint && upPoint <= NEAR_LINE) {
+            if (93 <= upPoint && upPoint <= NEAR_LINE&& my_road[upPoint].connected[j_mid[upPoint]].left > 94) {
                 state = stateIslandCircle;
             }
 
@@ -4587,7 +4620,7 @@ void island_out() {
            {
                xmax = 96;
            }
-             test_varible[14] = xMax;
+//             test_varible[14] = xMax;
 //             printf("y=%d,x=%d\n", yMax, xMax);
             // printf("xMax=%d,y=%d\n", xMax,yMax);
             if (left_line[yMax - 15] != MISS  < 0) {

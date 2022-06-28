@@ -136,7 +136,7 @@ int core0_main(void)
         voltage = 3.3 * 3 * power / 4096;
 //        SmartCar_ImgUpload(fullBuffer,120,188);//传图像给电脑，和uart一起用
 //
-        }
+    }
 
 }
 

@@ -186,6 +186,7 @@ void CTRL_visionDecision();
 
 void motorParamDefine();
 void CTRL_ServoPID_Determine();
+void CTRL_islandPwmCount();
 
 /*×²³µµ¹ÍË*/
 void CTRL_duzhuan();

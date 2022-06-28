@@ -152,6 +152,9 @@ extern uint8_t stopCount;
 extern uint8_t thresholdUp;
 extern uint8_t thresholdDown;
 extern uint8_t islandTimes, IslandRadius;
+
+extern uint8_t minThre, maxThre;
+extern int islandWhere;
 typedef struct {
     int x;
     int y;

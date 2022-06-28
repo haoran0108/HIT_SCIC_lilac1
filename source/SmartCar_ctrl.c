@@ -59,6 +59,7 @@ uint8_t testStateTimes = 0;
 uint8_t duzhuanCount = 0, duzhuanFlag = 0, duzhuanTime = 0;
 uint32_t startCount = 0;
 uint8_t startFlag = 0;
+int islandPwmMax, islandPwmMin;
 
 void CTRL_gyroInit()
 {
@@ -561,6 +562,7 @@ void CTRL_servoMain()
         {
             if(duzhuanFlag == 0)
             {
+
                 CTRL_ServoPID_Determine();
 
                 CTRL_fuzzyPID();
@@ -582,6 +584,7 @@ void CTRL_servoMain()
             servoPwm = servoMax;//770
         }
     }
+    CTRL_islandPwmCount();
 
     if(servoPwm > servoMax)
         servoPwm = servoMax;
@@ -589,6 +592,7 @@ void CTRL_servoMain()
         servoPwm = servoMin;
 //    servoPwm = display8.intVal;
     test_varible[11] = servoPwm;
+
     SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_0_TOUT48_P22_1_OUT, servoPwm);//¶æ»ú¿ØÖÆ
 
 
@@ -1513,38 +1517,9 @@ void CTRL_duzhuan()
 {
     duzhuanTime += 1;
 
-//    if(duzhuanTime <= 100)
-//    {
-//        expectR = -20;
-//        expectL = -20;
-//
-//    }
-//    else
-//    {
-//        duzhuanFlag = 0;
-//        duzhuanTime = 0;
-//        duzhuanCount = 0;
-//    }
+    expectR = -20;
+    expectL = -20;
 
-//    if(servoError.currentError >= 90 && servoError.currentError <= 98)
-//    {
-////        servoPwm = servoMidValue;
-//        duzhuanFlag = 0;
-//        duzhuanTime = 0;
-//        duzhuanCount = 0;
-//    }
-//
-//    else if(servoError.currentError > 98) //Æ«²îÔÚÓÒ
-//    {
-//        expectR = -20;
-//        expectL = -20;
-//    }
-//
-//    else if(servoError.currentError < 90)
-//    {
-        expectR = -20;
-        expectL = -20;
-//    }
 
 }
 
@@ -1573,4 +1548,90 @@ void CTRL_duzhuanZhuanWan()
         servoPwm = servoMin;
     }
 
+}
+
+
+void CTRL_islandPwmCount()
+{
+    if(state == stateIslandCircle)
+    {
+        if(islandWhere == LEFT)
+        {
+            if(servoPwm > islandPwmMax)
+            {
+                islandPwmMax = servoPwm;
+            }
+
+            if(servoPwm < islandPwmMin && servoPwm > servoMidValue)
+            {
+                islandPwmMin = servoPwm;
+            }
+        }
+        else if(islandWhere == RIGHT)
+        {
+            if(servoPwm > islandPwmMax && servoPwm < servoMidValue)
+            {
+                islandPwmMax = servoPwm;
+            }
+
+            if(servoPwm < islandPwmMin)
+            {
+                islandPwmMin = servoPwm;
+            }
+        }
+
+        test_varible[14] = islandPwmMax;
+        test_varible[15] = islandPwmMin;
+
+    }
+
+    else if(state == stateIslandOut)
+    {
+        if(islandWhere == LEFT)
+        {
+            if(servoPwm > islandPwmMax)
+            {
+                servoPwm = islandPwmMax;
+            }
+
+            if(servoPwm < islandPwmMin)
+            {
+                servoPwm = islandPwmMin;
+            }
+        }
+        else if(islandWhere == RIGHT)
+        {
+            if(servoPwm > islandPwmMax)
+            {
+                servoPwm = islandPwmMax;
+            }
+
+            if(servoPwm < islandPwmMin)
+            {
+                servoPwm = islandPwmMin;
+            }
+        }
+    }
+
+    else if(state == stateIslandTurn)
+    {
+        if(islandWhere == LEFT)
+        {
+            islandPwmMax = servoMidValue;
+            islandPwmMin = servoMax;
+        }
+        else if(islandWhere == RIGHT)
+        {
+            islandPwmMax = servoMin;
+            islandPwmMin = servoMidValue;
+        }
+
+        test_varible[14] = islandPwmMax;
+        test_varible[15] = islandPwmMin;
+    }
+//    else
+//    {
+//        islandPwmMax = servoMidValue;
+//        islandPwmMin = servoMax;
+//    }
 }

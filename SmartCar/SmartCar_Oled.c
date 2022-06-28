@@ -166,7 +166,7 @@ void SmartCar_OLED_Fillpart(uint8 bmp_data)
         OLED_WrtCmd(0xb0 + y);
         OLED_WrtCmd(0x01);
         OLED_WrtCmd(0x10);
-        for (x = 110; x < 128; x++)   OLED_WrtData(bmp_data);
+        for (x = 100; x < 128; x++)   OLED_WrtData(bmp_data);
     }
 }
 
