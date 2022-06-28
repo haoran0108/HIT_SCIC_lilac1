@@ -109,7 +109,7 @@
 #define stateTIslandIn 30//环岛 回环
 #define stateTIn 40
 #define stateTOut 50
-#define stateTover 60//30 40 50 60回环
+#define stateSTIsland 60//30 40 50 60回环
 
 #define stateIslandIng 70//30 70 80 90 100 110环岛
 #define stateIslandTurn 80
@@ -259,7 +259,7 @@ void design_island_out();
 void island_straight();
 void design_island_straight();
 void island_final();
-
+void straightT_or_island();
 //三叉
 void folk_road_in();
 void design_folk_road();

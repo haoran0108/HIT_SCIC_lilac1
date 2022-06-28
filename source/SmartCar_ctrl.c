@@ -211,8 +211,8 @@ void CTRL_speedLoopPID()
     test_varible[0] = -speedL;
     test_varible[1] = speedR;
 //
-    test_varible[4] = currentExpectLF;
-    test_varible[5] = currentExpectRT;
+//    test_varible[4] = currentExpectLF;
+//    test_varible[5] = currentExpectRT;
 
 
 }
@@ -227,8 +227,8 @@ void CTRL_curLoopPID()
 
     CTRL_currentAverageFilter();
 
-    test_varible[7] = currentLF[0];
-    test_varible[8] = currentRT[0];
+//    test_varible[7] = currentLF[0];
+//    test_varible[8] = currentRT[0];
 
 
 //    currentLF_real = 4420 - currentLF;
@@ -495,8 +495,8 @@ void CTRL_motorPID()
     currentRT[0] = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//ÓÒÂÖ
     currentLF[0] = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//×óÂÖ
     CTRL_currentAverageFilter();
-    test_varible[7] = currentLF[0];
-    test_varible[8] = currentRT[0];
+//    test_varible[7] = currentLF[0];
+//    test_varible[8] = currentRT[0];
 
 
     speedL = CTRL_speedGetLeft();
@@ -618,8 +618,8 @@ void CTRL_motor()
         mySpeedR = PWM_MAX_N;
     }
 
-    test_varible[2] = mySpeedL;
-    test_varible[3] = mySpeedR;
+//    test_varible[2] = mySpeedL;
+//    test_varible[3] = mySpeedR;
 
     if(mySpeedL >= 0 && mySpeedR >= 0)
     {
@@ -1461,7 +1461,7 @@ void CTRL_visionDecision()
         present_vision = present_vision - (uint8_t)(speedRatio * speedRatio * 80);
     }
 
-    test_varible[6] = present_vision;
+//    test_varible[6] = present_vision;
 }
 
 void CTRL_duzhuanTest()
