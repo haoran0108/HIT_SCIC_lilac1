@@ -4187,8 +4187,7 @@ void design_island_ing() {
 //±¸×¢£º
 ///////////////////////////////////////////
 void island_turn() {
-    int D = islandout_up.intVal;
-
+    int D = 0;
     if (islandWhere == RIGHT) {
         uint8_t j_mid[CAMERA_H];
         for (int i = NEAR_LINE; i >= 2; i--) {
@@ -4204,31 +4203,34 @@ void island_turn() {
         }
         if (my_road[35].connected[j_mid[35]].width < 35) {
             int upPoint = 119;
-            for (int i = 50; i <= 110; i++) {
+            for (int i = 30; i <= 90; i++) {
                 if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 35
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 40 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -2
-                    && fabs(calculate_slope_struct(i - 15, i - 1, j_mid, RIGHT) - calculate_slope_struct(i - 10, i + 3, j_mid, LEFT)) < 0.25
+                    && fabs(calculate_slope_struct(upPoint - 15, upPoint - 1, j_mid, RIGHT) - calculate_slope_struct(upPoint - 10, upPoint + 3, j_mid, LEFT)) < 0.25
                     ) {
                     upPoint = i;
                     break;
                 }
             }
-            uint8_t upTurn = 60;
-            if(IslandRadius == 70){
-                upTurn = 66;
+            if (fabs(calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, LEFT) - calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, RIGHT)) < 0.2) {
+                int up = 60;
+                if(IslandRadius == 70){
+                up = 66;
             }
             else if(IslandRadius == 50)
             {
-                upTurn = 64;
+                up = 64;
             }
             else if(IslandRadius == 100)
             {
-                upTurn = 66;
+                up = 66;
             }
-            if (upTurn + D<= upPoint && upPoint <= 110) {
-                state = stateIslandTurn;
+                if (up <= upPoint && upPoint <= 110) {
+                    state = stateIslandTurn;
+                }
             }
+
 
         }
 
@@ -4250,7 +4252,7 @@ void island_turn() {
 
         if (my_road[35].connected[j_mid[35]].width < 35) {
             int upPoint = 119;
-            for (int i = 50; i <= 110; i++) {
+            for (int i = 30; i <= 100; i++) {
                 if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 35
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 35 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
                     && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 2
@@ -4260,20 +4262,22 @@ void island_turn() {
                     break;
                 }
             }
-            uint8_t upTurn = 60;
-            if(IslandRadius == 70){
-                upTurn = 65;
-            }
-            else if(IslandRadius == 50)
-            {
-                upTurn = 66;
-            }
-            else if(IslandRadius == 100)
-            {
-                upTurn = 66;
-            }
-            if (upTurn + D <= upPoint && upPoint < 100) {
-                state = stateIslandTurn;
+            if (fabs(calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, LEFT) - calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, RIGHT)) < 0.2) {
+                int up = 60;
+                if(IslandRadius == 70){
+                up = 65;
+                }
+                else if(IslandRadius == 50)
+                {
+                    up = 66;
+                }
+                else if(IslandRadius == 100)
+                {
+                    up = 66;
+                }
+                if (up <= upPoint && upPoint < 100) {
+                    state = stateIslandTurn;
+                }
             }
 
         }
