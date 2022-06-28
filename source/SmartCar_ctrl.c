@@ -1566,6 +1566,11 @@ void CTRL_islandPwmCount()
             {
                 islandPwmMin = servoPwm;
             }
+
+            else if(servoPwm <= servoMidValue)
+            {
+                servoPwm = islandPwmMax;
+            }
         }
         else if(islandWhere == RIGHT)
         {
@@ -1578,10 +1583,15 @@ void CTRL_islandPwmCount()
             {
                 islandPwmMin = servoPwm;
             }
+
+            else if(servoPwm >= servoMidValue)
+            {
+                servoPwm = islandPwmMin;
+            }
         }
 
-        test_varible[14] = islandPwmMax;
-        test_varible[15] = islandPwmMin;
+//        test_varible[14] = islandPwmMax;
+//        test_varible[15] = islandPwmMin;
 
     }
 
@@ -1626,8 +1636,8 @@ void CTRL_islandPwmCount()
             islandPwmMin = servoMidValue;
         }
 
-        test_varible[14] = islandPwmMax;
-        test_varible[15] = islandPwmMin;
+//        test_varible[14] = islandPwmMax;
+//        test_varible[15] = islandPwmMin;
     }
 //    else
 //    {

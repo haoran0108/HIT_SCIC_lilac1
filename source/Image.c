@@ -4410,6 +4410,7 @@ void design_island_turn() {
             //  printf("up2=%d\n", upPoint);
             }
         //  printf("upp=%d\n", upPoint);
+            test_varible[14] = upPoint;
             if (upPoint <= 95) {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].left - my_road[100].connected[j_mid[100]].right) / (upPoint - 100);
                 for (int i = 107; i >= 2; i--) {
@@ -4448,19 +4449,38 @@ void design_island_turn() {
 //                    right_line[i] = k * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].left;
 //                    left_line[i] = my_road[i].connected[j_mid2[i]].left;
 //                }
-                for (int i = upPoint + 4; i >= 2; i--)
-                {
-                    if (left_line[i] >= left_line[i + 1] &&
-                            left_line[i] >= left_line[i + 2] &&
-                            left_line[i] - left_line[i + 1] >= 1 &&
-                            left_line[i] - left_line[i + 2] >= 1)
-                    {
-                        for (int j = i; j >= 2; j--)
-                        {
-                            left_line[j] = left_line[i + 1];
-                        }
-                    }
-                }
+                /*
+                uint8_t k1=2;
+                                for (int i = upPoint; i >= 2; i--)
+                                {
+                                    if (my_road[i].connected[j_mid2[i]].right - my_road[i + 1].connected[j_mid2[i + 1]].right > 20) {
+                                        k1 = i+1;
+                                        break;
+                                    }
+                                }
+
+                                if (k1 < upPoint - 10) k1 = upPoint - 10;
+                                double k = calculate_slope_uint(k1, upPoint, right_line);
+                                if (k < 0.5) k = 1.5;
+
+                                for (int i = (NEAR_LINE - 5); i >= 2; i--) {
+
+                                    right_line[i] = k * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].left;
+                                    left_line[i] = my_road[i].connected[j_mid2[i]].left;
+                                }*/
+                                for (int i = upPoint + 4; i >= 2; i--)
+                                {
+                                    if (left_line[i] >= left_line[i + 1] &&
+                                        left_line[i] >= left_line[i + 2] &&
+                                        left_line[i] - left_line[i + 1] >= 1 &&
+                                        left_line[i] - left_line[i + 2] >= 1)
+                                    {
+                                        for (int j = i; j >= 2; j--)
+                                        {
+                                            left_line[j] = left_line[i + 1];
+                                        }
+                                    }
+                                }
                 //pxy
             }
         }
