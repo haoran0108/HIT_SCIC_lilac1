@@ -934,43 +934,43 @@ void MENU_showIMG()
         SmartCar_OLED_Printf6x8(110, 3, "%d", thresholdDown);
 //        SmartCar_OLED_P6x8Str(100, 6, "state");
         SmartCar_OLED_Printf6x8(110, 4, "%d", state);
-        SmartCar_OLED_Printf6x8(110, 6, "%d", minThre);
-        SmartCar_OLED_Printf6x8(110, 7, "%d", maxThre);
-
-
-        if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
-                !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
-        {
-            Delay_ms(STM0,100);
-
-            if (!GPIO_Read(P11, 2))//上
-            {
-                minThre += 1;
-            }
-
-            else if (!GPIO_Read(P11, 9))//下
-            {
-                minThre -= 1;
-            }
-
-
-            else if (!GPIO_Read(P11, 10))//左
-            {
-                maxThre -= 1;
-            }
-
-
-            else if (!GPIO_Read(P11, 11))//右
-            {
-                maxThre += 1;
-            }
-
-
-//            else if (!GPIO_Read(P11, 12))//ok
-//            {
+//        SmartCar_OLED_Printf6x8(110, 6, "%d", minThre);
+//        SmartCar_OLED_Printf6x8(110, 7, "%d", maxThre);
 //
+//
+//        if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
+//                !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
+//        {
+//            Delay_ms(STM0,100);
+//
+//            if (!GPIO_Read(P11, 2))//上
+//            {
+//                minThre += 1;
 //            }
-        }
+//
+//            else if (!GPIO_Read(P11, 9))//下
+//            {
+//                minThre -= 1;
+//            }
+//
+//
+//            else if (!GPIO_Read(P11, 10))//左
+//            {
+//                maxThre -= 1;
+//            }
+//
+//
+//            else if (!GPIO_Read(P11, 11))//右
+//            {
+//                maxThre += 1;
+//            }
+//
+//
+////            else if (!GPIO_Read(P11, 12))//ok
+////            {
+////
+////            }
+//        }
          if(fullBuffer != NULL)
          {
 
