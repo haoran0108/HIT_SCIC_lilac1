@@ -703,14 +703,18 @@ void OTSU() {
 //输出：
 //备注：大津算法
 ///////////////////////////////////////////
+////////////////////////////////////////////
+//功能：分区阈值的确定
+//输入：
+//输出：
+//备注：大津算法
+///////////////////////////////////////////
 void part_OUST() {
     uint8_t* map;
     uint8_t* my_map;
 
     map = fullBuffer;
     uint8_t my_threshold = 0;
-    long int sum1 = 0;
-    long int sum2 = 0;
     uint8_t thre1[256] = { 0 };
     uint8_t thre2[256] = { 0 };
     double pthre1[256] = { 0 };
@@ -718,13 +722,11 @@ void part_OUST() {
 
     for (int i = 0; i < 30 * 188; i++) {
         thre1[*(map)]++;
-        //sum1 += *(map);
         map++;
     }
 
     for (int i = 30 * 188; i < 86 * 188; i++) {
         thre2[*(map)]++;
-        //sum2 += *(map);
         map++;
     }
     for (int i = 0; i < 256; i++) {
@@ -732,34 +734,69 @@ void part_OUST() {
         pthre2[i] = (double)thre2[i] / (56 * 188);
     }
     uint8_t min_thre = part_klow1.intVal, max_thre = part_khigh1.intVal;
-    double num = 0, max_num = 0;
+    double numU = 0, max_numU = 0;
+    double p = part_klow2.floatVal;
 
-    for (int k = min_thre * part_klow2.floatVal; k <= max_thre * part_klow2.floatVal; k++) {
-        double p_sum_less = 0;
-        double p_sum_more = 0;
-        double m_Less = 0;
-        double m_More = 0;
+    double p_sum_lessU = 0;
+    double p_sum_moreU = 0;
+    double m_LessU = 0;
+    double m_MoreU = 0;
+    double M_LessU = 0;
+    double M_MoreU = 0;
+    for (int i = 0; i < (int)(min_thre * p) - 1; i++) {
+        p_sum_lessU += pthre1[i];
+        m_LessU += i * pthre1[i];
+    }
+    for (int i = (int)(min_thre * p) - 1; i < 256; i++) {
+        p_sum_moreU += pthre1[i];
+        m_MoreU += i * pthre1[i];
+    }
+
+    for (int k = (int)(min_thre * p); k <= (int)(max_thre * p); k++) {
+        /*double p_sum_lessU = 0;
+        double p_sum_moreU = 0;
+        double m_LessU = 0;
+        double m_MoreU = 0;
         for (int i = 0; i < k; i++) {
-            p_sum_less += pthre1[i];
-            m_Less += i * pthre1[i];
+            p_sum_lessU += pthre1[i];
+            m_LessU += i * pthre1[i];
         }
         for (int i = k; i < 256; i++) {
-            p_sum_more += pthre1[i];
-            m_More += i * pthre1[i];
-        }
+            p_sum_moreU += pthre1[i];
+            m_MoreU += i * pthre1[i];
+        }*/
+        p_sum_lessU += pthre1[k];
+        p_sum_moreU -= pthre1[k];
+        m_LessU += k * pthre1[k];
+        m_MoreU -= k * pthre1[k];
 
-        m_Less = m_Less / p_sum_less;
-        m_More = m_More / p_sum_more;
+        M_LessU = m_LessU / p_sum_lessU;
+        M_MoreU = m_MoreU / p_sum_moreU;
 
-        num = p_sum_less * p_sum_more * (m_Less - m_More) * (m_Less - m_More);
-        if (num >= max_num) {
-            max_num = num;
+        numU = p_sum_lessU * p_sum_moreU * (M_LessU - M_MoreU) * (M_LessU - M_MoreU);
+        if (numU >= max_numU) {
+            max_numU = numU;
             thresholdUp = k;
         }
     }
+    double num = 0, max_num = 0;
+    double p_sum_less = 0;
+    double p_sum_more = 0;
+    double m_Less = 0;
+    double m_More = 0;
+    double M_Less = 0;
+    double M_More = 0;
+    for (int i = 0; i < min_thre - 1; i++) {
+        p_sum_less += pthre2[i];
+        m_Less += i * pthre2[i];
+    }
+    for (int i = min_thre- 1; i < 256; i++) {
+        p_sum_more += pthre2[i];
+        m_More += i * pthre2[i];
+    }
 
     for (int k = min_thre; k <= max_thre; k++) {
-        double p_sum_less = 0;
+        /*double p_sum_less = 0;
         double p_sum_more = 0;
         double m_Less = 0;
         double m_More = 0;
@@ -770,18 +807,22 @@ void part_OUST() {
         for (int i = k; i < 256; i++) {
             p_sum_more += pthre2[i];
             m_More += i * pthre2[i];
-        }
+        }*/
+        p_sum_less += pthre2[k];
+        p_sum_more -= pthre2[k];
+        m_Less += k * pthre2[k];
+        m_More -= k * pthre2[k];
 
-        m_Less = m_Less / p_sum_less;
-        m_More = m_More / p_sum_more;
+        M_Less = m_Less / p_sum_less;
+        M_More = m_More / p_sum_more;
 
-        num = p_sum_less * p_sum_more * (m_Less - m_More) * (m_Less - m_More);
+        num = p_sum_less * p_sum_more * (M_Less - M_More) * (M_Less - M_More);
         if (num >= max_num) {
             max_num = num;
             thresholdDown = k;
         }
     }
-    ////printf("upthre=%d,downtgre=%d\n", thresholdUp, thresholdDown);
+    //printf("upthre=%d,downthre=%d\n", thresholdUp, thresholdDown);
 
 }
 ////////////////////////////////////////////
@@ -2081,13 +2122,7 @@ void judge_type_road() {
         Loud=0;
     }
 
-//    test_varible[2] = carParkTimes;
-//    test_varible[3] = rightPark;
-//    test_varible[4] = leftPark;
-//    test_varible[5] = my_road[upPoint].connected[j_mid[upPoint]].right;
-//    test_varible[6] = my_road[upPoint + 1].connected[j_mid[upPoint + 1]].right;
-//    test_varible[7] = upPoint;
-//    test_varible[8] = my_road[upPoint + 3].connected[j_mid[upPoint + 3]].width;
+
 }
 
 ////////////////////////////////////////////
@@ -4599,13 +4634,7 @@ void island_turn() {
                     break;
                 }
             }
-            test_varible[2] = my_road[35].connected[j_mid[35]].width;
-//            test_varible[3] = upPoint;
-            test_varible[4] = upPoint;
-//            test_varible[5] = upPoint;
-//            test_varible[6] = upPoint;
 
-//            test_varible[7] = upPoint;
             if (fabs(calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, LEFT) - calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, RIGHT)) < 0.25) {
                 int up = 60;
                 if(IslandRadius == 70){
@@ -6016,7 +6045,7 @@ void design_cross_T_out() {
                 && abs(my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width) <= 3
                 && my_road[i].connected[j_mid[i]].width < 35
                 && my_road[i].connected[j_mid[i]].right < right_side[i] - 2 && my_road[i].connected[j_mid[i]].left > left_side[i] + 2
-
+                && my_road[i-1].white_num != 0
                 ) {
                 jumpLine = i;
                 break;
@@ -6080,7 +6109,7 @@ void design_cross_T_out() {
         uint8_t xup = left_line[leftPoint];
 
         for (int i = leftPoint; i >= leftPoint - 60; i--) {
-            if (my_road[i - 1].white_num != 0) {
+            if (my_road[i].white_num != 0) {
                 if (left_line[i] <= xup && left_line[i - 1] > xup && i < yupL) {
                     yupL = i;
                 }
@@ -6092,7 +6121,7 @@ void design_cross_T_out() {
         }
         for (int i = rightPoint; i >= rightPoint - 60; i--) {
             if (my_road[i].white_num != 0) {
-                if (right_line[i] <= xup && right_line[i + 1] > xup && i < yupR) {
+                if (right_line[i] >= xup && right_line[i - 1] < xup && i < yupR) {
                     yupR = i;
                 }
             }
@@ -6182,7 +6211,7 @@ void design_cross_T_out() {
                 && abs(my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width) <= 3
                 && my_road[i].connected[j_mid[i]].width < 35
                 && my_road[i].connected[j_mid[i]].right < right_side[i] - 2 && my_road[i].connected[j_mid[i]].left > left_side[i] + 2
-
+                && my_road[i-1].white_num != 0
                 ) {
                 jumpLine = i;
                 break;
@@ -6246,7 +6275,7 @@ void design_cross_T_out() {
         uint8_t xup = right_line[rightPoint];
 
         for (int i = rightPoint; i >= rightPoint - 60; i--) {
-            if (my_road[i - 1].white_num != 0) {
+            if (my_road[i].white_num != 0) {
                 if (left_line[i] <= xup && left_line[i - 1] > xup && i < yupL) {
                     yupL = i;
                 }
@@ -6258,7 +6287,7 @@ void design_cross_T_out() {
         }
         for (int i = rightPoint; i >= rightPoint - 60; i--) {
             if (my_road[i].white_num != 0) {
-                if (right_line[i] <= xup && right_line[i + 1] > xup && i < yupR) {
+                if (right_line[i] >= xup && right_line[i - 1] < xup && i < yupR) {
                     yupR = i;
                 }
             }
@@ -6308,11 +6337,20 @@ void design_cross_T_out() {
         }*/
 
 
+        test_varible[2] = yup;
+        test_varible[3] = leftPoint;
+        test_varible[4]=left_line[leftPoint];
+        test_varible[5]=xup;
 
         double k = (double)(xup - left_line[leftPoint]) / (yup - leftPoint);
         if (right_line[rightPoint] < 100 && rightPoint < leftPoint || rightPoint <= lookahead_line) {
+            test_varible[8]=1;
             k = 0;
+        }else{
+            test_varible[8]=0;
         }
+        test_varible[6]=k;
+        test_varible[7]=rightPoint;
         for (int i = leftPoint; i >= 2; i--) {
             left_line[i] = (k - dk) * (i - leftPoint) + left_line[leftPoint];
             if (right_line[i] < right_line[i + 1] && i <= rightPoint) {
