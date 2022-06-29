@@ -199,7 +199,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 90, 1.0, "vision", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
     cross_circle_param2 = MENU_fileInit(cross_circle_param2, 90, 1.0, "rightX", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
     cross_circle_param3 = MENU_fileInit(cross_circle_param3, 84, 1.0, "leftX", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
-    cross_circle_param4 = MENU_fileInit(cross_circle_param4, 32, 1.0, "outwidth", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
+    cross_circle_param4 = MENU_fileInit(cross_circle_param4, 86, 1.0, "outwidth", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
     cross_circle_param5 = MENU_fileInit(cross_circle_param5, 55, 0, "kfix", 6, datafloat, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
     cross_circle_param6 = MENU_fileInit(cross_circle_param6, 30, 1.0, "turnwidth", 7, dataint, &cross_circle_param5, &cross_circle_param7, NULL, NULL);
     cross_circle_param7 = MENU_fileInit(cross_circle_param7, 55, 1.5, "rowKP", 2, datafloat, &cross_circle_param6, &cross_circle_param8, NULL, NULL);

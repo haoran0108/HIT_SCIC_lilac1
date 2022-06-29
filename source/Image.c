@@ -731,7 +731,7 @@ void part_OUST() {
         pthre1[i] = (double)thre1[i] / (30 * 188);
         pthre2[i] = (double)thre2[i] / (56 * 188);
     }
-    uint8_t min_thre = minThre, max_thre =  maxThre;
+    uint8_t min_thre = part_klow1.intVal, max_thre = part_khigh1.intVal;
     double num = 0, max_num = 0;
 
     for (int k = min_thre * part_klow2.floatVal; k <= max_thre * part_klow2.floatVal; k++) {
@@ -4593,7 +4593,7 @@ void island_turn() {
                 if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 32
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 40 && my_road[i + 3].connected[j_mid[i + 3]].width >= 32
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -4
-                    && fabs(calculate_slope_struct(upPoint - 15, upPoint - 1, j_mid, RIGHT) - calculate_slope_struct(upPoint - 10, upPoint + 3, j_mid, LEFT)) < 0.25
+                    && fabs(calculate_slope_struct(i - 15, i - 1, j_mid, RIGHT) - calculate_slope_struct(i - 10, i + 3, j_mid, LEFT)) < 0.25
                     ) {
                     upPoint = i;
                     break;
@@ -4606,7 +4606,7 @@ void island_turn() {
 //            test_varible[6] = upPoint;
 
 //            test_varible[7] = upPoint;
-            if (fabs(calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, LEFT) - calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, RIGHT)) < 0.2) {
+            if (fabs(calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, LEFT) - calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, RIGHT)) < 0.25) {
                 int up = 60;
                 if(IslandRadius == 70){
                 up = 66;
@@ -5960,8 +5960,8 @@ void cross_T_out_start() {
 //备注：
 ///////////////////////////////////////////
 void design_cross_T_out() {
-    double dk = 0;
-
+    double dk = cross_circle_param5.floatVal;
+    int lookahead_line=cross_circle_param4.intVal;
     if (TWhere == RIGHT) {
         int leftPoint = 119;
         int rightPoint = 119;
@@ -6112,7 +6112,7 @@ void design_cross_T_out() {
 
         //printf("y=%d,x=%d\n", yup, xup);
         double k = (double)(xup - right_line[rightPoint]) / (yup - rightPoint);
-        if (left_line[leftPoint] > 80) {
+        if (left_line[leftPoint] > 80 && rightPoint > leftPoint || leftPoint <= lookahead_line) {
             k = 0;
         }
         for (int i = rightPoint; i >= 2; i--) {
@@ -6233,7 +6233,7 @@ void design_cross_T_out() {
                 }
             }
         }
-//        printf("ld=%d,rd=%d\n", leftPoint, rightPoint);
+        //printf("ld=%d,rd=%d\n", leftPoint, rightPoint);
 
         if (!(leftPoint >= 75 && leftPoint <= 110)) {
             leftPoint = 110;
@@ -6274,8 +6274,8 @@ void design_cross_T_out() {
         else {
             yup = yupR;
         }
-        //pxy
-
+        //pxy（考虑过多的内切法）
+        /*
         int lookahead_line = 90;
         if (rightPoint <= lookahead_line)//进入小直道往前补线
         {
@@ -6305,20 +6305,18 @@ void design_cross_T_out() {
             }
             //printf("k1=%lf,k2=%lf", k1,k2);
 
+        }*/
+
+
+
+        double k = (double)(xup - left_line[leftPoint]) / (yup - leftPoint);
+        if (right_line[rightPoint] < 100 && rightPoint < leftPoint || rightPoint <= lookahead_line) {
+            k = 0;
         }
-
-
-        else {//拐弯
-
-            double k = (double)(xup - left_line[leftPoint]) / (yup - leftPoint);
-            if (right_line[rightPoint] < 100 || rightPoint <= lookahead_line + 5) {
-                k = 0;
-            }
-            for (int i = leftPoint; i >= 2; i--) {
-                left_line[i] = (k - dk) * (i - leftPoint) + left_line[leftPoint];
-                if (right_line[i] < right_line[i + 1] && i <= rightPoint) {
-                    right_line[i] = right_line[i + 1];
-                }
+        for (int i = leftPoint; i >= 2; i--) {
+            left_line[i] = (k - dk) * (i - leftPoint) + left_line[leftPoint];
+            if (right_line[i] < right_line[i + 1] && i <= rightPoint) {
+                right_line[i] = right_line[i + 1];
             }
         }
 
@@ -6884,13 +6882,30 @@ void carpark_in()
     double leftK1 = 0, leftK2 = 0, rightK1 = 0, rightK2 = 0;
     uint8_t i, j;
     uint8_t upPoint = 1, downPoint = 1, averPoint, updownDelta = 0;
+    float lineCount = 0;
+    uint8_t whiteNumAdd = 0;
+    float lineNumAver = 0;
 
     for (carParkX = 66; carParkX < 95; carParkX++)
     {
-        if (my_road[carParkX + 1].white_num > 4 && my_road[carParkX].white_num > 4 && my_road[carParkX - 1].white_num > 4 && my_road[carParkX - 2].white_num > 3)
+        if (my_road[carParkX + 1].white_num >= 3 && my_road[carParkX].white_num > 4 && my_road[carParkX - 1].white_num >= 3)
         {
 
-            if (my_road[carParkX].connected[my_road[carParkX].white_num].width > 15 || my_road[carParkX].connected[1].width > 15)
+            lineCount = 0;
+            whiteNumAdd = 0;
+            for (int i = carParkX - 2; i <= carParkX + 4; i++)
+            {
+
+                if (my_road[i].white_num >= 3)
+                {
+                    whiteNumAdd += my_road[i].white_num;
+                    lineCount += 1;
+                }
+
+            }
+            lineNumAver = whiteNumAdd / lineCount;
+
+            if ((my_road[carParkX].connected[my_road[carParkX].white_num].width > 15 || my_road[carParkX].connected[1].width > 15) || lineNumAver >= 6)
             {
                 gapNumber = 0;
                 for (int gap = 1; gap <= my_road[carParkX].white_num; gap++)
@@ -6910,7 +6925,7 @@ void carpark_in()
                             rightK2 = calculate_two_point_slope(carParkX + 5, my_road[carParkX + 5].connected[1].left, carParkX - 10 ,my_road[carParkX - 10].connected[1].left);
 //                            test_varible[6] = rightK1;
 //                            test_varible[7] = rightK2;
-                            if(fabs(rightK1) < 0.3 && fabs(rightK2) < 0.3 && fabs(rightK1 - rightK2) < 0.1)
+                            if(fabs(rightK1) < 0.4 && fabs(rightK2) < 0.4 && fabs(rightK1 - rightK2) < 0.1)
                             {
                                 flag = 1;
 //                                test_varible[5] = carParkX;
@@ -6924,7 +6939,7 @@ void carpark_in()
 //                            test_varible[6] = leftK1;
 //                            test_varible[7] = leftK2;
 
-                            if(fabs(leftK1) < 0.3 && fabs(leftK2) < 0.3 && fabs(leftK1 - leftK2) < 0.1)
+                            if(fabs(leftK1) < 0.4 && fabs(leftK2) < 0.4 && fabs(leftK1 - leftK2) < 0.1)
                             {
                                 flag = 1;
 //                                test_varible[5] = carParkX;
