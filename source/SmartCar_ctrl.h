@@ -51,6 +51,11 @@
 #define servoMin 642
 #define servoMax 805
 
+#define servoParkMax 761
+#define servoParkMin 681
+
+#define servoRampMax 741
+#define servoRampMin 701
 
 extern uint32 servoPwm;
 extern int32 mySpeedL, mySpeedR;
@@ -193,6 +198,9 @@ void CTRL_duzhuan();
 void CTRL_duzhuanTest();
 void CTRL_duzhuanZhuanWan();//堵转转弯
 
+/*元素打角限幅*/
+void CTRL_carParkPwmxianfu();
+void CTRL_rampPwmxianfu();
 
 
 #endif /* SOURCE_SMARTCAR_CTRL_H_ */

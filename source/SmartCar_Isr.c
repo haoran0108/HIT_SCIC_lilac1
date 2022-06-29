@@ -41,7 +41,7 @@ IFX_INTERRUPT(dma_ch5_isr, 0, ERU_DMA_INT_PRIO)
     if(mt9v034_finish_flag == 1)
     {
 //        uint64 tim1 = 0, tim2 = 0;
-        if(GPIO_Read(P11, 6) || GPIO_Read(P11, 3)){
+        if(GPIO_Read(P13, 2) || GPIO_Read(P11, 3)){
 
             if(parkStart == 0)
             {
@@ -118,7 +118,7 @@ IFX_INTERRUPT(asclin0RxISR, 0, IFX_INTPRIO_ASCLIN0_RX)
     IfxCpu_enableInterrupts();//¿ªÆôÖÐ¶ÏÇ¶Ì×
     IfxAsclin_Asc_isrReceive(&uart[0]);
 
-    if(GPIO_Read(P11, 6) || GPIO_Read(P11, 3))
+    if(GPIO_Read(P13, 2) || GPIO_Read(P11, 3))
     {
         SmartCar_TFMINI_UARTCallBack();//tfmini
 

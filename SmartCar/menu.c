@@ -211,7 +211,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     startGyro = MENU_fileInit(startGyro, 30, 1.0, "st-gyro", 3, dataint, &parkCount, &endGyro, NULL, NULL);
     endGyro = MENU_fileInit(endGyro, 40, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
     search_line = MENU_fileInit(search_line, 80, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
-    parkDelay = MENU_fileInit(parkDelay, 5, 1.0, "delay", 6, dataint, &search_line, &paramBottom, NULL, NULL);
+    parkDelay = MENU_fileInit(parkDelay, 50, 1.0, "delay", 6, dataint, &search_line, &paramBottom, NULL, NULL);
 
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkDelay, NULL, NULL, NULL);
 
@@ -530,7 +530,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
     nodeptr_t printTemp;
     nodeptr_t dataRead;
 
-    if(GPIO_Read(P11, 6))
+    if(GPIO_Read(P13, 2))
     {
         SmartCar_OLED_Fill(0);
         MENU_showIMG();
@@ -538,7 +538,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
 
 
     }
-    else if(!GPIO_Read(P11, 6)){
+    else if(!GPIO_Read(P13, 2)){
     if (!GPIO_Read(P11, 2))//上
     {
         SmartCar_OLED_Fill(0);
@@ -993,7 +993,7 @@ void MENU_showIMG()
 
         }
 
-        if (!GPIO_Read(P11, 6))
+        if (!GPIO_Read(P13, 2))
         {
             if(!GPIO_Read(P11, 12) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
                     !GPIO_Read(P11, 11) || !GPIO_Read(P11, 2))

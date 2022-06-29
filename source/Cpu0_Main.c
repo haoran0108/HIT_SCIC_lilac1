@@ -107,7 +107,7 @@ int core0_main(void)
 
     /*记录上电次数*/
     uint32_t buf1[1024] = { 0 };
-    onPower = Page_Read(3, 0, int32_t);
+    onPower = 0;
     onPower ++;
     memcpy(buf1, &onPower, sizeof(uint32_t));
     Sector_Erase(3);//将onPower放在第四个扇区

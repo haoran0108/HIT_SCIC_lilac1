@@ -530,7 +530,7 @@ void CTRL_motorPID()
 void CTRL_servoMain()
 {
 
-    if(GPIO_Read(P11, 6))
+    if(GPIO_Read(P13, 2))
     {
         if(parkStart == 1 || parkStart == 2)
         {
@@ -585,6 +585,9 @@ void CTRL_servoMain()
         }
     }
     CTRL_islandPwmCount();
+    CTRL_rampPwmxianfu();
+    CTRL_carParkPwmxianfu();
+
 
     if(servoPwm > servoMax)
         servoPwm = servoMax;
@@ -943,7 +946,7 @@ void CTRL_motorDiffer()
 
 void CTRL_CarParkStart()
 {
-    if(GPIO_Read(P11, 6) && (parkStart == 1 || parkStart == -1 || parkStart == 2 || parkStart == -2) && parkStraightCount > parkCount.intVal)
+    if(GPIO_Read(P13, 2) && (parkStart == 1 || parkStart == -1 || parkStart == 2 || parkStart == -2) && parkStraightCount > parkCount.intVal)
     {
         CTRL_gyroUpdate();
         CTRL_directionAngleGet();
@@ -1645,3 +1648,39 @@ void CTRL_islandPwmCount()
 //        islandPwmMin = servoMax;
 //    }
 }
+
+void CTRL_carParkPwmxianfu()
+{
+   if(state == stateParkIn)
+   {
+       if(servoPwm > servoParkMax)
+       {
+           servoPwm = servoParkMax;
+       }
+
+       else if(servoPwm < servoParkMin)
+       {
+           servoPwm = servoParkMin;
+       }
+   }
+
+}
+
+
+void CTRL_rampPwmxianfu()
+{
+   if(state == stateRampway)
+   {
+       if(servoPwm > servoRampMax)
+       {
+           servoPwm = servoRampMax;
+       }
+
+       else if(servoPwm < servoRampMin)
+       {
+           servoPwm = servoRampMin;
+       }
+   }
+
+}
+
