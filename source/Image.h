@@ -155,6 +155,7 @@ extern uint8_t islandTimes, IslandRadius;
 
 extern uint8_t minThre, maxThre;
 extern int islandWhere;
+extern uint8_t islandCircleCount;
 typedef struct {
     int x;
     int y;
