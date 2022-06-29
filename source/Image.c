@@ -6146,7 +6146,7 @@ void design_cross_T_out() {
         }
         for (int i = rightPoint; i >= 2; i--) {
             right_line[i] = (k + dk) * (i - rightPoint) + right_line[rightPoint];
-            if (left_line[i] > left_line[i + 1] && i <= leftPoint) {
+            if ((left_line[i] > left_line[i + 1]||left_line[i]==MISS) && i <= leftPoint) {
                 left_line[i] = left_line[i + 1];
             }
         }
@@ -6353,7 +6353,7 @@ void design_cross_T_out() {
         test_varible[7]=rightPoint;
         for (int i = leftPoint; i >= 2; i--) {
             left_line[i] = (k - dk) * (i - leftPoint) + left_line[leftPoint];
-            if (right_line[i] < right_line[i + 1] && i <= rightPoint) {
+            if ((right_line[i] < right_line[i + 1]||right_line[i]==MISS) && i <= rightPoint) {
                 right_line[i] = right_line[i + 1];
             }
         }
