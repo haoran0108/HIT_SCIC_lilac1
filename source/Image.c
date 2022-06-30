@@ -7102,14 +7102,60 @@ void carpark_in()
 //输出：
 //备注：
 ///////////////////////////////////////////
+//void carpark_out()
+//{
+//    int flag = 0;
+//    for (int i = 50; i < 105; i++)
+//    {
+//        if (my_road[i + 1].white_num > 3 && my_road[i].white_num > 4 && my_road[i - 1].white_num > 3 && my_road[i - 2].white_num > 3)
+//        {
+//            flag = 1;
+//
+//            if (flag == 1)
+//            {
+//                break;
+//            }
+//
+//        }
+//    }
+//
+//    for (int j = 75; j < 105; j++)
+//    {
+//        if (my_road[j].connected[j_continue[j]].width > 30)
+//        {
+//            flag = 1;
+//        }
+//    }
+//    //    }
+//    if (flag == 0) {
+//        state = 0;
+//
+//        //carParkTimes += 1;
+//
+//    }
+//}
+
 void carpark_out()
 {
     int flag = 0;
-    for (int i = 50; i < 105; i++)
+    uint8_t gapNumber = 0;
+    for (int i = 55; i < 100; i++)
     {
-        if (my_road[i + 1].white_num > 3 && my_road[i].white_num > 4 && my_road[i - 1].white_num > 3 && my_road[i - 2].white_num > 3)
+        if (my_road[i + 1].white_num > 3 && my_road[i].white_num > 4 && my_road[i - 1].white_num > 3)
         {
-            flag = 1;
+            gapNumber = 0;
+            for(int j = 1;j < my_road[i].white_num;j++)
+            {
+                if (my_road[i].connected[j].width < 6)
+                {
+                    gapNumber += 1;
+                }
+            }
+            if (gapNumber > 3)
+            {
+                flag = 1;
+
+            }
 
             if (flag == 1)
             {
@@ -7119,7 +7165,7 @@ void carpark_out()
         }
     }
 
-    for (int j = 75; j < 105; j++)
+    for (int j = 75; j < 100; j++)
     {
         if (my_road[j].connected[j_continue[j]].width > 30)
         {
@@ -7134,7 +7180,6 @@ void carpark_out()
 
     }
 }
-
 
 ////////////////////////////////////////////
 //功能：车库补线
