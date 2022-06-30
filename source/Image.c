@@ -697,12 +697,7 @@ void OTSU() {
     threshold = my_threshold;
 }
 
-////////////////////////////////////////////
-//功能：分区阈值的确定
-//输入：
-//输出：
-//备注：大津算法
-///////////////////////////////////////////
+
 ////////////////////////////////////////////
 //功能：分区阈值的确定
 //输入：
@@ -731,7 +726,11 @@ void part_OUST() {
     }
     for (int i = 0; i < 256; i++) {
         pthre1[i] = (double)thre1[i] / (30 * 188);
+//        pthre1[i+1] = (double)thre1[i+1] / (30 * 188);
+
         pthre2[i] = (double)thre2[i] / (56 * 188);
+//        pthre2[i+1] = (double)thre2[i+1] / (56 * 188);
+
     }
     uint8_t min_thre = part_klow1.intVal, max_thre = part_khigh1.intVal;
     double numU = 0, max_numU = 0;
@@ -1641,6 +1640,10 @@ void image_main()
     int wayThreshold = wayThre.intVal;
     protection();
 //    strenghen_contrast_ratio();
+   // uint64 tim1 = 0, tim2 = 0;
+
+//    tim1 = Systick_Get(STM0)/100000;
+
     switch (wayThreshold) {
     case 0:break;
     case 1:OTSU();
@@ -1652,22 +1655,23 @@ void image_main()
     case 4:ZHAO_THRE();
         break;
     }
+
+//    tim2 = Systick_Get(STM0)/10000;
+
+//    test_varible[14] = (float)(tim1);
+//    test_varible[15] = (float)(tim2);
     //distortion();
     //THRE(wayThreshold);
     //IPM_map();
     //decide_miss();
     //head_clear();
    // transform(wayThreshold);
-//    uint64 tim1 = 0, tim2 = 0;
-//
-//    tim1 = Systick_Get(STM0)/100000;
+
 //
     transform_sd(wayThreshold);
 //
-//    tim2 = Systick_Get(STM1)/100000;
-//
-//    test_varible[14] = (float)(tim1);
-//    test_varible[15] = (float)(tim2);
+
+
     search_white_range();
     find_all_connect();
     find_road();
@@ -2086,24 +2090,24 @@ void judge_type_road() {
 
 
 
-    if (state == 10 || state == 20 ) {
-        forceOut++;
-        if (state == 10 || state == 20) {
-            if (forceOut >= 50) {
-                state = 0;
-                forceOut = 0;
-            }
-        }
-//        if (state == 50 || state == 110) {
+//    if (state == 10 || state == 20 ) {
+//        forceOut++;
+//        if (state == 10 || state == 20) {
 //            if (forceOut >= 50) {
 //                state = 0;
 //                forceOut = 0;
 //            }
 //        }
-    }
-    else {
-        forceOut = 0;
-    }
+////        if (state == 50 || state == 110) {
+////            if (forceOut >= 50) {
+////                state = 0;
+////                forceOut = 0;
+////            }
+////        }
+//    }
+//    else {
+//        forceOut = 0;
+//    }
     if(state != 80){
         lastUpPoint = 0;
     }
@@ -4424,8 +4428,11 @@ void straightT_or_island() {
                             sumL++;
                         }
                     }
+                    test_varible[4] = right_line[NEAR_LINE - 1];
+                    test_varible[5] = left_line[NEAR_LINE - 1];
                     //printf("flag1=%d\n", sumL);
                     if (sumL > 5 && right_line[NEAR_LINE - 1] - left_line[NEAR_LINE - 1] < 30) {
+
                         uint8_t j_mid1[CAMERA_H];
                         uint8_t j_mid2[CAMERA_H];
                         j_mid1[NEAR_LINE] = j_continue[NEAR_LINE];
@@ -4467,7 +4474,7 @@ void straightT_or_island() {
                             int top = 119;
                             //printf("%f,%f\n", calculate_slope_struct(44 - 13, 44 - 1, j_mid1, LEFT), calculate_slope_struct(44 - 13, 44 - 1, j_mid1, RIGHT));
                             for (int i = 90; i >= 10; i--) {
-                                if (my_road[i].connected[j_mid1[i]].right - my_road[i + 1].connected[j_mid1[i + 1]].right < -4
+                                if (my_road[i].connected[j_mid1[i]].right - my_road[i + 1].connected[j_mid1[i + 1]].right < -6
                                     && my_road[i].connected[j_mid1[i]].width < 30
                                     && fabs(calculate_slope_struct(i - 13, i - 1, j_mid1, LEFT) - calculate_slope_struct(i - 13, i - 1, j_mid1, RIGHT)) < 0.25
                                     && abs(my_road[i].connected[j_mid1[i]].left - my_road[i].connected[j_mid1[i - 1]].left) <= 2
@@ -4608,7 +4615,7 @@ void design_island_ing() {
 //备注：
 ///////////////////////////////////////////
 void island_turn() {
-    int D = 0;
+    int D = islandout_up.intVal;
     if (islandWhere == RIGHT) {
         uint8_t j_mid[CAMERA_H];
         for (int i = NEAR_LINE; i >= 2; i--) {
@@ -4627,18 +4634,19 @@ void island_turn() {
             for (int i = 90; i >= 30; i--) {
                 if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 32
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 40 && my_road[i + 3].connected[j_mid[i + 3]].width >= 32
-                    && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -4
-                    && fabs(calculate_slope_struct(i - 15, i - 1, j_mid, RIGHT) - calculate_slope_struct(i - 10, i + 3, j_mid, LEFT)) < 0.25
+                    && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -6
+                    && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 2
+                    //&& fabs(calculate_slope_struct(i - 15, i - 1, j_mid, RIGHT) - calculate_slope_struct(i - 10, i + 3, j_mid, LEFT)) < 0.25
                     ) {
                     upPoint = i;
                     break;
                 }
             }
-
-            if (fabs(calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, LEFT) - calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, RIGHT)) < 0.25) {
+            test_varible[2] = upPoint;
+            if (1) {
                 int up = 60;
                 if(IslandRadius == 70){
-                up = 66;
+                up = 70;
             }
             else if(IslandRadius == 50)
             {
@@ -4646,7 +4654,7 @@ void island_turn() {
             }
             else if(IslandRadius == 100)
             {
-                up = 66;
+                up = 72;
             }
                 if (up <= upPoint && upPoint <= 110) {
                     state = stateIslandTurn;
@@ -4660,11 +4668,12 @@ void island_turn() {
     }
     else if (islandWhere == LEFT) {
         uint8_t j_mid[CAMERA_H];
-        for (int i = NEAR_LINE; i >= 2; i--) {
+        j_mid[NEAR_LINE]=j_continue[NEAR_LINE];
+        for (int i = NEAR_LINE-1; i >= 2; i--) {
             j_mid[i] = j_continue[i];
             for (int j = 1; j <= my_road[i].white_num; j++) {
                 if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_mid[i + 1]].right) < abs(my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right)
-                    && my_road[i].connected[j].width > 15) {
+                    && my_road[i].connected[j].width > 10) {
                     j_mid[i] = j;
 
                 }
@@ -4674,20 +4683,26 @@ void island_turn() {
 
         if (my_road[35].connected[j_mid[35]].width < 35) {
             int upPoint = 119;
-            for (int i = 30; i <= 100; i++) {
+            for (int i = 100; i >= 30; i--) {
                 if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 35
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 35 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
-                    && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 2
-                    && fabs(calculate_slope_struct(i - 15,i - 1,j_mid,LEFT)- calculate_slope_struct(i - 10, i + 3, j_mid, RIGHT)) < 0.25
+                    && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 6
+                    && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left) <= 2
+
+                    //&& fabs(calculate_slope_struct(i - 15,i - 1,j_mid,LEFT)- calculate_slope_struct(i - 10, i + 3, j_mid, RIGHT)) < 0.35
                     ) {
                     upPoint = i;
                     break;
                 }
             }
-            if (fabs(calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, LEFT) - calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, RIGHT)) < 0.2) {
+
+//            test_varible[2] = upPoint;
+//            test_varible[2] = upPoint;
+
+            if (1) {
                 int up = 60;
                 if(IslandRadius == 70){
-                up = 65;
+                up = 70;
                 }
                 else if(IslandRadius == 50)
                 {
@@ -4695,7 +4710,7 @@ void island_turn() {
                 }
                 else if(IslandRadius == 100)
                 {
-                    up = 66;
+                    up = 72;
                 }
                 if (up <= upPoint && upPoint < 100) {
                     state = stateIslandTurn;
@@ -4758,6 +4773,8 @@ void design_island_turn() {
                     break;
                 }
             }
+
+            test_varible[3] = upPoint;
 //            if (lastUpPoint == 0) {
 //                lastUpPoint = upPoint;
 //            }
@@ -4837,11 +4854,12 @@ void design_island_turn() {
                 {
                     k = k + 0.2;
                 }
-                if (k > -0.5) k = -1.5;
+                //if (k > -0.5) k = -1.5;
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
 
-                    left_line[i] = (k - dkRight) * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].right;
+                    if (k < -0.2)left_line[i] = k * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].right;
+                    else left_line[i] = my_road[i].connected[j_mid2[i]].right - 27;
                     right_line[i] = my_road[i].connected[j_mid2[i]].right;
                 }
                 for (int i = upPoint + 4; i >= 2; i--)
@@ -4907,6 +4925,8 @@ void design_island_turn() {
                     break;
                 }
             }
+            test_varible[3] = upPoint;
+
 //            test_varible[2] = upPoint;
 //            test_varible[3] = left_line[NEAR_LINE];
 //            test_varible[4]
@@ -4998,13 +5018,17 @@ void design_island_turn() {
                 {
                     k = k + 0.2;
                 }
-                if (k < 0.5) k = 1.5;
+                //if (k < 0.5) k = 1.5;
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
 
-                    right_line[i] = (k + dkLeft) * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].left;
+                    if (k > 0.2) right_line[i] = k * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].left;
+                    else right_line[i] = my_road[i].connected[j_mid2[i]].left + 27;
                     left_line[i] = my_road[i].connected[j_mid2[i]].left;
                 }
+
+
+
                 for (int i = upPoint + 4; i >= 2; i--)
                 {
                     if (left_line[i] >= left_line[i + 1] &&
@@ -5056,7 +5080,7 @@ void island_circle() {
                 }
             }
 
-            if (98 <= upPoint && upPoint < NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].right < 94) {
+            if (100 <= upPoint && upPoint < NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].right < 94) {
                 state = stateIslandCircle;
             }
 
@@ -5091,7 +5115,7 @@ void island_circle() {
                 }
             }
 
-            if (98 <= upPoint && upPoint <= NEAR_LINE&& my_road[upPoint].connected[j_mid[upPoint]].left > 94) {
+            if (100 <= upPoint && upPoint <= NEAR_LINE&& my_road[upPoint].connected[j_mid[upPoint]].left > 94) {
                 state = stateIslandCircle;
             }
 
@@ -6337,20 +6361,20 @@ void design_cross_T_out() {
         }*/
 
 
-        test_varible[2] = yup;
-        test_varible[3] = leftPoint;
-        test_varible[4]=left_line[leftPoint];
-        test_varible[5]=xup;
+//        test_varible[2] = yup;
+//        test_varible[3] = leftPoint;
+//        test_varible[4]=left_line[leftPoint];
+//        test_varible[5]=xup;
 
         double k = (double)(xup - left_line[leftPoint]) / (yup - leftPoint);
         if (right_line[rightPoint] < 100 && rightPoint < leftPoint || rightPoint <= lookahead_line) {
-            test_varible[8]=1;
+//            test_varible[8]=1;
             k = 0;
         }else{
-            test_varible[8]=0;
+//            test_varible[8]=0;
         }
-        test_varible[6]=k;
-        test_varible[7]=rightPoint;
+//        test_varible[6]=k;
+//        test_varible[7]=rightPoint;
         for (int i = leftPoint; i >= 2; i--) {
             left_line[i] = (k - dk) * (i - leftPoint) + left_line[leftPoint];
             if ((right_line[i] < right_line[i + 1]||right_line[i]==MISS) && i <= rightPoint) {
