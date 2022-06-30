@@ -187,7 +187,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     islandout_up = MENU_fileInit(islandout_up, 0, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
     design_island_k = MENU_fileInit(design_island_k, 1, 0, "left-dk", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
     islandParam1 = MENU_fileInit(islandParam1, 1, 0, "right-dk", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
-    islandParam2 = MENU_fileInit(islandParam2, 50, 1.8, "radius", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
+    islandParam2 = MENU_fileInit(islandParam2, 70, 1.8, "radius", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
     islandParam3 = MENU_fileInit(islandParam3, 0, 0.35, "xleft", 6, dataint, &islandParam2, &islandParam4, NULL, NULL);
     islandParam4 = MENU_fileInit(islandParam4, 0, 0.35, "xright", 7, dataint, &islandParam3, &islandParam5, NULL, NULL);
     islandParam5 = MENU_fileInit(islandParam5, 64, 0, "dk-out", 2, datafloat, &islandParam4, &islandParam6, NULL, NULL);
@@ -199,10 +199,10 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 90, 1.0, "vision", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
     cross_circle_param2 = MENU_fileInit(cross_circle_param2, 90, 1.0, "rightX", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
     cross_circle_param3 = MENU_fileInit(cross_circle_param3, 84, 1.0, "leftX", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
-    cross_circle_param4 = MENU_fileInit(cross_circle_param4, 86, 1.0, "outwidth", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
+    cross_circle_param4 = MENU_fileInit(cross_circle_param4, 89, 1.0, "outwidth", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
     cross_circle_param5 = MENU_fileInit(cross_circle_param5, 55, 0, "kfix", 6, datafloat, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
     cross_circle_param6 = MENU_fileInit(cross_circle_param6, 30, 1.0, "turnwidth", 7, dataint, &cross_circle_param5, &cross_circle_param7, NULL, NULL);
-    cross_circle_param7 = MENU_fileInit(cross_circle_param7, 55, 1.5, "rowKP", 2, datafloat, &cross_circle_param6, &cross_circle_param8, NULL, NULL);
+    cross_circle_param7 = MENU_fileInit(cross_circle_param7, 55, 0, "rowKP", 2, datafloat, &cross_circle_param6, &cross_circle_param8, NULL, NULL);
     cross_circle_param8 = MENU_fileInit(cross_circle_param8, 82, 1.0, "tgt-row", 3, dataint, &cross_circle_param7, &ccBottom, NULL, NULL);
     ccBottom = MENU_fileInit(ccBottom, 55, 1.0, "bottom", 4, none, &cross_circle_param8, NULL, NULL, NULL);
 
@@ -211,7 +211,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     startGyro = MENU_fileInit(startGyro, 30, 1.0, "st-gyro", 3, dataint, &parkCount, &endGyro, NULL, NULL);
     endGyro = MENU_fileInit(endGyro, 40, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
     search_line = MENU_fileInit(search_line, 80, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
-    parkDelay = MENU_fileInit(parkDelay, 50, 1.0, "delay", 6, dataint, &search_line, &paramBottom, NULL, NULL);
+    parkDelay = MENU_fileInit(parkDelay, 5, 1.0, "delay", 6, dataint, &search_line, &paramBottom, NULL, NULL);
 
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkDelay, NULL, NULL, NULL);
 
@@ -248,7 +248,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
 //    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
 
-    circle_PB = MENU_fileInit(circle_PB, 1, 2.7, "circlePB", 2, datafloat, NULL, &circle_DS, &CrossCircle, NULL);
+    circle_PB = MENU_fileInit(circle_PB, 1, 3, "circlePB", 2, datafloat, NULL, &circle_DS, &CrossCircle, NULL);
 //    circle_PM = MENU_fileInit(circle_PM, 1, 3, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
 //    circle_PS = MENU_fileInit(circle_PS, 1, 2.2, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
 //    circle_ZO = MENU_fileInit(circle_ZO, 1, 1.4, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
@@ -259,7 +259,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
 
     Island_PB = MENU_fileInit(Island_PB, 1, 2.4, "BIG-I", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
-    Island_PM = MENU_fileInit(Island_PM, 1, 2.6, "MID-I", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
+    Island_PM = MENU_fileInit(Island_PM, 1, 2.7, "MID-I", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
     Island_PS = MENU_fileInit(Island_PS, 1, 2.8, "SMALL-I", 4, datafloat, &Island_PM, &Island_DS, NULL, NULL);
 //    Island_ZO = MENU_fileInit(Island_ZO, 1, 2.8, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
 //    Island_NS = MENU_fileInit(Island_NS, 1, 3, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
