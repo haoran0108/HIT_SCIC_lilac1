@@ -3039,7 +3039,7 @@ void design_cross_ing() {
                         && my_road[i - 4].connected[j_mid[i - 4]].left < my_road[i - 5].connected[j_mid[i - 5]].right
                         && my_road[i - 4].connected[j_mid[i - 4]].left < my_road[i - 6].connected[j_mid[i - 6]].right
                         && my_road[i - 5].connected[j_mid[i - 5]].left < my_road[i - 6].connected[j_mid[i - 6]].right
-                        && my_road[i].connected[j_mid[i]].width<32
+                        //&& my_road[i].connected[j_mid[i]].width<32
                         && j_mid[i] > 1
                         ) {
                         j_mid[i] -= 1;
@@ -3068,7 +3068,7 @@ void design_cross_ing() {
                         && my_road[i - 4].connected[j_mid[i - 4]].right > my_road[i - 5].connected[j_mid[i - 5]].left
                         && my_road[i - 5].connected[j_mid[i - 5]].right > my_road[i - 6].connected[j_mid[i - 6]].left
                         && my_road[i - 6].connected[j_mid[i - 6]].right > my_road[i - 6].connected[j_mid[i - 6]].left
-                        && my_road[i].connected[j_mid[i]].width < 32
+                        //&& my_road[i].connected[j_mid[i]].width < 32
                         && j_mid[i] < my_road[i].white_num
                         ) {
                         j_mid[i] += 1;
@@ -3284,19 +3284,13 @@ void design_cross_ing() {
                 direction = 0;
             }
         }
-        /*if (sumL >= sumR + 3) {
-            direction = LEFT;
-        }
-        else if (sumL + 3 <= sumR) {
-            direction = RIGHT;
-        }
-        else {
-            direction = 0;
-        }*/
         j_mid[NEAR_LINE] = j_continue[NEAR_LINE];
         if (direction == 0) {
             for (int i = NEAR_LINE - 1; i >= 1; i--) {
                 j_mid[i] = j_continue[i];
+                if(!(1<=j_continue[i] && j_continue[i]<=my_road[i].white_num)){
+                    j_mid[i]=1;
+                }
                 for (int j = 1; j <= my_road[i].white_num; j++) {
                     if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 - 92) <= abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i + 1]].right) / 2 - 92)
                         && my_road[i].connected[j].width > 15) {
@@ -3308,6 +3302,9 @@ void design_cross_ing() {
         else if (direction == LEFT) {
             for (int i = NEAR_LINE - 1; i >= 2; i--) {
                 j_mid[i] = j_continue[i];
+                if(!(1<=j_continue[i] && j_continue[i]<=my_road[i].white_num)){
+                    j_mid[i]=1;
+                }
                 for (int j = 1; j <= my_road[i].white_num; j++) {
                     if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_mid[i + 1]].left) < abs(my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left)
                         && my_road[i].connected[j].width > 15) {
@@ -3321,6 +3318,9 @@ void design_cross_ing() {
         else if (direction == RIGHT) {
             for (int i = NEAR_LINE - 1; i >= 2; i--) {
                 j_mid[i] = j_continue[i];
+                if(!(1<=j_continue[i] && j_continue[i]<=my_road[i].white_num)){
+                    j_mid[i]=1;
+                }
                 for (int j = 1; j <= my_road[i].white_num; j++) {
                     if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_mid[i + 1]].right) < abs(my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right)
                         && my_road[i].connected[j].width > 15) {
@@ -3341,11 +3341,16 @@ void design_cross_ing() {
                 start++;
             }
         }
+        test_varible[2]= my_road[85].connected[j_mid[85]].right;
+
+        test_varible[3] = my_road[85].connected[j_mid[85]].left;
+        test_varible[4]=left_side[85];
+        test_varible[5]=right_side[85];
 
         uint8_t jumpLineD = 119;
         for (int i = start; i >= 60; i--) {
-            if (my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width >= 5
-                && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) <= 3
+            if (my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width >= 6
+                && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) <= 4
                 && my_road[i].connected[j_mid[i]].width < 35
                 && my_road[i].connected[j_mid[i]].right < right_side[i] - 2 && my_road[i].connected[j_mid[i]].left > left_side[i] + 2
                 ) {
@@ -3355,6 +3360,7 @@ void design_cross_ing() {
 
 
         }
+        test_varible[6]=jumpLineD;
         for (int i = jumpLineD - 1; i >= jumpLineD - 20; i--) {
             mid[i] = (my_road[i].connected[j_mid[i]].right + my_road[i].connected[j_mid[i]].left) / 2;
         }
@@ -3415,6 +3421,7 @@ void design_cross_ing() {
                 left_line[i] = kl * (i - leftUpJumpPoint) + my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left;
             }
             double kr = calculate_slope_struct(rightUpJumpPoint - 20, rightUpJumpPoint - 5, j_mid, RIGHT);
+//            test_varible[2] = kr;
             if (rightUpJumpPoint <= i) {
                 right_line[i] = kr * (i - rightUpJumpPoint) + my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right;
             }
@@ -4491,8 +4498,8 @@ void straightT_or_island() {
                             sumL++;
                         }
                     }
-                    test_varible[4] = right_line[NEAR_LINE - 1];
-                    test_varible[5] = left_line[NEAR_LINE - 1];
+//                    test_varible[4] = right_line[NEAR_LINE - 1];
+//                    test_varible[5] = left_line[NEAR_LINE - 1];
                     //printf("flag1=%d\n", sumL);
                     if (sumL > 5 && right_line[NEAR_LINE - 1] - left_line[NEAR_LINE - 1] < 30) {
 
@@ -4705,8 +4712,8 @@ void island_turn() {
                     break;
                 }
             }
-            test_varible[2] = upPoint;
-            test_varible[3]=my_road[upPoint].connected[j_mid[upPoint]].right;
+//            test_varible[2] = upPoint;
+//            test_varible[3]=my_road[upPoint].connected[j_mid[upPoint]].right;
             if (1) {
                 int up = 60;
                 if(IslandRadius == 70){
