@@ -2952,10 +2952,10 @@ void design_cross_ing() {
     }
     uint8_t jumpLine = 119;
     for (int i = 110; i >= 30; i--) {
-        if (my_road[i - 2].connected[j_mid[i - 2]].width - my_road[i].connected[j_mid[i]].width >= 4
+        if (my_road[i - 2].connected[j_mid[i - 2]].width - my_road[i].connected[j_mid[i]].width >= 5
             && my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width >= 3
             && abs(my_road[i + 1].connected[j_mid[i + 1]].width - my_road[i].connected[j_mid[i]].width) <= 3
-            && abs(my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width) <= 3
+            && abs(my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width) <= 4
             && my_road[i].connected[j_mid[i]].width < 35
             && my_road[i].connected[j_mid[i]].right < right_side[i] - 2 && my_road[i].connected[j_mid[i]].left > left_side[i] + 2
 
@@ -3008,7 +3008,7 @@ void design_cross_ing() {
             for (int j = 1; j <= my_road[i].white_num; j++) {
 
                 if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 - mid[i]) < abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right) / 2 - mid[i])
-                    && my_road[i].connected[j].width >= 20
+                    && my_road[i].connected[j].width >= 10
                     // && my_road[i].connected[j].right >= my_road[i - 1].connected[j_mid[i - 1]].left
                     ) {
                     j_mid[i] = j;
@@ -3322,7 +3322,9 @@ void design_cross_ing() {
             rightUpJumpPoint = jumpLineD;
             int i = jumpLineD - 5;
             leftUpJumpPoint = i;
-            while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].left >= left_side[i] + 5) {
+            while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].left >= left_side[i] + 5 &&
+                    my_road[i].connected[j_mid[i]].left>=my_road[jumpLineD].connected[j_mid[jumpLineD]].left-10
+                    ) {
                 if (my_road[i].connected[j_mid[i]].left >= my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left) {
                     leftUpJumpPoint = i;
                 }
@@ -3335,7 +3337,9 @@ void design_cross_ing() {
             leftUpJumpPoint = jumpLineD;
             int i = jumpLineD - 5;
             rightUpJumpPoint = i;
-            while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].right <= right_side[i] - 5) {
+            while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].right <= right_side[i] - 5 &&
+                    my_road[i].connected[j_mid[i]].right<=my_road[jumpLineD].connected[j_mid[jumpLineD]].right+10
+                    ) {
                 if (my_road[i].connected[j_mid[i]].right <= my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right) {
                     rightUpJumpPoint = i;
                 }
@@ -4424,7 +4428,7 @@ void straightT_or_island() {
                 else if (TIslandWhere == RIGHT) {
                     int sumL = 0;
                     for (int i = NEAR_LINE - 1; i >= 105; i--) {
-                        if (left_line[i] - left_side[i] > 1) {
+                        if (right_line[i] - right_side[i] < -1) {
                             sumL++;
                         }
                     }
@@ -4643,6 +4647,7 @@ void island_turn() {
                 }
             }
             test_varible[2] = upPoint;
+            test_varible[3]=my_road[upPoint].connected[j_mid[upPoint]].right;
             if (1) {
                 int up = 60;
                 if(IslandRadius == 70){
@@ -4656,7 +4661,7 @@ void island_turn() {
             {
                 up = 72;
             }
-                if (up <= upPoint && upPoint <= 110) {
+                if (up + D <= upPoint && upPoint <= 110 && my_road[upPoint].connected[j_mid[upPoint]].right < 115) {
                     state = stateIslandTurn;
                 }
             }
@@ -4712,7 +4717,7 @@ void island_turn() {
                 {
                     up = 72;
                 }
-                if (up <= upPoint && upPoint < 100) {
+                if (up + D <= upPoint && upPoint < 100 && my_road[upPoint].connected[j_mid[upPoint]].left > 70) {
                     state = stateIslandTurn;
                 }
             }
@@ -4774,7 +4779,8 @@ void design_island_turn() {
                 }
             }
 
-            test_varible[3] = upPoint;
+
+//            test_varible[3] = upPoint;
 //            if (lastUpPoint == 0) {
 //                lastUpPoint = upPoint;
 //            }
@@ -4794,15 +4800,15 @@ void design_island_turn() {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[107].connected[j_mid[107]].left) / (upPoint - 107);
                 if(IslandRadius == 50)
                 {
-                    k = k + 0.2;
+                    k = k - 0.2;
                 }
                 else if(IslandRadius >= 60 && IslandRadius <= 70)
                 {
-                    k = k + 0.2;
+                    k = k - 0.2;
                 }
                 else if(IslandRadius > 70)
                 {
-                    k = k + 0.2;
+                    k = k - 0.2;
                 }
                 for (int i = 107; i >= 2; i--) {
                     left_line[i] = (k - dkRight) * (i - (107)) + my_road[107].connected[j_mid[107]].left;
@@ -4925,7 +4931,7 @@ void design_island_turn() {
                     break;
                 }
             }
-            test_varible[3] = upPoint;
+//            test_varible[3] = upPoint;
 
 //            test_varible[2] = upPoint;
 //            test_varible[3] = left_line[NEAR_LINE];
@@ -5535,7 +5541,7 @@ void design_island_straight() {
 
         for (int i = 110; i >= 50; i--) {
 
-            right_line[i] = k * (i - yMin) + xMin;
+            right_line[i] = leftRoad[i] + 26;
             left_line[i] = leftRoad[i];
         }
     }
@@ -5569,7 +5575,7 @@ void design_island_straight() {
         double k = calculate_slope(80, 100, rightRoad);
 
         for (int i = 110; i >= 50; i--) {
-            left_line[i] = k * (i - yMin) + xMin;
+            left_line[i] = rightRoad[i] - 26;
             right_line[i] = rightRoad[i];
         }
     }
