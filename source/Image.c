@@ -2358,6 +2358,44 @@ double cos_angle(int x1, int x2, int x3, int y1, int y2, int y3) {
 }
 
 ////////////////////////////////////////////
+//功能：线性判断
+//输入：
+//输出：
+//备注：
+///////////////////////////////////////////
+double linear_judgement(int start, int end, uint8_t side[CAMERA_H]) {
+
+    //先拟合直线
+    double k = calculate_slope_uint(start, end, side);
+
+    int xSum = 0;
+    int ySum = 0;
+    for (int i = start; i <= end; i++) {
+        xSum += side[i];
+        ySum += i;
+    }
+    double xAve = (double)xSum / (end - start + 1);
+    double yAve = (double)ySum / (end - start + 1);
+
+    double b = xAve - k * yAve;
+//    printf("k=%f,b=%f\n", k, b);
+    int difference[CAMERA_H] = { 0 };
+    int sumA = 0;
+    for (int i = start; i <= end; i++) {
+        difference[i] = ((int)side[i] - (int)(k * i + b));
+        sumA += difference[i];
+//        printf("dx:%d=%d-%d=%d,%d\n", i, side[i], (int)(k * i + b),difference[i],sumA);
+    }
+    double ave = (double)sumA / (end - start + 1);
+//    printf("sum=%d,ave=%f\n",sumA, ave);
+    double dv = 0;
+    for (int i = start; i <= end; i++) {
+        dv += (difference[i] - ave) * (difference[i] - ave);
+    }
+    return dv;
+
+}
+////////////////////////////////////////////
 //功能：进十字
 //输入：
 //输出：
@@ -2408,7 +2446,7 @@ void cross_in() {
                 j_mid[i] = j;
             }
         }
-         ////printf("%d:l=%d,r=%d\n", i, my_road[i].connected[j_mid[i]].left, my_road[i].connected[j_mid[i]].width);
+         //printf("%d:l=%d,r=%d\n", i, my_road[i].connected[j_mid[i]].left, my_road[i].connected[j_mid[i]].width);
     }
     uint8_t jumpLine = 119;
     for (int i = 113; i >= 30; i--) {
@@ -2421,7 +2459,7 @@ void cross_in() {
             break;
         }
     }
-    ////printf("j=%d,d=%d\n", jumpLine, direction);
+    //printf("j=%d,d=%d\n", jumpLine, direction);
     //Q弯看不到底下的角针对Q弯写的三点十字，一定要和三叉区分开！！！！！
 
     int way = 1;
@@ -2438,14 +2476,14 @@ void cross_in() {
         }
     }
 
-    ////printf("sr=%d,sl=%d", sumDR, sumDL);
+    //printf("sr=%d,sl=%d", sumDR, sumDL);
     if (sumDR >= 10 && sumDL <= 2) {
         for (int i = NEAR_LINE; i >= 100; i--) {
             mid[i] = (left_line[i] + right_line[i]) / 2;
         }
 
         kMid = calculate_slope_uint(102, NEAR_LINE - 1, right_line);
-        ////printf("km=%f\n", kMid);
+        //printf("km=%f\n", kMid);
 
         for (int i = NEAR_LINE - 3; i >= 10; i--) {
             mid[i] = kMid * (i - 110) + (left_line[110]+right_line[110]) / 2;
@@ -2534,7 +2572,7 @@ void cross_in() {
                 double dk;
                 double dk2;
 
-                    //  //printf("d=%d,ku=%f,kd=%f\n", direction, calculate_slope_struct(rightUpJumpPoint - 20 + 2, rightUpJumpPoint - 5 + 2, j_mid, RIGHT), calculate_slope_struct(leftDownJumpPoint + 5 - 2, leftDownJumpPoint + 20 - 2, j_mid, LEFT));
+                    //  printf("d=%d,ku=%f,kd=%f\n", direction, calculate_slope_struct(rightUpJumpPoint - 20 + 2, rightUpJumpPoint - 5 + 2, j_mid, RIGHT), calculate_slope_struct(leftDownJumpPoint + 5 - 2, leftDownJumpPoint + 20 - 2, j_mid, LEFT));
                 dk = fabs(calculate_slope_struct(rightUpJumpPoint - 18, rightUpJumpPoint - 3, j_mid, RIGHT) - calculate_slope_struct(leftDownJumpPoint + 3, leftDownJumpPoint + 18, j_mid, LEFT));
                 dk2= fabs(calculate_slope_struct(leftUpJumpPoint - 18, leftUpJumpPoint - 3, j_mid, LEFT) - calculate_slope_struct(leftDownJumpPoint + 3, leftDownJumpPoint + 18, j_mid, LEFT));
 
@@ -2550,7 +2588,7 @@ void cross_in() {
                     double kr1 = calculate_slope_struct(rightUpJumpPoint - 15, rightUpJumpPoint - 1, j_mid, RIGHT);
                     double kr2 = calculate_slope_struct(rightUpJumpPoint + 1, leftDownJumpPoint - 1, j_mid, RIGHT);
                     double kr3 = calculate_slope_struct(rightDownJumpPoint + 1, leftDownJumpPoint + 15, j_mid, RIGHT);
-                    ////printf("dk=%f\n", fabs(kl2 - kl3));
+                    //printf("dk=%f\n", fabs(kl2 - kl3));
                     if (((fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2) || (fabs(kr1 - kr2) < 0.2 && fabs(kr1 - kr3) < 0.2 && fabs(kr2 - kr3) < 0.2))) {
 
                     }
@@ -2662,7 +2700,7 @@ void cross_in() {
                 double kr1 = calculate_slope_struct(rightUpJumpPoint - 15, rightUpJumpPoint - 1, j_mid, RIGHT);
                 double kr2 = calculate_slope_struct(rightUpJumpPoint + 1, rightDownJumpPoint - 1, j_mid, RIGHT);
                 double kr3 = calculate_slope_struct(rightDownJumpPoint + 1, rightDownJumpPoint + 15, j_mid, RIGHT);
-                ////printf("dk=%f\n", fabs(kl2 - kl3));
+                //printf("dk=%f\n", fabs(kl2 - kl3));
                 if (((fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2) || (fabs(kr1 - kr2) < 0.2 && fabs(kr1 - kr3) < 0.2 && fabs(kr2 - kr3) < 0.2))) {
 
                 }
@@ -2713,7 +2751,7 @@ void cross_in() {
                     i--;
                 }
             }
-            ////printf("%d=%d,%d=%d\n", leftDownJumpPoint, my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left, rightDownJumpPoint, my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right);
+            //printf("%d=%d,%d=%d\n", leftDownJumpPoint, my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left, rightDownJumpPoint, my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right);
             if (leftDownJumpPoint < jumpLine + 1 && rightDownJumpPoint < jumpLine + 1
                 && fabs(calculate_slope_struct(leftDownJumpPoint + 1,leftDownJumpPoint + 16, j_mid, LEFT) - calculate_slope_struct(rightDownJumpPoint + 1, rightDownJumpPoint + 16, j_mid, RIGHT)) < 0.2
                 && my_road[15].white_num != 0) {
@@ -2741,7 +2779,7 @@ void cross_in() {
 
                 for (int i = jumpLine; i >= 1; i--) {
                     mid[i] = kMid * (i - jumpLine) + mid[jumpLine];
-                    IMG[i][mid[i]] = purple;
+                //  IMG[i][mid[i]] = purple;
                 }
                 for (int i = jumpLine; i >= 1; i--) {
                     j_mid[i] = j_continue[i];
@@ -2751,7 +2789,7 @@ void cross_in() {
                             j_mid[i] = j;
                         }
                     }
-                    ////printf("%d:l=%d,r=%d\n", i, my_road[i].connected[j_mid[i]].left, my_road[i].connected[j_mid[i]].width);
+                    //printf("%d:l=%d,r=%d\n", i, my_road[i].connected[j_mid[i]].left, my_road[i].connected[j_mid[i]].width);
                 }
 
                 //这时候我们认为我们已经找到了下方两个突变点的坐标，
@@ -2817,21 +2855,22 @@ void cross_in() {
                         i++;
                     }
                 }
-                ////printf("jD=%d\n", jumpLineD);
-                //  //printf("%d=%d,%d=%d\n", leftUpJumpPoint, my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left, rightUpJumpPoint, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right);
+                //printf("jD=%d\n", jumpLineD);
+//                printf("lu:%d=%d,ru:%d=%d\n", leftUpJumpPoint, my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left, rightUpJumpPoint, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right);
+//                printf("ld:%d=%d,rd:%d=%d\n", leftDownJumpPoint, my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left, rightDownJumpPoint, my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right);
                 if (jumpLineD - 1 < leftUpJumpPoint && jumpLineD - 1 < rightUpJumpPoint
                     && jumpLine-jumpLineD <= 65
                     && leftUpJumpPoint <= jumpLine && rightUpJumpPoint <= jumpLine
-                    && leftDownJumpPoint - 5 > leftUpJumpPoint && rightDownJumpPoint - 5 > leftUpJumpPoint
-                    && leftDownJumpPoint - 5 > rightUpJumpPoint && rightDownJumpPoint - 5 > rightUpJumpPoint
+                    && leftDownJumpPoint  > leftUpJumpPoint && rightDownJumpPoint  > leftUpJumpPoint
+                    && leftDownJumpPoint  > rightUpJumpPoint && rightDownJumpPoint > rightUpJumpPoint
                     //右上的拐点不应该在左下拐点的左边,同理，左上拐点不应该在右下拐点的右边
-                    && my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right > my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left
-                    && my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left < my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right
-                    && my_road[leftUpJumpPoint + 7].connected[j_mid[leftUpJumpPoint + 7]].left < my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left
-                    && my_road[rightUpJumpPoint + 7].connected[j_mid[rightUpJumpPoint + 7]].right > my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right
-                    && my_road[leftDownJumpPoint - 7].connected[j_mid[leftDownJumpPoint - 7]].left < my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left
-                    && my_road[rightDownJumpPoint - 7].connected[j_mid[rightDownJumpPoint - 7]].right > my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right
-                    && my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right > my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left
+                    && my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right >= my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left - 1
+                    && my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left <= my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right + 1
+                    /*&& my_road[leftUpJumpPoint + 6].connected[j_mid[leftUpJumpPoint + 6]].left < my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left
+                    && my_road[rightUpJumpPoint + 6].connected[j_mid[rightUpJumpPoint + 6]].right > my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right
+                    && my_road[leftDownJumpPoint - 6].connected[j_mid[leftDownJumpPoint - 6]].left < my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left
+                    && my_road[rightDownJumpPoint - 6].connected[j_mid[rightDownJumpPoint - 6]].right > my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right
+                    */&& my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right > my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left
                     && my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right > my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left
 
                     //&& fabs(calculate_slope_struct(leftUpJumpPoint - 16, leftUpJumpPoint - 1, j_mid, LEFT) - calculate_slope_struct(rightUpJumpPoint - 16, rightUpJumpPoint - 1, j_mid, RIGHT)) < 0.2
@@ -2842,21 +2881,21 @@ void cross_in() {
                     double dk;
 
                     if (direction == 0) {
-                        // //printf("d=%d,ku=%f,kd=%f\n", direction, calculate_slope_struct(leftUpJumpPoint - 20 + 2, leftUpJumpPoint - 5 + 2, j_mid, LEFT), calculate_slope_struct(leftDownJumpPoint + 5 - 2, leftDownJumpPoint + 20 - 2, j_mid, LEFT));
+                        // printf("d=%d,ku=%f,kd=%f\n", direction, calculate_slope_struct(leftUpJumpPoint - 20 + 2, leftUpJumpPoint - 5 + 2, j_mid, LEFT), calculate_slope_struct(leftDownJumpPoint + 5 - 2, leftDownJumpPoint + 20 - 2, j_mid, LEFT));
                         dk = fabs(calculate_slope_struct(leftUpJumpPoint - 18, leftUpJumpPoint - 3, j_mid, LEFT) - calculate_slope_struct(leftDownJumpPoint + 3, leftDownJumpPoint + 18, j_mid, LEFT));
                     }
                     else if (direction == LEFT) {
-                        ////printf("d=%d,ku=%f,kd=%f\n", direction, calculate_slope_struct(leftUpJumpPoint - 20 + 2, leftUpJumpPoint - 5 + 2, j_mid, LEFT), calculate_slope_struct(rightDownJumpPoint + 5 - 2, rightDownJumpPoint + 20 - 2, j_mid, RIGHT));
+                        //printf("d=%d,ku=%f,kd=%f\n", direction, calculate_slope_struct(leftUpJumpPoint - 20 + 2, leftUpJumpPoint - 5 + 2, j_mid, LEFT), calculate_slope_struct(rightDownJumpPoint + 5 - 2, rightDownJumpPoint + 20 - 2, j_mid, RIGHT));
                         dk = fabs(calculate_slope_struct(leftUpJumpPoint - 18, leftUpJumpPoint - 3, j_mid, LEFT) - calculate_slope_struct(rightDownJumpPoint + 3, rightDownJumpPoint + 18, j_mid, RIGHT));
                     }
                     else if (direction == RIGHT) {
-                        //  //printf("d=%d,ku=%f,kd=%f\n", direction, calculate_slope_struct(rightUpJumpPoint - 20 + 2, rightUpJumpPoint - 5 + 2, j_mid, RIGHT), calculate_slope_struct(leftDownJumpPoint + 5 - 2, leftDownJumpPoint + 20 - 2, j_mid, LEFT));
+                        //  printf("d=%d,ku=%f,kd=%f\n", direction, calculate_slope_struct(rightUpJumpPoint - 20 + 2, rightUpJumpPoint - 5 + 2, j_mid, RIGHT), calculate_slope_struct(leftDownJumpPoint + 5 - 2, leftDownJumpPoint + 20 - 2, j_mid, LEFT));
                         dk = fabs(calculate_slope_struct(rightUpJumpPoint - 18, rightUpJumpPoint - 3, j_mid, RIGHT) - calculate_slope_struct(leftDownJumpPoint + 3, leftDownJumpPoint + 18, j_mid, LEFT));
                     }
 
 
-                    ////printf("ld:%d=%d,rd:%d=%d,lu:%d=%d,ru:%d=%d\n", leftDownJumpPoint, my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left, rightDownJumpPoint, my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right, leftUpJumpPoint, my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left, rightUpJumpPoint, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right);
-                    if (dk < 0.2) {
+                    //printf("ld:%d=%d,rd:%d=%d,lu:%d=%d,ru:%d=%d\n", leftDownJumpPoint, my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left, rightDownJumpPoint, my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right, leftUpJumpPoint, my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left, rightUpJumpPoint, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right);
+                    if (dk < 0.3) {
                         //区别环岛，T字路口
 
                         /*double kl1 = calculate_slope_struct(leftUpJumpPoint - 15, leftUpJumpPoint - 1, j_mid, LEFT);
@@ -2871,8 +2910,19 @@ void cross_in() {
                         double kr1 = calculate_slope_struct(40, 55, j_mid, RIGHT);
                         double kr2 = calculate_slope_struct(60, 75, j_mid, RIGHT);
                         double kr3 = calculate_slope_struct(80, 95, j_mid, RIGHT);
-                        ////printf("dk=%f\n", fabs(kl2 - kl3));
-                        if (((fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2) || (fabs(kr1 - kr2) < 0.2 && fabs(kr1 - kr3) < 0.2 && fabs(kr2 - kr3) < 0.2))) {
+                        uint8_t left_road[CAMERA_H];
+                        uint8_t right_road[CAMERA_H];
+                        for (int i = leftUpJumpPoint - 7; i <= leftDownJumpPoint + 7; i++) {
+                            left_road[i] = my_road[i].connected[j_mid[i]].left;
+                        }
+                        for (int i = rightUpJumpPoint - 7; i <= rightDownJumpPoint + 7; i++) {
+                            right_road[i] = my_road[i].connected[j_mid[i]].right;
+                        }
+//                        printf("dvl=%f,dvr=%f\n", linear_judgement(leftUpJumpPoint-7,leftDownJumpPoint+7,left_road), linear_judgement(rightUpJumpPoint - 7, rightDownJumpPoint + 7, right_road));
+
+                        //printf("dk=%f\n", fabs(kl2 - kl3));
+                        if (/*((fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2) || (fabs(kr1 - kr2) < 0.2 && fabs(kr1 - kr3) < 0.2 && fabs(kr2 - kr3) < 0.2))*/
+                            linear_judgement(leftUpJumpPoint - 7, leftDownJumpPoint + 7, left_road)< 100 &&  linear_judgement(rightUpJumpPoint - 7, rightDownJumpPoint + 7, right_road) < 100) {
 
                         }
                         else {
@@ -2893,6 +2943,7 @@ void cross_in() {
 
 
 }
+
 
 ////////////////////////////////////////////
 //功能：进十字补线
@@ -2995,10 +3046,13 @@ void design_cross_ing() {
 
         for (int i = jumpLine + 3; i >= 1; i--) {
             mid[i] = kMid * (i - jumpLine - 3) + mid[jumpLine + 3];
-            //IMG[i][mid[i]] = gray;
+//            IMG[i][mid[i]] = purple;
         }
         for (int i = NEAR_LINE; i >= 1; i--) {
             j_mid[i] = j_continue[i];
+            if(!(1<=j_mid[i]&&j_mid[i]<=my_road[i].connected)){
+                j_mid[i]=1;
+            }
             for (int j = 1; j <= my_road[i].white_num; j++) {
 
                 if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 - mid[i]) < abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right) / 2 - mid[i])
@@ -3009,6 +3063,7 @@ void design_cross_ing() {
 
                 }
             }
+            IMG[i][my_road[i].connected[j_mid[i]].left + 4 ]=purple;
         }
 
         for (int i = 20; i <= NEAR_LINE; i++) {
@@ -3115,7 +3170,7 @@ void design_cross_ing() {
             //这时候我们认为我们已经找到了下方两个突变点的坐标，
             //我们继续寻找上方两个坐标点
 
-            int start = jumpLine - 45;
+            int start = jumpLine - 50;
 
             if (my_road[start].connected[j_mid[start]].width >= 35
                 ) {
@@ -3124,9 +3179,9 @@ void design_cross_ing() {
                 }
             }
             uint8_t jumpLineD = 119;
-            for (int i = start; i <= jumpLine; i++) {
-                if (my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width >= 5
-                    && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) <= 3
+            for (int i = jumpLine; i >= start; i--) {
+                if (my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width >= 6
+                    && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) <= 4
                     && my_road[i].connected[j_mid[i]].width < 35
                     && my_road[i].connected[j_mid[i]].right < right_side[i] - 2 && my_road[i].connected[j_mid[i]].left > left_side[i] + 2
                     ) {
@@ -3171,7 +3226,10 @@ void design_cross_ing() {
             }
             ////printf("ru=%d\n", rightUpJumpPoint);
             ////printf("%d:l=%d,r=%d", rightUpJumpPoint, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].left, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right);
-
+            test_varible[2]=direction;
+            test_varible[3]=start;
+            test_varible[4]=jumpLineD;
+            test_varible[5]=rightDownJumpPoint;
 
             if (jumpLineD - 5 <= leftUpJumpPoint && jumpLineD - 5 <= rightUpJumpPoint
                 && leftUpJumpPoint <= jumpLine && rightUpJumpPoint <= jumpLine) {
@@ -3196,7 +3254,7 @@ void design_cross_ing() {
         }
     }
     else if (jumpLine == 119 || jumpLine <= 60 || jumpLine > 106) {
-
+//test_varible[2]=2;
         //并不成功的想法  //根据上一张图的中线来确定新图的中线大致范围
 
         //确定中线，寻找上突变点
@@ -3335,11 +3393,7 @@ void design_cross_ing() {
                 start++;
             }
         }
-        test_varible[2]= my_road[85].connected[j_mid[85]].right;
 
-        test_varible[3] = my_road[85].connected[j_mid[85]].left;
-        test_varible[4]=left_side[85];
-        test_varible[5]=right_side[85];
 
         uint8_t jumpLineD = 119;
         for (int i = start; i >= 60; i--) {
@@ -4711,7 +4765,7 @@ void island_turn() {
             if (1) {
                 int up = 60;
                 if(IslandRadius == 70){
-                up = 68;
+                up = 62;
             }
             else if(IslandRadius == 50)
             {
@@ -4767,7 +4821,7 @@ void island_turn() {
             if (1) {
                 int up = 60;
                 if(IslandRadius == 70){
-                up = 70;
+                up = 61;
                 }
                 else if(IslandRadius == 50)
                 {
@@ -5313,11 +5367,11 @@ void island_out() {
 
             int xmin = 100;
              if(IslandRadius == 70){
-                xmin = 94;
+                xmin = 90;
             }
             else if(IslandRadius == 50)
             {
-                xmin = 92;
+                xmin = 90;
             }
             else if(IslandRadius == 100)
             {
