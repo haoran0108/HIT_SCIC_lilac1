@@ -697,7 +697,7 @@ void OTSU() {
     threshold = my_threshold;
 }
 
-
+uint8_t lastThre=0;
 ////////////////////////////////////////////
 //功能：分区阈值的确定
 //输入：
@@ -710,126 +710,64 @@ void part_OUST() {
 
     map = fullBuffer;
     uint8_t my_threshold = 0;
-    uint8_t thre1[256] = { 0 };
-    uint8_t thre2[256] = { 0 };
-    double pthre1[256] = { 0 };
-    double pthre2[256] = { 0 };
+    uint8_t thre[256] = { 0 };
+    double pthre[256] = { 0 };
 
-    for (int i = 0; i < 30 * 188; i++) {
-        thre1[*(map)]++;
-        map++;
-    }
-
-    for (int i = 30 * 188; i < 86 * 188; i++) {
-        thre2[*(map)]++;
+    for (int i = 0; i < 86 * 188; i++) {
+        thre[*(map)]++;
         map++;
     }
     for (int i = 0; i < 256; i++) {
-        pthre1[i] = (double)thre1[i] / (30 * 188);
-
-        pthre2[i] = (double)thre2[i] / (56 * 188);
-//        pthre2[i+1] = (double)thre2[i+1] / (56 * 188);
-
+        pthre[i] = (double)thre[i]/(86 * 188);
     }
-    uint8_t min_thre = minThre, max_thre = maxThre;
-    double p = part_klow2.floatVal;
 
+    uint8_t min_thre, max_thre;
+    for (min_thre = 0; thre[min_thre] == 0 && min_thre < 256;  min_thre++);
+    for (max_thre = 255; thre[max_thre] == 0 && max_thre >= 0; max_thre--);
     double num = 0, max_num = 0;
-//    double p_sum_lessU = 0;
-//    double p_sum_moreU = 0;
-//    double m_LessU = 0;
-//    double m_MoreU = 0;
-//    double M_LessU = 0;
-//    double M_MoreU = 0;
-//    for (int i = 0; i < (int)(min_thre * p) - 1; i++) {
-//        p_sum_lessU += pthre1[i];
-//        m_LessU += i * pthre1[i];
-//    }
-//    for (int i = (int)(min_thre * p) - 1; i < 256; i++) {
-//        p_sum_moreU += pthre1[i];
-//        m_MoreU += i * pthre1[i];
-//    }
-
-    for (int k = (min_thre * p); k <= (max_thre * p); k++) {
-
-        double p_sum_less = 0;
-        double p_sum_more = 0;
-        double m_Less = 0;
-        double m_More = 0;
-//        double M_Less = 0;
-//        double M_More=0;
-
-        for (int i = 0; i < k; i++) {
-            p_sum_less += pthre1[i];
-            m_Less += i * pthre1[i];
-        }
-        for (int i = k; i < 256; i++) {
-            p_sum_more += pthre1[i];
-            m_More += i * pthre1[i];
-        }
-//        p_sum_lessU += pthre1[k];
-//        p_sum_moreU -= pthre1[k];
-//        m_LessU += k * pthre1[k];
-//        m_MoreU -= k * pthre1[k];
-
-        m_Less = m_Less / p_sum_less;
-        m_More = m_More / p_sum_more;
-
-        num = p_sum_less * p_sum_more * (m_Less - m_More) * (m_Less - m_More);
-        if (num >= max_num) {
-            max_num = num;
-            thresholdUp = k;
-        }
+    double p_sum_less = 0;
+    double p_sum_more = 0;
+    double m_Less = 0;
+    double m_More = 0;
+    double M_Less = 0;
+    double M_More = 0;
+    for (int i = min_thre; i <= max_thre; i++) {
+        p_sum_more += pthre[i];
+        m_More += i * pthre[i];
     }
-//    double num = 0, max_num = max_numU;
-//    double p_sum_less = 0;
-//    double p_sum_more = 0;
-//    double m_Less = 0;
-//    double m_More = 0;
-//    double M_Less = 0;
-//    double M_More = 0;
-
-//    for (int i = 0; i < min_thre - 1; i++) {
-//        p_sum_less += pthre2[i];
-//        m_Less += i * pthre2[i];
-//    }
-//    for (int i = min_thre- 1; i < 256; i++) {
-//        p_sum_more += pthre2[i];
-//        m_More += i * pthre2[i];
-//    }
-    max_num=0;
     for (int k = min_thre; k <= max_thre; k++) {
-        double p_sum_less = 0;
-        double p_sum_more = 0;
-        double m_Less = 0;
-        double m_More = 0;
-//        double M_Less = 0;
-//        double M_More = 0;
-        for (int i = 0; i < k; i++) {
-            p_sum_less += pthre2[i];
-            m_Less += i * pthre2[i];
-        }
-        for (int i = k; i < 256; i++) {
-            p_sum_more += pthre2[i];
-            m_More += i * pthre2[i];
-        }
-//        p_sum_less += pthre2[k];
-//        p_sum_more -= pthre2[k];
-//        m_Less += k * pthre2[k];
-//        m_More -= k * pthre2[k];
-
-        m_Less = m_Less / p_sum_less;
-        m_More = m_More / p_sum_more;
-
-        num = p_sum_less * p_sum_more * (m_Less - m_More) * (m_Less - m_More);
-        if (num >= max_num) {
+        p_sum_less += pthre[k];
+        p_sum_more -= pthre[k];
+        m_Less += k * pthre[k];
+        m_More -= k * pthre[k];
+        M_Less = m_Less / p_sum_less;
+        M_More = m_More / p_sum_more;
+        num = p_sum_less * p_sum_more * (M_Less - M_More) * (M_Less - M_More);
+        if (num > max_num) {
             max_num = num;
-            thresholdDown = k;
+            threshold = k;
         }
     }
-    //printf("upthre=%d,downthre=%d\n", thresholdUp, thresholdDown);
+//    if(lastThre==0){
+//           lastThre=threshold;
+//       }else{
+//           if(abs(threshold - lastThre) > 7){
+//               threshold=lastThre;
+//           }
+//       }
+
+    uint8_t maxThre1 = maxThre, minThre1 = minThre;
+    double upFix = part_klow1.floatVal, downFix = part_khigh1.floatVal;
+    if (threshold > maxThre1) threshold = maxThre1;
+    if (threshold < minThre1) threshold = minThre1;
+    thresholdUp = threshold * upFix;
+    thresholdDown = threshold * downFix;
+//  printf("upthre=%d,downthre=%d\n", thresholdUp, thresholdDown);
+
+
 
 }
+
 ////////////////////////////////////////////
 //功能：阈值的确定
 //输入：
