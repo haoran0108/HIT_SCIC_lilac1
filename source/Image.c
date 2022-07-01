@@ -733,7 +733,14 @@ void part_OUST() {
     }
     uint8_t min_thre = minThre, max_thre = maxThre;
     double p = part_klow2.floatVal;
-    double numU = 0, max_numU = 0;
+
+    double num = 0, max_num = 0;
+//    double p_sum_lessU = 0;
+//    double p_sum_moreU = 0;
+//    double m_LessU = 0;
+//    double m_MoreU = 0;
+//    double M_LessU = 0;
+//    double M_MoreU = 0;
 //    for (int i = 0; i < (int)(min_thre * p) - 1; i++) {
 //        p_sum_lessU += pthre1[i];
 //        m_LessU += i * pthre1[i];
@@ -743,39 +750,44 @@ void part_OUST() {
 //        m_MoreU += i * pthre1[i];
 //    }
 
-    for (int k = (int)(min_thre * p); k <= (int)(max_thre * p); k++) {
+    for (int k = (min_thre * p); k <= (max_thre * p); k++) {
 
-        double p_sum_lessU = 0;
-        double p_sum_moreU = 0;
-        double m_LessU = 0;
-        double m_MoreU = 0;
-        double M_LessU = 0;
-        double M_MoreU=0;
+        double p_sum_less = 0;
+        double p_sum_more = 0;
+        double m_Less = 0;
+        double m_More = 0;
+//        double M_Less = 0;
+//        double M_More=0;
 
         for (int i = 0; i < k; i++) {
-            p_sum_lessU += pthre1[i];
-            m_LessU += i * pthre1[i];
+            p_sum_less += pthre1[i];
+            m_Less += i * pthre1[i];
         }
         for (int i = k; i < 256; i++) {
-            p_sum_moreU += pthre1[i];
-            m_MoreU += i * pthre1[i];
+            p_sum_more += pthre1[i];
+            m_More += i * pthre1[i];
         }
 //        p_sum_lessU += pthre1[k];
 //        p_sum_moreU -= pthre1[k];
 //        m_LessU += k * pthre1[k];
 //        m_MoreU -= k * pthre1[k];
 
-        M_LessU = m_LessU / p_sum_lessU;
-        M_MoreU = m_MoreU / p_sum_moreU;
+        m_Less = m_Less / p_sum_less;
+        m_More = m_More / p_sum_more;
 
-        numU = p_sum_lessU * p_sum_moreU * (M_LessU - M_MoreU) * (M_LessU - M_MoreU);
-        if (numU > max_numU) {
-            max_numU = numU;
+        num = p_sum_less * p_sum_more * (m_Less - m_More) * (m_Less - m_More);
+        if (num > max_num) {
+            max_num = num;
             thresholdUp = k;
         }
     }
-    double num = 0, max_num = 0;
-
+//    double num = 0, max_num = max_numU;
+//    double p_sum_less = 0;
+//    double p_sum_more = 0;
+//    double m_Less = 0;
+//    double m_More = 0;
+//    double M_Less = 0;
+//    double M_More = 0;
 
 //    for (int i = 0; i < min_thre - 1; i++) {
 //        p_sum_less += pthre2[i];
@@ -791,8 +803,8 @@ void part_OUST() {
         double p_sum_more = 0;
         double m_Less = 0;
         double m_More = 0;
-        double M_Less = 0;
-        double M_More = 0;
+//        double M_Less = 0;
+//        double M_More = 0;
         for (int i = 0; i < k; i++) {
             p_sum_less += pthre2[i];
             m_Less += i * pthre2[i];
@@ -806,10 +818,10 @@ void part_OUST() {
 //        m_Less += k * pthre2[k];
 //        m_More -= k * pthre2[k];
 
-        M_Less = m_Less / p_sum_less;
-        M_More = m_More / p_sum_more;
+        m_Less = m_Less / p_sum_less;
+        m_More = m_More / p_sum_more;
 
-        num = p_sum_less * p_sum_more * (M_Less - M_More) * (M_Less - M_More);
+        num = p_sum_less * p_sum_more * (m_Less - m_More) * (m_Less - m_More);
         if (num > max_num) {
             max_num = num;
             thresholdDown = k;
