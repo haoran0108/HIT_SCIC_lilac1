@@ -710,8 +710,8 @@ void part_OUST() {
 
     map = fullBuffer;
     uint8_t my_threshold = 0;
-    int thre1[256] = { 0 };
-    int thre2[256] = { 0 };
+    uint8_t thre1[256] = { 0 };
+    uint8_t thre2[256] = { 0 };
     double pthre1[256] = { 0 };
     double pthre2[256] = { 0 };
 
@@ -724,7 +724,7 @@ void part_OUST() {
         thre2[*(map)]++;
         map++;
     }
-    for (int i = 0; i < 256; i++) {\
+    for (int i = 0; i < 256; i++) {
         pthre1[i] = (double)thre1[i] / (30 * 188);
 
         pthre2[i] = (double)thre2[i] / (56 * 188);
@@ -776,7 +776,7 @@ void part_OUST() {
         m_More = m_More / p_sum_more;
 
         num = p_sum_less * p_sum_more * (m_Less - m_More) * (m_Less - m_More);
-        if (num > max_num) {
+        if (num >= max_num) {
             max_num = num;
             thresholdUp = k;
         }
@@ -797,7 +797,7 @@ void part_OUST() {
 //        p_sum_more += pthre2[i];
 //        m_More += i * pthre2[i];
 //    }
-
+    max_num=0;
     for (int k = min_thre; k <= max_thre; k++) {
         double p_sum_less = 0;
         double p_sum_more = 0;
@@ -822,7 +822,7 @@ void part_OUST() {
         m_More = m_More / p_sum_more;
 
         num = p_sum_less * p_sum_more * (m_Less - m_More) * (m_Less - m_More);
-        if (num > max_num) {
+        if (num >= max_num) {
             max_num = num;
             thresholdDown = k;
         }
