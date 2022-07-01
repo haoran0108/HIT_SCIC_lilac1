@@ -364,7 +364,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display2 = MENU_fileInit(display2, 25, 0.1, "rowKp", 3, datafloat, &display1, &display3, NULL, NULL);
 
     LFKP = MENU_fileInit(LFKP, 34, 3.8, "KP", 2, dataint, NULL, &LFKI, &display1, NULL);
-    LFKI = MENU_fileInit(LFKI, 30, 1.5, "KI", 3, dataint, &LFKP, &RTKP, NULL, NULL);
+    LFKI = MENU_fileInit(LFKI, 18, 1.5, "KI", 3, dataint, &LFKP, &RTKP, NULL, NULL);
     RTKP = MENU_fileInit(RTKP, 8, 3.8, "motorPS", 4, dataint, &LFKI, &RTKI, NULL, NULL);
     RTKI = MENU_fileInit(RTKI, 4, 1.5, "motorZO", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
     fastLFKP = MENU_fileInit(fastLFKP, 5, 133.03, "motorNM", 6, dataint, &RTKI, &fastLFKI, NULL, NULL);
@@ -926,7 +926,7 @@ void MENU_showIMG()
 
     while(TRUE)
     {
-        SmartCar_OLED_Fillpart(0);
+//        SmartCar_OLED_Fillpart(0);
 
         SmartCar_OLED_P6x8Str(110, 0, "up");
         SmartCar_OLED_Printf6x8(110, 1, "%d", thresholdUp);
@@ -934,43 +934,43 @@ void MENU_showIMG()
         SmartCar_OLED_Printf6x8(110, 3, "%d", thresholdDown);
 //        SmartCar_OLED_P6x8Str(100, 6, "state");
         SmartCar_OLED_Printf6x8(110, 4, "%d", state);
-//        SmartCar_OLED_Printf6x8(110, 6, "%d", minThre);
-//        SmartCar_OLED_Printf6x8(110, 7, "%d", maxThre);
-//
-//
-//        if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
-//                !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
-//        {
-//            Delay_ms(STM0,100);
-//
-//            if (!GPIO_Read(P11, 2))//上
+        SmartCar_OLED_Printf6x8(110, 6, "%d", minThre);
+        SmartCar_OLED_Printf6x8(110, 7, "%d", maxThre);
+
+
+        if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
+                !GPIO_Read(P11, 11) || !GPIO_Read(P11, 12) )
+        {
+            Delay_ms(STM0,100);
+
+            if (!GPIO_Read(P11, 2))//上
+            {
+                minThre += 1;
+            }
+
+            else if (!GPIO_Read(P11, 9))//下
+            {
+                minThre -= 1;
+            }
+
+
+            else if (!GPIO_Read(P11, 10))//左
+            {
+                maxThre -= 1;
+            }
+
+
+            else if (!GPIO_Read(P11, 11))//右
+            {
+                maxThre += 1;
+            }
+
+
+//            else if (!GPIO_Read(P11, 12))//ok
 //            {
-//                minThre += 1;
+//
 //            }
-//
-//            else if (!GPIO_Read(P11, 9))//下
-//            {
-//                minThre -= 1;
-//            }
-//
-//
-//            else if (!GPIO_Read(P11, 10))//左
-//            {
-//                maxThre -= 1;
-//            }
-//
-//
-//            else if (!GPIO_Read(P11, 11))//右
-//            {
-//                maxThre += 1;
-//            }
-//
-//
-////            else if (!GPIO_Read(P11, 12))//ok
-////            {
-////
-////            }
-//        }
+        }
          if(fullBuffer != NULL)
          {
 

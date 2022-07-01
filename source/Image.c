@@ -732,16 +732,15 @@ void part_OUST() {
 //        pthre2[i+1] = (double)thre2[i+1] / (56 * 188);
 
     }
-    uint8_t min_thre = part_klow1.intVal, max_thre = part_khigh1.intVal;
-    double numU = 0, max_numU = 0;
+    uint8_t min_thre = minThre, max_thre = maxThre;
     double p = part_klow2.floatVal;
-
+    double numU = 0, max_numU = 0;
     double p_sum_lessU = 0;
     double p_sum_moreU = 0;
     double m_LessU = 0;
     double m_MoreU = 0;
     double M_LessU = 0;
-    double M_MoreU = 0;
+    double M_MoreU=0;
     for (int i = 0; i < (int)(min_thre * p) - 1; i++) {
         p_sum_lessU += pthre1[i];
         m_LessU += i * pthre1[i];
@@ -752,18 +751,16 @@ void part_OUST() {
     }
 
     for (int k = (int)(min_thre * p); k <= (int)(max_thre * p); k++) {
-        /*double p_sum_lessU = 0;
-        double p_sum_moreU = 0;
-        double m_LessU = 0;
-        double m_MoreU = 0;
-        for (int i = 0; i < k; i++) {
-            p_sum_lessU += pthre1[i];
-            m_LessU += i * pthre1[i];
-        }
-        for (int i = k; i < 256; i++) {
-            p_sum_moreU += pthre1[i];
-            m_MoreU += i * pthre1[i];
-        }*/
+
+
+//        for (int i = 0; i < k; i++) {
+//            p_sum_lessU += pthre1[i];
+//            m_LessU += i * pthre1[i];
+//        }
+//        for (int i = k; i < 256; i++) {
+//            p_sum_moreU += pthre1[i];
+//            m_MoreU += i * pthre1[i];
+//        }
         p_sum_lessU += pthre1[k];
         p_sum_moreU -= pthre1[k];
         m_LessU += k * pthre1[k];
@@ -772,7 +769,7 @@ void part_OUST() {
         M_LessU = m_LessU / p_sum_lessU;
         M_MoreU = m_MoreU / p_sum_moreU;
 
-        numU = p_sum_lessU * p_sum_moreU * (M_LessU - M_MoreU) * (M_LessU - M_MoreU);
+        numU =100 * p_sum_lessU * p_sum_moreU * (M_LessU - M_MoreU) * (M_LessU - M_MoreU);
         if (numU >= max_numU) {
             max_numU = numU;
             thresholdUp = k;
@@ -795,18 +792,15 @@ void part_OUST() {
     }
 
     for (int k = min_thre; k <= max_thre; k++) {
-        /*double p_sum_less = 0;
-        double p_sum_more = 0;
-        double m_Less = 0;
-        double m_More = 0;
-        for (int i = 0; i < k; i++) {
-            p_sum_less += pthre2[i];
-            m_Less += i * pthre2[i];
-        }
-        for (int i = k; i < 256; i++) {
-            p_sum_more += pthre2[i];
-            m_More += i * pthre2[i];
-        }*/
+
+//        for (int i = 0; i < k; i++) {
+//            p_sum_less += pthre2[i];
+//            m_Less += i * pthre2[i];
+//        }
+//        for (int i = k; i < 256; i++) {
+//            p_sum_more += pthre2[i];
+//            m_More += i * pthre2[i];
+//        }
         p_sum_less += pthre2[k];
         p_sum_more -= pthre2[k];
         m_Less += k * pthre2[k];
@@ -815,7 +809,7 @@ void part_OUST() {
         M_Less = m_Less / p_sum_less;
         M_More = m_More / p_sum_more;
 
-        num = p_sum_less * p_sum_more * (M_Less - M_More) * (M_Less - M_More);
+        num =100 * p_sum_less * p_sum_more * (M_Less - M_More) * (M_Less - M_More);
         if (num >= max_num) {
             max_num = num;
             thresholdDown = k;
@@ -1827,20 +1821,20 @@ void judge_type_road() {
         islandTimes++;
     }
     if (islandTimes == 1) {
-        IslandRadius = 100;
-//        IslandRadius = islandParam2.intVal;
+//        IslandRadius = 100;
+        IslandRadius = islandParam2.intVal;
     }
     else if (islandTimes == 2) {
-        IslandRadius = 50;
-//        IslandRadius = islandParam2.intVal;
+//        IslandRadius = 50;
+        IslandRadius = islandParam2.intVal;
     }
     else if(islandTimes == 3) {
-//        IslandRadius = islandParam2.intVal;
-        IslandRadius = 100;
+        IslandRadius = islandParam2.intVal;
+//        IslandRadius = 100;
     }
     else if (islandTimes == 4) {
-//        IslandRadius = islandParam2.intVal;
-        IslandRadius = 50;
+        IslandRadius = islandParam2.intVal;
+//        IslandRadius = 50;
 
     }
 
@@ -4717,7 +4711,7 @@ void island_turn() {
             if (1) {
                 int up = 60;
                 if(IslandRadius == 70){
-                up = 70;
+                up = 68;
             }
             else if(IslandRadius == 50)
             {
@@ -4930,7 +4924,7 @@ void design_island_turn() {
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
 
-                    if (k < -0.2)left_line[i] = k * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].right;
+                    if (k < -0.2)left_line[i] = (k-dkRight) * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].right;
                     else left_line[i] = my_road[i].connected[j_mid2[i]].right - 20;
                     right_line[i] = my_road[i].connected[j_mid2[i]].right;
                 }
@@ -5055,70 +5049,73 @@ void design_island_turn() {
                 //pxy
 
             }
-            else if (upPoint >= 95 && upPoint <= NEAR_LINE) {
-                /*
-                double k = (double) (left_side[10] - right_line[(NEAR_LINE - 5)])/ (10 - (NEAR_LINE - 5)) - 0.2;
+            else if (upPoint >= 95&&upPoint!=119) {
 
-                for (int i = (NEAR_LINE - 5); i >= 2; i--) {
-                    right_line[i] = k * (i - (NEAR_LINE - 5)) + right_line[(NEAR_LINE - 5)];
-                    left_line[i] = my_road[i].connected[j_mid2[i]].left;
-                }*/
+                           uint8_t k1=2;
+                           for (int i = upPoint; i >= 2; i--)
+                           {
+                               if (my_road[i-1].connected[j_mid2[i-1]].right - my_road[i].connected[j_mid2[i]].right > 10) {
+                                   k1 = i;
+                                   break;
+                               }
+                               right_line[i] = my_road[i].connected[j_mid2[i]].right;
+                               //printf("%d\n", right_line[i]);
+                           }
+                           if (k1 >= upPoint-5) {
+                               for (int i = (NEAR_LINE - 5); i >= 50; i--)
+                               {
+                                   left_line[i] = left_side[i];
+                                   right_line[i] = left_side[i] + my_road[upPoint].connected[j_mid[upPoint]].left - left_side[upPoint];
+                               }
+                           }
+                           else {
+                               if (k1 < upPoint - 10) k1 = upPoint - 10;
+                               double k = calculate_slope_uint(k1, upPoint, right_line);
+           if(IslandRadius == 50)
+                           {
+                               k = k + 0.2;
+                           }
+                           else if(IslandRadius >= 60 && IslandRadius <= 70)
+                           {
+                               k = k + 0.2;
+                           }
+                           else if(IslandRadius > 70)
+                           {
+                               k = k + 0.2;
+                           }
+                               if (k > 0.2)
+                               {
+                                   for (int i = (NEAR_LINE - 5); i >= 2; i--) {
+                                       right_line[i] = (k +dkLeft)* (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].left;
+                                       left_line[i] = my_road[i].connected[j_mid2[i]].left;
+                                   }
+                               }
+                               else {
+                                   for (int i = (NEAR_LINE - 5); i >= 2; i--) {
+                                       left_line[i] = left_side[i];
+                                       right_line[i] = left_side[i] + my_road[upPoint].connected[j_mid[upPoint]].left - left_side[upPoint];
+                                   }
+                               }
 
-                //pxy
-                //double k = (double)(left_side[10] - right_line[(NEAR_LINE - 5)]) / (10 - (NEAR_LINE - 5)) - 0.2;
-
-                uint8_t k1=2;
-                for (int i = upPoint; i >= 2; i--)
-                {
-                    if (my_road[i].connected[j_mid2[i]].right - my_road[i + 1].connected[j_mid2[i + 1]].right > 20) {
-                        k1 = i+1;
-                        break;
-                    }
-                }
-
-                if (k1 < upPoint - 10) k1 = upPoint - 10;
-                double k = calculate_slope_uint(k1, upPoint, right_line);
-                if(IslandRadius == 50)
-                {
-                    k = k + 0.2;
-                }
-                else if(IslandRadius >= 60 && IslandRadius <= 70)
-                {
-                    k = k + 0.2;
-                }
-                else if(IslandRadius > 70)
-                {
-                    k = k + 0.2;
-                }
-                //if (k < 0.5) k = 1.5;
-
-                for (int i = (NEAR_LINE - 5); i >= 2; i--) {
-
-                    if (k > 0.2) right_line[i] = k * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].left;
-                    else right_line[i] = my_road[i].connected[j_mid2[i]].left + 20;
-                    left_line[i] = my_road[i].connected[j_mid2[i]].left;
-                }
-
-
-
-                for (int i = upPoint + 4; i >= 2; i--)
-                {
-                    if (left_line[i] >= left_line[i + 1] &&
-                        left_line[i] >= left_line[i + 2] &&
-                        left_line[i] - left_line[i + 1] >= 1 &&
-                        left_line[i] - left_line[i + 2] >= 1)
-                    {
-                        for (int j = i; j >= 2; j--)
-                        {
-                            left_line[j] = left_line[i + 1];
-                        }
-                    }
-                }
-                //pxy
+                               for (int i = upPoint + 4; i >= 2; i--)
+                               {
+                                   if (left_line[i] >= left_line[i + 1] &&
+                                       left_line[i] >= left_line[i + 2] &&
+                                       left_line[i] - left_line[i + 1] >= 1 &&
+                                       left_line[i] - left_line[i + 2] >= 1)
+                                   {
+                                       for (int j = i; j >= 2; j--)
+                                       {
+                                           left_line[j] = left_line[i + 1];
+                                       }
+                                   }
+                               }
+                               //pxy
+                           }
             }
         }
-
     }
+
 }
 
 ////////////////////////////////////////////
@@ -5253,7 +5250,7 @@ void island_out() {
             int start = NEAR_LINE;
             while (start >= 50 && left_line[start] >= left_line[NEAR_LINE] - 10) {
                 if (my_road[start - 1].white_num != 0) {
-                    if (left_line[start] >= xMax) {
+                    if (left_line[start] >= xMax - 1) {
                         xMax = left_line[start];
                         yMax = start;
                     }
@@ -5292,7 +5289,7 @@ void island_out() {
             int start = NEAR_LINE;
             while (start >= 50 && right_line[start] <= right_line[NEAR_LINE] + 10) {
                 if (my_road[start - 1].white_num != 0) {
-                    if (right_line[start] <= xMin) {
+                    if (right_line[start] <= xMin + 1) {
                         xMin = right_line[start];
                         yMin = start;
                     }
@@ -5543,7 +5540,7 @@ void island_straight() {
             }
             for(int i=90;i>=50;i--){
                 if(abs(left_line[i] - left_line[i - 1]) > 4){
-                    flag=0;
+                //    flag=0;
                 }
             }
 
@@ -5567,7 +5564,7 @@ void island_straight() {
         //  //printf("ku=%f,kd=%f\n", calculate_slope_uint(50, 70, right_line), calculate_slope_uint(80, 100, right_line));
             if (fabs(calculate_slope_uint(50, 70, right_line) - calculate_slope_uint(80, 100, right_line)) > 0.2
                 ) {
-                flag = 0;
+               // flag = 0;
             }
             for(int i=90;i>=50;i--){
                 if(abs(right_line[i] - right_line[i - 1]) > 4){
@@ -6600,7 +6597,7 @@ void cross_T_out_over() {
                             }
                         }
                         //  printf("lk=%f\n", calculate_slope_uint(start - 13, start, left_line));
-                        if (sumR >= 15 && calculate_slope_uint(start - 13, start, left_line) < -1 && calculate_slope_uint(start - 13, start, left_line) > -3) {
+                        if (sumR >= 15 && calculate_slope_uint(start - 13, start, right_line) > 1 && calculate_slope_uint(start - 13, start, right_line) < 3) {
                             state = 0;
                             TWhere = 0;
                         }
