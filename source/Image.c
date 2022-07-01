@@ -1827,12 +1827,12 @@ void judge_type_road() {
         islandTimes++;
     }
     if (islandTimes == 1) {
-//        IslandRadius = 100;
-        IslandRadius = islandParam2.intVal;
+        IslandRadius = 100;
+//        IslandRadius = islandParam2.intVal;
     }
     else if (islandTimes == 2) {
-//        IslandRadius = 50;
-        IslandRadius = islandParam2.intVal;
+        IslandRadius = 50;
+//        IslandRadius = islandParam2.intVal;
     }
     else if(islandTimes == 3) {
 //        IslandRadius = islandParam2.intVal;
