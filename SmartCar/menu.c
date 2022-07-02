@@ -927,11 +927,22 @@ void MENU_showIMG()
     while(TRUE)
     {
 //        SmartCar_OLED_Fillpart(0);
+        if(wayThre.intVal == 2)
+        {
+             SmartCar_OLED_P6x8Str(110, 0, "up");
+             SmartCar_OLED_Printf6x8(110, 1, "%d", thresholdUp);
+             SmartCar_OLED_P6x8Str(100, 2, "down");
+             SmartCar_OLED_Printf6x8(110, 3, "%d", thresholdDown);
+        }
 
-        SmartCar_OLED_P6x8Str(110, 0, "up");
-        SmartCar_OLED_Printf6x8(110, 1, "%d", thresholdUp);
-        SmartCar_OLED_P6x8Str(100, 2, "down");
-        SmartCar_OLED_Printf6x8(110, 3, "%d", thresholdDown);
+        else if(wayThre.intVal == 3)
+        {
+            SmartCar_OLED_P6x8Str(100, 0, "origin");
+
+            SmartCar_OLED_Printf6x8(110, 1, "%d", threOriginal);
+
+        }
+
 //        SmartCar_OLED_P6x8Str(100, 6, "state");
         SmartCar_OLED_Printf6x8(110, 4, "%d", state);
         SmartCar_OLED_Printf6x8(110, 6, "%d", minThre);

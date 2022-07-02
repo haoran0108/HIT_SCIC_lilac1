@@ -122,6 +122,8 @@ void SW_readSwitch()
 
         islandTimes = 0;
         islandCircleCount = 0;
+        tInCount = 0;
+
     }
     else
     {

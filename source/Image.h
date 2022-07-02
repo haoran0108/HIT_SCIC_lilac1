@@ -156,6 +156,10 @@ extern uint8_t islandTimes, IslandRadius;
 extern uint8_t minThre, maxThre;
 extern int islandWhere;
 extern uint8_t islandCircleCount;
+extern uint8_t tInCount;
+extern int threOriginal;
+
+
 typedef struct {
     int x;
     int y;
@@ -224,6 +228,7 @@ void transform_sd(int wayThre);
 void orinary_two_line_history();
 
 void protection();
+void image_Preprocess(void);
 
 //道路规划
 void judge_type_road();

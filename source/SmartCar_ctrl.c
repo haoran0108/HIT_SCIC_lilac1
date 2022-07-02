@@ -233,18 +233,29 @@ void CTRL_curLoopPID()
 
 //    currentLF_real = 4420 - currentLF;
 
-    currentErrorR.currentError = currentExpectRT - currentRT[0];
+    int currentR = 0, currentL = 0;
+    if(state == stateRampway)
+    {
+        currentR = currentExpectRT + 200;
+        currentL = currentExpectLF + 200;
+
+        currentErrorR.currentError = currentR - currentRT[0];
+        currentErrorL.currentError = currentL - currentLF[0];
+
+    }
+
+    else
+    {
+        currentErrorR.currentError = currentExpectRT - currentRT[0];
+        currentErrorL.currentError = currentExpectLF - currentLF[0];
+
+    }
+//    currentErrorR.currentError = currentExpectRT - currentRT[0];
     currentErrorR.delta = currentErrorR.currentError - currentErrorR.lastError;
-//    currentErrorR.delta = (currentErrorR.currentError - currentErrorR.lastError) * currentKdLpf.floatVal + currentErrorR.delta * (1 - currentKdLpf.floatVal);
     mySpeedR = (int32)(mySpeedR + currentErrorR.currentError * currentKI_R + currentErrorR.delta * currentKP_R);
     currentErrorR.lastError = currentErrorR.currentError;
 
-
-    currentErrorL.currentError = currentExpectLF - currentLF[0];
-//    currentErrorL.currentError = 2250 - currentLF;
     currentErrorL.delta = currentErrorL.currentError - currentErrorL.lastError;
-//    currentErrorL.delta = (currentErrorL.currentError - currentErrorL.lastError) * currentKdLpf.floatVal + currentErrorL.delta * (1 - currentKdLpf.floatVal);
-
     mySpeedL = (int32)(mySpeedL + currentErrorL.currentError * currentKI_L + currentErrorL.delta * currentKP_L);
     currentErrorL.lastError = currentErrorL.currentError;
 
