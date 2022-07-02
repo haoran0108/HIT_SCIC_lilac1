@@ -3153,7 +3153,7 @@ void design_cross_ing() {
 
         for (int i = jumpLine + 3; i >= 1; i--) {
             mid[i] = kMid * (i - jumpLine - 3) + mid[jumpLine + 3];
-            IMG[i][mid[i]] = gray;
+           // IMG[i][mid[i]] = gray;
         }
         for (int i = NEAR_LINE; i >= 1; i--) {
             j_mid[i] = j_continue[i];
