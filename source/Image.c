@@ -2937,7 +2937,7 @@ void cross_in() {
 
                         //printf("dk=%f\n", fabs(kl2 - kl3));
                         if (/*((fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2) || (fabs(kr1 - kr2) < 0.2 && fabs(kr1 - kr3) < 0.2 && fabs(kr2 - kr3) < 0.2))*/
-                            linear_judgement(leftUpJumpPoint - 7, leftDownJumpPoint + 7, left_road)< 100 &&  linear_judgement(rightUpJumpPoint - 7, rightDownJumpPoint + 7, right_road) < 100) {
+                            linear_judgement(leftUpJumpPoint - 7, leftDownJumpPoint + 7, left_road)< 100 ||  linear_judgement(rightUpJumpPoint - 7, rightDownJumpPoint + 7, right_road) < 100) {
 
                         }
                         else {
@@ -3012,10 +3012,10 @@ void design_cross_ing() {
     }
     uint8_t jumpLine = 119;
     for (int i = 110; i >= 30; i--) {
-        if (my_road[i - 2].connected[j_mid[i - 2]].width - my_road[i].connected[j_mid[i]].width >= 5
+        if (my_road[i - 2].connected[j_mid[i - 2]].width - my_road[i].connected[j_mid[i]].width >= 4
             && my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width >= 3
             && abs(my_road[i + 1].connected[j_mid[i + 1]].width - my_road[i].connected[j_mid[i]].width) <= 3
-            && abs(my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width) <= 4
+            && abs(my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width) <= 3
             && my_road[i].connected[j_mid[i]].width < 35
             && my_road[i].connected[j_mid[i]].right < right_side[i] - 2 && my_road[i].connected[j_mid[i]].left > left_side[i] + 2
 
@@ -3027,7 +3027,7 @@ void design_cross_ing() {
             break;
         }
     }
-    ////printf("jl=%d", jumpLine);
+    //printf("jl=%d", jumpLine);
     if (60 < jumpLine && jumpLine <= 110) {
 
         for (int i = NEAR_LINE; i >= jumpLine + 1; i--) {
@@ -3061,84 +3061,89 @@ void design_cross_ing() {
 
         for (int i = jumpLine + 3; i >= 1; i--) {
             mid[i] = kMid * (i - jumpLine - 3) + mid[jumpLine + 3];
-//            IMG[i][mid[i]] = purple;
+            //IMG[i][mid[i]] = gray;
         }
         for (int i = NEAR_LINE; i >= 1; i--) {
             j_mid[i] = j_continue[i];
-            if(!(1<=j_mid[i]&&j_mid[i]<=my_road[i].white_num)){
-                j_mid[i]=1;
-            }
             for (int j = 1; j <= my_road[i].white_num; j++) {
 
                 if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 - mid[i]) < abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right) / 2 - mid[i])
                     && my_road[i].connected[j].width >= 10
-                    // && my_road[i].connected[j].right >= my_road[i - 1].connected[j_mid[i - 1]].left
+                    //&& !(IMG[i - 3][my_road[i].connected[j_mid[i]].left] == black && IMG[i - 3][my_road[i].connected[j_mid[i]].right] == black)
+                    && my_road[i].connected[j].right >= my_road[i - 1].connected[j_mid[i - 1]].left
                     ) {
                     j_mid[i] = j;
 
                 }
             }
-            IMG[i][my_road[i].connected[j_mid[i]].left + 4 ]=purple;
+        //  printf("%d:l=%d,r=%d\n",i,my_road[i].connected[j_mid[i]].left,my_road[i].connected[j_mid[i]].right);
         }
 
         for (int i = 20; i <= NEAR_LINE; i++) {
-                    if (my_road[i].connected[j_mid[i]].left > my_road[i - 1].connected[j_mid[i - 1]].right
-                        && my_road[i].connected[j_mid[i]].left > my_road[i - 2].connected[j_mid[i - 2]].right
-                        && my_road[i].connected[j_mid[i]].left > my_road[i - 3].connected[j_mid[i - 3]].right
-                        && my_road[i].connected[j_mid[i]].left > my_road[i - 4].connected[j_mid[i - 4]].right
-                        && my_road[i].connected[j_mid[i]].left > my_road[i - 5].connected[j_mid[i - 5]].right
-                        && my_road[i].connected[j_mid[i]].left > my_road[i - 6].connected[j_mid[i - 6]].right
-                        && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 2].connected[j_mid[i - 2]].right
-                        && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 3].connected[j_mid[i - 3]].right
-                        && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 4].connected[j_mid[i - 4]].right
-                        && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 5].connected[j_mid[i - 5]].right
-                        && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 6].connected[j_mid[i - 6]].right
-                        && my_road[i - 2].connected[j_mid[i - 2]].left < my_road[i - 3].connected[j_mid[i - 3]].right
-                        && my_road[i - 2].connected[j_mid[i - 2]].left < my_road[i - 4].connected[j_mid[i - 4]].right
-                        && my_road[i - 2].connected[j_mid[i - 2]].left < my_road[i - 5].connected[j_mid[i - 5]].right
-                        && my_road[i - 2].connected[j_mid[i - 2]].left < my_road[i - 6].connected[j_mid[i - 6]].right
-                        && my_road[i - 3].connected[j_mid[i - 3]].left < my_road[i - 4].connected[j_mid[i - 4]].right
-                        && my_road[i - 3].connected[j_mid[i - 3]].left < my_road[i - 5].connected[j_mid[i - 5]].right
-                        && my_road[i - 3].connected[j_mid[i - 3]].left < my_road[i - 6].connected[j_mid[i - 6]].right
-                        && my_road[i - 4].connected[j_mid[i - 4]].left < my_road[i - 5].connected[j_mid[i - 5]].right
-                        && my_road[i - 4].connected[j_mid[i - 4]].left < my_road[i - 6].connected[j_mid[i - 6]].right
-                        && my_road[i - 5].connected[j_mid[i - 5]].left < my_road[i - 6].connected[j_mid[i - 6]].right
-                        //&& my_road[i].connected[j_mid[i]].width<32
-                        && j_mid[i] > 1
-                        ) {
-                        j_mid[i] -= 1;
-                        i--;
-                    }
-                }
-                for (int i = 20; i <= NEAR_LINE; i++) {
-                    if (my_road[i].connected[j_mid[i]].right < my_road[i - 1].connected[j_mid[i - 1]].left
-                        && my_road[i].connected[j_mid[i]].right < my_road[i - 2].connected[j_mid[i - 2]].left
-                        && my_road[i].connected[j_mid[i]].right < my_road[i - 3].connected[j_mid[i - 3]].left
-                        && my_road[i].connected[j_mid[i]].right < my_road[i - 4].connected[j_mid[i - 4]].left
-                        && my_road[i].connected[j_mid[i]].right < my_road[i - 5].connected[j_mid[i - 5]].left
-                        && my_road[i].connected[j_mid[i]].right < my_road[i - 6].connected[j_mid[i - 6]].left
-                        && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 2].connected[j_mid[i - 2]].left
-                        && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 3].connected[j_mid[i - 3]].left
-                        && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 4].connected[j_mid[i - 4]].left
-                        && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 5].connected[j_mid[i - 5]].left
-                        && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 6].connected[j_mid[i - 6]].left
-                        && my_road[i - 2].connected[j_mid[i - 2]].right > my_road[i - 3].connected[j_mid[i - 3]].left
-                        && my_road[i - 2].connected[j_mid[i - 2]].right > my_road[i - 4].connected[j_mid[i - 4]].left
-                        && my_road[i - 2].connected[j_mid[i - 2]].right > my_road[i - 5].connected[j_mid[i - 5]].left
-                        && my_road[i - 2].connected[j_mid[i - 2]].right > my_road[i - 6].connected[j_mid[i - 6]].left
-                        && my_road[i - 3].connected[j_mid[i - 3]].right > my_road[i - 4].connected[j_mid[i - 4]].left
-                        && my_road[i - 3].connected[j_mid[i - 3]].right > my_road[i - 5].connected[j_mid[i - 5]].left
-                        && my_road[i - 3].connected[j_mid[i - 3]].right > my_road[i - 6].connected[j_mid[i - 6]].left
-                        && my_road[i - 4].connected[j_mid[i - 4]].right > my_road[i - 5].connected[j_mid[i - 5]].left
-                        && my_road[i - 5].connected[j_mid[i - 5]].right > my_road[i - 6].connected[j_mid[i - 6]].left
-                        && my_road[i - 6].connected[j_mid[i - 6]].right > my_road[i - 6].connected[j_mid[i - 6]].left
-                        //&& my_road[i].connected[j_mid[i]].width < 32
-                        && j_mid[i] < my_road[i].white_num
-                        ) {
-                        j_mid[i] += 1;
-                        i--;
-                    }
-                }
+            if (my_road[i].connected[j_mid[i]].left > my_road[i - 1].connected[j_mid[i - 1]].right
+                && my_road[i].connected[j_mid[i]].left > my_road[i - 2].connected[j_mid[i - 2]].right
+                && my_road[i].connected[j_mid[i]].left > my_road[i - 3].connected[j_mid[i - 3]].right
+                && my_road[i].connected[j_mid[i]].left > my_road[i - 4].connected[j_mid[i - 4]].right
+                && my_road[i].connected[j_mid[i]].left > my_road[i - 5].connected[j_mid[i - 5]].right
+                && my_road[i].connected[j_mid[i]].left > my_road[i - 6].connected[j_mid[i - 6]].right
+                && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 2].connected[j_mid[i - 2]].right
+                && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 3].connected[j_mid[i - 3]].right
+                && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 4].connected[j_mid[i - 4]].right
+                && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 5].connected[j_mid[i - 5]].right
+                && my_road[i - 1].connected[j_mid[i - 1]].left < my_road[i - 6].connected[j_mid[i - 6]].right
+                && my_road[i - 2].connected[j_mid[i - 2]].left < my_road[i - 3].connected[j_mid[i - 3]].right
+                && my_road[i - 2].connected[j_mid[i - 2]].left < my_road[i - 4].connected[j_mid[i - 4]].right
+                && my_road[i - 2].connected[j_mid[i - 2]].left < my_road[i - 5].connected[j_mid[i - 5]].right
+                && my_road[i - 2].connected[j_mid[i - 2]].left < my_road[i - 6].connected[j_mid[i - 6]].right
+                && my_road[i - 3].connected[j_mid[i - 3]].left < my_road[i - 4].connected[j_mid[i - 4]].right
+                && my_road[i - 3].connected[j_mid[i - 3]].left < my_road[i - 5].connected[j_mid[i - 5]].right
+                && my_road[i - 3].connected[j_mid[i - 3]].left < my_road[i - 6].connected[j_mid[i - 6]].right
+                && my_road[i - 4].connected[j_mid[i - 4]].left < my_road[i - 5].connected[j_mid[i - 5]].right
+                && my_road[i - 4].connected[j_mid[i - 4]].left < my_road[i - 6].connected[j_mid[i - 6]].right
+                && my_road[i - 5].connected[j_mid[i - 5]].left < my_road[i - 6].connected[j_mid[i - 6]].right
+                && my_road[i].connected[j_mid[i]].width < my_road[i + 5].connected[j_mid[i + 5]].width - 20
+                && my_road[i].connected[j_mid[i]].width < my_road[i + 6].connected[j_mid[i + 6]].width - 20
+                && my_road[i].connected[j_mid[i]].width<32
+                && j_mid[i] > 1
+                ) {
+                j_mid[i] -= 1;
+                i--;
+            }
+        }
+        for (int i = 20; i <= NEAR_LINE; i++) {
+            if (my_road[i].connected[j_mid[i]].right < my_road[i - 1].connected[j_mid[i - 1]].left
+                && my_road[i].connected[j_mid[i]].right < my_road[i - 2].connected[j_mid[i - 2]].left
+                && my_road[i].connected[j_mid[i]].right < my_road[i - 3].connected[j_mid[i - 3]].left
+                && my_road[i].connected[j_mid[i]].right < my_road[i - 4].connected[j_mid[i - 4]].left
+                && my_road[i].connected[j_mid[i]].right < my_road[i - 5].connected[j_mid[i - 5]].left
+                && my_road[i].connected[j_mid[i]].right < my_road[i - 6].connected[j_mid[i - 6]].left
+                && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 2].connected[j_mid[i - 2]].left
+                && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 3].connected[j_mid[i - 3]].left
+                && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 4].connected[j_mid[i - 4]].left
+                && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 5].connected[j_mid[i - 5]].left
+                && my_road[i - 1].connected[j_mid[i - 1]].right > my_road[i - 6].connected[j_mid[i - 6]].left
+                && my_road[i - 2].connected[j_mid[i - 2]].right > my_road[i - 3].connected[j_mid[i - 3]].left
+                && my_road[i - 2].connected[j_mid[i - 2]].right > my_road[i - 4].connected[j_mid[i - 4]].left
+                && my_road[i - 2].connected[j_mid[i - 2]].right > my_road[i - 5].connected[j_mid[i - 5]].left
+                && my_road[i - 2].connected[j_mid[i - 2]].right > my_road[i - 6].connected[j_mid[i - 6]].left
+                && my_road[i - 3].connected[j_mid[i - 3]].right > my_road[i - 4].connected[j_mid[i - 4]].left
+                && my_road[i - 3].connected[j_mid[i - 3]].right > my_road[i - 5].connected[j_mid[i - 5]].left
+                && my_road[i - 3].connected[j_mid[i - 3]].right > my_road[i - 6].connected[j_mid[i - 6]].left
+                && my_road[i - 4].connected[j_mid[i - 4]].right > my_road[i - 5].connected[j_mid[i - 5]].left
+                && my_road[i - 5].connected[j_mid[i - 5]].right > my_road[i - 6].connected[j_mid[i - 6]].left
+                && my_road[i - 6].connected[j_mid[i - 6]].right > my_road[i - 6].connected[j_mid[i - 6]].left
+                //&& my_road[i].connected[j_mid[i]].width < my_road[i + 4].connected[j_mid[i + 4]].width - 20
+                && my_road[i].connected[j_mid[i]].width < my_road[i + 5].connected[j_mid[i + 5]].width - 20
+                && my_road[i].connected[j_mid[i]].width < my_road[i + 6].connected[j_mid[i + 6]].width - 20
+                && my_road[i].connected[j_mid[i]].width < 32
+                && j_mid[i] < my_road[i].white_num
+                ) {
+                j_mid[i] += 1;
+                i--;
+            }
+        }
+
+
 
         if (direction == 0) {
             int dy = 10;
@@ -3179,13 +3184,13 @@ void design_cross_ing() {
                 i--;
             }
         }
-        ////printf("%d=%d,%d=%d\n", leftDownJumpPoint, my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left, rightDownJumpPoint, my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right);
+        //printf("%d=%d,%d=%d\n", leftDownJumpPoint, my_road[leftDownJumpPoint].connected[j_mid[leftDownJumpPoint]].left, rightDownJumpPoint, my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right);
         if (leftDownJumpPoint <= jumpLine + 1 && rightDownJumpPoint <= jumpLine + 1
             && my_road[jumpLine - 60].white_num != 0) {
             //这时候我们认为我们已经找到了下方两个突变点的坐标，
             //我们继续寻找上方两个坐标点
 
-            int start = jumpLine - 50;
+            int start = jumpLine - 45;
 
             if (my_road[start].connected[j_mid[start]].width >= 35
                 ) {
@@ -3194,9 +3199,9 @@ void design_cross_ing() {
                 }
             }
             uint8_t jumpLineD = 119;
-            for (int i = jumpLine; i >= start; i--) {
-                if (my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width >= 6
-                    && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) <= 4
+            for (int i = start; i <= jumpLine; i++) {
+                if (my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width >= 5
+                    && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) <= 3
                     && my_road[i].connected[j_mid[i]].width < 35
                     && my_road[i].connected[j_mid[i]].right < right_side[i] - 2 && my_road[i].connected[j_mid[i]].left > left_side[i] + 2
                     ) {
@@ -3206,7 +3211,7 @@ void design_cross_ing() {
 
 
             }
-            ////printf("jlD=%d\n", jumpLineD);
+            //printf("jlD=%d\n", jumpLineD);
             if (direction == 0) {
                 if (my_road[jumpLineD + 10].connected[j_mid[jumpLineD + 10]].right + 4 >= my_road[jumpLineD].connected[j_mid[jumpLineD]].right
                     && my_road[jumpLineD + 10].connected[j_mid[jumpLineD + 10]].left - 4 <= my_road[jumpLineD].connected[j_mid[jumpLineD]].left) {
@@ -3216,9 +3221,10 @@ void design_cross_ing() {
             }
             else if (direction == LEFT) {
                 rightUpJumpPoint = jumpLineD;
-                int i = jumpLineD - 5;
+                int i = jumpLineD;
                 leftUpJumpPoint = i;
-                while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].left >= left_side[i] + 5) {
+                while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].left >= left_side[i] + 5
+                    && my_road[i].connected[j_mid[i]].left >= my_road[jumpLineD].connected[j_mid[jumpLineD]].left - 10) {
                     if (my_road[i].connected[j_mid[i]].left >= my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left - 1) {
                         leftUpJumpPoint = i;
                     }
@@ -3229,9 +3235,11 @@ void design_cross_ing() {
             }
             else if (direction == RIGHT) {
                 leftUpJumpPoint = jumpLineD;
-                int i = jumpLineD - 5;
+                int i = jumpLineD;
                 rightUpJumpPoint = i;
-                while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].right <= right_side[i] - 5) {
+                while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].right <= right_side[i] - 5
+                    && my_road[i].connected[j_mid[i]].right <= my_road[jumpLineD].connected[j_mid[jumpLineD]].right + 15
+                    ) {
                     if (my_road[i].connected[j_mid[i]].right <= my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right + 1) {
                         rightUpJumpPoint = i;
                     }
@@ -3239,12 +3247,9 @@ void design_cross_ing() {
                     i++;
                 }
             }
-            ////printf("ru=%d\n", rightUpJumpPoint);
-            ////printf("%d:l=%d,r=%d", rightUpJumpPoint, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].left, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right);
-            test_varible[2]=direction;
-            test_varible[3]=start;
-            test_varible[4]=jumpLineD;
-            test_varible[5]=rightDownJumpPoint;
+            //printf("ru=%d\n", rightUpJumpPoint);
+            //printf("%d:l=%d,r=%d", rightUpJumpPoint, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].left, my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right);
+
 
             if (jumpLineD - 5 <= leftUpJumpPoint && jumpLineD - 5 <= rightUpJumpPoint
                 && leftUpJumpPoint <= jumpLine && rightUpJumpPoint <= jumpLine) {
@@ -3260,7 +3265,7 @@ void design_cross_ing() {
                     if (rightUpJumpPoint <= i && i <= rightDownJumpPoint) {
                         right_line[i] = kr * (i - rightDownJumpPoint) + my_road[rightDownJumpPoint].connected[j_mid[rightDownJumpPoint]].right;
                     }
-                    // //printf("%d:w=%d\n", i, right_line[i] - left_line[i]);
+                    // printf("%d:w=%d\n", i, right_line[i] - left_line[i]);
                 }
 
             }
@@ -3269,10 +3274,11 @@ void design_cross_ing() {
         }
     }
     else if (jumpLine == 119 || jumpLine <= 60 || jumpLine > 106) {
-//test_varible[2]=2;
+
         //并不成功的想法  //根据上一张图的中线来确定新图的中线大致范围
 
         //确定中线，寻找上突变点
+        //根据底端白条，计算依赖阈值需要看的比较全
         int sumL = 0, sumR = 0;
         int FIRSTL = 119, FIRSTR = 119;
         int endL = 119, endR = 119;
@@ -3313,7 +3319,7 @@ void design_cross_ing() {
 
 
         }
-        ////printf("L:fl=%d,el=%d\nR:fr=%d,er=%d\n", FIRSTL, endL, FIRSTR, endR);
+        //printf("L:fl=%d,el=%d\nR:fr=%d,er=%d\n", FIRSTL, endL, FIRSTR, endR);
 
         /*if ((FIRSTL >= 106 && FIRSTL <= NEAR_LINE)  && (FIRSTR <= 106 || FIRSTR > NEAR_LINE)) {
             direction = LEFT;
@@ -3351,13 +3357,19 @@ void design_cross_ing() {
                 direction = 0;
             }
         }
+        /*if (sumL >= sumR + 3) {
+            direction = LEFT;
+        }
+        else if (sumL + 3 <= sumR) {
+            direction = RIGHT;
+        }
+        else {
+            direction = 0;
+        }*/
         j_mid[NEAR_LINE] = j_continue[NEAR_LINE];
         if (direction == 0) {
             for (int i = NEAR_LINE - 1; i >= 1; i--) {
                 j_mid[i] = j_continue[i];
-                if(!(1<=j_continue[i] && j_continue[i]<=my_road[i].white_num)){
-                    j_mid[i]=1;
-                }
                 for (int j = 1; j <= my_road[i].white_num; j++) {
                     if (abs((my_road[i].connected[j].left + my_road[i].connected[j].right) / 2 - 92) <= abs((my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i + 1]].right) / 2 - 92)
                         && my_road[i].connected[j].width > 15) {
@@ -3369,9 +3381,6 @@ void design_cross_ing() {
         else if (direction == LEFT) {
             for (int i = NEAR_LINE - 1; i >= 2; i--) {
                 j_mid[i] = j_continue[i];
-                if(!(1<=j_continue[i] && j_continue[i]<=my_road[i].white_num)){
-                    j_mid[i]=1;
-                }
                 for (int j = 1; j <= my_road[i].white_num; j++) {
                     if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_mid[i + 1]].left) < abs(my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left)
                         && my_road[i].connected[j].width > 15) {
@@ -3385,9 +3394,6 @@ void design_cross_ing() {
         else if (direction == RIGHT) {
             for (int i = NEAR_LINE - 1; i >= 2; i--) {
                 j_mid[i] = j_continue[i];
-                if(!(1<=j_continue[i] && j_continue[i]<=my_road[i].white_num)){
-                    j_mid[i]=1;
-                }
                 for (int j = 1; j <= my_road[i].white_num; j++) {
                     if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_mid[i + 1]].right) < abs(my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right)
                         && my_road[i].connected[j].width > 15) {
@@ -3409,11 +3415,10 @@ void design_cross_ing() {
             }
         }
 
-
         uint8_t jumpLineD = 119;
         for (int i = start; i >= 60; i--) {
-            if (my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width >= 6
-                && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) <= 4
+            if (my_road[i + 2].connected[j_mid[i + 2]].width - my_road[i].connected[j_mid[i]].width >= 5
+                && abs(my_road[i - 1].connected[j_mid[i - 1]].width - my_road[i].connected[j_mid[i]].width) <= 3
                 && my_road[i].connected[j_mid[i]].width < 35
                 && my_road[i].connected[j_mid[i]].right < right_side[i] - 2 && my_road[i].connected[j_mid[i]].left > left_side[i] + 2
                 ) {
@@ -3423,7 +3428,6 @@ void design_cross_ing() {
 
 
         }
-        test_varible[6]=jumpLineD;
         for (int i = jumpLineD - 1; i >= jumpLineD - 20; i--) {
             mid[i] = (my_road[i].connected[j_mid[i]].right + my_road[i].connected[j_mid[i]].left) / 2;
         }
@@ -3448,11 +3452,9 @@ void design_cross_ing() {
         }
         else if (direction == LEFT) {
             rightUpJumpPoint = jumpLineD;
-            int i = jumpLineD - 5;
+            int i = jumpLineD;
             leftUpJumpPoint = i;
-            while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].left >= left_side[i] + 5 &&
-                    my_road[i].connected[j_mid[i]].left>=my_road[jumpLineD].connected[j_mid[jumpLineD]].left-10
-                    ) {
+            while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].left >= left_side[i] + 5) {
                 if (my_road[i].connected[j_mid[i]].left >= my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left) {
                     leftUpJumpPoint = i;
                 }
@@ -3463,11 +3465,9 @@ void design_cross_ing() {
         }
         else if (direction == RIGHT) {
             leftUpJumpPoint = jumpLineD;
-            int i = jumpLineD - 5;
+            int i = jumpLineD;
             rightUpJumpPoint = i;
-            while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].right <= right_side[i] - 5 &&
-                    my_road[i].connected[j_mid[i]].right<=my_road[jumpLineD].connected[j_mid[jumpLineD]].right+10
-                    ) {
+            while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].right <= right_side[i] - 5) {
                 if (my_road[i].connected[j_mid[i]].right <= my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right) {
                     rightUpJumpPoint = i;
                 }
@@ -3484,11 +3484,10 @@ void design_cross_ing() {
                 left_line[i] = kl * (i - leftUpJumpPoint) + my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left;
             }
             double kr = calculate_slope_struct(rightUpJumpPoint - 20, rightUpJumpPoint - 5, j_mid, RIGHT);
-//            test_varible[2] = kr;
             if (rightUpJumpPoint <= i) {
                 right_line[i] = kr * (i - rightUpJumpPoint) + my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right;
             }
-            // //printf("1\n");
+            // printf("1\n");
         }
 
 
@@ -3520,7 +3519,7 @@ void cross_over() {
         }
     }
 
-    if (sumD >=1 && sumD <= 7 && sumU >= 5) {
+    if (sumD >=2 && sumD <= 7 && sumU >= 5 && right_line[NEAR_LINE - 1] - left_line[NEAR_LINE - 1] > 30) {
         if (fabs(kl - kr) < 0.2) {
             if (1) {
                 state = stateStart;
@@ -5311,7 +5310,7 @@ void design_island_circle(){
 ///////////////////////////////////////////
 void island_out() {
     int dx = 0;
-    if (my_road[70].white_num != 0) {
+    if (my_road[60].white_num != 0) {
         if (islandWhere == RIGHT) {
 
             int xMax = 0;
@@ -5345,7 +5344,7 @@ void island_out() {
 //             test_varible[14] = xMax;
 //             //printf("y=%d,x=%d\n", yMax, xMax);
             // //printf("xMax=%d,y=%d\n", xMax,yMax);
-            if (left_line[yMax - 15] != MISS  < 0) {
+            if (left_line[yMax - 5] != MISS  < 0) {
                 if (xMax < xmax - islandParam4.intVal && yMax >= 40 && yMax <= 110) {
                   state = stateIslandOut;
                 }
