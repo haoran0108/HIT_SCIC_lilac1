@@ -3065,7 +3065,7 @@ void design_cross_ing() {
         }
         for (int i = NEAR_LINE; i >= 1; i--) {
             j_mid[i] = j_continue[i];
-            if(!(1<=j_mid[i]&&j_mid[i]<=my_road[i].connected)){
+            if(!(1<=j_mid[i]&&j_mid[i]<=my_road[i].white_num)){
                 j_mid[i]=1;
             }
             for (int j = 1; j <= my_road[i].white_num; j++) {
@@ -4788,7 +4788,7 @@ void island_turn() {
             }
             else if(IslandRadius == 100)
             {
-                up = 72;
+                up = 62;
             }
                 if (up + D <= upPoint && upPoint <= 110 && my_road[upPoint].connected[j_mid[upPoint]].right < 115) {
                     state = stateIslandTurn;
@@ -4844,7 +4844,7 @@ void island_turn() {
                 }
                 else if(IslandRadius == 100)
                 {
-                    up = 72;
+                    up = 62;
                 }
                 if (up + D <= upPoint && upPoint < 100 && my_road[upPoint].connected[j_mid[upPoint]].left > 70) {
                     state = stateIslandTurn;
@@ -5544,7 +5544,7 @@ void design_island_out() {
             }
             else if(IslandRadius == 100)
             {
-                k = k - 0.3;
+                k = k - 0.1;
             }
             for (int i = NEAR_LINE - 1; i >= 2; i--) {
                 if (i <= yMin) {
@@ -5567,7 +5567,7 @@ void design_island_out() {
             }
             else if(IslandRadius == 100)
             {
-                k = k - 0.3;
+                k = k - 0.1;
             }
             for (int i = NEAR_LINE - 1; i >= 2; i--) {
                 right_line[i] = (k + dk) * (i - NEAR_LINE) + right_line[NEAR_LINE];
