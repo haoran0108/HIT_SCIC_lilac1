@@ -311,15 +311,20 @@ float CTRL_FuzzyMemberShip(int midError)
     float membership[2] = {1, 0};
     float servoKP = 0;
     float fuzzyWidth = 10;
-
+    float member1 = 1, member2 = 0;
     if(midError >= PB)
     {
         servoKP = fuzzy_PB;
     }
     else if(midError < PB && midError > PM)
     {
-        membership[0] = fabs((midError - PM) / fuzzyWidth);
-        membership[1] = fabs((midError - PB) / fuzzyWidth);
+        member1 = (float)(midError - PM);
+        membership[0] = member1 * member1 * 0.01;
+
+//        member2 = (float)(midError - PB);
+        membership[1] = 1 - membership[0];
+//        membership[0] = fabs((midError - PM) / fuzzyWidth);
+//        membership[1] = fabs((midError - PB) / fuzzyWidth);
 
         servoKP = fuzzy_PB * membership[0] + fuzzy_PM * membership[1];
     }
@@ -340,8 +345,12 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < PS && midError > ZO)
     {
-        membership[0] = fabs((midError - ZO) / fuzzyWidth);
-        membership[1] = fabs((midError - PS) / fuzzyWidth);
+        member1 = (float)(midError - PS);
+        membership[0] = member1 * member1 * 0.01;
+
+        membership[1] = 1 - membership[0];
+//        membership[0] = fabs((midError - ZO) / fuzzyWidth);
+//        membership[1] = fabs((midError - PS) / fuzzyWidth);
 
         servoKP = fuzzy_PS * membership[0] + fuzzy_ZO * membership[1];
     }
@@ -351,8 +360,12 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < ZO && midError > NS)
     {
-        membership[0] = fabs((midError - NS) / fuzzyWidth);
-        membership[1] = fabs((midError - ZO) / fuzzyWidth);
+        member1 = (float)(midError - NS);
+        membership[0] = member1 * member1 * 0.01;
+
+        membership[1] = 1 - membership[0];
+//        membership[0] = fabs((midError - NS) / fuzzyWidth);
+//        membership[1] = fabs((midError - ZO) / fuzzyWidth);
 
         servoKP = fuzzy_ZO * membership[0] + fuzzy_NS * membership[1];
     }
@@ -373,8 +386,12 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < NM && midError > NB)
     {
-        membership[0] = fabs((midError - NB) / fuzzyWidth);
-        membership[1] = fabs((midError - NM) / fuzzyWidth);
+        member1 = (float)(midError - NB);
+        membership[0] = member1 * member1 * 0.01;
+
+        membership[1] = 1 - membership[0];
+//        membership[0] = fabs((midError - NB) / fuzzyWidth);
+//        membership[1] = fabs((midError - NM) / fuzzyWidth);
 
         servoKP = fuzzy_NM * membership[0] + fuzzy_NB * membership[1];
     }

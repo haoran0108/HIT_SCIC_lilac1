@@ -3125,7 +3125,7 @@ void design_cross_ing() {
         for (int i = NEAR_LINE; i >= jumpLine + 1; i--) {
             mid[i] = (left_line[i] + right_line[i]) / 2;
         }
-        if (jumpLine >= 103) {
+        if (jumpLine >= 105) {
             if (right_line[jumpLine - 4] > right_line[jumpLine] + 2 && abs(left_line[jumpLine - 4] - left_line[jumpLine]) <= 2 ) {
                 kMid = calculate_slope_uint(jumpLine - 3, jumpLine + 10, left_line);
             }
