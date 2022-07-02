@@ -83,6 +83,7 @@ extern uint8_t present_speed, present_vision;
 extern uint8_t duzhuanCount, duzhuanFlag, duzhuanTime;
 extern uint32_t startCount;
 extern uint8_t startFlag;
+
 struct error
 {
     double delta;
@@ -90,6 +91,7 @@ struct error
     double lastError;
 };
 typedef struct error error;
+extern error servoError;
 
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      øÿ÷∆≥ı ºªØ

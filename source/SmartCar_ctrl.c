@@ -692,7 +692,7 @@ void CTRL_motorMain()
     {
         CTRL_CarParkStart();
 
-        CTRL_duzhuanTest();
+//        CTRL_duzhuanTest();
 
         speedDetermine();
         CTRL_motorDiffer();
@@ -813,6 +813,8 @@ void CTRL_motorDiffer()
 //            }
 //            GPIO_Set(P22, 0, 0);
 //        }
+
+
 
         speedDelta = (int32)((expectR - expectL) * gap.floatVal);
         if(speedDelta >= 0)

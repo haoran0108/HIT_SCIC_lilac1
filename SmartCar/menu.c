@@ -929,10 +929,10 @@ void MENU_showIMG()
 //        SmartCar_OLED_Fillpart(0);
         if(wayThre.intVal == 2)
         {
-             SmartCar_OLED_P6x8Str(110, 0, "up");
-             SmartCar_OLED_Printf6x8(110, 1, "%d", thresholdUp);
-             SmartCar_OLED_P6x8Str(100, 2, "down");
-             SmartCar_OLED_Printf6x8(110, 3, "%d", thresholdDown);
+//             SmartCar_OLED_P6x8Str(110, 0, "up");
+             SmartCar_OLED_Printf6x8(110, 0, "%d", thresholdUp);
+//             SmartCar_OLED_P6x8Str(100, 2, "down");
+             SmartCar_OLED_Printf6x8(110, 1, "%d", thresholdDown);
         }
 
         else if(wayThre.intVal == 3)
@@ -942,9 +942,11 @@ void MENU_showIMG()
             SmartCar_OLED_Printf6x8(110, 1, "%d", threOriginal);
 
         }
+        SmartCar_OLED_Printf6x8(110, 4, "%d", mid_line[present_vision]);
 
 //        SmartCar_OLED_P6x8Str(100, 6, "state");
-        SmartCar_OLED_Printf6x8(110, 4, "%d", state);
+        SmartCar_OLED_Printf6x8(110, 5, "%d", state);
+
         SmartCar_OLED_Printf6x8(110, 6, "%d", minThre);
         SmartCar_OLED_Printf6x8(110, 7, "%d", maxThre);
 
