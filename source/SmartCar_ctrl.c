@@ -318,11 +318,11 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < PB && midError > PM)
     {
-        member1 = (float)(midError - PM);
-        membership[0] = member1 * member1 * 0.01;
+        member2 = (float)(midError - PB);
+        membership[1] = member2 * member2 * 0.01;
 
 //        member2 = (float)(midError - PB);
-        membership[1] = 1 - membership[0];
+        membership[0] = 1 - membership[1];
 //        membership[0] = fabs((midError - PM) / fuzzyWidth);
 //        membership[1] = fabs((midError - PB) / fuzzyWidth);
 
@@ -345,14 +345,14 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < PS && midError > ZO)
     {
-        member1 = (float)(midError - PS);
-        membership[0] = member1 * member1 * 0.01;
+        member2 = (float)(midError - ZO);
+        membership[1] = member2 * member2 * 0.01;
 
-        membership[1] = 1 - membership[0];
+        membership[0] = 1 - membership[1];
 //        membership[0] = fabs((midError - ZO) / fuzzyWidth);
 //        membership[1] = fabs((midError - PS) / fuzzyWidth);
 
-        servoKP = fuzzy_PS * membership[0] + fuzzy_ZO * membership[1];
+        servoKP = fuzzy_PS * membership[1] + fuzzy_ZO * membership[0];
     }
     else if(midError == ZO)
     {
@@ -360,10 +360,10 @@ float CTRL_FuzzyMemberShip(int midError)
     }
     else if(midError < ZO && midError > NS)
     {
-        member1 = (float)(midError - NS);
-        membership[0] = member1 * member1 * 0.01;
+        member2 = (float)(midError - ZO);
+        membership[1] = member2 * member2 * 0.01;
 
-        membership[1] = 1 - membership[0];
+        membership[0] = 1 - membership[1];
 //        membership[0] = fabs((midError - NS) / fuzzyWidth);
 //        membership[1] = fabs((midError - ZO) / fuzzyWidth);
 
@@ -430,7 +430,22 @@ void CTRL_fuzzyPID()
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
-    servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
+
+    if(state == stateCrossIn)
+    {
+        if((servoError.lastError <= 8 && servoError.delta >= 5) || (servoError.lastError >= -8 && servoError.delta <= -5))
+        {
+
+        }
+
+        else servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
+
+    }
+    else
+    {
+        servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
+
+    }
 
     if(state == stateTIn)
     {
@@ -1714,3 +1729,14 @@ void CTRL_rampPwmxianfu()
 
 }
 
+
+void CTRL_crossPwmxianfu()
+{
+    if(state == stateCrossIn)
+    {
+        if(servoError.currentError <= 6 && servoError.currentError >= -6)
+        {
+
+        }
+    }
+}

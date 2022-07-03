@@ -480,7 +480,7 @@ void transform_sd(int wayThre)
 
         }
     }
-    else if (wayThre == 5) {
+    else if (0) {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 4; j++) {
                 map = fullBuffer + 188 * 43 * i + j * 47;
@@ -1134,7 +1134,7 @@ void ZHAO_THRE()
             sumGrayGrads += Grads * ((int)plineadd[j]);
         }
     }
-    threshold = sumGrayGrads / sumGrads + 5;
+    threshold = sumGrayGrads / sumGrads + 7;
 
     //以下是使用固定阈值的切换，不用时注释掉
     //threshold = threshold_fix;
