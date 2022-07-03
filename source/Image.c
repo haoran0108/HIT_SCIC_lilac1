@@ -3324,7 +3324,7 @@ void design_cross_ing() {
                 leftUpJumpPoint = i;
                 while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].left >= left_side[i] + 5
                     && my_road[i].connected[j_mid[i]].left >= my_road[jumpLineD].connected[j_mid[jumpLineD]].left - 10) {
-                    if (my_road[i].connected[j_mid[i]].left >= my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left - 1) {
+                    if (my_road[i].connected[j_mid[i]].left >= my_road[leftUpJumpPoint].connected[j_mid[leftUpJumpPoint]].left ) {
                         leftUpJumpPoint = i;
                     }
 
@@ -3339,7 +3339,7 @@ void design_cross_ing() {
                 while (i <= jumpLineD + 30 && my_road[i].connected[j_mid[i]].right <= right_side[i] - 5
                     && my_road[i].connected[j_mid[i]].right <= my_road[jumpLineD].connected[j_mid[jumpLineD]].right + 15
                     ) {
-                    if (my_road[i].connected[j_mid[i]].right <= my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right + 1) {
+                    if (my_road[i].connected[j_mid[i]].right <= my_road[rightUpJumpPoint].connected[j_mid[rightUpJumpPoint]].right  ) {
                         rightUpJumpPoint = i;
                     }
 
