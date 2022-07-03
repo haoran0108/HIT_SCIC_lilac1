@@ -3246,8 +3246,7 @@ void design_cross_ing() {
 
         if (direction == 0) {
             int dy = 10;
-            if (my_road[jumpLine - 10].connected[j_mid[jumpLine - 10]].right + 1 >= my_road[jumpLine].connected[j_mid[jumpLine]].right
-                && my_road[jumpLine - 10].connected[j_mid[jumpLine - 10]].left - 1 <= my_road[jumpLine].connected[j_mid[jumpLine]].left) {
+            if (1) {
                 leftDownJumpPoint = jumpLine;
                 rightDownJumpPoint = jumpLine;
             }
