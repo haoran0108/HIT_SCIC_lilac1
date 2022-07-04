@@ -91,7 +91,8 @@ uint8_t minThre, maxThre;
 uint8_t islandCircleCount = 0;
 uint8_t tInCount = 0;
 int threOriginal;
-
+int flagIT = 0;
+int wayIT = 1; //回环之后一定是环岛，我们用+-1来决定，1肯定是环岛，-1是回环 由发车方向决定
 
 //uint8_t zebraFlag;
 //uint8_t zebraCircle;
@@ -1829,16 +1830,32 @@ void judge_type_road() {
 
     //十字
     if (state == stateStart && flagChange == 0) {
-        cross_in();
+        //cross_in();
         if (my_road[60].white_num != 0)
             folk_road_in();
-        T_island_in_start();
+      //  T_island_in_start();
+//        if (lastState != state) {
+//            flagChange = 1;
+//        }
+
+    }
+    if (state == stateStart) {
+        if (flagIT == stateIslandFinal * RIGHT || flagIT == stateTOut * RIGHT) {
+            if (my_road[NEAR_LINE - 1].connected[j_continue[NEAR_LINE - 1]].width < 28) {
+                T_island_in_start();
+            }
+
+        }
+        else {
+            T_island_in_start();
+        }
         if (lastState != state) {
             flagChange = 1;
         }
-
     }
-
+    if (state != 0) {
+        flagIT = 0;
+    }
     if (state == stateCrossIn && flagChange == 0) {
         cross_over();
         if (lastState != state) {
@@ -1994,7 +2011,7 @@ void judge_type_road() {
     }
 
 
-    if (state != stateParkIn) {
+    if (state == stateStart || state == stateTIslandIn || state == stateTOut) {
         if(carParkTimes == 0)
         {
             if(file1.intVal == -1)
@@ -4452,9 +4469,11 @@ void T_or_island() {
 
     if (sumD > 5 && sumL>=2) {
         //如果上方没有赛道，我们认为是十字回环
-        if (my_road[35].white_num == 0) {
+        if (my_road[35].white_num == 0 && wayIT == -1) {
             state = stateTIn;
             TWhere = TIslandWhere;
+            TIslandWhere = 0;
+            wayIT = wayIT * -1;
         }
         else {
             if (TIslandWhere == RIGHT) {
@@ -4477,13 +4496,20 @@ void T_or_island() {
                 double kl2 = calculate_slope_struct(60, 75, j_mid, LEFT);
                 double kl3 = calculate_slope_struct(85, 100, j_mid, LEFT);
 
-                if (fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2) {
-                    state = stateSTIsland;
+                if (fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2 && wayIT == 1) {
+                    //state = stateSTIsland;
+                    state = stateIslandIng;
+                    islandWhere = TIslandWhere;
+                    TIslandWhere = 0;
+                    wayIT = wayIT * -1;
                 }
                 else {
-                    state = stateTIn;
-                    TWhere = TIslandWhere;
-                    TIslandWhere = 0;
+                    if (wayIT == -1) {
+                        state = stateTIn;
+                        TWhere = TIslandWhere;
+                        TIslandWhere = 0;
+                        wayIT = wayIT * -1;
+                    }
                 }
             }
             else if (TIslandWhere == LEFT) {
@@ -4512,13 +4538,20 @@ void T_or_island() {
 
                 // //printf("dk1=%f,dk2=%f,dk3=%f\n", fabs(kl1 - kl2), fabs(kl1 - kl3), fabs(kl2 - kl3));
                 //外边不直是回环
-                if (fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2) {
-                    state = stateSTIsland;
+                if (fabs(kl1 - kl2) < 0.2 && fabs(kl1 - kl3) < 0.2 && fabs(kl2 - kl3) < 0.2 && wayIT == 1) {
+                    //state = stateSTIsland;
+                    state = stateIslandIng;
+                    islandWhere = TIslandWhere;
+                    TIslandWhere = 0;
+                    wayIT = wayIT * -1;
                 }
                 else {
-                    state = stateTIn;
-                    TWhere = TIslandWhere;
-                    TIslandWhere = 0;
+                    if (wayIT == -1) {
+                        state = stateTIn;
+                        TWhere = TIslandWhere;
+                        TIslandWhere = 0;
+                        wayIT = wayIT * -1;
+                    }
                 }
             }
         }
@@ -5846,6 +5879,7 @@ void island_final() {
         if (islandWhere == RIGHT) {
             if (fabs(calculate_slope_uint(80, 100, left_line) - calculate_slope_uint(80, 100, right_line)) < 0.15
                     && calculate_slope_uint(85, 105, left_line) > -0.6) {
+                flagIT = islandWhere * state;
                 state = stateStart;
                 islandWhere = 0;
             }
@@ -5853,6 +5887,7 @@ void island_final() {
         else if (islandWhere == LEFT) {
             if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(85, 100, right_line)) < 0.15
                     && calculate_slope_uint(85, 105, right_line) < 0.6) {
+                flagIT = islandWhere * state;
                 state = stateStart;
                 islandWhere = 0;
             }
@@ -6690,6 +6725,7 @@ void cross_T_out_over() {
                     && calculate_slope_uint(start - 13, start, left_line) > -2.5 && calculate_slope_uint(start - 13, start, left_line) <= 0
                     && flag2 == 0) {
                     if (fabs(calculate_slope_uint(start - 11, start - 1, right_line) - calculate_slope_uint(start - 11, start - 1, left_line)) < 0.25) {
+                        flagIT = state * TWhere;
                         state = 0;
                         TWhere = 0;
                     }
@@ -6708,6 +6744,7 @@ void cross_T_out_over() {
                         }
                     //  //printf("lk=%f\n", calculate_slope_uint(start - 13, start, left_line));
                         if (sumR >= 15 && calculate_slope_uint(start - 13, start, left_line) < -1 && calculate_slope_uint(start - 13, start, left_line) > -3) {
+                            flagIT = state * TWhere;
                             state = 0;
                             TWhere = 0;
                         }
@@ -6747,8 +6784,9 @@ void cross_T_out_over() {
                     && calculate_slope_uint(start - 13, start, right_line) >= 0
                     && flag2 == 0) {
                     if (fabs(calculate_slope_uint(start - 11, start - 1, left_line) - calculate_slope_uint(start - 11, start - 1, right_line)) < 0.2) {
-                        state = 0;
-                        TWhere = 0;
+                        flagIT = state * TWhere;
+                        state = stateTIslandIn;
+                        TIslandWhere=-1*TWhere;
                     }
                     else {
                         //出来内直道过短，看到的是边界
@@ -6765,8 +6803,9 @@ void cross_T_out_over() {
                         }
                         //  //printf("lk=%f\n", calculate_slope_uint(start - 13, start, left_line));
                         if (sumR >= 15 && calculate_slope_uint(start - 13, start, right_line) > 1 && calculate_slope_uint(start - 13, start, right_line) < 3) {
-                            state = 0;
-                            TWhere = 0;
+                            flagIT = state * TWhere;
+                            state = stateTIslandIn;
+                            TIslandWhere=-1*TWhere;
                         }
 
                     }
@@ -7244,7 +7283,7 @@ void carpark_in()
 
     for (carParkX = 66; carParkX < 95; carParkX++)
     {
-        if (my_road[carParkX + 1].white_num >= 3 && my_road[carParkX].white_num > 4 && my_road[carParkX - 1].white_num >= 3)
+        if (my_road[carParkX + 1].white_num >= 3 && my_road[carParkX].white_num > 3 && my_road[carParkX - 1].white_num >= 3)
         {
 
             lineCount = 0;
@@ -7273,7 +7312,7 @@ void carpark_in()
                         }
 
                     }
-                    if (gapNumber >= 5 && carParkX > 70)
+                    if (gapNumber >= 4 && carParkX > 70)
                     {
                         if(rightPark == 1 && leftPark == 0)
                         {
@@ -7281,7 +7320,7 @@ void carpark_in()
                             rightK2 = calculate_two_point_slope(carParkX + 5, my_road[carParkX + 5].connected[1].left, carParkX - 10 ,my_road[carParkX - 10].connected[1].left);
 //                            test_varible[6] = rightK1;
 //                            test_varible[7] = rightK2;
-                            if(fabs(rightK1) < 0.4 && fabs(rightK2) < 0.4 && fabs(rightK1 - rightK2) < 0.1)
+                            if(fabs(rightK1) < 0.5 && fabs(rightK2) < 0.5 && fabs(rightK1 - rightK2) < 0.1)
                             {
                                 flag = 1;
 //                                test_varible[5] = carParkX;
@@ -7295,7 +7334,7 @@ void carpark_in()
 //                            test_varible[6] = leftK1;
 //                            test_varible[7] = leftK2;
 
-                            if(fabs(leftK1) < 0.4 && fabs(leftK2) < 0.4 && fabs(leftK1 - leftK2) < 0.1)
+                            if(fabs(leftK1) < 0.7 && fabs(leftK2) < 0.7 && fabs(leftK1 - leftK2) < 0.1)
                             {
                                 flag = 1;
 //                                test_varible[5] = carParkX;

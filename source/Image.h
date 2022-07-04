@@ -158,7 +158,7 @@ extern int islandWhere;
 extern uint8_t islandCircleCount;
 extern uint8_t tInCount;
 extern int threOriginal;
-
+extern int wayIT;
 
 typedef struct {
     int x;

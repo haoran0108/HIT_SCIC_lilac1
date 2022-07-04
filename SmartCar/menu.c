@@ -328,10 +328,10 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     OTSU_Khigh = MENU_fileInit(OTSU_Khigh, 140, 1.0, "K-higt", 3, dataint, &OTSU_Klow, NULL, NULL, NULL);
 
     partOTSU = MENU_fileInit(partOTSU, 1, 1.0, "partOTSU", 4, none, &OTSU1, &expTime, NULL, &part_klow1);
-    part_klow1 = MENU_fileInit(part_klow1, 115, 0.88, "fixup", 2, datafloat, NULL, &part_khigh1, &partOTSU, NULL);
+    part_klow1 = MENU_fileInit(part_klow1, 115, 0.81, "fixup", 2, datafloat, NULL, &part_khigh1, &partOTSU, NULL);
     part_khigh1 = MENU_fileInit(part_khigh1, 140, 0.75, "fixdown", 3, datafloat, &part_klow1, &part_klow2, NULL, NULL);
-    part_klow2 = MENU_fileInit(part_klow2, 100, 0.9, "minthre", 4, dataint, &part_khigh1, &part_khigh2, NULL, NULL);
-    part_khigh2 = MENU_fileInit(part_khigh2, 140, 1.0, "maxthre", 5, dataint, &part_klow2, NULL, NULL, NULL);
+    part_klow2 = MENU_fileInit(part_klow2, 50, 0.9, "minthre", 4, dataint, &part_khigh1, &part_khigh2, NULL, NULL);
+    part_khigh2 = MENU_fileInit(part_khigh2, 100, 1.0, "maxthre", 5, dataint, &part_klow2, NULL, NULL, NULL);
 
     expTime = MENU_fileInit(expTime, 300, 1.0, "exptime", 5, dataint, &partOTSU, NULL, NULL, NULL);
 
