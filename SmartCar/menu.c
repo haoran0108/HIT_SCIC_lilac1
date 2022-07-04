@@ -530,6 +530,7 @@ nodeptr_t MENU_curPosition(nodeptr_t temp)
     nodeptr_t printTemp;
     nodeptr_t dataRead;
 
+
     if(GPIO_Read(P13, 2))
     {
         SmartCar_OLED_Fill(0);
