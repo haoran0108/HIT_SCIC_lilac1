@@ -535,16 +535,16 @@ void CTRL_fuzzyPID()
 void CTRL_motorPID()
 {
 
-    currentRT[0] = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//右轮
-    currentLF[0] = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//左轮
-    CTRL_currentAverageFilter();
+//    currentRT[0] = ADC_Get(ADC_0, ADC0_CH5_A5, ADC_12BIT);//右轮
+//    currentLF[0] = ADC_Get(ADC_0, ADC0_CH7_A7, ADC_12BIT);//左轮
+//    CTRL_currentAverageFilter();
 //    test_varible[7] = currentLF[0];
 //    test_varible[8] = currentRT[0];
 
 
     speedL = CTRL_speedGetLeft();
     speedR = CTRL_speedGetRight();
-    speedL = speedL / 8;
+//    speedL = speedL / 8;
 
     CTRL_lowpassFilter();
 
@@ -552,12 +552,12 @@ void CTRL_motorPID()
 
     errorML.currentError = expectL + speedL;//取偏差
     errorML.delta = errorML.currentError - errorML.lastError;
-    mySpeedL = (int32)(mySpeedL + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
+    mySpeedL = (int32)(mySpeedL + LFKI.intVal * errorML.currentError + LFKP.intVal * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
 
     errorMR.currentError = expectR - speedR;//取偏差
     errorMR.delta = errorMR.currentError - errorMR.lastError;
-    mySpeedR = (int32)(mySpeedR + motorRTKI * errorMR.currentError + motorRTKP * errorMR.delta);
+    mySpeedR = (int32)(mySpeedR + LFKI.intVal * errorMR.currentError + LFKP.intVal * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
 
     lastSpeedL = speedL;
@@ -756,9 +756,9 @@ void CTRL_motorMain()
 
     motorParamDefine();
 
-//    CTRL_motorPID();
-    CTRL_speedLoopPID();
-    CTRL_curLoopPID();
+    CTRL_motorPID();
+//    CTRL_speedLoopPID();
+//    CTRL_curLoopPID();
     CTRL_motor();
 
 

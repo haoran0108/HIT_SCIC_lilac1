@@ -1945,7 +1945,7 @@ void judge_type_road() {
         }
 
     }
-    if (lastState == 30 && state == 60) {
+    if (lastState == 30 && state == 70) {
         islandTimes++;
     }
     if (islandTimes == 1) {
@@ -2012,7 +2012,7 @@ void judge_type_road() {
     }
 
 
-    if (state == stateStart || state == stateTIslandIn || state == stateTOut) {
+    if (state != stateParkIn) {
         if(carParkTimes == 0)
         {
             if(file1.intVal == -1)
@@ -2023,8 +2023,8 @@ void judge_type_road() {
 
             else if(file1.intVal == 0)
             {
-                leftPark = 0;
-                rightPark = 1;
+                leftPark = 1;
+                rightPark = 0;
             }
 
             else if(file1.intVal == 1)
