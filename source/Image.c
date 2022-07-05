@@ -5440,7 +5440,7 @@ void design_island_circle(){
 //±¸×¢£º
 ///////////////////////////////////////////
 void island_out() {
-    int dx = 0;
+    int dxRight = islandParam4.intVal, dxLeft = islandParam3.intVal;
     if (1) {
         if (islandWhere == RIGHT) {
 
@@ -5475,7 +5475,7 @@ void island_out() {
         //   //printf("y=%d,x=%d\n", yMax, xMax);
             // //printf("xMax=%d,y=%d\n", xMax,yMax);d
             if (left_line[yMax - 15] != MISS && (calculate_slope_uint(yMax - 18, yMax - 1, left_line) * calculate_slope_uint(yMax + 2, yMax + 18, left_line) < 0 || left_line[yMax] - left_line[yMax - 3] > 6)) {
-                if (xMax < xmax && yMax >= 40 && yMax <= 110) {
+                if (xMax < xmax - dxRight && yMax >= 40 && yMax <= 110) {
                 state = stateIslandOut;
                 }
             }
@@ -5524,7 +5524,7 @@ void island_out() {
             }
         //  //printf("y=%d\n", yMin);
             if (left_line[yMin - 15]!=MISS) {
-                if (xMin > xmin && yMin >= 40 && yMin <= 110 && (calculate_slope_uint(yMin - 18, yMin - 1, right_line) * calculate_slope_uint(yMin + 2, yMin + 18, right_line) < 0 || right_line[yMin] - right_line[yMin - 3] < -6)) {
+                if (xMin > xmin + dxLeft && yMin >= 40 && yMin <= 110 && (calculate_slope_uint(yMin - 18, yMin - 1, right_line) * calculate_slope_uint(yMin + 2, yMin + 18, right_line) < 0 || right_line[yMin] - right_line[yMin - 3] < -6)) {
                     state = stateIslandOut;
                 }
             }
