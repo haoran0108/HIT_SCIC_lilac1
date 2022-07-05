@@ -184,7 +184,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
-    islandout_up = MENU_fileInit(islandout_up, 0, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
+    islandout_up = MENU_fileInit(islandout_up, 2, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
     design_island_k = MENU_fileInit(design_island_k, 1, 0, "left-dk", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
     islandParam1 = MENU_fileInit(islandParam1, 1, 0, "right-dk", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
     islandParam2 = MENU_fileInit(islandParam2, 50, 1.8, "radius", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);

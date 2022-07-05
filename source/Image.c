@@ -1822,6 +1822,7 @@ void judge_type_road() {
     rightDownJumpPoint = 119;
     int lastState = state;
     int flagChange = 0;
+
     if(state != laststate)
     {
         laststate = state;
@@ -1904,7 +1905,7 @@ void judge_type_road() {
     if (state == stateIslandCircle && flagChange == 0) {
 
         islandCircleCount += 1;
-        if(islandCircleCount >= 50)
+        if(islandCircleCount >= 40)
         {
             island_out();
 
@@ -4832,7 +4833,7 @@ void design_island_ing() {
 
             for (int i = 110; i >= 50; i--) {
 
-                right_line[i] = leftRoad[i] + 30;//xMin - leftRoad[yMin] - 20;
+                right_line[i] = leftRoad[i] + 24;//xMin - leftRoad[yMin] - 20;
                 left_line[i] = leftRoad[i];
             }
         }
@@ -5059,7 +5060,7 @@ void design_island_turn() {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[107].connected[j_mid[107]].left) / (upPoint - 107);
                 if(IslandRadius == 50)
                 {
-                    k = k - 0.2;
+                    k = k - 0.7;
                 }
                 else if(IslandRadius >= 60 && IslandRadius <= 70)
                 {
@@ -5109,7 +5110,7 @@ void design_island_turn() {
                 double k = calculate_slope_uint(k1, upPoint,left_line);
                 if(IslandRadius == 50)
                 {
-                    k = k + 0.2;
+                    k = k + 0.7;
                 }
                 else if(IslandRadius >= 60 && IslandRadius <= 70)
                 {
