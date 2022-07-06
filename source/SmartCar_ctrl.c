@@ -211,8 +211,8 @@ void CTRL_speedLoopPID()
     test_varible[0] = -speedL;
     test_varible[1] = speedR;
 //
-//    test_varible[4] = currentExpectLF;
-//    test_varible[5] = currentExpectRT;
+    test_varible[4] = currentExpectLF;
+    test_varible[5] = currentExpectRT;
 
 
 }
@@ -229,7 +229,7 @@ void CTRL_curLoopPID()
 
 //    test_varible[7] = currentLF[0];
 //    test_varible[8] = currentRT[0];
-
+//
 
 //    currentLF_real = 4420 - currentLF;
 
@@ -778,9 +778,9 @@ void CTRL_motorMain()
 
     motorParamDefine();
 
-    CTRL_motorPID();
-//    CTRL_speedLoopPID();
-//    CTRL_curLoopPID();
+//    CTRL_motorPID();
+    CTRL_speedLoopPID();
+    CTRL_curLoopPID();
     CTRL_motor();
 
 

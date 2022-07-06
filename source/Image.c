@@ -572,7 +572,7 @@ void image_Preprocess(void)
         ptrHistGramCy = image_histGram;
         for (uint8_t i = startLine; i < endLine; i++)
         {
-            for (uint8_t j = 0; j < CAMERA_W; j++, fullBufferCy++)
+            for (uint8_t j = 2; j < CAMERA_W; j++, fullBufferCy++)
             {
                 (*(ptrHistGramCy + (*fullBufferCy)))++; //统计每个灰度值的个数信息
             }
@@ -1746,6 +1746,7 @@ void image_main()
 //    strenghen_contrast_ratio();
    // uint64 tim1 = 0, tim2 = 0;
 
+
 //    tim1 = Systick_Get(STM0)/100000;
 
     switch (wayThreshold) {
@@ -1830,30 +1831,8 @@ void judge_type_road() {
 
     }
 
-    if(file1.intVal == 1)
-    {
-        if(state == 0 && lastState == 20)
-        {
-            folkTimes += 1;
-        }
-        if(folkTimes >= 4)
-        {
-            searchParkLine();
-        }
-    }
 
-    else if(file1.intVal == -1)
-    {
-        if((state == 0 && lastState == 50) || (state == 30 && lastState == 50))
-        {
-            tCrossTimes += 1;
-        }
 
-        if(tCrossTimes >= 2)
-        {
-            searchParkLine();
-        }
-    }
     //十字
     if (state == stateStart && flagChange == 0) {
         //cross_in();
@@ -1868,12 +1847,12 @@ void judge_type_road() {
     if (state == stateStart) {
         if (flagIT == stateIslandFinal * RIGHT || flagIT == stateTOut * RIGHT) {
             if (my_road[NEAR_LINE - 1].connected[j_continue[NEAR_LINE - 1]].width < 28) {
-                T_island_in_start();
+//                T_island_in_start();
             }
 
         }
         else {
-            T_island_in_start();
+//            T_island_in_start();
         }
         if (lastState != state) {
             flagChange = 1;
@@ -2001,6 +1980,37 @@ void judge_type_road() {
     if(lastState == 60 && state == 40){
         islandTimes--;
     }
+
+    if(file1.intVal == 1)
+    {
+        if(state == 0 && lastState == 20)
+        {
+            folkTimes += 1;
+        }
+        if(folkTimes >= 4)
+        {
+            leftPark = 0;
+            rightPark = 1;
+            searchParkLine();
+        }
+    }
+
+    else if(file1.intVal == -1)
+    {
+        if(lastState == 50)
+        {
+            tCrossTimes += 1;
+        }
+
+        if(tCrossTimes >= 2)
+        {
+            leftPark = 1;
+            rightPark = 0;
+            searchParkLine();
+        }
+    }
+    test_varible[15] = folkTimes;
+    test_varible[14] = lastState;
     //补线
     if (state == stateCrossIn) {
         design_cross_ing();
@@ -2036,11 +2046,10 @@ void judge_type_road() {
         design_cross_T_out();
     }
 
-test_varible[14] = carParkTimes;
+//test_varible[14] = carParkTimes;
 
     if (state != stateParkIn) {
-        test_varible[14] = carParkTimes;
-        test_varible[15] = leftPark;
+//        test_varible[15] = leftPark;
 
 
         if(carParkTimes == 0)
@@ -2077,14 +2086,33 @@ test_varible[14] = carParkTimes;
         if(carParkTimes == 1 && file1.intVal == 1)
         {
             parkJudgeCount += 1;
-            leftPark = 1;
-            rightPark = 0;
+            if(folkTimes < 4)
+            {
+                leftPark = 1;
+                rightPark = 0;
+            }
+
+            else if(folkTimes >= 4)
+            {
+                leftPark = 0;
+                rightPark = 1;
+            }
         }
         else if(carParkTimes == 1 && file1.intVal == -1)
         {
             parkJudgeCount += 1;
-            leftPark = 0;
-            rightPark = 1;
+            if(tCrossTimes < 2)
+            {
+                leftPark = 0;
+                rightPark = 1;
+            }
+
+            else if(tCrossTimes >= 2)
+            {
+                leftPark = 1;
+                rightPark = 0;
+            }
+
         }
         else if(carParkTimes == 1 && file1.intVal == 0)
         {
@@ -7763,10 +7791,13 @@ void searchParkLine()
         }
     }
 
+    test_varible[7] = i;
     if(i >= search_line.intVal && flag == 1)
     {
         flagStop = 1;
     }
+
+
 //    else flagStop = 0;
 
 //    test_varible[15] = i;
