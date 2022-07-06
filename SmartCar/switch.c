@@ -86,7 +86,8 @@ void SW_readSwitch()
 
         testFlag = 1;//»¸µ¿≤‚ ‘
         testStateTimes = 0;
-
+        flagStopCount1 = 0;
+        flagStop1 = 0;
         memoryFlag = 0;
         memoryState[0] = 0;
         memoryState[1] = 0;
@@ -110,6 +111,7 @@ void SW_readSwitch()
         memoryState[19] = 0;
 
         folkTimes = 0;
+        tCrossTimes = 0;
         sRoadFlag = 0;
 
         duzhuanFlag = 0;

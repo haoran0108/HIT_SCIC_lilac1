@@ -57,6 +57,9 @@
 #define servoRampMax 741
 #define servoRampMin 701
 
+#define parkStopStraightTime 3
+
+
 extern uint32 servoPwm;
 extern int32 mySpeedL, mySpeedR;
 extern int32 speedL, speedR;
@@ -83,7 +86,7 @@ extern uint8_t present_speed, present_vision;
 extern uint8_t duzhuanCount, duzhuanFlag, duzhuanTime;
 extern uint32_t startCount;
 extern uint8_t startFlag;
-
+extern uint8_t flagStop1, flagStopCount1;
 struct error
 {
     double delta;

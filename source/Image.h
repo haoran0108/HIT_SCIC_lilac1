@@ -159,7 +159,7 @@ extern uint8_t islandCircleCount;
 extern uint8_t tInCount;
 extern int threOriginal;
 extern int wayIT;
-
+extern uint8_t tCrossTimes;
 typedef struct {
     int x;
     int y;

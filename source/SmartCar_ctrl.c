@@ -12,7 +12,7 @@ float test_varible[20] = {1,2,3,4,5,6,7,8,9,10};//发送数据的   //数组
 /*标志位*/
 int zebraFlag = 0, zebraCircle = 0;
 int flagStop = 0, delayStop = 0;
-
+uint8_t flagStop1 = 0, flagStopCount1 = 0;
 
 /*pid相关*/
 error servoError = {1, 1, 1};
@@ -551,18 +551,22 @@ void CTRL_motorPID()
 
 
     errorML.currentError = expectL + speedL;//取偏差
+    errorMR.currentError = expectR - speedR;//取偏差
+    motorLFKI = CTRL_fuzzySpeedKp(errorML.currentError);
+    motorRTKI = CTRL_fuzzySpeedKp(errorMR.currentError);
+
     errorML.delta = errorML.currentError - errorML.lastError;
-    mySpeedL = (int32)(mySpeedL + LFKI.intVal * errorML.currentError + LFKP.intVal * errorML.delta);
+    mySpeedL = (int32)(mySpeedL + motorLFKI * errorML.currentError + fastRTKP.intVal * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
 
-    errorMR.currentError = expectR - speedR;//取偏差
     errorMR.delta = errorMR.currentError - errorMR.lastError;
-    mySpeedR = (int32)(mySpeedR + LFKI.intVal * errorMR.currentError + LFKP.intVal * errorMR.delta);
+    mySpeedR = (int32)(mySpeedR + motorRTKI * errorMR.currentError + fastRTKP.intVal * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
 
     lastSpeedL = speedL;
     lastSpeedR = speedR;
-
+    test_varible[9] = expectL;
+    test_varible[10] = expectR;
     test_varible[0] = speedL;
     test_varible[1] = speedR;
 
@@ -620,16 +624,34 @@ void CTRL_servoMain()
         }
         else if(flagStop == 1 && leftPark == 0 && rightPark == 1)
         {
-            servoPwm = servoMin;//630
+            if(flagStopCount1 < parkStopStraightTime && flagStop1 == 0)
+            {
+                servoPwm = servoMin;//630
+
+            }
+
+            else if(flagStop1 == 1)
+            {
+                servoPwm = servoMidValue;
+            }
         }
         else if(flagStop == 1 && leftPark == 1 && rightPark == 0)
         {
-            servoPwm = servoMax;//770
+            if(flagStopCount1 < parkStopStraightTime && flagStop1 == 0)
+            {
+                servoPwm = servoMax;//630
+
+            }
+
+            else if(flagStop1 == 1)
+            {
+                servoPwm = servoMidValue;
+            }
         }
     }
     CTRL_islandPwmCount();
     CTRL_rampPwmxianfu();
-    CTRL_carParkPwmxianfu();
+//    CTRL_carParkPwmxianfu();
 
 
     if(servoPwm > servoMax)
@@ -1018,12 +1040,21 @@ void CTRL_CarParkStop()
     {
         if(currentGyro > endGyro.intVal || currentGyro < (-endGyro.intVal))
         {
-            expectL = 0;
-            expectR = 0;
+            flagStop1 = 1;
+            if(flagStop1 == 1)
+            {
+                flagStopCount1 += 1;
+            }
+            if(flagStop1 == 1 && flagStopCount1 >= parkStopStraightTime)
+            {
+                expectL = 0;
+                expectR = 0;
+            }
+
 //            currentGyro = 80;
         }
 
-        else if(currentGyro <= endGyro.intVal && currentGyro >= (-endGyro.intVal))
+        else if(currentGyro <= endGyro.intVal && currentGyro >= (-endGyro.intVal) && flagStopCount1 < parkStopStraightTime)
         {
             expectL = present_speed;
             expectR = present_speed;
