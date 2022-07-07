@@ -217,7 +217,7 @@ void find_all_connect();
 void find_road();
 uint8_t find_continue(uint8_t i_start, uint8_t j_start);
 void ordinary_two_line(void);
-void strenghen_contrast_ratio();
+int strenghen_contrast_ratio(int oldThre,int threA, int threNewA, int threB, int threNewB);
 void image_main();
 void get_mid_line(void);
 void IPM_map();

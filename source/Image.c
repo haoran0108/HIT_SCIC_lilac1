@@ -816,30 +816,82 @@ uint8_t lastThreUp=0, lastThreDown = 0;
 void part_OUST() {
         uint8_t* map;
         uint8_t* my_map;
-
+        uint8_t min_thre = minThre, max_thre = maxThre;
         map = fullBuffer;
         uint8_t my_threshold = 0;
         uint8_t thre1[256] = { 0 };
         uint8_t thre2[256] = { 0 };
         double pthre1[256] = { 0 };
         double pthre2[256] = { 0 };
+        uint8_t *pt1=thre1,*pt2=thre2;
+        double *ppt1=pthre1,*ppt2=pthre2;
+
+        double a;
+        double b;
+        double c;
+        int threB=(max_thre + 25);
+        int threA=min_thre;
+        int threNewB=threB*1.1;
+        int threNewA=threA*0.9;
+
+        if(threNewB > 255) threNewB = 255;
+        if(threNewA < 0) threNewA = 0;
+
+        a = (double)threNewA / (double)threA;
+        b = (double)(threNewB - threNewA) / (double)(threB - threA);
+        c = (double)(255 - threNewB) / (double)(255 - threB);
+        int newOne;
+
+
 
         for (int i = 0; i < 30 * 188; i++) {
-            thre1[*(map)]++;
-            //sum1 += *(map);
+//            if(i>15 * 188){
+//                if (*(map) < threA) {
+//                    *(map) = a * (*(map));
+//                    if(*(map) <= 0) *(map)=0;
+//                }
+//                else if (threA <= *(map) && threB > *(map)) {
+//                    *(map) = b * (*(map) -threA) + threNewA;
+//                }
+//                else if (threB <= *(map)) {
+//                    *(map) = c * (int)(*(map) - threB) + threNewB;
+//                    if (*(map) >= 255)  *(map) = 255;
+//
+//                }
+           // }
+//            *(map)=(uint8_t)strenghen_contrast_ratio((int)*(map),(int)(min_thre),(int)((min_thre)*0.9),(int)(max_thre + 25),(int)((max_thre + 25)*1.1));
+
+           thre1[*map]++;
             map++;
         }
 
         for (int i = 30 * 188; i < 86 * 188; i++) {
-            thre2[*(map)]++;
-            //sum2 += *(map);
+//            *(map)=(uint8_t)strenghen_contrast_ratio((int)*(map),(int)(min_thre),(int)((min_thre)*0.9),(int)(max_thre + 25),(int)((max_thre + 25)*1.1));
+//            if(i<=40*188){
+//                if (*(map) < threA) {
+//                    *(map) = a * (*(map));
+//                    if(*(map) <= 0) *(map)=0;
+//                }
+//                else if (threA <= *(map) && threB > *(map)) {
+//                    *(map) = b * (*(map) -threA) + threNewA;
+//                }
+//                else if (threB <= *(map)) {
+//                    *(map) = c * (int)(*(map) - threB) + threNewB;
+//                    if (*(map) >= 255)  *(map) = 255;
+//
+//                }
+//            }
+
+
+
+            thre2[(*map)]++;
             map++;
         }
         for (int i = 0; i < 256; i++) {
-            pthre1[i] = (double)thre1[i] / (30 * 188);
-            pthre2[i] = (double)thre2[i] / (56 * 188);
+            pthre1[i] = (double)(thre1[i]) / (30 * 188);
+            pthre2[i] = (double)(thre2[i]) / (56 * 188);
         }
-        uint8_t min_thre = minThre, max_thre = maxThre;
+       // uint8_t min_thre = minThre, max_thre = maxThre;
         double numU = 0, max_numU = 0;
         double p_sum_lessU = 0;
         double p_sum_moreU = 0;
@@ -848,29 +900,6 @@ void part_OUST() {
         double M_LessU = 0;
         double M_MoreU = 0;
 
-        for (int i = 0; i < min_thre * part_klow1.floatVal - 1; i++) {
-            p_sum_lessU += pthre1[i];
-            m_LessU += i * pthre1[i];
-        }
-        for (int i = min_thre * part_klow1.floatVal - 1; i < 256; i++) {
-            p_sum_moreU += pthre1[i];
-            m_MoreU += i * pthre1[i];
-        }
-        for (int k = min_thre * part_klow1.floatVal; k <= max_thre * part_klow1.floatVal; k++) {
-            p_sum_lessU += pthre1[k];
-            m_LessU += k*pthre1[k];
-            p_sum_moreU -=pthre1[k];
-            m_MoreU -= k * pthre1[k];
-
-            M_LessU = m_LessU / p_sum_lessU;
-            M_MoreU = m_MoreU / p_sum_moreU;
-
-            numU = p_sum_lessU * p_sum_moreU * (M_LessU - M_MoreU) * (M_LessU - M_MoreU);
-            if (numU >= max_numU) {
-                max_numU = numU;
-                thresholdUp = k;
-            }
-        }
         double num = 0, max_num = 0;
         double p_sum_less = 0;
         double p_sum_more = 0;
@@ -878,19 +907,45 @@ void part_OUST() {
         double m_More = 0;
         double M_Less = 0;
         double M_More = 0;
-        for (int i = 0; i < min_thre - 1; i++) {
+
+        for (int i = 0; i < min_thre* part_klow1.floatVal - 1; i++) {
+            p_sum_lessU +=  pthre1[i];
+            m_LessU += i *pthre1[i];
+        }
+        for (int i = min_thre * part_klow1.floatVal - 1; i < 256; i++) {
+            p_sum_moreU += pthre1[i];
+            m_MoreU += i *pthre1[i];
+
+        }
+        for (int k = min_thre* part_klow1.floatVal; k <= max_thre* part_klow1.floatVal; k++) {
+            p_sum_lessU += pthre1[k];
+            m_LessU += k*pthre1[k];
+            p_sum_moreU -= pthre1[k];
+            m_MoreU -= k*pthre1[k];
+
+            M_LessU = m_LessU / p_sum_lessU;
+            M_MoreU = m_MoreU / p_sum_moreU;
+
+            numU = p_sum_lessU * p_sum_moreU * (M_LessU - M_MoreU) * (M_LessU - M_MoreU);
+            if (numU >= max_numU) {
+                max_numU = numU;
+                thresholdUp = k ;
+            }
+
+        }
+        for (int i = 0; i < min_thre- 1; i++){
             p_sum_less += pthre2[i];
-            m_Less += i * pthre2[i];
+            m_Less += i *pthre2[i];
         }
-        for (int i = min_thre - 1; i < 256; i++) {
+        for (int i = min_thre - 1; i < 256; i++){
             p_sum_more += pthre2[i];
-            m_More += i * pthre2[i];
+            m_More+=i*pthre2[i];
         }
-        for (int k = min_thre; k <= max_thre; k++) {
+        for(int k=min_thre;k<=max_thre;k++){
             p_sum_less += pthre2[k];
-            m_Less += k * pthre2[k];
+            m_Less += k *pthre2[k];
             p_sum_more -= pthre2[k];
-            m_More -= pthre2[k] * k;
+            m_More -= k * pthre2[k];
 
             M_Less = m_Less / p_sum_less;
             M_More = m_More / p_sum_more;
@@ -1699,39 +1754,39 @@ void get_mid_line(void)
 }
 ////////////////////////////////////////////
 //功能：增强对比度
-//输入：灰度图片
-//输出：fullBuffer
+//输入：像素值，对比度节点
+//输出：像素值
 //备注：
 ///////////////////////////////////////////
-void strenghen_contrast_ratio() {
+int strenghen_contrast_ratio(int oldThre,int threA, int threNewA, int threB, int threNewB) {
 
     double a;
     double b;
     double c;
-    int threA=80, threB=200;       //调节的参数
-    int threNewA=60, threNewB=60;  //调节的参数
+
+    if(threNewB > 255) threNewB = 255;
+    if(threNewA < 0) threNewA = 0;
     a = (double)threNewA / (double)threA;
     b = (double)(threNewB - threNewA) / (double)(threB - threA);
     c = (double)(255 - threNewB) / (double)(255 - threB);
-    uint8_t* map = fullBuffer;
-    for (int i = 0; i < 69 * 188; i++, map++) {
-        if (*(map) < threA) {
-            *(map) = a * (*(map));
-        }
-        else if (threA <= *(map) && threB > *(map)){
-            *(map) = b * (*(map)-threA) + threNewA;
-        }
-        else if (threB <= *(map)) {
-            int tem = c * (int)( (int) (*(map)) - (int)threB) + (int)threNewB;
-            if (tem >= 255) {
-                *map = 255;
-            }
-        }
+    int newOne;
+
+    if (oldThre < threA) {
+        newOne = a * oldThre;
+        if(newOne <= 0) newOne=0;
+    }
+    else if (threA <= oldThre && threB > oldThre) {
+        newOne = b * (oldThre -threA) + threNewA;
+    }
+    else if (threB <= oldThre) {
+        newOne = c * (int)(oldThre - threB) + threNewB;
+        if (newOne >= 255)  newOne = 255;
+
     }
 
+    return newOne;
 
 }
-
 ////////////////////////////////////////////
 //功能：图像处理主程序
 //输入：
@@ -1744,11 +1799,10 @@ void image_main()
     int wayThreshold = wayThre.intVal;
     protection();
 //    strenghen_contrast_ratio();
-   // uint64 tim1 = 0, tim2 = 0;
+    uint64 tim1 = 0, tim2 = 0;
 
 
-//    tim1 = Systick_Get(STM0)/100000;
-
+    tim1 = Systick_Get(STM0)/100000;
     switch (wayThreshold) {
     case 0:break;
     case 1:OTSU();
@@ -1763,10 +1817,9 @@ void image_main()
         break;
     }
 
-//    tim2 = Systick_Get(STM0)/10000;
-
-//    test_varible[14] = (float)(tim1);
-//    test_varible[15] = (float)(tim2);
+    tim2 = Systick_Get(STM0)/100000;
+    test_varible[14] = (float)(tim1);
+    test_varible[15] = (float)(tim2);
     //distortion();
     //THRE(wayThreshold);
     //IPM_map();
@@ -1774,9 +1827,12 @@ void image_main()
     //head_clear();
    // transform(wayThreshold);
 
+
 //
     transform_sd(wayThreshold);
-//
+
+    //
+
 
 
     search_white_range();
@@ -2009,8 +2065,8 @@ void judge_type_road() {
             searchParkLine();
         }
     }
-    test_varible[15] = folkTimes;
-    test_varible[14] = lastState;
+//    test_varible[15] = folkTimes;
+//    test_varible[14] = lastState;
     //补线
     if (state == stateCrossIn) {
         design_cross_ing();
@@ -2062,8 +2118,8 @@ void judge_type_road() {
 
             else if(file1.intVal == 0)
             {
-                leftPark = 1;
-                rightPark = 0;
+                leftPark = 0;
+                rightPark = 1;
             }
 
             else if(file1.intVal == 1)
