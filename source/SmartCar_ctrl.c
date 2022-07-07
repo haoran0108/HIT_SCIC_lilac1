@@ -779,6 +779,7 @@ void CTRL_motorMain()
     {
         CTRL_CarParkStop();
 
+
     }
     else if(stopFlag == 1 && duzhuanFlag == 0)
     {
@@ -1060,24 +1061,26 @@ void CTRL_CarParkStop()
     {
         if(currentGyro > endGyro.intVal || currentGyro < (-endGyro.intVal))
         {
-            flagStop1 = 1;
-            if(flagStop1 == 1)
-            {
-                flagStopCount1 += 1;
-            }
-            if(flagStop1 == 1 && flagStopCount1 >= parkStopStraightTime)
-            {
+//            flagStop1 = 1;
+//            if(flagStop1 == 1)
+//            {
+//                flagStopCount1 += 1;
+//            }
+//            if(flagStop1 == 1 && flagStopCount1 >= parkStopStraightTime)
+//            {
                 expectL = 0;
                 expectR = 0;
-            }
+//            }
 
 //            currentGyro = 80;
         }
 
         else if(currentGyro <= endGyro.intVal && currentGyro >= (-endGyro.intVal) && flagStopCount1 < parkStopStraightTime)
         {
-            expectL = present_speed;
-            expectR = present_speed;
+            present_speed = 70;
+            CTRL_motorDiffer();
+
+//            present_speed = 70;
 
             CTRL_gyroUpdate();
             CTRL_directionAngleGet();

@@ -7841,7 +7841,7 @@ void searchParkLine()
     uint8_t flag = 0;
     for(i = 60; i < 105; i++)
     {
-        if (my_road[i].white_num > 3 && my_road[i + 1].white_num > 2)
+        if (my_road[i].white_num > 3 && my_road[i + 1].white_num > 2 && my_road[i - 1].white_num > 2 && my_road[i - 2].white_num > 2)
         {
             flag = 1;
 
