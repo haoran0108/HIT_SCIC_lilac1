@@ -1847,12 +1847,12 @@ void judge_type_road() {
     if (state == stateStart) {
         if (flagIT == stateIslandFinal * RIGHT || flagIT == stateTOut * RIGHT) {
             if (my_road[NEAR_LINE - 1].connected[j_continue[NEAR_LINE - 1]].width < 28) {
-//                T_island_in_start();
+                T_island_in_start();
             }
 
         }
         else {
-//            T_island_in_start();
+            T_island_in_start();
         }
         if (lastState != state) {
             flagChange = 1;
@@ -1885,7 +1885,7 @@ void judge_type_road() {
     }
     if (state == stateSTIsland && flagChange == 0) {
         straightT_or_island();
-            //island_radius();
+//            island_radius();
             if (lastState != state) {
                 flagChange = 1;
             }
@@ -1909,7 +1909,7 @@ void judge_type_road() {
     if (state == stateIslandCircle && flagChange == 0) {
 
         islandCircleCount += 1;
-        if(islandCircleCount >= 40)
+        if(islandCircleCount >= 20)
         {
             island_out();
 
@@ -2094,6 +2094,7 @@ void judge_type_road() {
 
             else if(folkTimes >= 4)
             {
+                state = 0;
                 leftPark = 0;
                 rightPark = 1;
             }
@@ -2109,6 +2110,7 @@ void judge_type_road() {
 
             else if(tCrossTimes >= 2)
             {
+                state = 0;
                 leftPark = 1;
                 rightPark = 0;
             }
@@ -7359,8 +7361,8 @@ void folk_road_in() {
 void design_folk_road() {
     uint8_t j_left[CAMERA_H];
     uint8_t j_right[CAMERA_H];
-    double k_delta = 0.2;
-
+    double k_delta = folkParam2.floatVal;
+    int width = folkParam1.intVal;
     j_left[NEAR_LINE] = j_continue[NEAR_LINE];
     j_right[NEAR_LINE] = j_continue[NEAR_LINE];
     for (int i = NEAR_LINE - 1; i >= FAR_LINE; i--) {
@@ -7393,30 +7395,30 @@ void design_folk_road() {
     if (FolkRoadWhere == RIGHT) {
         for (int i = NEAR_LINE; i >= 20; i--) {
             right_line[i] = my_road[i].connected[j_right[i]].right;
-            left_line[i] = right_line[i] - 25;
+            left_line[i] = right_line[i] - width - k_delta*(i - NEAR_LINE);
         }
         for (int i = NEAR_LINE; i >= 20; i--) {
             if (right_line[i] - right_line[i - 1] > 5 && right_line[i] - right_line[i - 2] > 5)
             {
                 right_line[i] = right_side[i];
                 right_line[i - 1] = right_side[i - 1];
-                left_line[i] = right_line[i] - 25;
-                left_line[i - 1] = right_line[i - 1] - 25;
+                left_line[i] = right_line[i] - width;
+                left_line[i - 1] = right_line[i - 1] - width;
             }
         }
     }
     else if (FolkRoadWhere == LEFT) {
         for (int i = NEAR_LINE; i >= 20; i--) {
             left_line[i] = my_road[i].connected[j_left[i]].left;
-            right_line[i] = left_line[i] + 25;
+            right_line[i] = left_line[i] + width + k_delta * (i - NEAR_LINE);
         }
         for (int i = NEAR_LINE; i >= 20; i--) {
             if (left_line[i - 1] - left_line[i] > 5 && left_line[i - 2] - left_line[i] > 5)
             {
                 left_line[i] = left_side[i];
                 left_line[i - 1] = left_side[i - 1];
-                right_line[i] = left_line[i] + 25;
-                right_line[i - 1] = left_line[i - 1] + 25;
+                right_line[i] = left_line[i] + width;
+                right_line[i - 1] = left_line[i - 1] + width;
             }
         }
 

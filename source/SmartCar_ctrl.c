@@ -185,14 +185,24 @@ void CTRL_speedLoopPID()
 
     errorML.currentError = expectL + speedL;//取偏差
     errorMR.currentError = expectR - speedR;//取偏差
-    motorLFKI = CTRL_fuzzySpeedKp(errorML.currentError);
-    motorRTKI = CTRL_fuzzySpeedKp(errorMR.currentError);
+//    motorLFKI = CTRL_fuzzySpeedKp(errorML.currentError);
+//    motorRTKI = CTRL_fuzzySpeedKp(errorMR.currentError);
 
 //    sumErrorLF += errorML.currentError;
 //    errorML.delta = errorML.currentError - errorML.lastError;
     errorML.delta = (errorML.currentError - errorML.lastError) * speedKdLpf.floatVal + errorML.delta * (1 - speedKdLpf.floatVal);
 //    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
-    currentExpectLF = (int32)(currentExpectLF + LFKI.intVal * errorML.currentError + LFKP.intVal * errorML.delta);
+    if(errorML.currentError >= 0)
+    {
+        currentExpectLF = (int32)(currentExpectLF + LFKI.intVal * errorML.currentError + LFKP.intVal * errorML.delta);
+
+    }
+
+    else if(errorML.currentError < 0)
+    {
+        currentExpectLF = (int32)(currentExpectLF + RTKP.intVal * errorML.currentError + LFKP.intVal * errorML.delta);
+
+    }
     errorML.lastError = errorML.currentError;//更新上一次误差
     if(currentExpectLF < 1000) currentExpectLF = 1000;
     else if(currentExpectLF > 4095) currentExpectLF = 4095;
@@ -203,7 +213,17 @@ void CTRL_speedLoopPID()
     errorMR.delta = (errorMR.currentError - errorMR.lastError) * speedKdLpf.floatVal + errorMR.delta * (1 - speedKdLpf.floatVal);
 
 //    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
-    currentExpectRT = (int32)(currentExpectRT + LFKI.intVal * errorMR.currentError + LFKP.intVal * errorMR.delta);
+    if(errorMR.currentError >= 0)
+    {
+        currentExpectRT = (int32)(currentExpectRT + LFKI.intVal * errorMR.currentError + LFKP.intVal * errorMR.delta);
+
+    }
+
+    else if(errorMR.currentError < 0)
+    {
+        currentExpectRT = (int32)(currentExpectRT + RTKP.intVal * errorMR.currentError + LFKP.intVal * errorMR.delta);
+
+    }
     errorMR.lastError = errorMR.currentError;//更新上一次误差
     if(currentExpectRT < 1000) currentExpectRT = 1000;
     else if(currentExpectRT > 4095) currentExpectRT = 4095;
