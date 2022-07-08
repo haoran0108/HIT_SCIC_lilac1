@@ -2269,6 +2269,7 @@ void judge_type_road() {
 
     }
 
+    test_varible[15] = TFMINI_Distance;
 
     if(state != stateRampway && state == stateStart )
     {
@@ -2303,7 +2304,7 @@ void judge_type_road() {
         rampWayCount = 0;
     }
     if(state != stateRampway && state != stateParkIn){
-        TcircleFix();
+//        TcircleFix();
         rampJudgeCount += 1;
     }
 
@@ -7957,15 +7958,14 @@ void searchParkLine()
 
 void rampwayOn()
 {
-    int rampFlag = 1;
-    test_varible[15] = TFMINI_Distance;
+    int rampFlag = 0;
     if(TFMINI_Distance <= rampDistance.intVal)
     {
 //        for(int i = 80;i <= 100; i++)
 //        {
 //            if(mid_line[i] > 106 || mid_line[i] < 80)
 //            {
-                rampFlag = 0;
+                rampFlag = 1;
 //            }
 
 //        }

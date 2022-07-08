@@ -112,11 +112,11 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     IslandPD = MENU_fileInit(IslandPD, 1, 0, "islandPD", 2, dataint, NULL, &CrossCircle, &PD, &Island_PB);
 
 //    CrossPD = MENU_fileInit(CrossPD, 1, 0.5, "cross", 2, none, NULL, &CrossCircle, &file3, &Cross_PB);
-    CrossCircle = MENU_fileInit(CrossCircle, 1, 0.5, "circlePD", 3, dataint, &IslandPD, &FolkPD, NULL, &circle_PB);
+    CrossCircle = MENU_fileInit(CrossCircle, 2, 0.5, "circlePD", 3, dataint, &IslandPD, &FolkPD, NULL, &circle_PB);
     param = MENU_fileInit(param, 1, 1.0, "Param", 3, none, &PD, &raceMemory, NULL, &island);
     raceMemory = MENU_fileInit(raceMemory, 0, 1.0, "memory", 4, dataint, &param, NULL, NULL, &memory1);//0关闭 1打开
     FolkPD = MENU_fileInit(FolkPD, 1, 1.0, "folk", 4, dataint, &CrossCircle, &straightPD, NULL, &Folk_PB);
-    straightPD = MENU_fileInit(straightPD, 0, 1.0, "straight", 5, dataint, &FolkPD, NULL, NULL, &straight_KP);
+    straightPD = MENU_fileInit(straightPD, 1, 1.0, "straight", 5, dataint, &FolkPD, NULL, NULL, &straight_KP);
 
 //    bugFix1 = MENU_fileInit(bugFix1, 1, 1.0, "nomean", 2, none, &straightPD, NULL, NULL, NULL);
 
@@ -389,7 +389,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display4 = MENU_fileInit(display4, 10, 0.5, "beta1", 5, datafloat, &display3, &display5, NULL, NULL);
     display5 = MENU_fileInit(display5, 10, 0.3, "beta2", 6, datafloat, &display4, &display6, NULL, NULL);
     display6 = MENU_fileInit(display6, 2, 1, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);
-    display7 = MENU_fileInit(display7, 100, 0.9, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
+    display7 = MENU_fileInit(display7, 100, 0.8, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
     display8 = MENU_fileInit(display8, 130, 7.91, "stopTHRE", 3, dataint, &display7, &display9, NULL, NULL);
     display9 = MENU_fileInit(display9, 1, 9.02, "testTimes", 4, dataint, &display8, NULL, NULL, NULL);
 //    display10 = MENU_fileInit(display10, 70, 9.02, "param2", 5, dataint, &display9, NULL, NULL, NULL);
