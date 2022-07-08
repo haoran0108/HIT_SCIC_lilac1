@@ -1910,12 +1910,21 @@ void judge_type_road() {
     if (state == stateStart) {
         if (flagIT == stateIslandFinal * RIGHT || flagIT == stateTOut * RIGHT) {
             if (my_road[NEAR_LINE - 1].connected[j_continue[NEAR_LINE - 1]].width < 28) {
-                T_island_in_start();
+                if(islandTimes != 2)
+                {
+                    T_island_in_start();
+
+                }
             }
 
         }
         else {
-            T_island_in_start();
+            if(islandTimes != 2)
+            {
+                T_island_in_start();
+
+            }
+//            T_island_in_start();
         }
         if (lastState != state) {
             flagChange = 1;
@@ -2015,6 +2024,7 @@ void judge_type_road() {
     if (lastState == 30 && state == 70) {
         islandTimes++;
     }
+    test_varible[14] = islandTimes;
     if (islandTimes == 1) {
 //        IslandRadius = 100;
         IslandRadius = islandParam2.intVal;
@@ -2260,9 +2270,9 @@ void judge_type_road() {
     }
 
 
-    if(state != stateRampway && state == stateStart)
+    if(state != stateRampway && state == stateStart )
     {
-        if(rampJudgeCount >= 200)
+        if(rampJudgeCount >= 200 && islandTimes == 2)
         {
             rampwayOn();
 
@@ -7032,7 +7042,7 @@ void design_cross_T_circle() {
         }
         //printf("dv=%f\n", linear_judgement(80, 100, right_line));
         double dv = linear_judgement(80, 100, right_line);
-        test_varible[15] = dv;
+//        test_varible[15] = dv;
 
         if (dv < 10 && tInCount <= 4) {
             for (int i = 80; i <= 100; i++) {
@@ -7948,16 +7958,17 @@ void searchParkLine()
 void rampwayOn()
 {
     int rampFlag = 1;
+    test_varible[15] = TFMINI_Distance;
     if(TFMINI_Distance <= rampDistance.intVal)
     {
-        for(int i = 80;i <= 100; i++)
-        {
-            if(mid_line[i] > 103 || mid_line[i] < 83)
-            {
+//        for(int i = 80;i <= 100; i++)
+//        {
+//            if(mid_line[i] > 106 || mid_line[i] < 80)
+//            {
                 rampFlag = 0;
-            }
+//            }
 
-        }
+//        }
 
         if(rampFlag == 1)
         {
