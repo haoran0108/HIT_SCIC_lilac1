@@ -160,6 +160,8 @@ extern uint8_t tInCount;
 extern int threOriginal;
 extern int wayIT;
 extern uint8_t tCrossTimes;
+extern uint8_t tCrossStatus;
+
 typedef struct {
     int x;
     int y;

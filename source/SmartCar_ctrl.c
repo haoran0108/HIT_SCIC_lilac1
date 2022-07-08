@@ -450,6 +450,7 @@ void CTRL_fuzzyPID()
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
+//    test_varible[14] = fuzzyKP;
 
     if(state == stateCrossIn)
     {
@@ -1061,23 +1062,23 @@ void CTRL_CarParkStop()
     {
         if(currentGyro > endGyro.intVal || currentGyro < (-endGyro.intVal))
         {
-//            flagStop1 = 1;
-//            if(flagStop1 == 1)
-//            {
-//                flagStopCount1 += 1;
-//            }
-//            if(flagStop1 == 1 && flagStopCount1 >= parkStopStraightTime)
-//            {
+            flagStop1 = 1;
+            if(flagStop1 == 1)
+            {
+                flagStopCount1 += 1;
+            }
+            if(flagStop1 == 1 && flagStopCount1 >= parkStopStraightTime)
+            {
                 expectL = 0;
                 expectR = 0;
-//            }
+            }
 
 //            currentGyro = 80;
         }
 
         else if(currentGyro <= endGyro.intVal && currentGyro >= (-endGyro.intVal) && flagStopCount1 < parkStopStraightTime)
         {
-            present_speed = 70;
+//            present_speed = 70;
             CTRL_motorDiffer();
 
 //            present_speed = 70;
@@ -1122,7 +1123,7 @@ void CTRL_ServoPID_Determine()
 {
 
 
-    if((state == stateTIslandIn || state == stateTIn || state == stateTOut || state == stateSTIsland) && CrossCircle.intVal == 1)//crossCircle
+    if((state == stateTIn || state == stateTOut) && CrossCircle.intVal == 1)//crossCircle
     {
         fuzzy_PB = circle_PB.floatVal;
         fuzzy_PM = circle_PB.floatVal;
@@ -1136,7 +1137,20 @@ void CTRL_ServoPID_Determine()
 
     }
 
-    else if((state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal) && IslandPD.intVal == 1)//island-45678
+    else if((state == stateTIn || state == stateTOut) && CrossCircle.intVal == 2)
+    {
+        fuzzy_PB = circle_PB.floatVal;
+        fuzzy_PM = circle_PM.floatVal;
+        fuzzy_PS = circle_PS.floatVal;
+        fuzzy_ZO = circle_ZO.floatVal;
+        fuzzy_NS = circle_NS.floatVal;
+        fuzzy_NM = circle_NM.floatVal;
+        fuzzy_NB = circle_NB.floatVal;
+        fuzzy_D = circle_DS.floatVal;
+    }
+
+
+    else if((state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal) && IslandPD.intVal == 1)//island-45678
     {
         if(IslandRadius == 50)
         {
@@ -1162,7 +1176,7 @@ void CTRL_ServoPID_Determine()
             fuzzy_D = Island_DS.floatVal;
         }
 
-        else if(IslandRadius >= 70 && IslandRadius <= 100)
+        else if(IslandRadius > 70 && IslandRadius <= 100)
         {
             fuzzy_PB = Island_PB.floatVal;
             fuzzy_PM = Island_PB.floatVal;
@@ -1190,7 +1204,7 @@ void CTRL_ServoPID_Determine()
         fuzzy_D = Folk_DS.floatVal;
     }
 
-    else if(straightPD.intVal == 1 && straightFlag == 1)
+    else if(straightPD.intVal == 1 && state == stateTIslandIn)
     {
         fuzzy_PB = straight_KP.floatVal;
         fuzzy_PM = straight_KP.floatVal;
@@ -1468,7 +1482,7 @@ void speedDetermine()
     }
     else if(straightFlag == 0)
     {
-        if(state == 20 || state == 50)
+        if(state == 50 && tCrossStatus == 1)
         {
             present_speed = (uint8_t)(present_speed * display7.floatVal);
 //            present_speed = (uint8_t)(present_speed * display7.floatVal);
@@ -1486,7 +1500,7 @@ void speedDetermine()
 //        GPIO_Set(P22, 0, 0);
     }
 
-    CTRL_speedDecision(speedLow.intVal, present_speed);
+//    CTRL_speedDecision(speedLow.intVal, present_speed);
 //    present_vision = foresee();
 }
 void CTRL_RoadTest()

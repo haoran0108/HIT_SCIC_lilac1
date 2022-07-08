@@ -248,14 +248,14 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
 //    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
 
-    circle_PB = MENU_fileInit(circle_PB, 1, 3.3, "circlePB", 2, datafloat, NULL, &circle_DS, &CrossCircle, NULL);
-//    circle_PM = MENU_fileInit(circle_PM, 1, 3, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
-//    circle_PS = MENU_fileInit(circle_PS, 1, 2.2, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
-//    circle_ZO = MENU_fileInit(circle_ZO, 1, 1.4, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
-//    circle_NS = MENU_fileInit(circle_NS, 1, 2.2, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
-//    circle_NM = MENU_fileInit(circle_NM, 1, 3, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
-//    circle_NB = MENU_fileInit(circle_NB, 1, 3.9, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
-    circle_DS = MENU_fileInit(circle_DS, 1, 3, "D-SMALL", 3, datafloat, &circle_PB, NULL, NULL, NULL);
+    circle_PB = MENU_fileInit(circle_PB, 1, 3.3, "circlePB", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
+    circle_PM = MENU_fileInit(circle_PM, 1, 3, "circlePM", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
+    circle_PS = MENU_fileInit(circle_PS, 1, 2.8, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
+    circle_ZO = MENU_fileInit(circle_ZO, 1, 2.7, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
+    circle_NS = MENU_fileInit(circle_NS, 1, 2.8, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
+    circle_NM = MENU_fileInit(circle_NM, 1, 3, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
+    circle_NB = MENU_fileInit(circle_NB, 1, 3.2, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
+    circle_DS = MENU_fileInit(circle_DS, 1, 3, "D-SMALL", 3, datafloat, &circle_NB, NULL, NULL, NULL);
 //    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
 
     Island_PB = MENU_fileInit(Island_PB, 1, 2.4, "BIG-I", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
@@ -278,8 +278,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     Folk_DS = MENU_fileInit(Folk_DS, 1, 3, "D-SMALL", 3, datafloat, &Folk_NB, &Folk_DB, NULL, NULL);
 //    Folk_DB = MENU_fileInit(Folk_DB, 1, 0.5, "D-BIG", 4, datafloat, &Folk_DS, NULL, NULL, NULL);
 
-    straight_KP = MENU_fileInit(straight_KP, 1, 1.6, "str-KP", 2, datafloat, NULL, &straight_KD, &straightPD, NULL);
-    straight_KD = MENU_fileInit(straight_KD, 1, 1.4, "str-KD", 3, datafloat, &straight_KP, NULL, NULL, NULL);
+    straight_KP = MENU_fileInit(straight_KP, 1, 2, "str-KP", 2, datafloat, NULL, &straight_KD, &straightPD, NULL);
+    straight_KD = MENU_fileInit(straight_KD, 1, 2, "str-KD", 3, datafloat, &straight_KP, NULL, NULL, NULL);
 
 
     gear1 = MENU_fileInit(gear1, 1, 1.0, "GearSlow", 4, none, &currentK, &gear2, NULL, &g1_Data1);//慢速档
