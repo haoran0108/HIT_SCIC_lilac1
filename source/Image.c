@@ -1899,7 +1899,7 @@ void judge_type_road() {
     //Ê®×Ö
     if (state == stateStart && flagChange == 0) {
         //cross_in();
-        if (my_road[60].white_num != 0)
+        if (my_road[40].white_num != 0)
             folk_road_in();
       //  T_island_in_start();
 //        if (lastState != state) {
@@ -2298,7 +2298,7 @@ void judge_type_road() {
         if(rampWayCount > rampCount.intVal)
         {
 
-//            state = 0;
+            state = 0;
             rampWayCount=0;
         }
     }
@@ -7547,7 +7547,7 @@ void design_folk_road() {
 void folk_road_out() {
 
     int sumD = 0;
-    for (int i = NEAR_LINE; i > 101; i--) {
+    for (int i = NEAR_LINE; i > 98; i--) {
         if (right_line[i] - left_line[i] > 31) {
             sumD++;
         }
@@ -7561,12 +7561,12 @@ void folk_road_out() {
 
     if (sumD > 3 && sumU > 5) {
         if (FolkRoadWhere == RIGHT) {
-            if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(95, 110, right_line)) < 0.25) {
+            if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(90, 105, right_line)) < 0.25) {
                 state = 0;
             }
         }
         else if (FolkRoadWhere == LEFT) {
-            if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(95, 110, left_line)) < 0.25) {
+            if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(90, 105, left_line)) < 0.25) {
                 state = 0;
             }
         }

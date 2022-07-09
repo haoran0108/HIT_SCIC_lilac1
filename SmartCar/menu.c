@@ -217,8 +217,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     ramp = MENU_fileInit(ramp, 1, 1.0, "ramp", 5, none, &carPark, &folkWay, NULL, &rampCount);
     rampCount = MENU_fileInit(rampCount, 80, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
-    rampDistance = MENU_fileInit(rampDistance, 40, 1.0, "distance", 3, dataint, &rampCount, &rampSpeed, NULL, NULL);
-    rampSpeed = MENU_fileInit(rampSpeed, 70, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampMax, NULL, NULL);
+    rampDistance = MENU_fileInit(rampDistance, 50, 1.0, "distance", 3, dataint, &rampCount, &rampSpeed, NULL, NULL);
+    rampSpeed = MENU_fileInit(rampSpeed, 50, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampMax, NULL, NULL);
     rampMax = MENU_fileInit(rampMax, 60, 1.0, "Max", 5, dataint, &rampSpeed, &rampMin, NULL, NULL);
     rampMin = MENU_fileInit(rampMin, 15, 1.0, "Min", 6, dataint, &rampMax, &rampBottom, NULL, NULL);
 
