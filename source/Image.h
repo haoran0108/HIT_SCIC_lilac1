@@ -206,6 +206,7 @@ typedef struct {
     int y;
 }coordinate;
 
+extern road my_road[CAMERA_H];//ÈüµÀ
 
 
 void head_clear(void);

@@ -1060,7 +1060,7 @@ void CTRL_CarParkStop()
 //    delayStop++;
     if(flagStop == 1)
     {
-        if(currentGyro > endGyro.intVal || currentGyro < (-endGyro.intVal))
+        if(currentGyro > endGyro.intVal || currentGyro < (-endGyro.intVal) || my_road[86].white_num == 0 || my_road[90].white_num == 0 || my_road[92].white_num == 0 || my_road[95].white_num == 0)
         {
             flagStop1 = 1;
             if(flagStop1 == 1)

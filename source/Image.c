@@ -7914,7 +7914,7 @@ void searchParkLine()
 
 //    else flagStop = 0;
 
-//    test_varible[15] = i;
+    test_varible[15] = i;
 }
 
 //void rampwayOn()
