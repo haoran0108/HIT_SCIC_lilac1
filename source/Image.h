@@ -208,7 +208,7 @@ typedef struct {
 
 extern road my_road[CAMERA_H];//ÈüµÀ
 
-
+void CCD();
 void head_clear(void);
 void OTSU();
 void part_OUST();
