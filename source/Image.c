@@ -6017,7 +6017,7 @@ void island_final() {
 
     int sumD = 0;
     for (int i = NEAR_LINE; i >= 100; i--) {
-        if (right_line[i] - left_line[i] > 32) {
+        if (right_line[i] - left_line[i] > 31) {
             sumD++;
         }
     }
@@ -6029,16 +6029,16 @@ void island_final() {
     }
     if (sumD > 4 && sumU > 6) {
         if (islandWhere == RIGHT) {
-            if (fabs(calculate_slope_uint(80, 100, left_line) - calculate_slope_uint(80, 100, right_line)) < 0.15
-                    && calculate_slope_uint(85, 105, left_line) > -0.6) {
+            if (fabs(calculate_slope_uint(80, 100, left_line) - calculate_slope_uint(80, 100, right_line)) < 0.25
+                    && calculate_slope_uint(85, 105, left_line) > -0.7) {
                 flagIT = islandWhere * state;
                 state = stateStart;
                 islandWhere = 0;
             }
         }
         else if (islandWhere == LEFT) {
-            if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(85, 100, right_line)) < 0.15
-                    && calculate_slope_uint(85, 105, right_line) < 0.6) {
+            if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(85, 100, right_line)) < 0.25
+                    && calculate_slope_uint(85, 105, right_line) < 0.7) {
                 flagIT = islandWhere * state;
                 state = stateStart;
                 islandWhere = 0;
