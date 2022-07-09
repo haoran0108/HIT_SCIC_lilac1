@@ -2024,7 +2024,7 @@ void judge_type_road() {
     if (lastState == 30 && state == 70) {
         islandTimes++;
     }
-    test_varible[14] = islandTimes;
+//    test_varible[14] = islandTimes;
     if (islandTimes == 1) {
 //        IslandRadius = 100;
         IslandRadius = islandParam2.intVal;
@@ -2269,7 +2269,6 @@ void judge_type_road() {
 
     }
 
-    test_varible[15] = TFMINI_Distance;
 
     if(state != stateRampway && state == stateStart )
     {
@@ -2278,6 +2277,11 @@ void judge_type_road() {
             rampwayOn();
 
         }
+//        if(rampJudgeCount >= 200)
+//        {
+//            rampwayOn();
+//
+//        }
         lastTwoState = 0;
         rampWayCount = 0;
         //        lastRampGyro = 0;
@@ -2294,7 +2298,7 @@ void judge_type_road() {
         if(rampWayCount > rampCount.intVal)
         {
 
-            state = 0;
+//            state = 0;
             rampWayCount=0;
         }
     }
@@ -7336,11 +7340,19 @@ void folk_road_in() {
                     }
                 }
                 minR = max;
+                int sumLD = 0;
+                for (int i = minL; i <= minL + 25; i++) {
+                    if (my_road[i].connected[j_left[i]].left <= left_side[i] + 2) {
+                        sumLD++;
+                    }
+                }
                 if (calculate_slope_struct(minR + 1, minR + 14, j_right, RIGHT) >= 0 && calculate_slope_struct(minR - 14, minR - 1, j_right, RIGHT) <= 0
                     && fabs(calculate_slope_struct(minR - 14, minR - 1, j_right, RIGHT) - calculate_slope_struct(top - 14, top - 1, j_right, LEFT)) < 0.25
                     && fabs(calculate_slope_struct(minR + 1, minR + 14, j_right, RIGHT) - calculate_slope_struct(top - 14, top - 1, j_right, LEFT)) > 0.6
                     && 0>= calculate_slope_struct(top - 14, top - 1, j_right, LEFT) && calculate_slope_struct(top - 14, top - 1, j_right, LEFT) >= -0.9
                     && top >= 40 && minL >=60 && minR >= 50
+                    && top < minR && minR<minL
+                    && sumLD  <= 7
                     ) {
 
                     double k = calculate_slope_struct(minR + 2, minR + 15, j_right, RIGHT);
@@ -7402,11 +7414,19 @@ void folk_road_in() {
                     }
                 }
                 minL = max;
+                int sumRD = 0;
+                for (int i = minR; i <= minR + 25; i++) {
+                    if (my_road[i].connected[j_right[i]].right >= right_side[i] - 2) {
+                        sumRD++;
+                    }
+                }
                 if (calculate_slope_struct(minL + 1, minL + 14, j_left, LEFT) <= 0 && calculate_slope_struct(minL - 14, minL - 1, j_left, LEFT)>= 0
                     && fabs(calculate_slope_struct(minL - 14, minL - 1, j_left, LEFT) - calculate_slope_struct(top - 14, top - 1, j_left, RIGHT)) < 0.25
                     && fabs(calculate_slope_struct(minL + 1, minL + 14, j_left, LEFT) - calculate_slope_struct(top - 14, top - 1, j_left, RIGHT)) > 0.6
                     && 0 <= calculate_slope_struct(top - 14, top - 1, j_left, RIGHT) && calculate_slope_struct(top - 14, top - 1, j_left, RIGHT) <= 0.9
                     && top >= 40 && minR >= 60 && minL >= 50
+                    && top < minL && minL < minR
+                    && sumRD <= 7
                     ) {
 
                     double k = calculate_slope_struct(minL + 2, minL + 15, j_right, RIGHT);
@@ -7959,7 +7979,7 @@ void searchParkLine()
 void rampwayOn()
 {
     int rampFlag = 0;
-    if(TFMINI_Distance <= rampDistance.intVal)
+    if(TFMINI_Distance <= rampDistance.intVal && TFMINI_Distance != 0)
     {
 //        for(int i = 80;i <= 100; i++)
 //        {
@@ -7990,7 +8010,7 @@ void rampwayDown()
         }
     }
 
-    if(TFMINI_Distance < rampDistance.intVal && lastTwoState == 1 && inv_accl[2] < 9.45)
+    if(TFMINI_Distance < rampDistance.intVal &&TFMINI_Distance != 0 && lastTwoState == 1 && inv_accl[2] < 9.45)
     {
         state = 0;
         rampJudgeCount = 0;
