@@ -95,7 +95,7 @@ int flagIT = 0;
 int wayIT = 1; //回环之后一定是环岛，我们用+-1来决定，1肯定是环岛，-1是回环 由发车方向决定
 uint8_t tCrossStatus = 0;
 uint8_t tCrossTimes = 0;
-//road zebra_cross[CAMERA_H];
+//road my_road[CAMERA_H];
 //uint8_t IMG_zebra[36][CAMERA_W];
 //uint8_t zebraFlag;
 //uint8_t zebraCircle;
@@ -2066,7 +2066,7 @@ void judge_type_road() {
         {
             leftPark = 0;
             rightPark = 1;
-            searchParkLine();
+//            searchParkLine();
         }
     }
 
@@ -2081,7 +2081,7 @@ void judge_type_road() {
         {
             leftPark = 1;
             rightPark = 0;
-            searchParkLine();
+//            searchParkLine();
         }
     }
 //    searchParkLine();
@@ -2122,8 +2122,8 @@ void judge_type_road() {
         design_cross_T_out();
     }
 
-//test_varible[14] = carParkTimes;
-
+test_varible[14] = carParkTimes;
+test_varible[15] = rightPark;
     if (state != stateParkIn) {
 //        test_varible[15] = leftPark;
 
@@ -2138,8 +2138,8 @@ void judge_type_road() {
 
             else if(file1.intVal == 0)
             {
-                leftPark = 0;
-                rightPark = 1;
+                leftPark = 1;
+                rightPark = 0;
             }
 
             else if(file1.intVal == 1)
@@ -2151,7 +2151,7 @@ void judge_type_road() {
 
         }
 
-        if(carParkTimes == 1 && parkJudgeCount > 500)
+        if(carParkTimes == 1 && parkJudgeCount > 200)
         {
             carpark_in();
 //            searchParkLine();
@@ -2161,7 +2161,11 @@ void judge_type_road() {
 
         if(carParkTimes == 1 && file1.intVal == 1)
         {
-            parkJudgeCount += 1;
+            if(parkJudgeCount <= 202)
+            {
+                parkJudgeCount += 1;
+
+            }
             if(folkTimes < 4)
             {
                 leftPark = 1;
@@ -2177,7 +2181,11 @@ void judge_type_road() {
         }
         else if(carParkTimes == 1 && file1.intVal == -1)
         {
-            parkJudgeCount += 1;
+            if(parkJudgeCount <= 202)
+            {
+                parkJudgeCount += 1;
+
+            }
             if(tCrossTimes < 2)
             {
                 leftPark = 0;
@@ -2194,19 +2202,31 @@ void judge_type_road() {
         }
         else if(carParkTimes == 1 && file1.intVal == 0)
         {
-            parkJudgeCount += 1;
+            if(parkJudgeCount <= 202)
+            {
+                parkJudgeCount += 1;
+
+            }
             leftPark = 1;
             rightPark = 0;
         }
         else if(carParkTimes == 1 && file1.intVal == 2)
         {
-            parkJudgeCount += 1;
+            if(parkJudgeCount <= 202)
+            {
+                parkJudgeCount += 1;
+
+            }
             leftPark = 0;
             rightPark = 1;
         }
         else if(carParkTimes == 1 && file1.intVal == -2)
         {
-            parkJudgeCount += 1;
+            if(parkJudgeCount <= 202)
+            {
+                parkJudgeCount += 1;
+
+            }
             leftPark = 1;
             rightPark = 0;
         }
@@ -2226,8 +2246,8 @@ void judge_type_road() {
         }
         else if(carParkTimes == 2 && file1.intVal == 0)
         {
-            leftPark = 0;
-            rightPark = 1;
+            leftPark = 1;
+            rightPark = 0;
             searchParkLine();
 
         }
@@ -2680,7 +2700,7 @@ void CCD() {
 //    map = fullBuffer;
 //    uint8_t j_num = 1;
 //    //再一次得到全新的二值化结果
-//    zebra_cross[35] = my_road[95];
+//    my_road[35] = my_road[95];
 //    for (int i = 34; i >= 0; i--) {
 //        for (int j = 0; j < 188; j++) {
 //            if(188 * transform_x[i + 60][j] < 30){
@@ -2719,13 +2739,13 @@ void CCD() {
 //            }
 //            if (*(white_road + j) == white && *(white_road + j + 1) == black && flag == 1) {
 //                end_white = j;
-//                for (int k = 1; k <= zebra_cross[i + 1].white_num; k++) {
-//                    if ((zebra_cross[i + 1].connected[k].left <= start_white && start_white < zebra_cross[i + 1].connected[k].right) || (zebra_cross[i + 1].connected[k].left < end_white && end_white <= zebra_cross[i + 1].connected[k].right)
-//                        || (zebra_cross[i + 1].connected[k].left >= start_white && end_white >= zebra_cross[i + 1].connected[k].right) || (zebra_cross[i + 1].connected[k].left <= start_white && end_white <= zebra_cross[i + 1].connected[k].right)) {
-//                        zebra_cross[i].connected[j_num].left = start_white;
-//                        zebra_cross[i].connected[j_num].right = end_white;
-//                        //IMG[i + 60][zebra_cross[i].connected[j_num].left] = red, IMG[i  +60][zebra_cross[i].connected[j_num].right] = blue;
-//                        zebra_cross[i].connected[j_num].width = end_white - start_white + 1;
+//                for (int k = 1; k <= my_road[i + 1].white_num; k++) {
+//                    if ((my_road[i + 1].connected[k].left <= start_white && start_white < my_road[i + 1].connected[k].right) || (my_road[i + 1].connected[k].left < end_white && end_white <= my_road[i + 1].connected[k].right)
+//                        || (my_road[i + 1].connected[k].left >= start_white && end_white >= my_road[i + 1].connected[k].right) || (my_road[i + 1].connected[k].left <= start_white && end_white <= my_road[i + 1].connected[k].right)) {
+//                        my_road[i].connected[j_num].left = start_white;
+//                        my_road[i].connected[j_num].right = end_white;
+//                        //IMG[i + 60][my_road[i].connected[j_num].left] = red, IMG[i  +60][my_road[i].connected[j_num].right] = blue;
+//                        my_road[i].connected[j_num].width = end_white - start_white + 1;
 //                        j_num++;
 //                        flag = 0;
 //                        break;
@@ -2734,7 +2754,7 @@ void CCD() {
 //            }
 //
 //        }
-//        zebra_cross[i].white_num = j_num - 1;
+//        my_road[i].white_num = j_num - 1;
 //        j_num = 1;
 //
 //    }
@@ -7688,109 +7708,109 @@ void protection() {
 ///////////////////////////////////////////
 void carpark_in()
 {
-//    int flag = 0;
-//    int gapNumber = 0, gapNumber1 = 0, gapNumber2 = 0, gapNumber3 = 0;
-//    double leftK1 = 0, leftK2 = 0, rightK1 = 0, rightK2 = 0;
-//    uint8_t i, j;
-//    uint8_t upPoint = 1, downPoint = 1, averPoint, updownDelta = 0;
-//    float lineCount = 0;
-//    uint8_t whiteNumAdd = 0;
-//    float lineNumAver = 0;
-//
-//    for (carParkX = 60; carParkX < 95; carParkX++)
-//    {
-//        if (zebra_cross[carParkX + 1].white_num >= 3 && zebra_cross[carParkX].white_num > 3 && zebra_cross[carParkX - 1].white_num >= 3)
-//        {
-//
-//            lineCount = 0;
-//            whiteNumAdd = 0;
-//            for (int i = carParkX - 2; i <= carParkX + 4; i++)
-//            {
-//
-//                if (zebra_cross[i].white_num >= 3)
-//                {
-//                    whiteNumAdd += my_road[i].white_num;
-//                    lineCount += 1;
-//                }
-//
-//            }
-//            lineNumAver = whiteNumAdd / lineCount;
-//
-//            if (zebra_cross[carParkX].connected[zebra_cross[carParkX].white_num].width > 15 || zebra_cross[carParkX].connected[1].width > 15 || lineNumAver >= 6)
-//            {
-//                gapNumber = 0;
-//                for (int gap = 1; gap <= zebra_cross[carParkX].white_num; gap++)
-//                {
-//                    if (zebra_cross[carParkX].connected[gap].width <= 3)
-//                    {
-//                        if (zebra_cross[5].white_num != 0) {
-//                            gapNumber++;
-//                        }
-//
-//                    }
-//                }
-//
-//                for (int gap2 = 1; gap2 <= zebra_cross[carParkX-1].white_num; gap2++)
-//                {
-//                    if (zebra_cross[carParkX-1].connected[gap2].width <= 4)
-//                    {
-//                        if (zebra_cross[5].white_num != 0) {
-//                            gapNumber++;
-//                        }
-//
-//                    }
-//                }
-//
-//                if (gapNumber >= 7 && carParkX >= 65)
-//                {
-//                    if(rightPark == 1 && leftPark == 0)
-//                    {
-//                        rightK1 = calculate_two_point_slope(carParkX + 15, zebra_cross[carParkX + 15].connected[1].left, carParkX - 10 ,zebra_cross[carParkX - 10].connected[1].left);
-//                        rightK2 = calculate_two_point_slope(carParkX + 5, zebra_cross[carParkX + 5].connected[1].left, carParkX - 10 ,zebra_cross[carParkX - 10].connected[1].left);
-////                                test_varible[6] = rightK1;
-////                            test_varible[7] = rightK2;
-//                        if(fabs(rightK1) < 0.5 && fabs(rightK2) < 0.5 && fabs(rightK1 - rightK2) < 0.08)
-//                        {
-//                            flag = 1;
-////                                    test_varible[5] = carParkX;
-//                        }
-//                    }
-//
-//                    else if(leftPark == 1 && rightPark == 0)
-//                    {
-//                        leftK1 = calculate_two_point_slope(carParkX + 15, zebra_cross[carParkX + 15].connected[zebra_cross[carParkX + 15].white_num].right, carParkX - 10 ,zebra_cross[carParkX - 10].connected[zebra_cross[carParkX - 10].white_num].right);
-//                        leftK2 = calculate_two_point_slope(carParkX + 5, zebra_cross[carParkX + 5].connected[zebra_cross[carParkX + 5].white_num].right, carParkX - 10 ,zebra_cross[carParkX - 10].connected[zebra_cross[carParkX - 10].white_num].right);
-////                            test_varible[6] = leftK1;
-////                            test_varible[7] = leftK2;
-//
-//                        if(fabs(leftK1) < 0.5 && fabs(leftK2) < 0.5 && fabs(leftK1 - leftK2) < 0.1)
-//                        {
-//                            flag = 1;
-////                                    test_varible[5] = carParkX;
-//                        }
-//                    }
-//
-//                        //flagStop = 1;
-//
-//
-//                    }
-//
-//                if (flag == 1)
-//                {
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//
-//    if (flag == 1) {
-//        state = stateParkIn;
-//        carParkDelay = 0;
-//        carParkTimes+=1;
-//       // leftPark = 1;
-//        //carParkTimes += 1;
-//
-//    }
+    int flag = 0;
+    int gapNumber = 0, gapNumber1 = 0, gapNumber2 = 0, gapNumber3 = 0;
+    double leftK1 = 0, leftK2 = 0, rightK1 = 0, rightK2 = 0;
+    uint8_t i, j;
+    uint8_t upPoint = 1, downPoint = 1, averPoint, updownDelta = 0;
+    float lineCount = 0;
+    uint8_t whiteNumAdd = 0;
+    float lineNumAver = 0;
+
+    for (carParkX = 60; carParkX < 100; carParkX++)
+    {
+        if (my_road[carParkX + 1].white_num >= 3 && my_road[carParkX].white_num > 3 && my_road[carParkX - 1].white_num >= 3)
+        {
+
+            lineCount = 0;
+            whiteNumAdd = 0;
+            for (int i = carParkX - 2; i <= carParkX + 4; i++)
+            {
+
+                if (my_road[i].white_num >= 3)
+                {
+                    whiteNumAdd += my_road[i].white_num;
+                    lineCount += 1;
+                }
+
+            }
+            lineNumAver = whiteNumAdd / lineCount;
+
+            if (my_road[carParkX].connected[my_road[carParkX].white_num].width > 15 || my_road[carParkX].connected[1].width > 15 || lineNumAver >= 6)
+            {
+                gapNumber = 0;
+                for (int gap = 1; gap <= my_road[carParkX].white_num; gap++)
+                {
+                    if (my_road[carParkX].connected[gap].width <= 3)
+                    {
+                        if (my_road[5].white_num != 0) {
+                            gapNumber++;
+                        }
+
+                    }
+                }
+
+                for (int gap2 = 1; gap2 <= my_road[carParkX-1].white_num; gap2++)
+                {
+                    if (my_road[carParkX-1].connected[gap2].width <= 4)
+                    {
+                        if (my_road[5].white_num != 0) {
+                            gapNumber++;
+                        }
+
+                    }
+                }
+
+                if (gapNumber >= 7 && carParkX >= 65)
+                {
+                    if(rightPark == 1 && leftPark == 0)
+                    {
+                        rightK1 = calculate_two_point_slope(carParkX + 15, my_road[carParkX + 15].connected[1].left, carParkX - 10 ,my_road[carParkX - 10].connected[1].left);
+                        rightK2 = calculate_two_point_slope(carParkX + 5, my_road[carParkX + 5].connected[1].left, carParkX - 10 ,my_road[carParkX - 10].connected[1].left);
+//                                test_varible[6] = rightK1;
+//                            test_varible[7] = rightK2;
+                        if(fabs(rightK1) < 0.6 && fabs(rightK2) < 0.6 && fabs(rightK1 - rightK2) < 0.08)
+                        {
+                            flag = 1;
+//                                    test_varible[5] = carParkX;
+                        }
+                    }
+
+                    else if(leftPark == 1 && rightPark == 0)
+                    {
+                        leftK1 = calculate_two_point_slope(carParkX + 15, my_road[carParkX + 15].connected[my_road[carParkX + 15].white_num].right, carParkX - 10 ,my_road[carParkX - 10].connected[my_road[carParkX - 10].white_num].right);
+                        leftK2 = calculate_two_point_slope(carParkX + 5, my_road[carParkX + 5].connected[my_road[carParkX + 5].white_num].right, carParkX - 10 ,my_road[carParkX - 10].connected[my_road[carParkX - 10].white_num].right);
+//                            test_varible[6] = leftK1;
+//                            test_varible[7] = leftK2;
+
+                        if(fabs(leftK1) < 0.6 && fabs(leftK2) < 0.6 && fabs(leftK1 - leftK2) < 0.1)
+                        {
+                            flag = 1;
+//                                    test_varible[5] = carParkX;
+                        }
+                    }
+
+                        //flagStop = 1;
+
+
+                    }
+
+                if (flag == 1)
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    if (flag == 1) {
+        state = stateParkIn;
+        carParkDelay = 0;
+        carParkTimes+=1;
+       // leftPark = 1;
+        //carParkTimes += 1;
+
+    }
 }
 
 ////////////////////////////////////////////
