@@ -184,21 +184,21 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
-    islandout_up = MENU_fileInit(islandout_up, -2, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
-    design_island_k = MENU_fileInit(design_island_k, 1, 0.2, "left-dk", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
+    islandout_up = MENU_fileInit(islandout_up, 0, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
+    design_island_k = MENU_fileInit(design_island_k, 1, 0, "left-dk", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
     islandParam1 = MENU_fileInit(islandParam1, 1, 0, "right-dk", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
     islandParam2 = MENU_fileInit(islandParam2, 50, 1.8, "radius", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
     islandParam3 = MENU_fileInit(islandParam3, 0, 0.35, "xleft", 6, dataint, &islandParam2, &islandParam4, NULL, NULL);
     islandParam4 = MENU_fileInit(islandParam4, 0, 0.35, "xright", 7, dataint, &islandParam3, &islandParam5, NULL, NULL);
-    islandParam5 = MENU_fileInit(islandParam5, 64, 0.1, "dk-out", 2, datafloat, &islandParam4, &islandParam6, NULL, NULL);
+    islandParam5 = MENU_fileInit(islandParam5, 64, 0, "dk-out", 2, datafloat, &islandParam4, &islandParam6, NULL, NULL);
     islandParam6 = MENU_fileInit(islandParam6, 0, 0, "width", 3, dataint, &islandParam5, &islandBottom, NULL, NULL);
     islandBottom = MENU_fileInit(islandBottom, 1, 0.35, "bottom", 4, none, &islandParam6, NULL, NULL, NULL);
 
 
     cross_circle = MENU_fileInit(cross_circle, 1, 1.0, "crocircle", 3, none, &island, &carPark, NULL, &cross_circle_param1);
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 90, 1.0, "vision", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
-    cross_circle_param2 = MENU_fileInit(cross_circle_param2, 90, 1.0, "rightX", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
-    cross_circle_param3 = MENU_fileInit(cross_circle_param3, 84, 1.0, "leftX", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
+    cross_circle_param2 = MENU_fileInit(cross_circle_param2, 0, 1.0, "rightX", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
+    cross_circle_param3 = MENU_fileInit(cross_circle_param3, 0, 1.0, "leftX", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
     cross_circle_param4 = MENU_fileInit(cross_circle_param4, 88, 1.0, "outwidth", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
     cross_circle_param5 = MENU_fileInit(cross_circle_param5, 55, 0.1, "kfix", 6, datafloat, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
     cross_circle_param6 = MENU_fileInit(cross_circle_param6, 30, 1.0, "turnwidth", 7, dataint, &cross_circle_param5, &cross_circle_param7, NULL, NULL);
@@ -209,14 +209,14 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     carPark = MENU_fileInit(carPark, 1, 1.0, "park", 4, none, &cross_circle, &ramp, NULL, &parkCount);
     parkCount = MENU_fileInit(parkCount, 58, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
     startGyro = MENU_fileInit(startGyro, 30, 1.0, "st-gyro", 3, dataint, &parkCount, &endGyro, NULL, NULL);
-    endGyro = MENU_fileInit(endGyro, 80, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
-    search_line = MENU_fileInit(search_line, 75, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
+    endGyro = MENU_fileInit(endGyro, 65, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
+    search_line = MENU_fileInit(search_line, 88, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
     parkDelay = MENU_fileInit(parkDelay, 5, 1.0, "delay", 6, dataint, &search_line, &paramBottom, NULL, NULL);
 
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkDelay, NULL, NULL, NULL);
 
     ramp = MENU_fileInit(ramp, 1, 1.0, "ramp", 5, none, &carPark, &folkWay, NULL, &rampCount);
-    rampCount = MENU_fileInit(rampCount, 80, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
+    rampCount = MENU_fileInit(rampCount, 100, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
     rampDistance = MENU_fileInit(rampDistance, 50, 1.0, "distance", 3, dataint, &rampCount, &rampSpeed, NULL, NULL);
     rampSpeed = MENU_fileInit(rampSpeed, 50, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampMax, NULL, NULL);
     rampMax = MENU_fileInit(rampMax, 60, 1.0, "Max", 5, dataint, &rampSpeed, &rampMin, NULL, NULL);
@@ -389,7 +389,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display4 = MENU_fileInit(display4, 10, 0.5, "beta1", 5, datafloat, &display3, &display5, NULL, NULL);
     display5 = MENU_fileInit(display5, 10, 0.3, "beta2", 6, datafloat, &display4, &display6, NULL, NULL);
     display6 = MENU_fileInit(display6, 2, 1, "speedUP", 7, datafloat, &display5, &display7, NULL, NULL);
-    display7 = MENU_fileInit(display7, 100, 0.8, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
+    display7 = MENU_fileInit(display7, 100, 0.9, "speedDOWN", 2, datafloat, &display6, &display8, NULL, NULL);
     display8 = MENU_fileInit(display8, 130, 7.91, "stopTHRE", 3, dataint, &display7, &display9, NULL, NULL);
     display9 = MENU_fileInit(display9, 1, 9.02, "testTimes", 4, dataint, &display8, NULL, NULL, NULL);
 //    display10 = MENU_fileInit(display10, 70, 9.02, "param2", 5, dataint, &display9, NULL, NULL, NULL);

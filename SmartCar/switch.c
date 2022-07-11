@@ -125,6 +125,8 @@ void SW_readSwitch()
         islandTimes = 0;
         islandCircleCount = 0;
         tInCount = 0;
+        rampTimes = 0;
+        parkSlowDownCount = 0;
 
         if(file1.intVal == -1)//×ó »·µº
         {

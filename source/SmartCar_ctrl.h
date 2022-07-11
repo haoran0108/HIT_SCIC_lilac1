@@ -57,7 +57,7 @@
 #define servoRampMax 741
 #define servoRampMin 701
 
-#define parkStopStraightTime 3
+#define parkStopStraightTime 2
 
 
 extern uint32 servoPwm;

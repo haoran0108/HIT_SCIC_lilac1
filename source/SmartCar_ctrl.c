@@ -586,8 +586,8 @@ void CTRL_motorPID()
 
     lastSpeedL = speedL;
     lastSpeedR = speedR;
-    test_varible[9] = expectL;
-    test_varible[10] = expectR;
+//    test_varible[9] = expectL;
+//    test_varible[10] = expectR;
     test_varible[0] = speedL;
     test_varible[1] = speedR;
 
@@ -645,12 +645,12 @@ void CTRL_servoMain()
         }
         else if(flagStop == 1 && leftPark == 0 && rightPark == 1)
         {
-            if(flagStopCount1 < parkStopStraightTime && flagStop1 == 0)
+            if(flagStop1 == 0)
             {
                 servoPwm = servoMin;//630
-
+//
             }
-
+//
             else if(flagStop1 == 1)
             {
                 servoPwm = servoMidValue;
@@ -658,12 +658,12 @@ void CTRL_servoMain()
         }
         else if(flagStop == 1 && leftPark == 1 && rightPark == 0)
         {
-            if(flagStopCount1 < parkStopStraightTime && flagStop1 == 0)
+            if(flagStop1 == 0)
             {
                 servoPwm = servoMax;//630
 
             }
-
+//
             else if(flagStop1 == 1)
             {
                 servoPwm = servoMidValue;
@@ -776,13 +776,13 @@ void CTRL_motorMain()
         CTRL_RoadTest();
 
     }
-    else if(flagStop == 1 && duzhuanFlag == 0)
+    else if(flagStop == 1)
     {
         CTRL_CarParkStop();
 
 
     }
-    else if(stopFlag == 1 && duzhuanFlag == 0)
+    else if(stopFlag == 1)
     {
         expectL = 0;
         expectR = 0;
@@ -793,10 +793,10 @@ void CTRL_motorMain()
         expectR = 0;
     }
 
-    if(duzhuanFlag == 1)
-    {
-        CTRL_duzhuan();
-    }
+//    if(duzhuanFlag == 1)
+//    {
+//        CTRL_duzhuan();
+//    }
 
     motorParamDefine();
 
@@ -823,8 +823,18 @@ void CTRL_motorDiffer()
     {
 //        k = 0.9459 - 0.2679 * FabsDelta * FabsDelta - 0.1511 * FabsDelta;
         k = 0.9997 - 0.4404 * FabsDelta;
-        expectL = (int32)(present_speed);
-        expectR = (int32)(present_speed * k);
+        if(state == 50 && tCrossStatus == 1 && TWhere == LEFT)
+        {
+            expectL = (int32)(present_speed);
+            expectR = (int32)(present_speed * k * display7.floatVal);
+        }
+
+        else
+        {
+            expectL = (int32)(present_speed);
+            expectR = (int32)(present_speed * k);
+        }
+
 //        if(straightFlag == 1)
 //        {
 //            expectL = (int32)(present_speed * display6.floatVal);
@@ -862,8 +872,18 @@ void CTRL_motorDiffer()
     {
         k = 0.9927 - 0.4257 * FabsDelta;
 
-        expectL = (int32)(present_speed * k);
-        expectR = (int32)(present_speed);
+        if(state == 50 && tCrossStatus == 1 && TWhere == RIGHT)
+        {
+            expectL = (int32)(present_speed * k * display7.floatVal);
+            expectR = (int32)(present_speed);
+        }
+
+        else
+        {
+            expectL = (int32)(present_speed * k);
+            expectR = (int32)(present_speed);
+        }
+
 //        if(straightFlag == 1)
 //        {
 //            expectL = (int32)(present_speed * display6.floatVal * k);
@@ -1058,16 +1078,22 @@ void CTRL_CarParkStart()
 void CTRL_CarParkStop()
 {
 //    delayStop++;
+    uint8_t myValid;
+    myValid = valid_row();
+    test_varible[8] = myValid;
+
     if(flagStop == 1)
     {
-        if(currentGyro > endGyro.intVal || currentGyro < (-endGyro.intVal) || my_road[86].white_num == 0 || my_road[90].white_num == 0 || my_road[92].white_num == 0 || my_road[95].white_num == 0)
-        {
+//        if(currentGyro > endGyro.intVal || currentGyro < (-endGyro.intVal) || myValid > 94 || flagStop1 == 1)
+       if(myValid > 92 || flagStop1 == 1)
+       {
+
             flagStop1 = 1;
             if(flagStop1 == 1)
             {
                 flagStopCount1 += 1;
             }
-            if(flagStop1 == 1 && flagStopCount1 >= parkStopStraightTime)
+            if(myValid > 92)
             {
                 expectL = 0;
                 expectR = 0;
@@ -1076,9 +1102,18 @@ void CTRL_CarParkStop()
 //            currentGyro = 80;
         }
 
-        else if(currentGyro <= endGyro.intVal && currentGyro >= (-endGyro.intVal) && flagStopCount1 < parkStopStraightTime)
+        else if(currentGyro <= endGyro.intVal && currentGyro >= (-endGyro.intVal))
         {
-//            present_speed = 70;
+            if(present_speed > 2)
+            {
+                if(parkSlowDownCount % 2 == 0)
+                {
+                    present_speed = present_speed - 1;
+
+                }
+
+            }
+            else present_speed = 0;
             CTRL_motorDiffer();
 
 //            present_speed = 70;
@@ -1204,7 +1239,7 @@ void CTRL_ServoPID_Determine()
         fuzzy_D = Folk_DS.floatVal;
     }
 
-    else if(straightPD.intVal == 1 && state == stateTIslandIn)
+    else if(straightPD.intVal == 1 && (state == stateTIslandIn || state == stateIslandIng))
     {
         fuzzy_PB = straight_KP.floatVal;
         fuzzy_PM = straight_KP.floatVal;
@@ -1374,87 +1409,87 @@ void speedDetermine()
 {
 
 
-    if(memoryState[0] == 1)
-    {
-        present_speed = memorySpeed1.intVal;
-        present_vision = memoryVision1.intVal;
-    }
-    else if(memoryState[1] == 1)
-    {
-        present_speed = memorySpeed2.intVal;
-        present_vision = memoryVision2.intVal;
-    }
-    else if(memoryState[2] == 1)
-    {
-        present_speed = memorySpeed3.intVal;
-        present_vision = memoryVision3.intVal;
-    }
-    else if(memoryState[3] == 1)
-    {
-        present_speed = memorySpeed4.intVal;
-        present_vision = memoryVision4.intVal;
-    }
-    else if(memoryState[4] == 1)
-    {
-        present_speed = memorySpeed5.intVal;
-        present_vision = memoryVision5.intVal;
-    }
-    else if(memoryState[5] == 1)
-    {
-        present_speed = memorySpeed6.intVal;
-        present_vision = memoryVision6.intVal;
-    }
-    else if(memoryState[6] == 1)
-    {
-        present_speed = memorySpeed7.intVal;
-        present_vision = memoryVision7.intVal;
-    }
-    else if(memoryState[7] == 1)
-    {
-        present_speed = memorySpeed8.intVal;
-        present_vision = memoryVision8.intVal;
-    }
-    else if(memoryState[8] == 1)
-    {
-        present_speed = memorySpeed9.intVal;
-        present_vision = memoryVision9.intVal;
-    }
-    else if(memoryState[9] == 1)
-    {
-        present_speed = memorySpeed10.intVal;
-        present_vision = memoryVision10.intVal;
-    }
-    else if(memoryState[10] == 1)
-    {
-        present_speed = memorySpeed11.intVal;
-        present_vision = memoryVision11.intVal;
-    }
-    else if(memoryState[11] == 1)
-    {
-        present_speed = memorySpeed12.intVal;
-        present_vision = memoryVision12.intVal;
-    }
-    else if(memoryState[12] == 1)
-    {
-        present_speed = memorySpeed13.intVal;
-        present_vision = memoryVision13.intVal;
-    }
-    else if(memoryState[13] == 1)
-    {
-        present_speed = memorySpeed14.intVal;
-        present_vision = memoryVision14.intVal;
-    }
-    else if(memoryState[14] == 1)
-    {
-        present_speed = memorySpeed15.intVal;
-        present_vision = memoryVision15.intVal;
-    }
+//    if(memoryState[0] == 1)
+//    {
+//        present_speed = memorySpeed1.intVal;
+//        present_vision = memoryVision1.intVal;
+//    }
+//    else if(memoryState[1] == 1)
+//    {
+//        present_speed = memorySpeed2.intVal;
+//        present_vision = memoryVision2.intVal;
+//    }
+//    else if(memoryState[2] == 1)
+//    {
+//        present_speed = memorySpeed3.intVal;
+//        present_vision = memoryVision3.intVal;
+//    }
+//    else if(memoryState[3] == 1)
+//    {
+//        present_speed = memorySpeed4.intVal;
+//        present_vision = memoryVision4.intVal;
+//    }
+//    else if(memoryState[4] == 1)
+//    {
+//        present_speed = memorySpeed5.intVal;
+//        present_vision = memoryVision5.intVal;
+//    }
+//    else if(memoryState[5] == 1)
+//    {
+//        present_speed = memorySpeed6.intVal;
+//        present_vision = memoryVision6.intVal;
+//    }
+//    else if(memoryState[6] == 1)
+//    {
+//        present_speed = memorySpeed7.intVal;
+//        present_vision = memoryVision7.intVal;
+//    }
+//    else if(memoryState[7] == 1)
+//    {
+//        present_speed = memorySpeed8.intVal;
+//        present_vision = memoryVision8.intVal;
+//    }
+//    else if(memoryState[8] == 1)
+//    {
+//        present_speed = memorySpeed9.intVal;
+//        present_vision = memoryVision9.intVal;
+//    }
+//    else if(memoryState[9] == 1)
+//    {
+//        present_speed = memorySpeed10.intVal;
+//        present_vision = memoryVision10.intVal;
+//    }
+//    else if(memoryState[10] == 1)
+//    {
+//        present_speed = memorySpeed11.intVal;
+//        present_vision = memoryVision11.intVal;
+//    }
+//    else if(memoryState[11] == 1)
+//    {
+//        present_speed = memorySpeed12.intVal;
+//        present_vision = memoryVision12.intVal;
+//    }
+//    else if(memoryState[12] == 1)
+//    {
+//        present_speed = memorySpeed13.intVal;
+//        present_vision = memoryVision13.intVal;
+//    }
+//    else if(memoryState[13] == 1)
+//    {
+//        present_speed = memorySpeed14.intVal;
+//        present_vision = memoryVision14.intVal;
+//    }
+//    else if(memoryState[14] == 1)
+//    {
+//        present_speed = memorySpeed15.intVal;
+//        present_vision = memoryVision15.intVal;
+//    }
 //    else if(memoryState[15] == 1)
 //    {
 //        present_speed = memorySpeed2.intVal;
 //        present_vision = memoryVision2.intVal;
 //    }
-    else if(parkStart == 0)
+    if(parkStart == 0)
     {
         present_speed = presentSpeed.intVal;
         present_vision = presentVision.intVal;
@@ -1471,10 +1506,10 @@ void speedDetermine()
 //        present_vision = islandParam2.intVal;
 //    }
 
-    if(state == stateTIslandIn || state == stateTIn || state == stateTOut)
-    {
-        present_vision = cross_circle_param1.intVal;
-    }
+//    if(state == stateTIslandIn || state == stateTIn || state == stateTOut)
+//    {
+//        present_vision = cross_circle_param1.intVal;
+//    }
 
     if(straightFlag == 1)
     {
@@ -1482,12 +1517,12 @@ void speedDetermine()
     }
     else if(straightFlag == 0)
     {
-        if(state == 50 && tCrossStatus == 1)
-        {
-            present_speed = (uint8_t)(present_speed * display7.floatVal);
+//        if(state == 50 && tCrossStatus == 1)
+//        {
 //            present_speed = (uint8_t)(present_speed * display7.floatVal);
-        }
-        else if(state == 130)
+////            present_speed = (uint8_t)(present_speed * display7.floatVal);
+//        }
+        if(state == 130)
         {
             present_speed = rampSpeed.intVal;
 //            present_speed = rampSpeed.intVal;
@@ -1500,6 +1535,10 @@ void speedDetermine()
 //        GPIO_Set(P22, 0, 0);
     }
 
+//    if(carParkTimes == 2)
+//    {
+//        present_speed = 70;
+//    }
 //    CTRL_speedDecision(speedLow.intVal, present_speed);
 //    present_vision = foresee();
 }

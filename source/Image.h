@@ -161,7 +161,10 @@ extern int threOriginal;
 extern int wayIT;
 extern uint8_t tCrossTimes;
 extern uint8_t tCrossStatus;
+extern uint8_t rampTimes;
+extern uint8_t parkSlowDownCount;
 
+extern int TWhere;
 typedef struct {
     int x;
     int y;
@@ -290,6 +293,7 @@ void carpark_in();
 void carpark_out();
 void design_carpark();
 void searchParkLine();
+void carPark_main();
 
 //Í£³µ
 
