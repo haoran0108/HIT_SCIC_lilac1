@@ -5440,7 +5440,7 @@ void island_circle() {
                 }
             }
 
-            if (100 <= upPoint && upPoint < NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].right < 94) {
+            if (103 <= upPoint && upPoint < NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].right < 94) {
                 state = stateIslandCircle;
             }
 
@@ -5475,7 +5475,7 @@ void island_circle() {
                 }
             }
 
-            if (100 <= upPoint && upPoint <= NEAR_LINE&& my_road[upPoint].connected[j_mid[upPoint]].left > 94) {
+            if (103 <= upPoint && upPoint <= NEAR_LINE&& my_road[upPoint].connected[j_mid[upPoint]].left > 94) {
                 state = stateIslandCircle;
             }
 
