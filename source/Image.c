@@ -7421,6 +7421,7 @@ void folk_road_in() {
     }
 
 }
+
 void design_folk_road() {
     uint8_t j_left[CAMERA_H];
     uint8_t j_right[CAMERA_H];
@@ -7456,9 +7457,12 @@ void design_folk_road() {
         }
     }
     if (FolkRoadWhere == RIGHT) {
-        for (int i = NEAR_LINE; i >= 20; i--) {
+        for (int i = NEAR_LINE - 1; i >= 20; i--) {
             right_line[i] = my_road[i].connected[j_right[i]].right;
-            left_line[i] = right_line[i] - width - k_delta*(i - NEAR_LINE);
+            left_line[i] = right_line[i] - width - k_delta * (i - NEAR_LINE);
+            if (left_line[i] < left_line[i + 1]) {
+                left_line[i] = left_line[i + 1];
+            }
         }
         for (int i = NEAR_LINE; i >= 20; i--) {
             if (right_line[i] - right_line[i - 1] > 5 && right_line[i] - right_line[i - 2] > 5)
@@ -7474,6 +7478,9 @@ void design_folk_road() {
         for (int i = NEAR_LINE; i >= 20; i--) {
             left_line[i] = my_road[i].connected[j_left[i]].left;
             right_line[i] = left_line[i] + width + k_delta * (i - NEAR_LINE);
+            if (right_line[i] > right_line[i + 1]) {
+                right_line[i] = right_line[i + 1];
+            }
         }
         for (int i = NEAR_LINE; i >= 20; i--) {
             if (left_line[i - 1] - left_line[i] > 5 && left_line[i - 2] - left_line[i] > 5)
@@ -7488,7 +7495,6 @@ void design_folk_road() {
     }
 
 }
-
 ////////////////////////////////////////////
 //功能：出三叉
 //输入：
