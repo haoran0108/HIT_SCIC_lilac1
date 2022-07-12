@@ -6168,7 +6168,7 @@ void cross_T_out_start() {
                     yMax = leftDownPoint;
                     xMax = left_line[leftDownPoint];
 
-                    if (yMax < 100 && yMax >= 80) {
+                    if (yMax < 100 && yMax >= 50) {
                         state = stateTOut;
                     }
                 }
@@ -6269,7 +6269,7 @@ void cross_T_out_start() {
                     yMin = rightDownPoint;
                     xMin = right_line[leftDownPoint];
 
-                    if (yMin < 100 && yMin >= 80) {
+                    if (yMin < 100 && yMin >= 50) {
                         state = stateTOut;
                     }
                 }
@@ -6303,7 +6303,7 @@ void cross_T_out_start() {
                 }
                 //  //////printf("x=%d,y=%d\n", xMin, yMin);
                 if (calculate_slope_uint(yMin - 18, yMin - 1, right_line) * calculate_slope_uint(yMin + 2, yMin + 18, right_line) < 0) {
-                    if (xMin >= 96 + cross_circle_param3.intVal && yMin >= 80 && yMin <= 110
+                    if (xMin >= 96 + cross_circle_param3.intVal && yMin >= 70 && yMin <= 110
                         && right_line[change - 2] - left_line[change - 2] > 25) {
                         state = stateTOut;
                     }

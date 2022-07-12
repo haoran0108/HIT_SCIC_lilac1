@@ -185,8 +185,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
     islandout_up = MENU_fileInit(islandout_up, 0, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
-    design_island_k = MENU_fileInit(design_island_k, 1, 0, "left-dk", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
-    islandParam1 = MENU_fileInit(islandParam1, 1, 0, "right-dk", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
+    design_island_k = MENU_fileInit(design_island_k, 1, 0.1, "left-dk", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
+    islandParam1 = MENU_fileInit(islandParam1, 1, 0.1, "right-dk", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
     islandParam2 = MENU_fileInit(islandParam2, 50, 1.8, "radius", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
     islandParam3 = MENU_fileInit(islandParam3, 0, 0.35, "xleft", 6, dataint, &islandParam2, &islandParam4, NULL, NULL);
     islandParam4 = MENU_fileInit(islandParam4, 0, 0.35, "xright", 7, dataint, &islandParam3, &islandParam5, NULL, NULL);
@@ -226,8 +226,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 
     folkWay = MENU_fileInit(folkWay, 1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);//1-left   -1-right
-    folkParam1 = MENU_fileInit(folkParam1, 26, 1.0, "width", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
-    folkParam2 = MENU_fileInit(folkParam2, 25, 0.15, "k", 3, datafloat, &folkParam1, NULL, NULL, NULL);
+    folkParam1 = MENU_fileInit(folkParam1, 16, 1.0, "width", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
+    folkParam2 = MENU_fileInit(folkParam2, 25, -0.1, "k", 3, datafloat, &folkParam1, NULL, NULL, NULL);
 //    folkParam3 = MENU_fileInit(folkParam3, 95, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
 //    folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkBottom, NULL, NULL);
 //    folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);

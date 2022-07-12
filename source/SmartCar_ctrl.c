@@ -442,13 +442,29 @@ void CTRL_fuzzyPID()
     myMidLine = aver_mid_line_foresee();
     if(state == stateRampway)
     {
-        servoError.currentError = 93 - mid_line[present_vision+10];
+        servoError.currentError = 93 - mid_line[present_vision+5];
 
     }
     else servoError.currentError = 93 - myMidLine;
     test_varible[12] = myMidLine;
+
+
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
+
+    if(state == laststate)
+    {
+        if(abs(servoError.delta) > 9 && abs(servoError.delta) <= 16)
+        {
+            servoError.currentError = servoError.currentError * 0.8 + servoError.lastError * 0.2;
+        }
+
+        else if(abs(servoError.delta) > 16)
+        {
+            servoError.currentError = servoError.currentError * 0.5 + servoError.lastError * 0.5;
+        }
+
+    }
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
 //    test_varible[14] = fuzzyKP;
 
@@ -1497,7 +1513,7 @@ void speedDetermine()
 
     else if(parkStart != 0)
     {
-        present_speed = 70;
+        present_speed = 80;
 //        present_vision = 60;
     }
 
