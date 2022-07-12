@@ -1102,7 +1102,7 @@ void CTRL_CarParkStop()
 //            currentGyro = 80;
         }
 
-        else if(currentGyro <= endGyro.intVal && currentGyro >= (-endGyro.intVal))
+        else if(myValid <= 92)
         {
             if(present_speed > 2)
             {
@@ -1497,7 +1497,7 @@ void speedDetermine()
 
     else if(parkStart != 0)
     {
-        present_speed = 60;
+        present_speed = 70;
 //        present_vision = 60;
     }
 

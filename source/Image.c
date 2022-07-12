@@ -1986,7 +1986,7 @@ void judge_type_road() {
     if (state == stateIslandCircle && flagChange == 0) {
 
         islandCircleCount += 1;
-        if(islandCircleCount >= 20)
+        if(islandCircleCount >= 4)
         {
             island_out();
 
@@ -2136,7 +2136,7 @@ void judge_type_road() {
 
 
 
-    if(state != stateRampway && state == stateStart )
+    if(state == stateFolkRoadIn  || state == stateStart )
     {
         if(rampJudgeCount >= 200 && islandTimes == 2)
         {

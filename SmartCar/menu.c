@@ -207,7 +207,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     ccBottom = MENU_fileInit(ccBottom, 55, 1.0, "bottom", 4, none, &cross_circle_param8, NULL, NULL, NULL);
 
     carPark = MENU_fileInit(carPark, 1, 1.0, "park", 4, none, &cross_circle, &ramp, NULL, &parkCount);
-    parkCount = MENU_fileInit(parkCount, 58, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
+    parkCount = MENU_fileInit(parkCount, 57, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
     startGyro = MENU_fileInit(startGyro, 30, 1.0, "st-gyro", 3, dataint, &parkCount, &endGyro, NULL, NULL);
     endGyro = MENU_fileInit(endGyro, 65, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
     search_line = MENU_fileInit(search_line, 88, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
