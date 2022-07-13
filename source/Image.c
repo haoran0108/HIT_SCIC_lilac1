@@ -5422,7 +5422,7 @@ void island_circle() {
             j_mid[i] = j_continue[i];
             for (int j = 1; j <= my_road[i].white_num; j++) {
                 if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_mid[i + 1]].left) < abs(my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left)
-                    && my_road[i].connected[j].width > 10) {
+                    && my_road[i].connected[j].width > 15) {
                     j_mid[i] = j;
 
                 }
@@ -5431,18 +5431,17 @@ void island_circle() {
         }
         if (my_road[35].connected[j_mid[35]].width < 35) {
             int upPoint = 119;
-            for (int i = 110; i >= 50; i--) {
-                if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 29
-                    && my_road[i - 1].connected[j_mid[i - 1]].width < 35 && my_road[i + 3].connected[j_mid[i + 3]].width >= 29
+            for (int i = 110; i >= 50; i++) {
+                if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 35
+                    && my_road[i - 1].connected[j_mid[i - 1]].width < 40 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -2) {
                     upPoint = i;
                     break;
                 }
             }
 
-            if (103 <= upPoint && upPoint < NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].right < 94) {
+            if (100 <= upPoint && upPoint <= NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].right < 94) {
                 state = stateIslandCircle;
-                islandCircleCount = 0;
 
             }
 
@@ -5450,15 +5449,13 @@ void island_circle() {
 
 
     }
-
-
     else if (islandWhere == LEFT) {
         uint8_t j_mid[CAMERA_H];
         for (int i = NEAR_LINE; i >= 2; i--) {
             j_mid[i] = j_continue[i];
             for (int j = 1; j <= my_road[i].white_num; j++) {
                 if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_mid[i + 1]].right) < abs(my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right)
-                    && my_road[i].connected[j].width > 10) {
+                    && my_road[i].connected[j].width > 15) {
                     j_mid[i] = j;
 
                 }
@@ -5466,30 +5463,27 @@ void island_circle() {
             }
         }
 
-        if (my_road[35].connected[j_mid[35]].width < 35) {
+        if (1) {
             int upPoint = 119;
             for (int i = 110; i >= 50; i--) {
-                if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 29
-                    && my_road[i - 1].connected[j_mid[i - 1]].width < 35 && my_road[i + 3].connected[j_mid[i + 3]].width >= 29
+                if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 35
+                    && my_road[i - 1].connected[j_mid[i - 1]].width < 35 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
                     && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 2) {
                     upPoint = i;
                     break;
                 }
             }
 
-            if (103 <= upPoint && upPoint <= NEAR_LINE&& my_road[upPoint].connected[j_mid[upPoint]].left > 94) {
+            if (100 <= upPoint && upPoint <= NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].left > 94) {
                 state = stateIslandCircle;
-                islandCircleCount = 0;
-
             }
 
         }
 
 
     }
-    if (my_road[60].white_num == 0) {
+    if (my_road[68].white_num == 0 ) {
         state = stateIslandCircle;
-        islandCircleCount = 0;
     }
 
 }
@@ -6384,6 +6378,7 @@ void cross_T_out_start() {
     //  }
     //}
 }
+
 ////////////////////////////////////////////
 //功能：出T字口补线
 //输入：
@@ -6391,8 +6386,8 @@ void cross_T_out_start() {
 //备注：
 ///////////////////////////////////////////
 void design_cross_T_out() {
-    double dk = cross_circle_param5.floatVal;
-    int lookahead_line = cross_circle_param4.intVal;
+    double dk = 0;
+    int lookahead_line = 85;
     if (TWhere == RIGHT) {
         int leftPoint = 119;
         int rightPoint = 119;
@@ -6403,7 +6398,7 @@ void design_cross_T_out() {
 
         double kMid = calculate_slope(100, 113, mid);
         int direction;
-        double kRange = 0.2;
+        double kRange = 0.15;
         if (fabs(kMid) <= kRange) {
             direction = 0;
         }
@@ -6456,7 +6451,7 @@ void design_cross_T_out() {
                 break;
             }
         }
-        //////printf("jl=%d", jumpLine);
+    //  printf("jl=%d\n", jumpLine);
         if (75 <= jumpLine) {
             if (direction == 0) {
                 int dy = 10;
@@ -6498,7 +6493,7 @@ void design_cross_T_out() {
                 }
             }
         }
-        //////printf("ld=%d,rd=%d\n", leftPoint, rightPoint);
+        //printf("ld=%d,rd=%d\n", leftPoint, rightPoint);
 
         if (leftPoint >= 110) {
             leftPoint = 110;
@@ -6547,9 +6542,9 @@ void design_cross_T_out() {
         }
 
 
-        //////printf("y=%d,x=%d\n", yup, xup);
+        ///printf("y=%d,x=%d\n", yup, xup);
         double k = (double)(xup - right_line[rightPoint]) / (yup - rightPoint);
-        if (left_line[leftPoint] > 80 && rightPoint > leftPoint + 20 || leftPoint <= lookahead_line) {
+        if (left_line[leftPoint] > 90 && (rightPoint > leftPoint + 20 || leftPoint <= lookahead_line)) {
             k = 0;
         }
 
@@ -6585,7 +6580,7 @@ void design_cross_T_out() {
 
         double kMid = calculate_slope(100, 113, mid);
         int direction;
-        double kRange = 0.2;
+        double kRange = 0.2-15;
         if (fabs(kMid) <= kRange) {
             direction = 0;
         }
@@ -6638,7 +6633,7 @@ void design_cross_T_out() {
                 break;
             }
         }
-        //////printf("jl=%d", jumpLine);
+        //printf("jl=%d", jumpLine);
         if (75 <= jumpLine) {
             if (direction == 0) {
                 int dy = 10;
@@ -6680,7 +6675,7 @@ void design_cross_T_out() {
                 }
             }
         }
-        //////printf("ld=%d,rd=%d\n", leftPoint, rightPoint);
+    //  printf("ld=%d,rd=%d\n", leftPoint, rightPoint);
 
         if (leftPoint >= 110) {
             leftPoint = 110;
@@ -6727,47 +6722,9 @@ void design_cross_T_out() {
         else {
             yup = yupR;
         }
-        //pxy（考虑过多的内切法）
-        /*
-        int lookahead_line = 90;
-        if (rightPoint <= lookahead_line)//进入小直道往前补线
-        {
-            double k1 = 0;
-            double k2 = 0;
-            double k_3 = 0.8;//不可信斜率
-            int x = 5;
-            k1= calculate_slope_uint(leftPoint, NEAR_LINE, left_line);//左下边斜率
-            k2= calculate_slope_uint(rightPoint, NEAR_LINE, right_line);//右下边斜率
-            if (fabs(k1) > k_3 && fabs(k2) > k_3) {
-                k1=0;
-                k2=0;
-            }
-            else if (fabs(k1) > k_3 && fabs(k2) < k_3) k1 = k2;
-            else if (fabs(k2) > k_3 && fabs(k1) < k_3) k2 = k1;
-            for (int i = leftPoint; i >= 2; i--)
-            {
-                left_line[i] = k1 * (i - leftPoint) + my_road[leftPoint].connected[j_mid[leftPoint]].left;
-            }
-            for (int i = rightPoint; i >= 2; i--)
-            {
-                right_line[i] = k1 * (i - rightPoint) + my_road[rightPoint].connected[j_mid[rightPoint]].right-x;
-            }
-            for (int i = NEAR_LINE; i > rightPoint; i--)
-            {
-                right_line[i] = right_line[i] - x;
-            }
-            //////printf("k1=%lf,k2=%lf", k1,k2);
-
-        }*/
-
-
-        //        test_varible[2] = yup;
-        //        test_varible[3] = leftPoint;
-        //        test_varible[4]=left_line[leftPoint];
-        //        test_varible[5]=xup;
 
         double k = (double)(xup - left_line[leftPoint]) / (yup - leftPoint);
-        if (right_line[rightPoint] < 100 && rightPoint + 20 < leftPoint || rightPoint <= lookahead_line) {
+        if (right_line[rightPoint] < 100 && (rightPoint + 20 < leftPoint || rightPoint <= lookahead_line)) {
             //            test_varible[8]=1;
             k = 0;
         }
@@ -9040,6 +8997,93 @@ uint8_t aver_mid_line_foresee()
     return averageMidLine;
 }
 
+
+////////////////////////////////////////////
+//功能：前后求平均位置滤波
+//输入：uint8_t left_line[CHANGED_H];//左边线  uint8_t right_line[CHANGED_H];//右边线
+//输出：uint8_t left_smooth[CHANGED_H];//左滤波 uint8_t right_smooth[CHANGED_H];//右滤波
+//备注：2020.2.19添加 copy学长
+///////////////////////////////////////////
+void filter_two_line(void)
+{
+    int gap=5;
+    uint8_t left_smooth[CAMERA_H];
+    uint8_t right_smooth[CAMERA_H];
+    uint8_t i_start;
+    uint8_t i_end;
+    uint8_t i;
+    int j_add = 0;
+    uint8_t num = 2;//向上或向下要取多少个点
+    uint8_t sum;
+    uint8_t left_top = NEAR_LINE - gap, right_top = NEAR_LINE + gap;
+    sum = 2 * num + 1;//每个点的值由周围总共几个点决定
+
+    for (i = NEAR_LINE; i >= FAR_LINE; i--)
+        if (left_line[i] != MISS)left_top = i;
+        else break;
+
+    for (i = NEAR_LINE; i >= FAR_LINE; i--)
+        if (right_line[i] != MISS)right_top = i;
+        else break;
+
+
+
+    //memset(left_smooth, MISS, CHANGED_H);
+    //memset(right_smooth, MISS, CHANGED_H);
+
+    //左边界
+
+    i_start = NEAR_LINE - num;
+    i_end = left_top + num;
+
+    for (i = NEAR_LINE; i >= i_start + 1; i--)
+        left_smooth[i] = left_line[i];
+
+    for (i = i_end - 1; i >= left_top; i--)
+        left_smooth[i] = left_line[i];
+
+    j_add = 0;
+    for (i = NEAR_LINE; i >= NEAR_LINE - sum + 1; i--)
+        j_add += left_line[i];
+
+    for (i = i_start; i >= i_end; i--)
+    {
+        left_smooth[i] = j_add / sum;
+        //IMG[i][left_smooth[i]] = green;
+        if (i == i_end)break;
+        j_add -= left_line[i + num];
+        j_add += left_line[i - num - 1];
+    }
+
+    //右边界
+    i_start = NEAR_LINE - num;
+    i_end = right_top + num;
+
+    for (i = NEAR_LINE; i >= i_start + 1; i--)
+        right_smooth[i] = right_line[i];
+
+    for (i = i_end - 1; i >= right_top; i--)
+        right_smooth[i] = right_line[i];
+
+    j_add = 0;
+    for (i = NEAR_LINE; i >= NEAR_LINE - sum + 1; i--)
+        j_add += right_line[i];
+
+    for (i = i_start; i >= i_end; i--)
+    {
+        right_smooth[i] = j_add / sum;
+        //IMG[i][right_smooth[i]] = green;
+        if (i == i_end)break;
+        j_add -= right_line[i + num];
+        j_add += right_line[i - num - 1];
+    }
+    for (int i = i_start; i <= i_end; i++) {
+        left_line[i] = left_smooth[i];
+        right_line[i] = right_smooth[i];
+    }
+
+
+}//filter_two_line
 
 // 以下是废案，没有成功的代码，以防万一需要使用的内容
 ////////////////////////////////////////////

@@ -309,6 +309,7 @@ void straight_define();
 //ÂË²¨
 void mid_line_filter();
 void big_mid_line_filter();
+void filter_two_line(void);
 
 //Ææ¹ÖµÄº¯Êý
 void roadMemory();
