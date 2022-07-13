@@ -135,7 +135,7 @@ void SW_readSwitch()
 
         else if(file1.intVal == 0)
         {
-            wayIT = -1;
+            wayIT = 1;
         }
 
         else if(file1.intVal == 1)

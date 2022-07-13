@@ -247,8 +247,8 @@ void CTRL_curLoopPID()
 
     CTRL_currentAverageFilter();
 
-//    test_varible[7] = currentLF[0];
-//    test_varible[8] = currentRT[0];
+    test_varible[7] = currentLF[0];
+    test_varible[8] = currentRT[0];
 //
 
 //    currentLF_real = 4420 - currentLF;
@@ -732,9 +732,7 @@ void CTRL_motor()
         pwmL = mySpeedL;
         GPIO_Init(P33, 9,PUSHPULL, 0);//左正
         GPIO_Init(P33, 11,PUSHPULL, 1);//右正
-//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, pwmR);//B右正
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D左正
-//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 0);//A右负
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C左负
     }
     else if(mySpeedL >= 0 && mySpeedR < 0)
@@ -743,9 +741,7 @@ void CTRL_motor()
         pwmL = mySpeedL;
         GPIO_Init(P33, 9,PUSHPULL, 0);//左正
         GPIO_Init(P33, 11,PUSHPULL, 0);//右正
-//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 0);//B
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D
-//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, pwmR);//A
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C
     }
     else if(mySpeedL < 0 && mySpeedR >= 0)
@@ -754,9 +750,7 @@ void CTRL_motor()
         pwmR = mySpeedR;
         GPIO_Init(P33, 9,PUSHPULL, 1);//左正
         GPIO_Init(P33, 11,PUSHPULL, 1);//右正
-//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, pwmR);//B
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D
-//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, 0);//A
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C
     }
     else if(mySpeedL < 0 && mySpeedR < 0)
@@ -765,9 +759,7 @@ void CTRL_motor()
         pwmR = -mySpeedR;
         GPIO_Init(P33, 9,PUSHPULL, 1);//左正
         GPIO_Init(P33, 11,PUSHPULL, 0);//右正
-//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_2_TOUT33_P33_11_OUT, 0);//B
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D
-//        SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM1_1_TOUT31_P33_9_OUT, pwmR);//A
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM0_5_TOUT40_P32_4_OUT, pwmL);//C
     }
 

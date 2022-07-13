@@ -5442,6 +5442,8 @@ void island_circle() {
 
             if (103 <= upPoint && upPoint < NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].right < 94) {
                 state = stateIslandCircle;
+                islandCircleCount = 0;
+
             }
 
         }
@@ -5477,13 +5479,15 @@ void island_circle() {
 
             if (103 <= upPoint && upPoint <= NEAR_LINE&& my_road[upPoint].connected[j_mid[upPoint]].left > 94) {
                 state = stateIslandCircle;
+                islandCircleCount = 0;
+
             }
 
         }
 
 
     }
-    if (my_road[50].white_num == 0) {
+    if (my_road[60].white_num == 0) {
         state = stateIslandCircle;
         islandCircleCount = 0;
     }
@@ -6545,7 +6549,7 @@ void design_cross_T_out() {
 
         //////printf("y=%d,x=%d\n", yup, xup);
         double k = (double)(xup - right_line[rightPoint]) / (yup - rightPoint);
-        if (left_line[leftPoint] > 80 && rightPoint > leftPoint || leftPoint <= lookahead_line) {
+        if (left_line[leftPoint] > 80 && rightPoint > leftPoint + 20 || leftPoint <= lookahead_line) {
             k = 0;
         }
 
@@ -6763,7 +6767,7 @@ void design_cross_T_out() {
         //        test_varible[5]=xup;
 
         double k = (double)(xup - left_line[leftPoint]) / (yup - leftPoint);
-        if (right_line[rightPoint] < 100 && rightPoint < leftPoint || rightPoint <= lookahead_line) {
+        if (right_line[rightPoint] < 100 && rightPoint + 20 < leftPoint || rightPoint <= lookahead_line) {
             //            test_varible[8]=1;
             k = 0;
         }
@@ -6787,7 +6791,7 @@ void design_cross_T_out() {
 
 
     }
-
+    test_varible[14] = tCrossStatus;
 }
 ////////////////////////////////////////////
 //功能：出T字口结束
@@ -8120,7 +8124,7 @@ void searchParkLine()
     }
 
 
-    test_varible[7] = myParkLine;
+//    test_varible[7] = myParkLine;
     if(i >= search_line.intVal && flag == 1)
     {
         flagStop = 1;
@@ -8135,8 +8139,8 @@ void searchParkLine()
 
 void carPark_main()
 {
-    test_varible[14] = carParkTimes;
-    test_varible[15] = rightPark;
+//    test_varible[14] = carParkTimes;
+//    test_varible[15] = rightPark;
     if (state != stateParkIn)
     {
     //        test_varible[15] = leftPark;
@@ -8160,7 +8164,7 @@ void carPark_main()
             {
                 leftPark = 1;
                 rightPark = 0;
-                carpark_in();
+//                carpark_in();
 
             }
 
