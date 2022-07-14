@@ -1886,8 +1886,8 @@ void image_main()
 //备注：初判断应该会出现很多混淆，之后会进行类似元素的单独判断
 ///////////////////////////////////////////
 void judge_type_road() {
-//    state=50;
-//    TWhere=RIGHT;
+    state=80;
+    islandWhere=-RIGHT;
     leftUpJumpPoint = 119;
     leftDownJumpPoint = 119;
     rightUpJumpPoint = 119;
@@ -5085,7 +5085,7 @@ void island_turn() {
 
 void design_island_turn() {
     double dk = 0.3;
-    double dkRight = islandParam1.floatVal, dkLeft = design_island_k.floatVal;
+    double dkRight = islandParam1.floatVal, dkLeft =design_island_k.floatVal;
     if (islandWhere == RIGHT) {
         uint8_t j_mid[CAMERA_H];
         uint8_t j_mid2[CAMERA_H];
@@ -5094,12 +5094,12 @@ void design_island_turn() {
             j_mid2[i] = j_continue[i];
             for (int j = 1; j <= my_road[i].white_num; j++) {
                 if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_mid[i + 1]].left) < abs(my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left)
-                    && my_road[i].connected[j].width > 15) {
+                    && my_road[i].connected[j].width > 10) {
                     j_mid[i] = j;
 
                 }
                 if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_mid2[i + 1]].right) < abs(my_road[i].connected[j_mid2[i]].right - my_road[i + 1].connected[j_mid2[i + 1]].right)
-                    && my_road[i].connected[j].width > 15) {
+                    && my_road[i].connected[j].width > 10) {
                     j_mid2[i] = j;
 
                 }
@@ -5127,40 +5127,41 @@ void design_island_turn() {
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 2].connected[j_mid[i + 2]].right < -4
                     && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 2
                     && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 2].connected[j_mid[i - 2]].right) <= 2
-                ) {
+                    && my_road[i].connected[j_mid[i]].left != my_road[i].connected[j_mid2[i]].left
+                    ) {
                     upPoint = i;
                     break;
                 }
             }
 
 
-//            test_varible[3] = upPoint;
-//            if (lastUpPoint == 0) {
-//                lastUpPoint = upPoint;
-//            }
-//            else {
-//                //////printf("up1=%d\n", upPoint);
-//                if (upPoint < lastUpPoint - 10) {
-//
-//                    upPoint = lastUpPoint;
-//
-//                }else{
-//                    lastUpPoint = upPoint;
-//                }
-//            //  ////printf("up2=%d\n", upPoint);
-//            }
+            //            test_varible[3] = upPoint;
+            //            if (lastUpPoint == 0) {
+            //                lastUpPoint = upPoint;
+            //            }
+            //            else {
+            //                //////printf("up1=%d\n", upPoint);
+            //                if (upPoint < lastUpPoint - 10) {
+            //
+            //                    upPoint = lastUpPoint;
+            //
+            //                }else{
+            //                    lastUpPoint = upPoint;
+            //                }
+            //            //  ////printf("up2=%d\n", upPoint);
+            //            }
 
             if (upPoint <= 95) {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[107].connected[j_mid[107]].left) / (upPoint - 107);
-                if(IslandRadius == 50)
+                if (IslandRadius == 50)
                 {
                     k = k - 0.2;
                 }
-                else if(IslandRadius >= 60 && IslandRadius <= 70)
+                else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
                     k = k - 0.2;
                 }
-                else if(IslandRadius > 70)
+                else if (IslandRadius > 70)
                 {
                     k = k - 0.2;
                 }
@@ -5172,8 +5173,8 @@ void design_island_turn() {
                 {
                     if (right_line[i] <= right_line[i + 1] &&
                         right_line[i] <= right_line[i + 2] &&
-                        right_line[i+1] - right_line[i] >= 1 &&
-                        right_line[i+2] - right_line[i] >= 1)
+                        right_line[i + 1] - right_line[i] >= 1 &&
+                        right_line[i + 2] - right_line[i] >= 1)
                     {
                         for (int j = i; j >= 2; j--)
                         {
@@ -5193,7 +5194,7 @@ void design_island_turn() {
                 uint8_t k1 = 2;
                 for (int i = upPoint; i >= 2; i--)
                 {
-                    if (my_road[i+1].connected[j_mid2[i+1]].left - my_road[i].connected[j_mid2[i]].left > 20) {
+                    if (my_road[i + 1].connected[j_mid2[i + 1]].left - my_road[i].connected[j_mid2[i]].left > 20) {
                         k1 = i + 1;
                         break;
                     }
@@ -5201,16 +5202,16 @@ void design_island_turn() {
 
 
                 if (k1 < upPoint - 10) k1 = upPoint - 10;
-                double k = calculate_slope_uint(k1, upPoint,left_line);
-                if(IslandRadius == 50)
+                double k = calculate_slope_uint(k1, upPoint, left_line);
+                if (IslandRadius == 50)
                 {
                     k = k - 0.2;
                 }
-                else if(IslandRadius >= 60 && IslandRadius <= 70)
+                else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
                     k = k - 0.2;
                 }
-                else if(IslandRadius > 70)
+                else if (IslandRadius > 70)
                 {
                     k = k - 0.2;
                 }
@@ -5218,7 +5219,7 @@ void design_island_turn() {
 
                 for (int i = (NEAR_LINE - 5); i >= 2; i--) {
 
-                    if (k < -0.2)left_line[i] = (k-dkRight) * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].right;
+                    if (k < -0.2)left_line[i] = (k - dkRight) * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].right;
                     else left_line[i] = my_road[i].connected[j_mid2[i]].right - 20;
                     right_line[i] = my_road[i].connected[j_mid2[i]].right;
                 }
@@ -5249,12 +5250,12 @@ void design_island_turn() {
             for (int j = 1; j <= my_road[i].white_num; j++) {
 
                 if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_mid[i + 1]].right) < abs(my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right)
-                    && my_road[i].connected[j].width > 15) {
+                    && my_road[i].connected[j].width > 10) {
                     j_mid[i] = j;
 
                 }
                 if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_mid2[i + 1]].left) < abs(my_road[i].connected[j_mid2[i]].left - my_road[i + 1].connected[j_mid2[i + 1]].left)
-                    && my_road[i].connected[j].width > 15) {
+                    && my_road[i].connected[j].width > 10) {
                     j_mid2[i] = j;
 
                 }
@@ -5280,44 +5281,45 @@ void design_island_turn() {
                     && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 4
                     && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left) <= 2
                     && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 2].connected[j_mid[i - 2]].left) <= 2
+                    && my_road[i].connected[j_mid[i]].left!= my_road[i].connected[j_mid2[i]].left
                     ) {
                     upPoint = i;
                     break;
                 }
             }
-//            test_varible[3] = upPoint;
+            //            test_varible[3] = upPoint;
 
-//            test_varible[2] = upPoint;
-//            test_varible[3] = left_line[NEAR_LINE];
-//            test_varible[4]
-//            if (lastUpPoint == 0) {
-//                lastUpPoint = upPoint;
-//            }
-//            else {
-//            //  ////printf("up1=%d\n", upPoint);
-//                if (upPoint < lastUpPoint - 15) {
-//                    upPoint = lastUpPoint;
-//
-//                }else{
-//                    lastUpPoint=upPoint;
-//                }
-//            //  ////printf("up2=%d\n", upPoint);
-//            }
-        //  ////printf("upp=%d\n", upPoint);
-        //
+            //            test_varible[2] = upPoint;
+            //            test_varible[3] = left_line[NEAR_LINE];
+            //            test_varible[4]
+            //            if (lastUpPoint == 0) {
+            //                lastUpPoint = upPoint;
+            //            }
+            //            else {
+            //            //  ////printf("up1=%d\n", upPoint);
+            //                if (upPoint < lastUpPoint - 15) {
+            //                    upPoint = lastUpPoint;
+            //
+            //                }else{
+            //                    lastUpPoint=upPoint;
+            //                }
+            //            //  ////printf("up2=%d\n", upPoint);
+            //            }
+                    //  ////printf("upp=%d\n", upPoint);
+                    //
 
-            //////printf("%d", upPoint);
-            if (upPoint <= 95) {
+                        //////printf("%d", upPoint);
+            if (upPoint <= 95)  {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].left - my_road[107].connected[j_mid[107]].right) / (upPoint - 107);
-                if(IslandRadius == 50)
+                if (IslandRadius == 50)
                 {
                     k = k + 0.2;
                 }
-                else if(IslandRadius >= 60 && IslandRadius <= 70)
+                else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
                     k = k + 0.2;
                 }
-                else if(IslandRadius > 70)
+                else if (IslandRadius > 70)
                 {
                     k = k + 0.2;
                 }
@@ -5326,7 +5328,7 @@ void design_island_turn() {
                     left_line[i] = my_road[i].connected[j_mid2[i]].left;
                 }
                 //pxy
-                for (int i = upPoint+4; i >= 2; i--)
+                for (int i = upPoint + 4; i >= 2; i--)
                 {
                     if (left_line[i] >= left_line[i + 1] &&
                         left_line[i] >= left_line[i + 2] &&
@@ -5342,19 +5344,19 @@ void design_island_turn() {
                 //pxy
 
             }
-            else if (upPoint >= 95&&upPoint!=119) {
+            else if (upPoint >= 95 && upPoint != 119) {
 
-                uint8_t k1=2;
+                uint8_t k1 = 2;
                 for (int i = upPoint; i >= 2; i--)
                 {
-                    if (my_road[i-1].connected[j_mid2[i-1]].right - my_road[i].connected[j_mid2[i]].right > 10) {
+                    if (my_road[i - 1].connected[j_mid2[i - 1]].right - my_road[i].connected[j_mid2[i]].right > 10) {
                         k1 = i;
                         break;
                     }
                     right_line[i] = my_road[i].connected[j_mid2[i]].right;
                     //////printf("%d\n", right_line[i]);
                 }
-                if (k1 >= upPoint-5) {
+                if (k1 >= upPoint - 5) {
                     for (int i = (NEAR_LINE - 5); i >= 50; i--)
                     {
                         left_line[i] = left_side[i];
@@ -5364,22 +5366,22 @@ void design_island_turn() {
                 else {
                     if (k1 < upPoint - 10) k1 = upPoint - 10;
                     double k = calculate_slope_uint(k1, upPoint, right_line);
-                    if(IslandRadius == 50)
+                    if (IslandRadius == 50)
                     {
                         k = k + 0.2;
                     }
-                    else if(IslandRadius >= 60 && IslandRadius <= 70)
+                    else if (IslandRadius >= 60 && IslandRadius <= 70)
                     {
                         k = k + 0.2;
                     }
-                    else if(IslandRadius > 70)
+                    else if (IslandRadius > 70)
                     {
                         k = k + 0.2;
                     }
                     if (k > 0.2)
                     {
                         for (int i = (NEAR_LINE - 5); i >= 2; i--) {
-                            right_line[i] = (k +dkLeft)* (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].left;
+                            right_line[i] = (k + dkLeft) * (i - (upPoint)) + my_road[upPoint].connected[j_mid[upPoint]].left;
                             left_line[i] = my_road[i].connected[j_mid2[i]].left;
                         }
                     }
@@ -5393,9 +5395,9 @@ void design_island_turn() {
                     for (int i = upPoint + 4; i >= 2; i--)
                     {
                         if (left_line[i] >= left_line[i + 1] &&
-                                left_line[i] >= left_line[i + 2] &&
-                                left_line[i] - left_line[i + 1] >= 1 &&
-                                left_line[i] - left_line[i + 2] >= 1)
+                            left_line[i] >= left_line[i + 2] &&
+                            left_line[i] - left_line[i + 1] >= 1 &&
+                            left_line[i] - left_line[i + 2] >= 1)
                         {
                             for (int j = i; j >= 2; j--)
                             {
@@ -5403,14 +5405,13 @@ void design_island_turn() {
                             }
                         }
                     }
-           //pxy
+                    //pxy
                 }
             }
         }
     }
 
 }
-
 ////////////////////////////////////////////
 //功能：环岛弯道
 //输入：
