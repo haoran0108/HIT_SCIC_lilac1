@@ -446,25 +446,27 @@ void CTRL_fuzzyPID()
 
     }
     else servoError.currentError = 93 - myMidLine;
-    test_varible[12] = myMidLine;
 
 
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
 
-    if(state == laststate)
-    {
-        if(abs(servoError.delta) > 9 && abs(servoError.delta) <= 16)
-        {
-            servoError.currentError = servoError.currentError * 0.8 + servoError.lastError * 0.2;
-        }
+//    if(state == laststate)
+//    {
+//        if(abs(servoError.delta) > 6 && abs(servoError.delta) <= 12)
+//        {
+//            servoError.currentError = servoError.currentError * 0.7 + servoError.lastError * 0.3;
+//        }
+//
+//        else if(abs(servoError.delta) > 12)
+//        {
+//            servoError.currentError = servoError.lastError;
+//        }
+//
+//    }
 
-        else if(abs(servoError.delta) > 16)
-        {
-            servoError.currentError = servoError.currentError * 0.5 + servoError.lastError * 0.5;
-        }
+    test_varible[12] = myMidLine;
 
-    }
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
 //    test_varible[14] = fuzzyKP;
 
@@ -834,7 +836,7 @@ void CTRL_motorDiffer()
         if(state == 50 && tCrossStatus == 1 && TWhere == LEFT)
         {
             expectL = (int32)(present_speed);
-            expectR = (int32)(present_speed * k * display7.floatVal);
+            expectR = (int32)(present_speed * k);
         }
 
         else
@@ -882,7 +884,7 @@ void CTRL_motorDiffer()
 
         if(state == 50 && tCrossStatus == 1 && TWhere == RIGHT)
         {
-            expectL = (int32)(present_speed * k * display7.floatVal);
+            expectL = (int32)(present_speed * k);
             expectR = (int32)(present_speed);
         }
 
@@ -1509,15 +1511,15 @@ void speedDetermine()
 //        present_vision = 60;
     }
 
-//    if(state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
-//    {
-//        present_vision = islandParam2.intVal;
-//    }
+    if(state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
+    {
+        present_vision = islandParam2.intVal;
+    }
 
-//    if(state == stateTIslandIn || state == stateTIn || state == stateTOut)
-//    {
-//        present_vision = cross_circle_param1.intVal;
-//    }
+    if(state == stateTIslandIn || state == stateTIn || state == stateTOut)
+    {
+        present_vision = cross_circle_param1.intVal;
+    }
 
     if(straightFlag == 1)
     {
@@ -1525,11 +1527,11 @@ void speedDetermine()
     }
     else if(straightFlag == 0)
     {
-//        if(state == 50 && tCrossStatus == 1)
-//        {
+        if(state == 50 && tCrossStatus == 1)
+        {
+            present_speed = (uint8_t)(present_speed * display7.floatVal);
 //            present_speed = (uint8_t)(present_speed * display7.floatVal);
-////            present_speed = (uint8_t)(present_speed * display7.floatVal);
-//        }
+        }
         if(state == 130)
         {
             present_speed = rampSpeed.intVal;
