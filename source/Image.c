@@ -5085,7 +5085,7 @@ void island_turn() {
 
 void design_island_turn() {
     double dk = 0.3;
-    double dkRight = islandParam1.floatVal, dkLeft =design_island_k.floatVal;
+    double dkRight = islandParam1.floatVal, dkLeft = design_island_k.floatVal;
     if (islandWhere == RIGHT) {
         uint8_t j_mid[CAMERA_H];
         uint8_t j_mid2[CAMERA_H];
@@ -5125,9 +5125,9 @@ void design_island_turn() {
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 40 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -4
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 2].connected[j_mid[i + 2]].right < -4
-                    && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 2
-                    && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 2].connected[j_mid[i - 2]].right) <= 2
-                    && my_road[i].connected[j_mid[i]].left != my_road[i].connected[j_mid2[i]].left
+                    && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 4
+                    && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 2].connected[j_mid[i - 2]].right) <= 4
+                    && my_road[i].connected[j_mid[i - 1]].left != my_road[i].connected[j_mid2[i - 1]].left
                     ) {
                     upPoint = i;
                     break;
@@ -5275,40 +5275,19 @@ void design_island_turn() {
             //Á¬½Ó¶¥µã
             int upPoint = 119;
             for (int i = 109; i >= 50; i--) {
-                if (my_road[i].connected[j_mid[i]].width < 32 && my_road[i + 2].connected[j_mid[i + 2]].width >= 35
-                    && my_road[i - 1].connected[j_mid[i - 1]].width < 32 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
+                if (my_road[i].connected[j_mid[i]].width < 35 && my_road[i + 2].connected[j_mid[i + 2]].width >= 35
+                    && my_road[i - 1].connected[j_mid[i - 1]].width < 35 && my_road[i + 3].connected[j_mid[i + 3]].width >= 35
                     && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 4
                     && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 4
-                    && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left) <= 2
-                    && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 2].connected[j_mid[i - 2]].left) <= 2
+                    && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left) <= 4
+                    && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 2].connected[j_mid[i - 2]].left) <= 4
                     && my_road[i].connected[j_mid[i]].left!= my_road[i].connected[j_mid2[i]].left
                     ) {
                     upPoint = i;
                     break;
                 }
             }
-            //            test_varible[3] = upPoint;
-
-            //            test_varible[2] = upPoint;
-            //            test_varible[3] = left_line[NEAR_LINE];
-            //            test_varible[4]
-            //            if (lastUpPoint == 0) {
-            //                lastUpPoint = upPoint;
-            //            }
-            //            else {
-            //            //  ////printf("up1=%d\n", upPoint);
-            //                if (upPoint < lastUpPoint - 15) {
-            //                    upPoint = lastUpPoint;
-            //
-            //                }else{
-            //                    lastUpPoint=upPoint;
-            //                }
-            //            //  ////printf("up2=%d\n", upPoint);
-            //            }
-                    //  ////printf("upp=%d\n", upPoint);
-                    //
-
-                        //////printf("%d", upPoint);
+//            printf("up=%d\n", upPoint);
             if (upPoint <= 95)  {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].left - my_road[107].connected[j_mid[107]].right) / (upPoint - 107);
                 if (IslandRadius == 50)
