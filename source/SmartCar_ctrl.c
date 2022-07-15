@@ -753,6 +753,8 @@ void CTRL_motor()
     {
         pwmR = mySpeedR;
         pwmL = mySpeedL;
+//        pwmL = 0;
+//        pwmR = 0;
         GPIO_Init(P33, 9,PUSHPULL, 0);//左正
         GPIO_Init(P33, 11,PUSHPULL, 1);//右正
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D左正
@@ -762,6 +764,8 @@ void CTRL_motor()
     {
         pwmR = -mySpeedR;
         pwmL = mySpeedL;
+//        pwmL = 0;
+//        pwmR = 0;
         GPIO_Init(P33, 9,PUSHPULL, 0);//左正
         GPIO_Init(P33, 11,PUSHPULL, 0);//右正
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D
@@ -771,6 +775,8 @@ void CTRL_motor()
     {
         pwmL = -mySpeedL;
         pwmR = mySpeedR;
+//        pwmL = 0;
+//        pwmR = 0;
         GPIO_Init(P33, 9,PUSHPULL, 1);//左正
         GPIO_Init(P33, 11,PUSHPULL, 1);//右正
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D
@@ -780,6 +786,8 @@ void CTRL_motor()
     {
         pwmL = -mySpeedL;
         pwmR = -mySpeedR;
+//        pwmL = 0;
+//        pwmR = 0;
         GPIO_Init(P33, 9,PUSHPULL, 1);//左正
         GPIO_Init(P33, 11,PUSHPULL, 0);//右正
         SmartCar_Gtm_Pwm_Setduty(&IfxGtm_ATOM3_4_TOUT34_P33_12_OUT, pwmR);//D
