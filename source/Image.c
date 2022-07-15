@@ -1886,8 +1886,8 @@ void image_main()
 //备注：初判断应该会出现很多混淆，之后会进行类似元素的单独判断
 ///////////////////////////////////////////
 void judge_type_road() {
-    state=80;
-    islandWhere=-RIGHT;
+    state=100;
+    islandWhere=RIGHT;
     leftUpJumpPoint = 119;
     leftDownJumpPoint = 119;
     rightUpJumpPoint = 119;
@@ -1979,7 +1979,7 @@ void judge_type_road() {
 
     }
     if (state == stateIslandTurn && flagChange == 0) {
-//        island_circle();
+        island_circle();
         if (lastState != state) {
             flagChange = 1;
         }
@@ -5127,7 +5127,7 @@ void design_island_turn() {
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 2].connected[j_mid[i + 2]].right < -4
                     && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 4
                     && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 2].connected[j_mid[i - 2]].right) <= 4
-                    && my_road[i].connected[j_mid[i - 1]].left != my_road[i].connected[j_mid2[i - 1]].left
+                    && (my_road[i].connected[j_mid[i]].left != my_road[i].connected[j_mid2[i]].left || my_road[45].white_num != 0)
                     ) {
                     upPoint = i;
                     break;
@@ -5155,7 +5155,7 @@ void design_island_turn() {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[107].connected[j_mid[107]].left) / (upPoint - 107);
                 if (IslandRadius == 50)
                 {
-                    k = k - 0.2;
+                    k = k - 0.4;
                 }
                 else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
@@ -5205,7 +5205,7 @@ void design_island_turn() {
                 double k = calculate_slope_uint(k1, upPoint, left_line);
                 if (IslandRadius == 50)
                 {
-                    k = k - 0.2;
+                    k = k - 0.4;
                 }
                 else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
@@ -5281,7 +5281,7 @@ void design_island_turn() {
                     && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 4
                     && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left) <= 4
                     && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 2].connected[j_mid[i - 2]].left) <= 4
-                    && my_road[i].connected[j_mid[i]].left!= my_road[i].connected[j_mid2[i]].left
+                    && (my_road[i].connected[j_mid[i]].left!= my_road[i].connected[j_mid2[i]].left || my_road[45].white_num != 0)
                     ) {
                     upPoint = i;
                     break;
@@ -5391,6 +5391,7 @@ void design_island_turn() {
     }
 
 }
+
 ////////////////////////////////////////////
 //功能：环岛弯道
 //输入：
@@ -5847,7 +5848,7 @@ void island_straight() {
         if (islandWhere == RIGHT) {
 
             if (calculate_slope_uint(50, 70, left_line) > -1.5 && calculate_slope_uint(80, 100, left_line) > -1
-                && calculate_slope_uint(50, 70, left_line) <= 0.2 && calculate_slope_uint(80, 100, left_line) <= 0.2) {
+                && calculate_slope_uint(50, 70, left_line) <= 0 && calculate_slope_uint(80, 100, left_line) <= 0) {
                 flag = 1;
             }
             ////////////////////////////////////////////////printf("flag1=%d\n", flag);
@@ -5875,17 +5876,17 @@ void island_straight() {
              }*/
              //}
             if (calculate_slope_uint(50, 70, right_line) < 1.5 && calculate_slope_uint(80, 100, right_line) < 1
-                && calculate_slope_uint(50, 70, right_line) >= -0.1 && calculate_slope_uint(80, 100, right_line) >= -0.1) {
+                && calculate_slope_uint(50, 70, right_line) >= -0 && calculate_slope_uint(80, 100, right_line) >= -0) {
                 flag = 1;
             }
         //  //////printf("ku=%f,kd=%f\n", calculate_slope_uint(50, 70, right_line), calculate_slope_uint(80, 100, right_line));
             if (fabs(calculate_slope_uint(50, 70, right_line) - calculate_slope_uint(80, 100, right_line)) > 0.2
                 ) {
-               // flag = 0;
+                flag = 0;
             }
             for(int i=90;i>=50;i--){
                 if(abs(right_line[i] - right_line[i - 1]) > 4){
-                    flag=0;
+//                    flag=0;
                 }
             }
         }

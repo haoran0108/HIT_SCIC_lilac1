@@ -87,6 +87,7 @@ extern uint8_t duzhuanCount, duzhuanFlag, duzhuanTime;
 extern uint32_t startCount;
 extern uint8_t startFlag;
 extern uint8_t flagStop1, flagStopCount1;
+extern uint8_t lastMyMidLine;
 struct error
 {
     double delta;

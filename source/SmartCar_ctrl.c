@@ -59,6 +59,7 @@ uint8_t testStateTimes = 0;
 uint8_t duzhuanCount = 0, duzhuanFlag = 0, duzhuanTime = 0;
 uint32_t startCount = 0;
 uint8_t startFlag = 0;
+uint8_t lastMyMidLine = 0;
 int islandPwmMax, islandPwmMin;
 
 void CTRL_gyroInit()
@@ -440,6 +441,21 @@ void CTRL_fuzzyPID()
 //    servoError.currentError = 92 - mid_line[presentVision.intVal];
     uint8_t myMidLine;
     myMidLine = aver_mid_line_foresee();
+
+    if(lastMyMidLine == 0)
+    {
+        lastMyMidLine = myMidLine;
+    }
+    if(state == laststate)
+    {
+        if(abs(myMidLine - lastMyMidLine) >= 20)
+        {
+            myMidLine = lastMyMidLine;
+        }
+        else lastMyMidLine = myMidLine;
+
+    }else lastMyMidLine = myMidLine;
+
     if(state == stateRampway)
     {
         servoError.currentError = 93 - mid_line[present_vision+5];

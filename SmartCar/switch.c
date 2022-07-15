@@ -127,6 +127,7 @@ void SW_readSwitch()
         tInCount = 0;
         rampTimes = 0;
         parkSlowDownCount = 0;
+        lastMyMidLine = 0;
 
         if(file1.intVal == -1)//×ó »·µº
         {
