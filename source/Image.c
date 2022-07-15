@@ -1887,7 +1887,7 @@ void image_main()
 ///////////////////////////////////////////
 void judge_type_road() {
     state=80;
-    islandWhere=RIGHT;
+    islandWhere=LEFT;
     leftUpJumpPoint = 119;
     leftDownJumpPoint = 119;
     rightUpJumpPoint = 119;
