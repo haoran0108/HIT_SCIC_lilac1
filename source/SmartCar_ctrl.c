@@ -448,11 +448,16 @@ void CTRL_fuzzyPID()
     }
     if(state == laststate)
     {
-        if(abs(myMidLine - lastMyMidLine) >= 20)
+        if(abs(myMidLine - lastMyMidLine) >= 30)
         {
             myMidLine = lastMyMidLine;
+            test_varible[15] = 1;
         }
-        else lastMyMidLine = myMidLine;
+        else
+        {
+            lastMyMidLine = myMidLine;
+            test_varible[15] = 0;
+        }
 
     }else lastMyMidLine = myMidLine;
 

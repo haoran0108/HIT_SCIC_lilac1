@@ -1886,8 +1886,8 @@ void image_main()
 //备注：初判断应该会出现很多混淆，之后会进行类似元素的单独判断
 ///////////////////////////////////////////
 void judge_type_road() {
-    state=100;
-    islandWhere=RIGHT;
+//    state=100;
+//    islandWhere=RIGHT;
     leftUpJumpPoint = 119;
     leftDownJumpPoint = 119;
     rightUpJumpPoint = 119;
@@ -5836,6 +5836,8 @@ void design_island_out() {
 
 
 }
+
+
 ////////////////////////////////////////////
 //功能：出环岛直线
 //输入：
@@ -5846,48 +5848,30 @@ void island_straight() {
     int flag = 0;
     if (my_road[40].white_num != 0) {
         if (islandWhere == RIGHT) {
-
-            if (calculate_slope_uint(50, 70, left_line) > -1.5 && calculate_slope_uint(80, 100, left_line) > -1
-                && calculate_slope_uint(50, 70, left_line) <= 0 && calculate_slope_uint(80, 100, left_line) <= 0) {
+            //printf("jl=%f\n", linear_judgement(70, 90, left_line));
+            if (calculate_slope_uint(50, 70, left_line) > -1.5 && calculate_slope_uint(80, 100, left_line) > -1.5
+                && calculate_slope_uint(50, 70, left_line) <= 0 && calculate_slope_uint(80, 100, left_line) <= 0
+                && linear_judgement(70, 90, left_line) < 200 ) {
                 flag = 1;
             }
-            ////////////////////////////////////////////////printf("flag1=%d\n", flag);
+
             if (fabs(calculate_slope_uint(50, 70, left_line) - calculate_slope_uint(80, 100, left_line)) > 0.2
                 ) {
                 flag = 0;
             }
-            for(int i=90;i>=50;i--){
-                if(abs(left_line[i] - left_line[i - 1]) > 4){
-                //    flag=0;
-                }
-            }
 
-            ////////////////////////////////////////////////printf("flag2=%d\n", flag);
         }
         else if (islandWhere == LEFT) {
 
-            // //////////////////////////////////printf("k=%f,%f,%f", calculate_slope(30, 50, RIGHT), calculate_slope(60,80,RIGHT),calculate_slope(100,110,RIGHT));
-           /*  for (int i = 102; i >= 30; i--) {
-                 if (right_line[i - 1] > right_line[i] || right_line[i - 2] > right_line[i]
-                     || right_line[i + 1] < right_line[i] || right_line[i + 2] < right_line[i]
-                     ) {
-                     flag = 0;
-                 }
-             }*/
-             //}
-            if (calculate_slope_uint(50, 70, right_line) < 1.5 && calculate_slope_uint(80, 100, right_line) < 1
-                && calculate_slope_uint(50, 70, right_line) >= -0 && calculate_slope_uint(80, 100, right_line) >= -0) {
+
+            if (calculate_slope_uint(50, 70, right_line) < 1.5 && calculate_slope_uint(80, 100, right_line) < 1.5
+                && calculate_slope_uint(50, 70, right_line) >= -0 && calculate_slope_uint(80, 100, right_line) >= -0
+                && linear_judgement(70, 90, right_line) < 200) {
                 flag = 1;
             }
-        //  //////printf("ku=%f,kd=%f\n", calculate_slope_uint(50, 70, right_line), calculate_slope_uint(80, 100, right_line));
             if (fabs(calculate_slope_uint(50, 70, right_line) - calculate_slope_uint(80, 100, right_line)) > 0.2
                 ) {
                 flag = 0;
-            }
-            for(int i=90;i>=50;i--){
-                if(abs(right_line[i] - right_line[i - 1]) > 4){
-//                    flag=0;
-                }
             }
         }
     }
