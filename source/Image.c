@@ -2122,6 +2122,7 @@ void judge_type_road() {
     }
     if (state == stateIslandCircle) {
         design_island_circle();
+        roof();
     }
     if (state == stateIslandOut) {
         design_island_out();
@@ -2131,6 +2132,7 @@ void judge_type_road() {
     }
     if (state == stateTIn) {
         design_cross_T_circle();
+        roof();
     }
     if (state == stateTOut) {
         design_cross_T_out();
@@ -5397,7 +5399,51 @@ void design_island_turn() {
     }
 
 }
+//////////////////////////////////////////////
+////功能：大角度弯道修正
+////输入：
+////输出：
+////备注：
+/////////////////////////////////////////////
+void roof(void)
+{
+    uint8_t i, i_start, i_end;
+    uint8_t my_roof = MISS, Ldir = 0, Rdir = 0;
+    uint8_t max_width = 0, max_width_num = 0;
+    uint8_t roof_line = 1;
 
+    //寻找第一个非miss行
+    for (i = 1; i <= 90; i++)
+    {
+        if (left_line[i] != MISS || right_line[i] != MISS)
+        {
+            roof_line = i;
+            break;
+        }
+    }
+    if (roof_line <= 60)
+    {
+        return;
+    }
+
+    //printf("roof line:%d\n", roof_line);
+    uint8_t left_min = 255, left_min_line = 119;
+    uint8_t right_min = 255, right_min_line = 119;
+    if (state == stateIslandCircle || state == stateTIn) {
+        for (int i = roof_line; i <= roof_line + 20; i++) {
+            if (right_line[i] - left_line[i] > 23) {
+                left_min_line = i;
+                break;
+            }
+        }
+        for (int i = roof_line; i <= left_min_line; i++) {
+            left_line[i] = MISS;
+        }
+
+    }
+
+    //printf("圆弧顶修正: 左%d %d  右%d %d\n", left_min, left_min_line, right_min, right_min_line);
+}
 ////////////////////////////////////////////
 //功能：环岛弯道
 //输入：
@@ -5887,6 +5933,9 @@ void island_straight() {
         state = stateIslandFinal;
     }
 }
+
+
+
 
 ////////////////////////////////////////////
 //功能：出环岛直线补线

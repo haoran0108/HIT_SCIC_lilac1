@@ -1143,16 +1143,16 @@ void CTRL_CarParkStop()
 
         else if(myValid <= 92)
         {
-            if(present_speed > 2)
-            {
-                if(parkSlowDownCount % 2 == 0)
-                {
-                    present_speed = present_speed - 1;
-
-                }
-
-            }
-            else present_speed = 0;
+//            if(present_speed > 2)
+//            {
+//                if(parkSlowDownCount % 2 == 0)
+//                {
+//                    present_speed = present_speed - 1;
+//
+//                }
+//
+//            }
+//            else present_speed = 0;
             CTRL_motorDiffer();
 
 //            present_speed = 70;
