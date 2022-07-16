@@ -7562,37 +7562,30 @@ void design_folk_road() {
 //备注：
 ///////////////////////////////////////////
 void folk_road_out() {
-
-    int sumD = 0;
-    for (int i = NEAR_LINE; i > 98; i--) {
-        if (right_line[i] - left_line[i] > 31) {
-            sumD++;
-        }
-    }
-    int sumU = 0;
-    for (int i = 105; i >= 85; i--) {
-        if (right_line[i] - left_line[i] < 40) {
-            sumU++;
-        }
-    }
-
-    if (sumD > 3 && sumU > 5) {
+    //printf("出三叉判据：\k1=%f,k2=%f\n",  calculate_slope_uint(85, 100, left_line), calculate_slope_uint(95, 110, right_line));
+    //printf("dv=%f,dv=%f\n", linear_judgement(85, 100, left_line), linear_judgement(96, 110, right_line));
+    if (1) {
         if (FolkRoadWhere == RIGHT) {
-            if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(90, 105, right_line)) < 0.25) {
+            if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(95, 110, right_line)) < 0.25
+                && calculate_slope_uint(85, 100, left_line) > -1.2 && calculate_slope_uint(95, 110, right_line) > -1.2
+                && linear_judgement(85, 100, left_line) < 100 && linear_judgement(96, 110, right_line) < 100
+                && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 32 || (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] <= 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] < -2))
+                ) {
                 state = 0;
             }
         }
         else if (FolkRoadWhere == LEFT) {
-            if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(90, 105, left_line)) < 0.25) {
+            if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(95, 110, left_line)) < 0.25
+                && calculate_slope_uint(85, 100, right_line) < 0.9 && calculate_slope_uint(95, 110, left_line) < 0.9
+                && linear_judgement(85, 100, right_line) < 100 && linear_judgement(96, 110, left_line) < 100
+                && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 32|| (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] > 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] >= -2))
+                ) {
                 state = 0;
             }
         }
 
     }
 }
-
-
-
 void protection() {
     int count1 = 0;
     uint8_t* pmap;
