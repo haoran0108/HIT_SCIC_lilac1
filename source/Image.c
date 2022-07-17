@@ -98,6 +98,8 @@ uint8_t tCrossTimes = 0;
 uint8_t rampTimes = 0;
 uint8_t myParkLine = 0;
 uint8_t parkSlowDownCount = 0;
+uint8_t car_stop = 0;
+
 //road my_road[CAMERA_H];
 //uint8_t IMG_zebra[36][CAMERA_W];
 //uint8_t zebraFlag;
@@ -5011,7 +5013,7 @@ void island_turn() {
             }
             else if(IslandRadius == 50)
             {
-                up = 64;
+                up = 61;
             }
             else if(IslandRadius == 100)
             {
@@ -5067,7 +5069,7 @@ void island_turn() {
                 }
                 else if(IslandRadius == 50)
                 {
-                    up = 63;
+                    up = 60;
                 }
                 else if(IslandRadius == 100)
                 {
@@ -5093,7 +5095,7 @@ void island_turn() {
 ///////////////////////////////////////////
 void design_island_turn() {
     double dk = 0.3;
-    double dkRight = 0, dkLeft =0;
+    double dkRight = islandParam1.floatVal, dkLeft = design_island_k.floatVal;
     if (islandWhere == RIGHT) {
         uint8_t j_mid[CAMERA_H];
         uint8_t j_mid2[CAMERA_H];
@@ -5163,7 +5165,7 @@ void design_island_turn() {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[107].connected[j_mid[107]].left) / (upPoint - 107);
                 if (IslandRadius == 50)
                 {
-                    k = k - 0.4;
+                    k = k - 0.5;
                 }
                 else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
@@ -5213,7 +5215,7 @@ void design_island_turn() {
                 double k = calculate_slope_uint(k1, upPoint, left_line);
                 if (IslandRadius == 50)
                 {
-                    k = k - 0.4;
+                    k = k - 0.5;
                 }
                 else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
@@ -5300,7 +5302,7 @@ void design_island_turn() {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].left - my_road[107].connected[j_mid[107]].right) / (upPoint - 107);
                 if (IslandRadius == 50)
                 {
-                    k = k + 0.4;
+                    k = k + 0.5;
                 }
                 else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
@@ -5355,7 +5357,7 @@ void design_island_turn() {
                     double k = calculate_slope_uint(k1, upPoint, right_line);
                     if (IslandRadius == 50)
                     {
-                        k = k + 0.4;
+                        k = k + 0.5;
                     }
                     else if (IslandRadius >= 60 && IslandRadius <= 70)
                     {
@@ -5710,16 +5712,16 @@ void island_out() {
 //备注：
 ///////////////////////////////////////////
 void design_island_out() {
-    double dk = 0;
+    double dk = islandParam5.floatVal;
     dk = islandParam5.floatVal;
     if (islandWhere == RIGHT) {
         int up = 10;
         if(IslandRadius == 70){
-            up = 12;
+            up = 5;
         }
         else if(IslandRadius == 50)
         {
-            up = 12;
+            up = 8;
         }
         else if(IslandRadius == 100)
         {
@@ -5807,7 +5809,7 @@ void design_island_out() {
         }
         else if(IslandRadius == 50)
         {
-            up = 20;
+            up = 8;
         }
         else if(IslandRadius == 100)
         {
@@ -5901,9 +5903,9 @@ void island_straight() {
     if (my_road[40].white_num != 0) {
         if (islandWhere == RIGHT) {
             ////printf("jl=%f\n", linear_judgement(70, 90, left_line));
-            if (calculate_slope_uint(50, 70, left_line) > -1 && calculate_slope_uint(80, 100, left_line) > -1
+            if (calculate_slope_uint(50, 70, left_line) > -0.6 && calculate_slope_uint(80, 100, left_line) > -0.6
                 && calculate_slope_uint(50, 70, left_line) <= 0 && calculate_slope_uint(80, 100, left_line) <= 0
-                && linear_judgement(70, 90, left_line) < 200 ) {
+                && linear_judgement(70, 90, left_line) < 100 ) {
                 flag = 1;
             }
 
@@ -5916,9 +5918,9 @@ void island_straight() {
         else if (islandWhere == LEFT) {
 
 
-            if (calculate_slope_uint(50, 70, right_line) < 1 && calculate_slope_uint(80, 100, right_line) < 1
+            if (calculate_slope_uint(50, 70, right_line) < 0.6 && calculate_slope_uint(80, 100, right_line) < 0.6
                 && calculate_slope_uint(50, 70, right_line) >= -0 && calculate_slope_uint(80, 100, right_line) >= -0
-                && linear_judgement(70, 90, right_line) < 200) {
+                && linear_judgement(70, 90, right_line) < 100) {
                 flag = 1;
             }
             if (fabs(calculate_slope_uint(50, 70, right_line) - calculate_slope_uint(80, 100, right_line)) > 0.2
@@ -8185,6 +8187,39 @@ void searchParkLine()
 //    test_varible[15] = i;
 }
 
+
+///////////////////////////////////////////
+//功能：车库停车
+//输入：
+//输出：
+//备注：
+///////////////////////////////////////////
+void carpark_stop() {
+
+    int roof_line = NEAR_LINE;
+    for (int i = NEAR_LINE; i >= 90; i--) {
+        if (my_road[i - 1].white_num == 0 && my_road[i].white_num != 0) {
+            roof_line = i;
+            break;
+        }
+        if (i == 90) {
+            return;
+        }
+    }
+
+    double ljl = linear_judgement(roof_line + 2, NEAR_LINE, left_line);
+    double ljr= linear_judgement(roof_line + 2, NEAR_LINE, right_line);
+    if (ljl < 10 && ljr < 10) {
+        if (roof_line > 92) {
+            car_stop = 1;
+        }
+    }
+    else {
+        if (roof_line > 88) {
+            car_stop = 1;
+        }
+    }
+}
 
 void carPark_main()
 {

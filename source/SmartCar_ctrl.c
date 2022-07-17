@@ -817,6 +817,7 @@ void CTRL_motorMain()
     }
     else if(flagStop == 1)
     {
+        carpark_stop();
         CTRL_CarParkStop();
 
 
@@ -1124,24 +1125,26 @@ void CTRL_CarParkStop()
     if(flagStop == 1)
     {
 //        if(currentGyro > endGyro.intVal || currentGyro < (-endGyro.intVal) || myValid > 94 || flagStop1 == 1)
-       if(myValid > 92 || flagStop1 == 1)
+//       if(myValid > 92 || flagStop1 == 1)
+        if(car_stop == 1)
        {
 
-            flagStop1 = 1;
-            if(flagStop1 == 1)
-            {
-                flagStopCount1 += 1;
-            }
-            if(myValid > 92)
-            {
+//            flagStop1 = 1;
+//            if(flagStop1 == 1)
+//            {
+//                flagStopCount1 += 1;
+//            }
+//            if(myValid > 92)
+//            {
                 expectL = 0;
                 expectR = 0;
-            }
+//            }
 
 //            currentGyro = 80;
         }
 
-        else if(myValid <= 92)
+//        else if(myValid <= 92)
+        else if(car_stop == 0)
         {
 //            if(present_speed > 2)
 //            {
