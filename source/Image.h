@@ -164,7 +164,7 @@ extern uint8_t tCrossStatus;
 extern uint8_t rampTimes;
 extern uint8_t parkSlowDownCount;
 extern uint8_t car_stop;
-
+extern int flagsee;
 extern int TWhere;
 typedef struct {
     int x;
@@ -297,6 +297,10 @@ void design_carpark();
 void searchParkLine();
 void carPark_main();
 void carpark_stop();
+void design_carpark_turn();
+int sign_carPark_in();
+
+
 //Í£³µ
 
 //ÉÏÏÂÆÂ

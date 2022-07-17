@@ -23,6 +23,8 @@
 
 #define PWM_MAX 9900
 #define PWM_MAX_N -9900
+#define PARKSTOP_PWM_MAX 2000
+#define PARKSTOP_PWM_MAX_N -5000
 #define pi 3.1415927
 
 /*Ô²ÐÎÇ°Õ°*/
@@ -88,6 +90,8 @@ extern uint32_t startCount;
 extern uint8_t startFlag;
 extern uint8_t flagStop1, flagStopCount1;
 extern uint8_t lastMyMidLine;
+extern int32 integerSpeedL, integerSpeedR;
+
 struct error
 {
     double delta;
