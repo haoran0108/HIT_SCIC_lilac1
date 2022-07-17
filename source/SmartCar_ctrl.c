@@ -26,6 +26,7 @@ uint32 servoGyroPwm;
 uint32 motorPwm;
 int32 expectL, expectR;//Ô¤ÆÚËÙ¶È
 int32 speedL, speedR, lastSpeedL, lastSpeedR;//Êµ¼ÊËÙ¶È
+int32 integerSpeedL, integerSpeedR;
 int32 mySpeedL = 0, mySpeedR = 0;
 uint8_t present_speed, present_vision;
 float motorLFKP, motorLFKI, motorLFKD, motorRTKP, motorRTKI, motorRTKD;
@@ -180,7 +181,7 @@ void CTRL_speedLoopPID()
     speedL = CTRL_speedGetLeft();
     speedR = CTRL_speedGetRight();
     CTRL_lowpassFilter();
-
+    test_varible[15] = ((integerSpeedR - integerSpeedL) / 2);
     test_varible[9] = expectL;
     test_varible[10] = expectR;
 
@@ -232,8 +233,8 @@ void CTRL_speedLoopPID()
     test_varible[0] = -speedL;
     test_varible[1] = speedR;
 //
-    test_varible[4] = currentExpectLF;
-    test_varible[5] = currentExpectRT;
+//    test_varible[4] = currentExpectLF;
+//    test_varible[5] = currentExpectRT;
 
 
 }
@@ -451,12 +452,12 @@ void CTRL_fuzzyPID()
         if(abs(myMidLine - lastMyMidLine) >= 30)
         {
             myMidLine = lastMyMidLine;
-            test_varible[15] = 1;
+//            test_varible[15] = 1;
         }
         else
         {
             lastMyMidLine = myMidLine;
-            test_varible[15] = 0;
+//            test_varible[15] = 0;
         }
 
     }else lastMyMidLine = myMidLine;
@@ -665,49 +666,47 @@ void CTRL_servoMain()
 
             }
         }
-        else if(parkStart == 0 && flagStop == 0)
+        else if(parkStart == 0)
         {
-            if(duzhuanFlag == 0)
-            {
+            CTRL_ServoPID_Determine();
 
-                CTRL_ServoPID_Determine();
+            CTRL_fuzzyPID();
 
-                CTRL_fuzzyPID();
-
-            }
-            else if(duzhuanFlag == 1)
-            {
-                CTRL_duzhuanZhuanWan();
-
-            }
-//
         }
-        else if(flagStop == 1 && leftPark == 0 && rightPark == 1)
-        {
-            if(flagStop1 == 0)
-            {
-                servoPwm = servoMin;//630
+//        else if(parkStart == 0 && flagStop == 0)
+//        {
+//                CTRL_ServoPID_Determine();
 //
-            }
+//                CTRL_fuzzyPID();
+////
+//        }
+//        else if(flagStop == 1 && leftPark == 0 && rightPark == 1)
+//        {
 //
-            else if(flagStop1 == 1)
-            {
-                servoPwm = servoMidValue;
-            }
-        }
-        else if(flagStop == 1 && leftPark == 1 && rightPark == 0)
-        {
-            if(flagStop1 == 0)
-            {
-                servoPwm = servoMax;//630
-
-            }
-//
-            else if(flagStop1 == 1)
-            {
-                servoPwm = servoMidValue;
-            }
-        }
+////            if(flagStop1 == 0)
+////            {
+////                servoPwm = servoMin;//630
+//////
+////            }
+//////
+////            else if(flagStop1 == 1)
+////            {
+////                servoPwm = servoMidValue;
+////            }
+//        }
+//        else if(flagStop == 1 && leftPark == 1 && rightPark == 0)
+//        {
+////            if(flagStop1 == 0)
+////            {
+////                servoPwm = servoMax;//630
+////
+////            }
+//////
+////            else if(flagStop1 == 1)
+////            {
+////                servoPwm = servoMidValue;
+////            }
+//        }
     }
     CTRL_islandPwmCount();
     CTRL_rampPwmxianfu();
@@ -729,22 +728,46 @@ void CTRL_servoMain()
 void CTRL_motor()
 {
     int pwmL, pwmR;
-    if(mySpeedL > PWM_MAX)
+    if(car_stop == 0)
     {
-        mySpeedL = PWM_MAX;
+        if(mySpeedL > PWM_MAX)
+        {
+            mySpeedL = PWM_MAX;
+        }
+        if(mySpeedR > PWM_MAX)
+        {
+            mySpeedR = PWM_MAX;
+        }
+        if(mySpeedL < PWM_MAX_N)
+        {
+            mySpeedL = PWM_MAX_N;
+        }
+        if(mySpeedR < PWM_MAX_N)
+        {
+            mySpeedR = PWM_MAX_N;
+        }
     }
-    if(mySpeedR > PWM_MAX)
+
+    else if(car_stop == 1)
     {
-        mySpeedR = PWM_MAX;
+        if(mySpeedL > PARKSTOP_PWM_MAX)
+        {
+            mySpeedL = PARKSTOP_PWM_MAX;
+        }
+        if(mySpeedR > PARKSTOP_PWM_MAX)
+        {
+            mySpeedR = PARKSTOP_PWM_MAX;
+        }
+        if(mySpeedL < PARKSTOP_PWM_MAX_N)
+        {
+            mySpeedL = PARKSTOP_PWM_MAX_N;
+        }
+        if(mySpeedR < PARKSTOP_PWM_MAX_N)
+        {
+            mySpeedR = PARKSTOP_PWM_MAX_N;
+        }
     }
-    if(mySpeedL < PWM_MAX_N)
-    {
-        mySpeedL = PWM_MAX_N;
-    }
-    if(mySpeedR < PWM_MAX_N)
-    {
-        mySpeedR = PWM_MAX_N;
-    }
+
 
 //    test_varible[2] = mySpeedL;
 //    test_varible[3] = mySpeedR;
@@ -819,7 +842,7 @@ void CTRL_motorMain()
     {
         carpark_stop();
         CTRL_CarParkStop();
-
+        test_varible[14] = car_stop;
 
     }
     else if(stopFlag == 1)
@@ -1346,6 +1369,7 @@ int16_t CTRL_speedGetRight()//×óÂÖ±àÂëÆ÷1 Òý½Å20.3ºÍ20.0¶ÔÓ¦T6   ÓÒÂÖ±àÂëÆ÷2 Òý½
 {
     int16_t ctrl_speedR = 0;
     ctrl_speedR = SmartCar_Encoder_Get(GPT12_T5);
+    integerSpeedR += ctrl_speedR;
     SmartCar_Encoder_Clear(GPT12_T5);
     return ctrl_speedR;
 }
@@ -1354,6 +1378,7 @@ int16_t CTRL_speedGetLeft()//×óÂÖ±àÂëÆ÷1 Òý½Å20.3ºÍ20.0¶ÔÓ¦T6   ÓÒÂÖ±àÂëÆ÷2 Òý½Å
 {
     int16_t ctrl_speedL = 0;
     ctrl_speedL = SmartCar_Encoder_Get(GPT12_T6);
+    integerSpeedL += ctrl_speedL;
     SmartCar_Encoder_Clear(GPT12_T6);
     return ctrl_speedL;
 }
@@ -1661,92 +1686,92 @@ void CTRL_visionDecision()
 //    test_varible[6] = present_vision;
 }
 
-void CTRL_duzhuanTest()
-{
-    if(startCount < 1000)
-    {
-        startCount += 1;
-    }
-
-    else if(startCount >= 1000)
-    {
-        startFlag = 1;
-    }
-
-
-    if(delayFlag == 1)//ÑÓ³Ù·¢³µ1sºó±äÎª1
-    {
-        if(parkStart == 0 && startFlag == 1)//×ª³ö³µ¿â
-        {
-            if(abs(speedL) < 30 || abs(speedR) < 30)
-            {
-                duzhuanCount += 1;
-            }
-
-            else if(abs(speedL) < 20 && abs(speedR) < 20 && mySpeedL > 5000 && mySpeedR > 5000)
-            {
-                duzhuanCount += 1;
-
-            }
-//            else
+//void CTRL_duzhuanTest()
+//{
+//    if(startCount < 1000)
+//    {
+//        startCount += 1;
+//    }
+//
+//    else if(startCount >= 1000)
+//    {
+//        startFlag = 1;
+//    }
+//
+//
+//    if(delayFlag == 1)//ÑÓ³Ù·¢³µ1sºó±äÎª1
+//    {
+//        if(parkStart == 0 && startFlag == 1)//×ª³ö³µ¿â
+//        {
+//            if(abs(speedL) < 30 || abs(speedR) < 30)
 //            {
-//                duzhuanCount = 0;
+//                duzhuanCount += 1;
 //            }
-
-        }
-
-    }
-
-    if(duzhuanCount > 15)
-    {
-        duzhuanFlag = 1;
-    }
-
-    else
-    {
-        duzhuanFlag = 0;
-    }
-
-}
-
-
-void CTRL_duzhuan()
-{
-    duzhuanTime += 1;
-
-    expectR = -20;
-    expectL = -20;
-
-
-}
-
-void CTRL_duzhuanZhuanWan()
-{
-    float fuzzyKP = 1;
-
-    uint8_t myMidLine;
-    myMidLine = aver_mid_line_foresee();
-
-    if(myMidLine >= 83 && myMidLine <= 103)
-    {
-//        servoPwm = servoMidValue;
-        duzhuanFlag = 0;
-        duzhuanTime = 0;
-        duzhuanCount = 0;
-    }
-
-    else if(myMidLine > 103) //Æ«²îÔÚÓÒ
-    {
-        servoPwm = servoMax;//ÂÖ×Ó×ó×ª
-    }
-
-    else if(myMidLine < 103)
-    {
-        servoPwm = servoMin;
-    }
-
-}
-
+//
+//            else if(abs(speedL) < 20 && abs(speedR) < 20 && mySpeedL > 5000 && mySpeedR > 5000)
+//            {
+//                duzhuanCount += 1;
+//
+//            }
+////            else
+////            {
+////                duzhuanCount = 0;
+////            }
+//
+//        }
+//
+//    }
+//
+//    if(duzhuanCount > 15)
+//    {
+//        duzhuanFlag = 1;
+//    }
+//
+//    else
+//    {
+//        duzhuanFlag = 0;
+//    }
+//
+//}
+//
+//
+//void CTRL_duzhuan()
+//{
+//    duzhuanTime += 1;
+//
+//    expectR = -20;
+//    expectL = -20;
+//
+//
+//}
+//
+//void CTRL_duzhuanZhuanWan()
+//{
+//    float fuzzyKP = 1;
+//
+//    uint8_t myMidLine;
+//    myMidLine = aver_mid_line_foresee();
+//
+//    if(myMidLine >= 83 && myMidLine <= 103)
+//    {
+////        servoPwm = servoMidValue;
+//        duzhuanFlag = 0;
+//        duzhuanTime = 0;
+//        duzhuanCount = 0;
+//    }
+//
+//    else if(myMidLine > 103) //Æ«²îÔÚÓÒ
+//    {
+//        servoPwm = servoMax;//ÂÖ×Ó×ó×ª
+//    }
+//
+//    else if(myMidLine < 103)
+//    {
+//        servoPwm = servoMin;
+//    }
+//
+//}
+//
 
 void CTRL_islandPwmCount()
 {
