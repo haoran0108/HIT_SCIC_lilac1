@@ -80,7 +80,7 @@
 #define LEFT_SIDE 0//图像处理左边界
 #define RIGHT_SIDE 187//图像处理右边界
 #define MISS 255
-#define white_num_MAX 10//每行最多允许白条数
+#define white_num_MAX 12//每行最多允许白条数
 
 #define white_straight 37 //正视直道的格数
 #define LEFT 1
@@ -166,6 +166,8 @@ extern uint8_t parkSlowDownCount;
 extern uint8_t car_stop;
 extern int flagsee;
 extern int TWhere;
+extern uint8_t afterRampFlag;
+
 typedef struct {
     int x;
     int y;

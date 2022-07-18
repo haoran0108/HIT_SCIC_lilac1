@@ -314,10 +314,10 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    g3_Data7 = MENU_fileInit(g3_Data7, 119, 1.1, "motor-I", 2, datafloat, &g3_Data6, &preGear3, NULL, NULL);
 
     currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 3, none, &Threshold, &gear1, NULL, &currentRTKP);
-    currentRTKP = MENU_fileInit(currentRTKP, 3, 4, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentK, NULL);
-    currentRTKI = MENU_fileInit(currentRTKI, 2, 4.4, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
-    currentLFKP = MENU_fileInit(currentLFKP, 3, 4, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
-    currentLFKI = MENU_fileInit(currentLFKI, 2, 4.4, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
+    currentRTKP = MENU_fileInit(currentRTKP, 3, 3.6, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentK, NULL);
+    currentRTKI = MENU_fileInit(currentRTKI, 2, 4, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
+    currentLFKP = MENU_fileInit(currentLFKP, 3, 3.6, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
+    currentLFKI = MENU_fileInit(currentLFKI, 2, 4, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
 //    currentKD = MENU_fileInit(currentKD, 2, 3.0, "motorKD", 4, datafloat, &currentRTKI, &expectC, NULL, NULL);
     expectC = MENU_fileInit(expectC, 2200, 9.5, "expect", 6, dataint, &currentLFKI, NULL, NULL, NULL);
 
@@ -363,9 +363,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display1 = MENU_fileInit(display1, 40, 133.03, "motor", 2, none, NULL, &display2, &display, &LFKP);
     display2 = MENU_fileInit(display2, 25, 0.1, "rowKp", 3, datafloat, &display1, &display3, NULL, NULL);
 
-    LFKP = MENU_fileInit(LFKP, 32, 3.8, "KP", 2, dataint, NULL, &LFKI, &display1, NULL);
-    LFKI = MENU_fileInit(LFKI, 20, 1.5, "KI-P", 3, dataint, &LFKP, &RTKP, NULL, NULL);
-    RTKP = MENU_fileInit(RTKP, 16, 3.8, "KI-N", 4, dataint, &LFKI, &RTKI, NULL, NULL);
+    LFKP = MENU_fileInit(LFKP, 30, 3.8, "KP", 2, dataint, NULL, &LFKI, &display1, NULL);
+    LFKI = MENU_fileInit(LFKI, 16, 1.5, "KI-P", 3, dataint, &LFKP, &RTKP, NULL, NULL);
+    RTKP = MENU_fileInit(RTKP, 12, 3.8, "KI-N", 4, dataint, &LFKI, &RTKI, NULL, NULL);
     RTKI = MENU_fileInit(RTKI, 4, 1.5, "motorZO", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
     fastLFKP = MENU_fileInit(fastLFKP, 8, 133.03, "motorNM", 6, dataint, &RTKI, &fastLFKI, NULL, NULL);
     fastLFKI = MENU_fileInit(fastLFKI, 15, 133.03, "motorNB", 7, dataint, &fastLFKP, &fastRTKP, NULL, NULL);

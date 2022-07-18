@@ -63,6 +63,7 @@ uint8_t startFlag = 0;
 uint8_t lastMyMidLine = 0;
 int islandPwmMax, islandPwmMin;
 int32 motorPwmMax, motorPwmMin;
+int integerSpeedAver;
 
 void CTRL_gyroInit()
 {
@@ -182,7 +183,7 @@ void CTRL_speedLoopPID()
     speedL = CTRL_speedGetLeft();
     speedR = CTRL_speedGetRight();
     CTRL_lowpassFilter();
-    test_varible[15] = ((integerSpeedR - integerSpeedL) / 2);
+    test_varible[15] = integerSpeedAver;
     test_varible[9] = expectL;
     test_varible[10] = expectR;
 
@@ -736,10 +737,15 @@ void CTRL_MotorPwmXianfu()
 
     else if(state == stateRampway)
     {
-        motorPwmMax = 3500;
-        motorPwmMin = -2500;
+        motorPwmMax = 3000;
+        motorPwmMin = -2000;
     }
 
+    else if(afterRampFlag == 1)
+    {
+        motorPwmMax = 6000;
+        motorPwmMin = -3000;
+    }
     else
     {
         motorPwmMax = 8000;
@@ -1953,4 +1959,10 @@ void CTRL_crossPwmxianfu()
 
         }
     }
+}
+
+void CTRL_encoderCount()
+{
+    integerSpeedAver = (integerSpeedR - integerSpeedL) / 2;
+//    return integerSpeedAver;
 }

@@ -91,6 +91,7 @@ extern uint8_t startFlag;
 extern uint8_t flagStop1, flagStopCount1;
 extern uint8_t lastMyMidLine;
 extern int32 integerSpeedL, integerSpeedR;
+extern int integerSpeedAver;
 
 struct error
 {
@@ -188,6 +189,7 @@ void CTRL_CircleServoPID();
 //-------------------------------------------------------------------------------------------------------------------
 int16_t CTRL_speedGetLeft();
 int16_t CTRL_speedGetRight();
+void CTRL_encoderCount();
 
 void speedUP_define();
 int foresee();

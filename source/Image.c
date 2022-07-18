@@ -1,6 +1,7 @@
 #include "image.h"
 //using namespace std;
 uint16_t f[10 * CAMERA_H];//考察连通域联通性
+
 uint8_t* fullBuffer = &mt9v034_image[0][0];
 
 //每个白条子属性
@@ -100,7 +101,7 @@ uint8_t myParkLine = 0;
 uint8_t parkSlowDownCount = 0;
 uint8_t car_stop = 0;
 int flagSee = 0;
-
+uint8_t afterRampFlag = 0;
 //road my_road[CAMERA_H];
 //uint8_t IMG_zebra[36][CAMERA_W];
 //uint8_t zebraFlag;
@@ -1920,19 +1921,43 @@ void judge_type_road() {
     if (state == stateStart) {
         if (flagIT == stateIslandFinal * RIGHT || flagIT == stateTOut * RIGHT) {
             if (my_road[NEAR_LINE - 1].connected[j_continue[NEAR_LINE - 1]].width < 28) {
-                if(islandTimes != 2)
+                if(file1.intVal == 1)
                 {
-                    T_island_in_start();
+                    if(islandTimes != 2)
+                    {
+                        T_island_in_start();
 
+                    }
+
+                }
+                else if(file1.intVal == -1)
+                {
+                    if(islandTimes <= 2)
+                    {
+                        T_island_in_start();
+
+                    }
                 }
             }
 
         }
         else {
-            if(islandTimes != 2)
+            if(file1.intVal == 1)
             {
-                T_island_in_start();
+                if(islandTimes != 2)
+                {
+                    T_island_in_start();
 
+                }
+
+            }
+            else if(file1.intVal == -1)
+            {
+                if(islandTimes <= 2)
+                {
+                    T_island_in_start();
+
+                }
             }
 //            T_island_in_start();
         }
@@ -2172,14 +2197,32 @@ void judge_type_road() {
         {
 
             state = 0;
+//            afterRampFlag = 1;
             rampWayCount=0;
         }
+
+        if(state == 0)
+        {
+            afterRampFlag = 1;
+        }
     }
+
     else if(state != stateRampway)
     {
 //        GPIO_Set(P22, 0, 0);
         rampWayCount = 0;
     }
+
+    if(afterRampFlag == 1)
+    {
+
+        CTRL_encoderCount();
+        if(integerSpeedAver > 3000)
+        {
+            afterRampFlag = 0;
+        }
+    }
+
     if(state != stateRampway && state != stateParkIn){
 //        TcircleFix();
         rampJudgeCount += 1;
@@ -5016,7 +5059,7 @@ void island_turn() {
             }
             else if(IslandRadius == 50)
             {
-                up = 61;
+                up = 63;
             }
             else if(IslandRadius == 100)
             {
@@ -5072,7 +5115,7 @@ void island_turn() {
                 }
                 else if(IslandRadius == 50)
                 {
-                    up = 60;
+                    up = 63;
                 }
                 else if(IslandRadius == 100)
                 {
@@ -8630,31 +8673,37 @@ void carPark_main()
 
     if (state == stateParkIn)
     {
-        int integerSpeedAver;
-//        int direction = file1.intVal;
-        integerSpeedAver = (integerSpeedR - integerSpeedL) / 2;
-        carParkDelay += 1;
-        if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && integerSpeedAver > 2000)
+        CTRL_encoderCount();
+        if(carParkDelay <= parkDelay.intVal)
+        {
+            carParkDelay += 1;
+        }
+        int direction = file1.intVal;
+//        if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && integerSpeedAver > 2000)
+//        {
+//            carpark_out();
+//
+//        }
+        if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == 1 && integerSpeedAver > 2000)
         {
             carpark_out();
 
         }
-//        if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == 1 && integerSpeedAver > 2000)
-//        {
-//            carpark_out();
-//
-//        }
-//        else if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == -1 && integerSpeedAver > 500)
-//        {
-//            carpark_out();
-//
-//        }
-//        else if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == 0 && integerSpeedAver > 500)
-//        {
-//            carpark_out();
-//
-//        }
+        else if(carParkDelay > parkDelay.intVal-3 && carParkTimes < 2 && direction == -1 && integerSpeedAver > 100)
+        {
+            carpark_out();
 
+        }
+        else if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == 0 && integerSpeedAver > 500)
+        {
+            carpark_out();
+
+        }
+
+        if(integerSpeedAver > 5000)
+        {
+            state = 0;
+        }
         design_carpark();
 
     }
@@ -8808,7 +8857,10 @@ void rampwayDown()
     if(TFMINI_Distance < rampDistance.intVal &&TFMINI_Distance != 0 && lastTwoState == 1 && inv_accl[2] < 9.45)
     {
         state = 0;
+        integerSpeedL = 0;
+        integerSpeedR = 0;
         rampJudgeCount = 0;
+
 //        GPIO_Set(P22, 0, 0);
     }
 
