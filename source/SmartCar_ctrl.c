@@ -737,19 +737,19 @@ void CTRL_MotorPwmXianfu()
 
     else if(state == stateRampway)
     {
-        motorPwmMax = 3000;
+        motorPwmMax = 4000;
         motorPwmMin = -2000;
     }
 
     else if(afterRampFlag == 1)
     {
-        motorPwmMax = 6000;
+        motorPwmMax = 7000;
         motorPwmMin = -3000;
     }
     else
     {
         motorPwmMax = 8000;
-        motorPwmMin = -5000;
+        motorPwmMin = -3000;
     }
 }
 
