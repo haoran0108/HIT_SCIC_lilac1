@@ -23,8 +23,8 @@
 
 #define PWM_MAX 9900
 #define PWM_MAX_N -9900
-#define PARKSTOP_PWM_MAX 2000
-#define PARKSTOP_PWM_MAX_N -5000
+#define PARKSTOP_PWM_MAX -1000
+#define PARKSTOP_PWM_MAX_N -9000
 #define pi 3.1415927
 
 /*圆形前瞻*/
@@ -211,6 +211,9 @@ void CTRL_duzhuanZhuanWan();//堵转转弯
 /*元素打角限幅*/
 void CTRL_carParkPwmxianfu();
 void CTRL_rampPwmxianfu();
+
+/*电机限幅*/
+void CTRL_MotorPwmXianfu();
 
 
 #endif /* SOURCE_SMARTCAR_CTRL_H_ */

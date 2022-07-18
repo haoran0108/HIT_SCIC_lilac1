@@ -62,6 +62,7 @@ uint32_t startCount = 0;
 uint8_t startFlag = 0;
 uint8_t lastMyMidLine = 0;
 int islandPwmMax, islandPwmMin;
+int32 motorPwmMax, motorPwmMin;
 
 void CTRL_gyroInit()
 {
@@ -725,52 +726,75 @@ void CTRL_servoMain()
 
 }
 
+void CTRL_MotorPwmXianfu()
+{
+    if(car_stop == 1)
+    {
+        motorPwmMax = 100;
+        motorPwmMin = -8000;
+    }
+
+    else if(state == stateRampway)
+    {
+        motorPwmMax = 3500;
+        motorPwmMin = -2500;
+    }
+
+    else
+    {
+        motorPwmMax = 8000;
+        motorPwmMin = -5000;
+    }
+}
+
+
 void CTRL_motor()
 {
     int pwmL, pwmR;
-    if(car_stop == 0)
+//    if(car_stop == 0)
+//    {
+    CTRL_MotorPwmXianfu();
+    if(mySpeedL > motorPwmMax)
     {
-        if(mySpeedL > PWM_MAX)
-        {
-            mySpeedL = PWM_MAX;
-        }
-        if(mySpeedR > PWM_MAX)
-        {
-            mySpeedR = PWM_MAX;
-        }
-        if(mySpeedL < PWM_MAX_N)
-        {
-            mySpeedL = PWM_MAX_N;
-        }
-        if(mySpeedR < PWM_MAX_N)
-        {
-            mySpeedR = PWM_MAX_N;
-        }
+        mySpeedL = motorPwmMax;
     }
-
-    else if(car_stop == 1)
+    if(mySpeedR > motorPwmMax)
     {
-        if(mySpeedL > PARKSTOP_PWM_MAX)
-        {
-            mySpeedL = PARKSTOP_PWM_MAX;
-        }
-        if(mySpeedR > PARKSTOP_PWM_MAX)
-        {
-            mySpeedR = PARKSTOP_PWM_MAX;
-        }
-        if(mySpeedL < PARKSTOP_PWM_MAX_N)
-        {
-            mySpeedL = PARKSTOP_PWM_MAX_N;
-        }
-        if(mySpeedR < PARKSTOP_PWM_MAX_N)
-        {
-            mySpeedR = PARKSTOP_PWM_MAX_N;
-        }
+        mySpeedR = motorPwmMax;
     }
+    if(mySpeedL < motorPwmMin)
+    {
+        mySpeedL = motorPwmMin;
+    }
+    if(mySpeedR < motorPwmMin)
+    {
+        mySpeedR = motorPwmMin;
+    }
+//    }
+//
+//    else if(car_stop == 1)
+//    {
+//        if(mySpeedL > PARKSTOP_PWM_MAX)
+//        {
+//            mySpeedL = PARKSTOP_PWM_MAX;
+//        }
+//        if(mySpeedR > PARKSTOP_PWM_MAX)
+//        {
+//            mySpeedR = PARKSTOP_PWM_MAX;
+//        }
+//        if(mySpeedL < PARKSTOP_PWM_MAX_N)
+//        {
+//            mySpeedL = PARKSTOP_PWM_MAX_N;
+//        }
+//        if(mySpeedR < PARKSTOP_PWM_MAX_N)
+//        {
+//            mySpeedR = PARKSTOP_PWM_MAX_N;
+//        }
+//    }
 
 
-//    test_varible[2] = mySpeedL;
-//    test_varible[3] = mySpeedR;
+    test_varible[2] = mySpeedL;
+    test_varible[3] = mySpeedR;
 
     if(mySpeedL >= 0 && mySpeedR >= 0)
     {
@@ -1225,14 +1249,30 @@ void CTRL_ServoPID_Determine()
 
     if((state == stateTIn || state == stateTOut) && CrossCircle.intVal == 1)//crossCircle
     {
-        fuzzy_PB = circle_PB.floatVal;
-        fuzzy_PM = circle_PB.floatVal;
-        fuzzy_PS = circle_PB.floatVal;
-        fuzzy_ZO = circle_PB.floatVal;
-        fuzzy_NS = circle_PB.floatVal;
-        fuzzy_NM = circle_PB.floatVal;
-        fuzzy_NB = circle_PB.floatVal;
-        fuzzy_D = circle_DS.floatVal;
+        if(TWhere == LEFT)
+        {
+            fuzzy_PB = circle_PB.floatVal;
+            fuzzy_PM = circle_PB.floatVal;
+            fuzzy_PS = circle_PB.floatVal;
+            fuzzy_ZO = circle_PB.floatVal;
+            fuzzy_NS = circle_PB.floatVal;
+            fuzzy_NM = circle_PB.floatVal;
+            fuzzy_NB = circle_PB.floatVal;
+            fuzzy_D = circle_DS.floatVal;
+        }
+
+        else if(TWhere == RIGHT)
+        {
+            fuzzy_PB = circle_PM.floatVal;
+            fuzzy_PM = circle_PM.floatVal;
+            fuzzy_PS = circle_PM.floatVal;
+            fuzzy_ZO = circle_PM.floatVal;
+            fuzzy_NS = circle_PM.floatVal;
+            fuzzy_NM = circle_PM.floatVal;
+            fuzzy_NB = circle_PM.floatVal;
+            fuzzy_D = circle_DS.floatVal;
+        }
+
 //        fuzzy_Dbig = circle_DB.floatVal;
 
     }

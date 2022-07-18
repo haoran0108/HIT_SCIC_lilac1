@@ -1,6 +1,6 @@
 #include "image.h"
 //using namespace std;
-int f[10 * CAMERA_H];//考察连通域联通性
+uint16_t f[10 * CAMERA_H];//考察连通域联通性
 uint8_t* fullBuffer = &mt9v034_image[0][0];
 
 //每个白条子属性
@@ -8210,15 +8210,16 @@ void searchParkLine()
 void carpark_stop() {
 
     int roof_line = NEAR_LINE;
-    for (int i = NEAR_LINE; i >= 90; i--) {
+    for (int i = NEAR_LINE; i >= 80; i--) {
         if (my_road[i - 1].white_num == 0 && my_road[i].white_num != 0) {
             roof_line = i;
             break;
         }
-        if (i == 90) {
+        if (i == 80) {
             return;
         }
     }
+    test_varible[5] = roof_line;
 
     double ljl = linear_judgement(roof_line + 2, NEAR_LINE, left_line);
     double ljr= linear_judgement(roof_line + 2, NEAR_LINE, right_line);
@@ -8299,7 +8300,7 @@ void design_carpark_turn() {
     int roof_black_line = sign_carPark_in();
     uint8_t searchLine = search_line.intVal;
     test_varible[4] = roof_black_line;
-    test_varible[5] = flagSee;
+//    test_varible[5] = flagSee;
     test_varible[6] = flagStop;
     if (roof_black_line >= searchLine && roof_black_line <= NEAR_LINE) {
         flagStop = 1;
@@ -8473,8 +8474,8 @@ void carPark_main()
         {
             if(file1.intVal == -1)
             {
-                leftPark = 1;
-                rightPark = 0;
+                leftPark = 0;
+                rightPark = 1;
 
                 if(rampTimes >= 1)
                 {
@@ -8630,6 +8631,7 @@ void carPark_main()
     if (state == stateParkIn)
     {
         int integerSpeedAver;
+//        int direction = file1.intVal;
         integerSpeedAver = (integerSpeedR - integerSpeedL) / 2;
         carParkDelay += 1;
         if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && integerSpeedAver > 2000)
@@ -8637,6 +8639,21 @@ void carPark_main()
             carpark_out();
 
         }
+//        if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == 1 && integerSpeedAver > 2000)
+//        {
+//            carpark_out();
+//
+//        }
+//        else if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == -1 && integerSpeedAver > 500)
+//        {
+//            carpark_out();
+//
+//        }
+//        else if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == 0 && integerSpeedAver > 500)
+//        {
+//            carpark_out();
+//
+//        }
 
         design_carpark();
 
