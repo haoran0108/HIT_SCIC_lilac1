@@ -929,13 +929,28 @@ void CTRL_motorDiffer()
 //            }
 //            GPIO_Set(P22, 0, 0);
 //        }
-
-        speedDelta = (int32)((expectL - expectR) * gap.floatVal);
-        if(speedDelta >= 0)
+        if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut)
         {
-            expectR = expectL - speedDelta;
+            speedDelta = (int32)((expectL - expectR) * islandDiff.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectR = expectL - speedDelta;
 
+            }
         }
+
+        else if(state == stateTIn || state == stateTOut)
+        {
+            speedDelta = (int32)((expectL - expectR) * tcrossDiff.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectR = expectL - speedDelta;
+
+            }
+        }
+
+//        else if(state == stateFolkRoadIn || )
+
     }
     else if(delta < 0)
     {
@@ -1600,13 +1615,13 @@ void speedDetermine()
 
     if(straightFlag == 1)
     {
-        present_speed = present_speed * display6.floatVal;
+        present_speed = present_speed * display2.floatVal;
     }
     else if(straightFlag == 0)
     {
         if(state == 50 && tCrossStatus == 1)
         {
-            present_speed = (uint8_t)(present_speed * display7.floatVal);
+            present_speed = (uint8_t)(present_speed * display3.floatVal);
 //            present_speed = (uint8_t)(present_speed * display7.floatVal);
         }
         if(state == 130)
@@ -1639,7 +1654,7 @@ void CTRL_RoadTest()
             laststate = 0;
 
         }
-        if(testStateTimes == display9.intVal)
+        if(testStateTimes == display1.intVal)
         {
             testFlag = 0;
         }

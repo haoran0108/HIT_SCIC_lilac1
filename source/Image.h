@@ -253,6 +253,8 @@ double calculate_two_point_slope(int start, int xStart, int end, int xEnd);
 double calculate_slope_struct(int start, int end, uint8_t j_mid[CAMERA_H], int type);
 double variance(int yStart, int yEnd, int side[CAMERA_H]);
 double correlation_coefficient(int start, int end, int side[CAMERA_W]);
+double linear_judgement(int start, int end, uint8_t side[CAMERA_H]);
+double linear_judgement_struct(int start, int end, uint8_t j[CAMERA_H],int direction);
 
 //Ê®×Ö
 void cross_in();

@@ -96,6 +96,7 @@ extern node_t folkWay;
 extern node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6;
 //extern node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6, folkParam7, folkParam8, folkParam9, folkParam10, folkBottom;
 extern node_t speedFilter, currentFilter1, currentFilter2, currentKdLpf, speedKdLpf;
+extern node_t curveDiff, islandDiff, tcrossDiff, folkDiff1, folkDiff2;
 
 extern node_t startWay;
 //-------------------------------------------------------------------------------------------------------------------
