@@ -104,6 +104,7 @@ int flagSee = 0;
 uint8_t afterRampFlag = 0;
 uint8_t folkCNT = 0;
 uint8_t islandTimesCNT = 0;
+uint8_t folkOutTimes = 0;
 //road my_road[CAMERA_H];
 //uint8_t IMG_zebra[36][CAMERA_W];
 //uint8_t zebraFlag;
@@ -1905,8 +1906,8 @@ void judge_type_road() {
     if(state != laststate)
     {
         laststate = state;
-//        integerSpeedCNT += (integerSpeedR - integerSpeedL) / 2;
-//        test_varible[14] = integerSpeedCNT;
+        integerSpeedCNT += (integerSpeedR - integerSpeedL) / 2;
+        test_varible[14] = integerSpeedCNT;
         integerSpeedL = 0;
         integerSpeedR = 0;
     }
@@ -1920,6 +1921,7 @@ void judge_type_road() {
         if (my_road[40].white_num != 0)
             folk_road_in();
             folkTimesCNT();
+            test_varible[6] = folkCNT;
 
       //  T_island_in_start();
 //        if (lastState != state) {
@@ -1930,12 +1932,16 @@ void judge_type_road() {
     if (state == stateStart) {
         if (flagIT == stateIslandFinal * RIGHT || flagIT == stateTOut * RIGHT) {
             if (my_road[NEAR_LINE - 1].connected[j_continue[NEAR_LINE - 1]].width < 28) {
-                if(file1.intVal == 1)
+                if(file1.intVal == 1 || file1.intVal == 0)
                 {
                     if(islandTimes != 2)
                     {
-                        T_island_in_start();
+                        if(carParkTimes == 0 || folkOutTimes == 2)
+                        {
+                            T_island_in_start();
 
+                        }
+//
                     }
 
                 }
@@ -1951,12 +1957,15 @@ void judge_type_road() {
 
         }
         else {
-            if(file1.intVal == 1)
+            if(file1.intVal == 1 || file1.intVal == 0)
             {
                 if(islandTimes != 2)
                 {
-                    T_island_in_start();
+                    if(carParkTimes == 0 || folkOutTimes == 2)
+                    {
+                        T_island_in_start();
 
+                    }
                 }
 
             }
@@ -2179,7 +2188,7 @@ void judge_type_road() {
 
     if(state == stateFolkRoadIn  || state == stateStart )
     {
-        if((rampTimes == 0 && islandTimesCNT == 2 && integerSpeedCNT >= 150000) || (rampTimes == 0 && folkTimes == 3 && integerSpeedCNT >= 150000))
+        if(rampTimes == 0 && folkTimes == 3 && integerSpeedCNT >= 150000)
         {
             rampwayOn();
 
@@ -6563,12 +6572,7 @@ void cross_T_out_start() {
     //}
 }
 
-////////////////////////////////////////////
-//功能：出T字口补线
-//输入：
-//输出：
-//备注：
-///////////////////////////////////////////
+
 ////////////////////////////////////////////
 //功能：出T字口补线
 //输入：
@@ -7051,7 +7055,7 @@ void cross_T_out_over() {
                 }
 
             }
-            if (ymax >= 107) {
+            if (ymax >= 110) {
                 int start = ymax;
                 int sumC = 0;
                 for (int i = start; i >= start - 20; i--) {
@@ -7064,7 +7068,7 @@ void cross_T_out_over() {
                     flag2 = 1;
                 }
 
-                if (fabs(calculate_slope_uint(start - 20, start - 5, right_line) - calculate_slope_uint(start - 12, start - 1, right_line)) < 0.25
+                if (fabs(calculate_slope_uint(start - 20, start - 5, right_line) - calculate_slope_uint(start - 12, start - 1, right_line)) < 0.3
                     && calculate_slope_uint(start - 13, start, right_line) < 2.5
                     && calculate_slope_uint(start - 13, start, right_line) >= 0
                     && flag2 == 0) {
@@ -7087,7 +7091,7 @@ void cross_T_out_over() {
                             }
                         }
                         //  //////printf("lk=%f\n", calculate_slope_uint(start - 13, start, left_line));
-                        if (sumR >= 15 && calculate_slope_uint(start - 13, start, right_line) > 1 && calculate_slope_uint(start - 13, start, right_line) < 3) {
+                        if (sumR >= 12 && calculate_slope_uint(start - 13, start, right_line) > 0.5 && calculate_slope_uint(start - 13, start, right_line) < 3) {
                             flagIT = state * TWhere;
                             state = stateTIslandIn;
                             TIslandWhere=-1*TWhere;
@@ -7401,7 +7405,12 @@ void folk_road_in() {
                         }
                         if (sumN >= 15) {
                             //printf("11\n");
-                            state = stateFolkRoadIn;
+                            if(folkCNT - folkTimes == 1) //folkCNT为需要满足的条件，folkTimes为次数，例如cnt=3代表可以开始识别第三个三叉，此时times=2
+                            {
+                                state = stateFolkRoadIn;
+                                folkTimes += 1;
+                            }
+
                         }
 
 
@@ -7504,7 +7513,11 @@ void folk_road_in() {
                         }
                     }
                     if (sumN >= 15) {
-                        state = stateFolkRoadIn;
+                        if(folkCNT - folkTimes == 1)
+                        {
+                            state = stateFolkRoadIn;
+                            folkTimes += 1;
+                        }
                     }
 
                 }
@@ -7578,7 +7591,11 @@ void folk_road_in() {
                         }
                     }
                     if (sumN >= 15) {
-                        state = stateFolkRoadIn;
+                        if(folkCNT - folkTimes == 1)
+                        {
+                            state = stateFolkRoadIn;
+                            folkTimes += 1;
+                        }
                     }
 
                 }
@@ -7692,6 +7709,7 @@ void folk_road_out() {
                 && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 32 || (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] <= 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] < -2))
                 ) {
                 state = 0;
+                folkOutTimes += 1;
             }
         }
         else if (FolkRoadWhere == LEFT) {
@@ -7701,6 +7719,7 @@ void folk_road_out() {
                 && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 32|| (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] > 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] >= -2))
                 ) {
                 state = 0;
+                folkOutTimes += 1;
             }
         }
 
@@ -8293,12 +8312,12 @@ void carpark_stop() {
     double ljl = linear_judgement(roof_line + 2, NEAR_LINE, left_line);
     double ljr= linear_judgement(roof_line + 2, NEAR_LINE, right_line);
     if (ljl < 10 && ljr < 10) {
-        if (roof_line > 82) {
+        if (roof_line > stopLine.intVal) {
             car_stop = 1;
         }
     }
     else {
-        if (roof_line > 82) {
+        if (roof_line > stopLine.intVal) {
             car_stop = 1;
         }
     }
@@ -8370,7 +8389,7 @@ void design_carpark_turn() {
     uint8_t searchLine = search_line.intVal;
     test_varible[4] = roof_black_line;
 //    test_varible[5] = flagSee;
-    test_varible[6] = flagStop;
+//    test_varible[6] = flagStop;
     if (roof_black_line >= searchLine && roof_black_line <= NEAR_LINE) {
         flagStop = 1;
         flagSee++;
@@ -9580,12 +9599,13 @@ void folkTimesCNT()
             if(folkCNT < 1 && state == stateFolkRoadIn) //没有跑到一定距离就识别出三叉 则认为是误识别
             {
                 state = 0;
+                folkCNT = 0;
             }
         }
 
-        else if(folkTimes == 1)
+        else if(folkTimes == 1 && folkOutTimes == 1)
         {
-            if(integerSpeedAver >= 10000)
+            if(integerSpeedAver >= 10000 && integerSpeedCNT >= 38000)
             {
                 folkCNT = 2;
 
@@ -9594,10 +9614,11 @@ void folkTimesCNT()
             if(folkCNT < 2 && state == stateFolkRoadIn) //没有跑到一定距离就识别出三叉 则认为是误识别
             {
                 state = 0;
+                folkCNT = 1;
             }
         }
 
-        else if(folkTimes == 2)
+        else if(folkTimes == 2 && folkCNT == 2 && folkOutTimes == 2)
         {
             if(integerSpeedAver >= 6000 && integerSpeedCNT > 140000 && islandTimesCNT == 2)
             {
@@ -9608,12 +9629,13 @@ void folkTimesCNT()
             if(folkCNT < 3 && state == stateFolkRoadIn) //没有跑到一定距离就识别出三叉 则认为是误识别
             {
                 state = 0;
+                folkCNT = 2;
             }
         }
 
-        else if(folkTimes == 3)
+        else if(folkTimes == 3 && folkCNT == 3 && folkOutTimes == 3)
         {
-            if(integerSpeedAver >= 3500)
+            if(integerSpeedAver >= 3500 && integerSpeedCNT >= 140000)
             {
                 folkCNT = 4;
             }
@@ -9621,6 +9643,7 @@ void folkTimesCNT()
             if(folkCNT < 4 && state == stateFolkRoadIn) //没有跑到一定距离就识别出三叉 则认为是误识别
             {
                 state = 0;
+                folkCNT = 3;
             }
         }
     }

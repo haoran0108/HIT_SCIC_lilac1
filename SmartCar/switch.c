@@ -132,7 +132,9 @@ void SW_readSwitch()
         folkCNT = 0;
         integerSpeedCNT = 0;
         islandTimesCNT = 0;
-
+        folkOutTimes = 0;
+        integerSpeedL = 0;
+        integerSpeedR = 0;
         if(file1.intVal == -1)//×ó »·µº
         {
             wayIT = 1;

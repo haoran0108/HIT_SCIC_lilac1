@@ -14,7 +14,8 @@ node_t file2, file3;
 node_t curveDiff, islandDiff, tcrossDiff, folkDiff1, folkDiff2;
 node_t PD, CrossPD, CrossCircle, IslandPD, FolkPD, straightPD;
 node_t motorPD;
-node_t motor1, currentMotor;
+node_t motor1, currentMotor, islandMotor, strMotor;
+node_t islandKP, islandKI;
 node_t gear1, g1_Data1, g1_Data2, g1_Data3, g1_Data4, g1_Data5, g1_Data6, g1_Data7, g1_Data8, g1_Data9, g1_Data10, g1_Data11, g1_Data12;
 node_t gear2, g2_Data1, g2_Data2, g2_Data3, g2_Data4, g2_Data5, g2_Data6, g2_Data7;
 node_t gear3, g3_Data1, g3_Data2, g3_Data3, g3_Data4, g3_Data5, g3_Data6, g3_Data7;
@@ -44,7 +45,7 @@ node_t param;
 node_t island,cross_circle, carPark, ramp, folkWay;
 node_t islandout_up, design_island_k, islandParam1, islandParam2, islandParam3, islandParam4, islandParam5, islandParam6, islandBottom;
 node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4, cross_circle_param5, cross_circle_param6, cross_circle_param7, cross_circle_param8, ccBottom;
-node_t parkCount, startGyro, endGyro, search_line, parkDelay;
+node_t parkCount, startGyro, endGyro, search_line, parkDelay, stopLine;
 node_t paramBottom;
 
 node_t raceMemory, memory1, memory2, memory3, memory4, memory5, memory6, memory7, memory8, memory9, memory10, memory11, memory12, memory13, memory14, memory15, memoryBottom;
@@ -133,7 +134,12 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     straightPD = MENU_fileInit(straightPD, 0, 1.0, "straight", 5, dataint, &FolkPD, NULL, NULL, &straight_KP);
 
     motor1 = MENU_fileInit(motor1, 1, 1.0, "motor1", 2, none, NULL, &currentMotor, &motorPD, &LFKP);
-    currentMotor = MENU_fileInit(currentMotor, 1, 1.0, "currentK", 3, none, &motor1, NULL, NULL, &currentRTKP);
+    currentMotor = MENU_fileInit(currentMotor, 1, 1.0, "currentK", 3, none, &motor1, &islandMotor, NULL, &currentRTKP);
+
+    islandMotor = MENU_fileInit(islandMotor, 1, 1.0, "Tisland", 4, none, &currentMotor, NULL, NULL, &islandKP);
+    islandKP = MENU_fileInit(islandKP, 30, 1.0, "islandKP", 2, dataint, NULL, &islandKI, &islandMotor, NULL);
+    islandKI = MENU_fileInit(islandKI, 30, 1.0, "islandKI", 3, dataint, &islandKP, NULL, NULL, NULL);
+
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
     islandout_up = MENU_fileInit(islandout_up, 0, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
@@ -159,11 +165,12 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     ccBottom = MENU_fileInit(ccBottom, 55, 1.0, "bottom", 4, none, &cross_circle_param8, NULL, NULL, NULL);
 
     carPark = MENU_fileInit(carPark, 1, 1.0, "park", 4, none, &cross_circle, &ramp, NULL, &parkCount);
-    parkCount = MENU_fileInit(parkCount, 58, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
+    parkCount = MENU_fileInit(parkCount, 60, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
     startGyro = MENU_fileInit(startGyro, 30, 1.0, "st-gyro", 3, dataint, &parkCount, &endGyro, NULL, NULL);
     endGyro = MENU_fileInit(endGyro, 65, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
     search_line = MENU_fileInit(search_line, 77, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
-    parkDelay = MENU_fileInit(parkDelay, 5, 1.0, "delay", 6, dataint, &search_line, &paramBottom, NULL, NULL);
+    parkDelay = MENU_fileInit(parkDelay, 5, 1.0, "delay", 6, dataint, &search_line, &stopLine, NULL, NULL);
+    stopLine = MENU_fileInit(stopLine, 78, 1.0, "stopLine", 7, dataint, &parkDelay, &paramBottom, NULL, NULL);
 
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkDelay, NULL, NULL, NULL);
 
@@ -200,7 +207,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
 //    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
 
-    circle_PB = MENU_fileInit(circle_PB, 1, 2.7, "circleL", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
+    circle_PB = MENU_fileInit(circle_PB, 1, 3.2, "circleL", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
     circle_PM = MENU_fileInit(circle_PM, 1, 3, "circleR", 3, datafloat, &circle_PB, &circle_PS, NULL, NULL);
     circle_PS = MENU_fileInit(circle_PS, 1, 2.8, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
     circle_ZO = MENU_fileInit(circle_ZO, 1, 2.7, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
@@ -318,8 +325,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     LFKP = MENU_fileInit(LFKP, 30, 3.8, "KP", 2, dataint, NULL, &LFKI, &motor1, NULL);
     LFKI = MENU_fileInit(LFKI, 16, 1.5, "KI-P", 3, dataint, &LFKP, &RTKP, NULL, NULL);
     RTKP = MENU_fileInit(RTKP, 12, 3.8, "KI-N", 4, dataint, &LFKI, &RTKI, NULL, NULL);
-    RTKI = MENU_fileInit(RTKI, 4, 1.5, "stopKP", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
-    fastLFKP = MENU_fileInit(fastLFKP, 20, 133.03, "stopKI", 6, dataint, &RTKI, &fastLFKI, NULL, NULL);
+    RTKI = MENU_fileInit(RTKI, 25, 1.5, "stopKP", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
+    fastLFKP = MENU_fileInit(fastLFKP, 10, 133.03, "stopKI", 6, dataint, &RTKI, &fastLFKI, NULL, NULL);
     fastLFKI = MENU_fileInit(fastLFKI, 15, 133.03, "motorNB", 7, dataint, &fastLFKP, &fastRTKP, NULL, NULL);
     fastRTKP = MENU_fileInit(fastRTKP, 30, 133.03, "motorKD", 2, dataint, &fastLFKI, &fastRTKI, NULL, NULL);
     fastRTKI = MENU_fileInit(fastRTKI, 50, 133.03, "BOTTOM", 3, dataint, &fastRTKP, NULL, NULL, NULL);

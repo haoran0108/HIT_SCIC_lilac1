@@ -949,7 +949,35 @@ void CTRL_motorDiffer()
             }
         }
 
-//        else if(state == stateFolkRoadIn || )
+        else if(state == stateFolkRoadIn || folkTimes == 1)
+        {
+            speedDelta = (int32)((expectL - expectR) * folkDiff1.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectR = expectL - speedDelta;
+
+            }
+        }
+
+        else if(state == stateFolkRoadIn || folkTimes == 3)
+        {
+            speedDelta = (int32)((expectL - expectR) * folkDiff2.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectR = expectL - speedDelta;
+
+            }
+        }
+
+        else
+        {
+            speedDelta = (int32)((expectL - expectR) * curveDiff.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectR = expectL - speedDelta;
+
+            }
+        }
 
     }
     else if(delta < 0)
@@ -994,14 +1022,57 @@ void CTRL_motorDiffer()
 //            GPIO_Set(P22, 0, 0);
 //        }
 
-
-
-        speedDelta = (int32)((expectR - expectL) * gap.floatVal);
-        if(speedDelta >= 0)
+        if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut)
         {
-            expectL = expectR - speedDelta;
+            speedDelta = (int32)((expectR - expectL) * islandDiff.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectL = expectR - speedDelta;
 
+            }
         }
+
+        else if(state == stateTIn || state == stateTOut)
+        {
+            speedDelta = (int32)((expectR - expectL) * tcrossDiff.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectL = expectR - speedDelta;
+
+            }
+        }
+
+        else if(state == stateFolkRoadIn || folkTimes == 1)
+        {
+            speedDelta = (int32)((expectR - expectL) * folkDiff1.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectL = expectR - speedDelta;
+
+            }
+        }
+
+        else if(state == stateFolkRoadIn || folkTimes == 3)
+        {
+            speedDelta = (int32)((expectR - expectL) * folkDiff2.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectL = expectR - speedDelta;
+
+            }
+        }
+
+        else
+        {
+            speedDelta = (int32)((expectR - expectL) * curveDiff.floatVal);
+            if(speedDelta >= 0)
+            {
+                expectL = expectR - speedDelta;
+
+            }
+        }
+
+
     }
     else if(delta == 0)
     {
@@ -1484,6 +1555,11 @@ void motorParamDefine()
             motorLFKI = fastLFKP.intVal;
         }
 
+        else if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateTIn || state == stateTOut)
+        {
+            motorLFKP = islandKP.intVal;
+            motorLFKI = islandKI.intVal;
+        }
         else
         {
             if(errorML.currentError >= 0)
@@ -1952,15 +2028,15 @@ void CTRL_crossPwmxianfu()
 
 void CTRL_encoderCount()
 {
-    int integerDelta;
-    if(integerSpeedL != 0 && integerSpeedR != 0)
-    {
-        integerDelta = ((integerSpeedR - integerSpeedL) / 2) - integerSpeedAver;
-        integerSpeedCNT += integerDelta;
-        integerSpeedAver = 0;
-    }
+//    int integerDelta;
+//    if(integerSpeedL != 0 && integerSpeedR != 0)
+//    {
+//        integerDelta = ((integerSpeedR - integerSpeedL) / 2) - integerSpeedAver;
+//        integerSpeedCNT += integerDelta;
+//        integerSpeedAver = 0;
+//    }
 
-//    integerSpeedAver = (integerSpeedR - integerSpeedL) / 2;
+    integerSpeedAver = (integerSpeedR - integerSpeedL) / 2;
 
 //    return integerSpeedAver;
 }
