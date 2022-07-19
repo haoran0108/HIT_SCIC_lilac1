@@ -129,6 +129,9 @@ void SW_readSwitch()
         parkSlowDownCount = 0;
         lastMyMidLine = 0;
         car_stop = 0;
+        folkCNT = 0;
+        integerSpeedCNT = 0;
+
         if(file1.intVal == -1)//×ó »·µº
         {
             wayIT = 1;

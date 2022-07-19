@@ -167,7 +167,7 @@ extern uint8_t car_stop;
 extern int flagsee;
 extern int TWhere;
 extern uint8_t afterRampFlag;
-
+extern uint8_t folkCNT;
 
 typedef struct {
     int x;
@@ -327,6 +327,7 @@ void TcircleFix();
 uint8_t mid_aver();//加权平均
 int8 valid_row_direction();
 uint8_t aver_mid_line_foresee();//前瞻
+void folkTimesCNT();
 
 //废案
 void cross_T_in_start();

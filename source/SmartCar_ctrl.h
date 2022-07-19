@@ -92,6 +92,7 @@ extern uint8_t flagStop1, flagStopCount1;
 extern uint8_t lastMyMidLine;
 extern int32 integerSpeedL, integerSpeedR;
 extern int integerSpeedAver;
+extern int32 integerSpeedCNT;
 
 struct error
 {

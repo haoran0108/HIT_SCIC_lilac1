@@ -120,67 +120,67 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 //    bugFix1 = MENU_fileInit(bugFix1, 1, 1.0, "nomean", 2, none, &straightPD, NULL, NULL, NULL);
 
-    memory1 = MENU_fileInit(memory1, 0, 1.0, "memory1", 2, dataint, NULL, &memory2, &raceMemory, &memorySpeed1);
-    memorySpeed1 = MENU_fileInit(memorySpeed1, 85, 1.0, "speed1", 2, dataint, NULL, &memoryVision1, &memory1, NULL);
-    memoryVision1 = MENU_fileInit(memoryVision1, 92, 1.0, "vision1", 3, dataint, &memorySpeed1, NULL, NULL, NULL);
-
-    memory2 = MENU_fileInit(memory2, 110, 1.0, "memory2", 3, dataint, &memory1, &memory3, NULL, &memorySpeed2);
-    memorySpeed2 = MENU_fileInit(memorySpeed2, 100, 1.0, "speed2", 2, dataint, NULL, &memoryVision2, &memory2, NULL);
-    memoryVision2 = MENU_fileInit(memoryVision2, 88, 1.0, "vision2", 3, dataint, &memorySpeed2, NULL, NULL, NULL);
-
-    memory3 = MENU_fileInit(memory3, 40, 1.0, "memory3", 4, dataint, &memory2, &memory4, NULL, &memorySpeed3);
-    memorySpeed3 = MENU_fileInit(memorySpeed3, 95, 1.0, "speed3", 2, dataint, NULL, &memoryVision3, &memory3, NULL);
-    memoryVision3 = MENU_fileInit(memoryVision3, 90, 1.0, "vision3", 3, dataint, &memorySpeed3, NULL, NULL, NULL);
-
-    memory4 = MENU_fileInit(memory4, 50, 1.0, "memory4", 5, dataint, &memory3, &memory5, NULL, &memorySpeed4);
-    memorySpeed4 = MENU_fileInit(memorySpeed4, 100, 1.0, "speed4", 2, dataint, NULL, &memoryVision4, &memory4, NULL);
-    memoryVision4 = MENU_fileInit(memoryVision4, 90, 1.0, "vision4", 3, dataint, &memorySpeed4, NULL, NULL, NULL);
-
-    memory5 = MENU_fileInit(memory5, 30, 1.0, "memory5", 6, dataint, &memory4, &memory6, NULL, &memorySpeed5);
-    memorySpeed5 = MENU_fileInit(memorySpeed5, 90, 1.0, "speed5", 2, dataint, NULL, &memoryVision5, &memory5, NULL);
-    memoryVision5 = MENU_fileInit(memoryVision5, 92, 1.0, "vision5", 3, dataint, &memorySpeed5, NULL, NULL, NULL);
-
-    memory6 = MENU_fileInit(memory6, 110, 1.0, "memory6", 7, dataint, &memory5, &memory7, NULL, &memorySpeed6);
-    memorySpeed6 = MENU_fileInit(memorySpeed6, 95, 1.0, "speed6", 2, dataint, NULL, &memoryVision6, &memory6, NULL);
-    memoryVision6 = MENU_fileInit(memoryVision6, 90, 1.0, "vision6", 3, dataint, &memorySpeed6, NULL, NULL, NULL);
-
-    memory7 = MENU_fileInit(memory7, 10, 1.0, "memory7", 2, dataint, &memory6, &memory8, NULL, &memorySpeed7);
-    memorySpeed7 = MENU_fileInit(memorySpeed7, 90, 1.0, "speed7", 2, dataint, NULL, &memoryVision7, &memory7, NULL);
-    memoryVision7 = MENU_fileInit(memoryVision7, 86, 1.0, "vision7", 3, dataint, &memorySpeed7, NULL, NULL, NULL);
-
-    memory8 = MENU_fileInit(memory8, 20, 1.0, "memory8", 3, dataint, &memory7, &memory9, NULL, &memorySpeed8);
-    memorySpeed8 = MENU_fileInit(memorySpeed8, 90, 1.0, "speed8", 2, dataint, NULL, &memoryVision8, &memory8, NULL);
-    memoryVision8 = MENU_fileInit(memoryVision8, 90, 1.0, "vision8", 3, dataint, &memorySpeed8, NULL, NULL, NULL);
-
-    memory9 = MENU_fileInit(memory9, 20, 1.0, "memory9", 4, dataint, &memory8, &memory10, NULL, &memorySpeed9);
-    memorySpeed9 = MENU_fileInit(memorySpeed9, 95, 1.0, "speed9", 2, dataint, NULL, &memoryVision9, &memory9, NULL);
-    memoryVision9 = MENU_fileInit(memoryVision9, 89, 1.0, "vision9", 3, dataint, &memorySpeed9, NULL, NULL, NULL);
-
-    memory10 = MENU_fileInit(memory10, 40, 1.0, "memory10", 5, dataint, &memory9, &memory11, NULL, &memorySpeed10);
-    memorySpeed10 = MENU_fileInit(memorySpeed10, 95, 1.0, "speed10", 2, dataint, NULL, &memoryVision10, &memory10, NULL);
-    memoryVision10 = MENU_fileInit(memoryVision10, 90, 1.0, "vision10", 3, dataint, &memorySpeed10, NULL, NULL, NULL);
-
-    memory11 = MENU_fileInit(memory11, 50, 1.0, "memory11", 6, dataint, &memory10, &memory12, NULL, &memorySpeed11);
-    memorySpeed11 = MENU_fileInit(memorySpeed11, 90, 1.0, "speed11", 2, dataint, NULL, &memoryVision11, &memory11, NULL);
-    memoryVision11 = MENU_fileInit(memoryVision11, 90, 1.0, "vision11", 3, dataint, &memorySpeed11, NULL, NULL, NULL);
-
-    memory12 = MENU_fileInit(memory12, 100, 1.0, "memory12", 7, dataint, &memory11, &memory13, NULL, &memorySpeed12);
-    memorySpeed12 = MENU_fileInit(memorySpeed12, 95, 1.0, "speed12", 2, dataint, NULL, &memoryVision12, &memory12, NULL);
-    memoryVision12 = MENU_fileInit(memoryVision12, 90, 1.0, "vision12", 3, dataint, &memorySpeed12, NULL, NULL, NULL);
-
-    memory13 = MENU_fileInit(memory13, 130, 1.0, "memory13", 2, dataint, &memory12, &memory14, NULL, &memorySpeed13);
-    memorySpeed13 = MENU_fileInit(memorySpeed13, 95, 1.0, "speed13", 2, dataint, NULL, &memoryVision13, &memory13, NULL);
-    memoryVision13 = MENU_fileInit(memoryVision13, 90, 1.0, "vision13", 3, dataint, &memorySpeed13, NULL, NULL, NULL);
-
-    memory14 = MENU_fileInit(memory14, 20, 1.0, "memory14", 3, dataint, &memory13, &memory15, NULL, &memorySpeed14);
-    memorySpeed14 = MENU_fileInit(memorySpeed14, 90, 1.0, "speed14", 2, dataint, NULL, &memoryVision14, &memory14, NULL);
-    memoryVision14 = MENU_fileInit(memoryVision14, 92, 1.0, "vision14", 3, dataint, &memorySpeed14, NULL, NULL, NULL);
-
-    memory15 = MENU_fileInit(memory15, 0, 1.0, "memory15", 4, dataint, &memory14, &memoryBottom, NULL, &memorySpeed15);
-    memorySpeed15 = MENU_fileInit(memorySpeed15, 90, 1.0, "speed15", 2, dataint, NULL, &memoryVision15, &memory15, NULL);
-    memoryVision15 = MENU_fileInit(memoryVision15, 92, 1.0, "vision15", 3, dataint, &memorySpeed15, NULL, NULL, NULL);
-
-    memoryBottom = MENU_fileInit(memoryBottom, 0, 1.0, "bottom", 5, none, &memory15, NULL, NULL, NULL);
+//    memory1 = MENU_fileInit(memory1, 0, 1.0, "memory1", 2, dataint, NULL, &memory2, &raceMemory, &memorySpeed1);
+//    memorySpeed1 = MENU_fileInit(memorySpeed1, 85, 1.0, "speed1", 2, dataint, NULL, &memoryVision1, &memory1, NULL);
+//    memoryVision1 = MENU_fileInit(memoryVision1, 92, 1.0, "vision1", 3, dataint, &memorySpeed1, NULL, NULL, NULL);
+//
+//    memory2 = MENU_fileInit(memory2, 110, 1.0, "memory2", 3, dataint, &memory1, &memory3, NULL, &memorySpeed2);
+//    memorySpeed2 = MENU_fileInit(memorySpeed2, 100, 1.0, "speed2", 2, dataint, NULL, &memoryVision2, &memory2, NULL);
+//    memoryVision2 = MENU_fileInit(memoryVision2, 88, 1.0, "vision2", 3, dataint, &memorySpeed2, NULL, NULL, NULL);
+//
+//    memory3 = MENU_fileInit(memory3, 40, 1.0, "memory3", 4, dataint, &memory2, &memory4, NULL, &memorySpeed3);
+//    memorySpeed3 = MENU_fileInit(memorySpeed3, 95, 1.0, "speed3", 2, dataint, NULL, &memoryVision3, &memory3, NULL);
+//    memoryVision3 = MENU_fileInit(memoryVision3, 90, 1.0, "vision3", 3, dataint, &memorySpeed3, NULL, NULL, NULL);
+//
+//    memory4 = MENU_fileInit(memory4, 50, 1.0, "memory4", 5, dataint, &memory3, &memory5, NULL, &memorySpeed4);
+//    memorySpeed4 = MENU_fileInit(memorySpeed4, 100, 1.0, "speed4", 2, dataint, NULL, &memoryVision4, &memory4, NULL);
+//    memoryVision4 = MENU_fileInit(memoryVision4, 90, 1.0, "vision4", 3, dataint, &memorySpeed4, NULL, NULL, NULL);
+//
+//    memory5 = MENU_fileInit(memory5, 30, 1.0, "memory5", 6, dataint, &memory4, &memory6, NULL, &memorySpeed5);
+//    memorySpeed5 = MENU_fileInit(memorySpeed5, 90, 1.0, "speed5", 2, dataint, NULL, &memoryVision5, &memory5, NULL);
+//    memoryVision5 = MENU_fileInit(memoryVision5, 92, 1.0, "vision5", 3, dataint, &memorySpeed5, NULL, NULL, NULL);
+//
+//    memory6 = MENU_fileInit(memory6, 110, 1.0, "memory6", 7, dataint, &memory5, &memory7, NULL, &memorySpeed6);
+//    memorySpeed6 = MENU_fileInit(memorySpeed6, 95, 1.0, "speed6", 2, dataint, NULL, &memoryVision6, &memory6, NULL);
+//    memoryVision6 = MENU_fileInit(memoryVision6, 90, 1.0, "vision6", 3, dataint, &memorySpeed6, NULL, NULL, NULL);
+//
+//    memory7 = MENU_fileInit(memory7, 10, 1.0, "memory7", 2, dataint, &memory6, &memory8, NULL, &memorySpeed7);
+//    memorySpeed7 = MENU_fileInit(memorySpeed7, 90, 1.0, "speed7", 2, dataint, NULL, &memoryVision7, &memory7, NULL);
+//    memoryVision7 = MENU_fileInit(memoryVision7, 86, 1.0, "vision7", 3, dataint, &memorySpeed7, NULL, NULL, NULL);
+//
+//    memory8 = MENU_fileInit(memory8, 20, 1.0, "memory8", 3, dataint, &memory7, &memory9, NULL, &memorySpeed8);
+//    memorySpeed8 = MENU_fileInit(memorySpeed8, 90, 1.0, "speed8", 2, dataint, NULL, &memoryVision8, &memory8, NULL);
+//    memoryVision8 = MENU_fileInit(memoryVision8, 90, 1.0, "vision8", 3, dataint, &memorySpeed8, NULL, NULL, NULL);
+//
+//    memory9 = MENU_fileInit(memory9, 20, 1.0, "memory9", 4, dataint, &memory8, &memory10, NULL, &memorySpeed9);
+//    memorySpeed9 = MENU_fileInit(memorySpeed9, 95, 1.0, "speed9", 2, dataint, NULL, &memoryVision9, &memory9, NULL);
+//    memoryVision9 = MENU_fileInit(memoryVision9, 89, 1.0, "vision9", 3, dataint, &memorySpeed9, NULL, NULL, NULL);
+//
+//    memory10 = MENU_fileInit(memory10, 40, 1.0, "memory10", 5, dataint, &memory9, &memory11, NULL, &memorySpeed10);
+//    memorySpeed10 = MENU_fileInit(memorySpeed10, 95, 1.0, "speed10", 2, dataint, NULL, &memoryVision10, &memory10, NULL);
+//    memoryVision10 = MENU_fileInit(memoryVision10, 90, 1.0, "vision10", 3, dataint, &memorySpeed10, NULL, NULL, NULL);
+//
+//    memory11 = MENU_fileInit(memory11, 50, 1.0, "memory11", 6, dataint, &memory10, &memory12, NULL, &memorySpeed11);
+//    memorySpeed11 = MENU_fileInit(memorySpeed11, 90, 1.0, "speed11", 2, dataint, NULL, &memoryVision11, &memory11, NULL);
+//    memoryVision11 = MENU_fileInit(memoryVision11, 90, 1.0, "vision11", 3, dataint, &memorySpeed11, NULL, NULL, NULL);
+//
+//    memory12 = MENU_fileInit(memory12, 100, 1.0, "memory12", 7, dataint, &memory11, &memory13, NULL, &memorySpeed12);
+//    memorySpeed12 = MENU_fileInit(memorySpeed12, 95, 1.0, "speed12", 2, dataint, NULL, &memoryVision12, &memory12, NULL);
+//    memoryVision12 = MENU_fileInit(memoryVision12, 90, 1.0, "vision12", 3, dataint, &memorySpeed12, NULL, NULL, NULL);
+//
+//    memory13 = MENU_fileInit(memory13, 130, 1.0, "memory13", 2, dataint, &memory12, &memory14, NULL, &memorySpeed13);
+//    memorySpeed13 = MENU_fileInit(memorySpeed13, 95, 1.0, "speed13", 2, dataint, NULL, &memoryVision13, &memory13, NULL);
+//    memoryVision13 = MENU_fileInit(memoryVision13, 90, 1.0, "vision13", 3, dataint, &memorySpeed13, NULL, NULL, NULL);
+//
+//    memory14 = MENU_fileInit(memory14, 20, 1.0, "memory14", 3, dataint, &memory13, &memory15, NULL, &memorySpeed14);
+//    memorySpeed14 = MENU_fileInit(memorySpeed14, 90, 1.0, "speed14", 2, dataint, NULL, &memoryVision14, &memory14, NULL);
+//    memoryVision14 = MENU_fileInit(memoryVision14, 92, 1.0, "vision14", 3, dataint, &memorySpeed14, NULL, NULL, NULL);
+//
+//    memory15 = MENU_fileInit(memory15, 0, 1.0, "memory15", 4, dataint, &memory14, &memoryBottom, NULL, &memorySpeed15);
+//    memorySpeed15 = MENU_fileInit(memorySpeed15, 90, 1.0, "speed15", 2, dataint, NULL, &memoryVision15, &memory15, NULL);
+//    memoryVision15 = MENU_fileInit(memoryVision15, 92, 1.0, "vision15", 3, dataint, &memorySpeed15, NULL, NULL, NULL);
+//
+//    memoryBottom = MENU_fileInit(memoryBottom, 0, 1.0, "bottom", 5, none, &memory15, NULL, NULL, NULL);
 
 
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
@@ -366,8 +366,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     LFKP = MENU_fileInit(LFKP, 30, 3.8, "KP", 2, dataint, NULL, &LFKI, &display1, NULL);
     LFKI = MENU_fileInit(LFKI, 16, 1.5, "KI-P", 3, dataint, &LFKP, &RTKP, NULL, NULL);
     RTKP = MENU_fileInit(RTKP, 12, 3.8, "KI-N", 4, dataint, &LFKI, &RTKI, NULL, NULL);
-    RTKI = MENU_fileInit(RTKI, 4, 1.5, "motorZO", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
-    fastLFKP = MENU_fileInit(fastLFKP, 8, 133.03, "motorNM", 6, dataint, &RTKI, &fastLFKI, NULL, NULL);
+    RTKI = MENU_fileInit(RTKI, 4, 1.5, "stopKP", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
+    fastLFKP = MENU_fileInit(fastLFKP, 8, 133.03, "stopKI", 6, dataint, &RTKI, &fastLFKI, NULL, NULL);
     fastLFKI = MENU_fileInit(fastLFKI, 15, 133.03, "motorNB", 7, dataint, &fastLFKP, &fastRTKP, NULL, NULL);
     fastRTKP = MENU_fileInit(fastRTKP, 30, 133.03, "motorKD", 2, dataint, &fastLFKI, &fastRTKI, NULL, NULL);
     fastRTKI = MENU_fileInit(fastRTKI, 50, 133.03, "BOTTOM", 3, dataint, &fastRTKP, NULL, NULL, NULL);

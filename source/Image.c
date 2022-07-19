@@ -102,6 +102,7 @@ uint8_t parkSlowDownCount = 0;
 uint8_t car_stop = 0;
 int flagSee = 0;
 uint8_t afterRampFlag = 0;
+uint8_t folkCNT = 0;
 //road my_road[CAMERA_H];
 //uint8_t IMG_zebra[36][CAMERA_W];
 //uint8_t zebraFlag;
@@ -1899,11 +1900,16 @@ void judge_type_road() {
     int lastState = state;
     int flagChange = 0;
 
+
     if(state != laststate)
     {
         laststate = state;
-
+//        integerSpeedCNT += (integerSpeedR - integerSpeedL) / 2;
+//        test_varible[14] = integerSpeedCNT;
+        integerSpeedL = 0;
+        integerSpeedR = 0;
     }
+    CTRL_encoderCount();
 
 //    CCD();
 
@@ -1912,6 +1918,8 @@ void judge_type_road() {
         //cross_in();
         if (my_road[40].white_num != 0)
             folk_road_in();
+            folkTimesCNT();
+
       //  T_island_in_start();
 //        if (lastState != state) {
 //            flagChange = 1;
@@ -2170,7 +2178,7 @@ void judge_type_road() {
 
     if(state == stateFolkRoadIn  || state == stateStart )
     {
-        if(rampJudgeCount >= 200 && islandTimes == 2)
+        if((rampTimes == 0 && islandTimes == 2 && integerSpeedCNT >= 150000) || (rampTimes == 0 && folkTimes == 3 && integerSpeedCNT >= 150000))
         {
             rampwayOn();
 
@@ -2216,7 +2224,6 @@ void judge_type_road() {
     if(afterRampFlag == 1)
     {
 
-        CTRL_encoderCount();
         if(integerSpeedAver > 3000)
         {
             afterRampFlag = 0;
@@ -7338,6 +7345,7 @@ void folk_road_in() {
                         if (sumN >= 15) {
                             //////printf("11\n");
                             state = stateFolkRoadIn;
+                            folkTimes += 1;
                         }
 
 
@@ -7440,6 +7448,7 @@ void folk_road_in() {
                     }
                     if (sumN >= 15) {
                         state = stateFolkRoadIn;
+                        folkTimes += 1;
                     }
 
                 }
@@ -7514,6 +7523,7 @@ void folk_road_in() {
                     }
                     if (sumN >= 15) {
                         state = stateFolkRoadIn;
+                        folkTimes += 1;
                     }
 
                 }
@@ -7790,8 +7800,7 @@ void carpark_in()
             ////printf("park:%f,%d\n",aveBlack, sumB_max);
             if ((aveBlack >= 3 && sumB_max >= 2) || (aveBlack < 3 && aveBlack >= 2.5 && sumB_max >= 3) || (aveBlack >= 2 && aveBlack < 2.5 && sumB_max >= 4)) {
                 state = stateParkIn;
-                integerSpeedL = 0;
-                integerSpeedR = 0;
+
                 carParkDelay = 0;
                 carParkTimes += 1;
 
@@ -7910,8 +7919,7 @@ void carpark_in()
             ////printf("park:%f,%d\n",aveBlack, sumB_max);
             if ((aveBlack >= 3 && sumB_max >= 2) || (aveBlack < 3 && aveBlack >= 2.5 && sumB_max >= 3) || (aveBlack >= 2 && aveBlack < 2.5 && sumB_max >= 4)) {
                 state = stateParkIn;
-                integerSpeedL = 0;
-                integerSpeedR = 0;
+
                 carParkDelay = 0;
                 carParkTimes += 1;
 
@@ -8042,44 +8050,6 @@ void carpark_in()
 }
 
 
-////////////////////////////////////////////
-//功能：识别车库离开
-//输入：
-//输出：
-//备注：
-///////////////////////////////////////////
-//void carpark_out()
-//{
-//    int flag = 0;
-//    for (int i = 50; i < 105; i++)
-//    {
-//        if (my_road[i + 1].white_num > 3 && my_road[i].white_num > 4 && my_road[i - 1].white_num > 3 && my_road[i - 2].white_num > 3)
-//        {
-//            flag = 1;
-//
-//            if (flag == 1)
-//            {
-//                break;
-//            }
-//
-//        }
-//    }
-//
-//    for (int j = 75; j < 105; j++)
-//    {
-//        if (my_road[j].connected[j_continue[j]].width > 30)
-//        {
-//            flag = 1;
-//        }
-//    }
-//    //    }
-//    if (flag == 0) {
-//        state = 0;
-//
-//        //carParkTimes += 1;
-//
-//    }
-//}
 
 void carpark_out()
 {
@@ -8673,7 +8643,7 @@ void carPark_main()
 
     if (state == stateParkIn)
     {
-        CTRL_encoderCount();
+//        CTRL_encoderCount();
         if(carParkDelay <= parkDelay.intVal)
         {
             carParkDelay += 1;
@@ -8857,8 +8827,7 @@ void rampwayDown()
     if(TFMINI_Distance < rampDistance.intVal &&TFMINI_Distance != 0 && lastTwoState == 1 && inv_accl[2] < 9.45)
     {
         state = 0;
-        integerSpeedL = 0;
-        integerSpeedR = 0;
+
         rampJudgeCount = 0;
 
 //        GPIO_Set(P22, 0, 0);
@@ -9539,6 +9508,73 @@ void filter_two_line(void)
 
 
 }//filter_two_line
+
+void folkTimesCNT()
+{
+    if(file1.intVal == 1 || file1.intVal == 0)
+    {
+        if(folkTimes == 0)
+        {
+            if(integerSpeedAver >= 9000)
+            {
+                folkCNT = 1;
+
+            }
+
+            if(folkCNT < 1 && state == stateFolkRoadIn) //没有跑到一定距离就识别出三叉 则认为是误识别
+            {
+                state = 0;
+            }
+        }
+
+        else if(folkTimes == 1)
+        {
+            if(integerSpeedAver >= 10000)
+            {
+                folkCNT = 2;
+
+            }
+
+            if(folkCNT < 2 && state == stateFolkRoadIn) //没有跑到一定距离就识别出三叉 则认为是误识别
+            {
+                state = 0;
+            }
+        }
+
+        else if(folkTimes == 2)
+        {
+            if(integerSpeedAver >= 6000 && integerSpeedCNT > 140000)
+            {
+                folkCNT = 3;
+
+            }
+
+            if(folkCNT < 3 && state == stateFolkRoadIn) //没有跑到一定距离就识别出三叉 则认为是误识别
+            {
+                state = 0;
+            }
+        }
+
+        else if(folkTimes == 3)
+        {
+            if(integerSpeedAver >= 3500)
+            {
+                folkCNT = 4;
+            }
+
+            if(folkCNT < 4 && state == stateFolkRoadIn) //没有跑到一定距离就识别出三叉 则认为是误识别
+            {
+                state = 0;
+            }
+        }
+    }
+
+//    else if(folkTimes == 4)
+//    {
+//
+//    }
+}
+
 
 // 以下是废案，没有成功的代码，以防万一需要使用的内容
 ////////////////////////////////////////////

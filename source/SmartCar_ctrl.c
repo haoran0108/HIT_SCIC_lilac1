@@ -64,7 +64,7 @@ uint8_t lastMyMidLine = 0;
 int islandPwmMax, islandPwmMin;
 int32 motorPwmMax, motorPwmMin;
 int integerSpeedAver;
-
+int32 integerSpeedCNT;
 void CTRL_gyroInit()
 {
     inv_imuGyroyQuene = INV_DataQueueInit(CTRL_IMU_QUENE_SIZE);
@@ -176,6 +176,8 @@ uint8_t CTRL_fuzzySpeedKp(int speedError)
     return motorKP;
 }
 
+//void CTRL_
+
 void CTRL_speedLoopPID()
 {
 
@@ -192,42 +194,15 @@ void CTRL_speedLoopPID()
 //    motorLFKI = CTRL_fuzzySpeedKp(errorML.currentError);
 //    motorRTKI = CTRL_fuzzySpeedKp(errorMR.currentError);
 
-//    sumErrorLF += errorML.currentError;
-//    errorML.delta = errorML.currentError - errorML.lastError;
     errorML.delta = (errorML.currentError - errorML.lastError) * speedKdLpf.floatVal + errorML.delta * (1 - speedKdLpf.floatVal);
-//    currentExpectLF = (int32)(2210 + motorLFKP * errorML.currentError + motorLFKI * errorML.delta);
-    if(errorML.currentError >= 0)
-    {
-        currentExpectLF = (int32)(currentExpectLF + LFKI.intVal * errorML.currentError + LFKP.intVal * errorML.delta);
-
-    }
-
-    else if(errorML.currentError < 0)
-    {
-        currentExpectLF = (int32)(currentExpectLF + RTKP.intVal * errorML.currentError + LFKP.intVal * errorML.delta);
-
-    }
+    currentExpectLF = (int32)(currentExpectLF + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
     errorML.lastError = errorML.currentError;//更新上一次误差
     if(currentExpectLF < 1000) currentExpectLF = 1000;
     else if(currentExpectLF > 4095) currentExpectLF = 4095;
 
 
-//    sumErrorRT += errorMR.currentError;
-//    errorMR.delta = errorMR.currentError - errorMR.lastError;
     errorMR.delta = (errorMR.currentError - errorMR.lastError) * speedKdLpf.floatVal + errorMR.delta * (1 - speedKdLpf.floatVal);
-
-//    currentExpectRT = (int32)(2210 + motorRTKP * errorMR.currentError + motorRTKI * errorMR.delta);
-    if(errorMR.currentError >= 0)
-    {
-        currentExpectRT = (int32)(currentExpectRT + LFKI.intVal * errorMR.currentError + LFKP.intVal * errorMR.delta);
-
-    }
-
-    else if(errorMR.currentError < 0)
-    {
-        currentExpectRT = (int32)(currentExpectRT + RTKP.intVal * errorMR.currentError + LFKP.intVal * errorMR.delta);
-
-    }
+    currentExpectRT = (int32)(currentExpectRT + motorLFKI * errorMR.currentError + motorLFKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//更新上一次误差
     if(currentExpectRT < 1000) currentExpectRT = 1000;
     else if(currentExpectRT > 4095) currentExpectRT = 4095;
@@ -240,6 +215,7 @@ void CTRL_speedLoopPID()
 
 
 }
+
 
 
 void CTRL_curLoopPID()
@@ -872,7 +848,7 @@ void CTRL_motorMain()
     {
         carpark_stop();
         CTRL_CarParkStop();
-        test_varible[14] = car_stop;
+//        test_varible[14] = car_stop;
 
     }
     else if(stopFlag == 1)
@@ -1487,28 +1463,26 @@ void motorParamDefine()
 {
     if(delayFlag == 1)
     {
-//        if(straightFlag == 2)
-//        {
-//            motorLFKP = fastLFKP.intVal;
-//            motorLFKI = fastLFKI.intVal;
-//            motorRTKP = fastRTKP.intVal;
-//            motorRTKI = fastRTKI.intVal;
-//        }
-//        else if(slowFlag == 1)
-//        {
-//            motorLFKP = slowLFKP.intVal;
-//            motorLFKI = slowLFKI.intVal;
-//            motorRTKP = slowRTKP.intVal;
-//            motorRTKI = slowRTKI.intVal;
-//        }
-//        else
-//        {
-//            motorLFKP = LFKP.intVal;
-//            motorLFKI = LFKI.intVal;
-//            motorRTKP = RTKP.intVal;
-//            motorRTKI = RTKI.intVal;
-//        }
+        if(car_stop == 1)
+        {
+            motorLFKP = RTKI.intVal;
+            motorLFKI = fastLFKP.intVal;
+        }
 
+        else
+        {
+            if(errorML.currentError >= 0)
+            {
+                motorLFKP = LFKP.intVal;
+                motorLFKI = LFKI.intVal;
+            }
+
+            else if(errorML.currentError < 0)
+            {
+                motorLFKP = LFKP.intVal;
+                motorLFKI = RTKP.intVal;
+            }
+        }
 
         currentKP_R = currentRTKP.floatVal;
         currentKI_R = currentRTKI.floatVal;
@@ -1963,6 +1937,15 @@ void CTRL_crossPwmxianfu()
 
 void CTRL_encoderCount()
 {
-    integerSpeedAver = (integerSpeedR - integerSpeedL) / 2;
+    int integerDelta;
+    if(integerSpeedL != 0 && integerSpeedR != 0)
+    {
+        integerDelta = ((integerSpeedR - integerSpeedL) / 2) - integerSpeedAver;
+        integerSpeedCNT += integerDelta;
+        integerSpeedAver = 0;
+    }
+
+//    integerSpeedAver = (integerSpeedR - integerSpeedL) / 2;
+
 //    return integerSpeedAver;
 }
