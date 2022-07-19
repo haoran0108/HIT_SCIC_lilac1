@@ -131,6 +131,7 @@ void SW_readSwitch()
         car_stop = 0;
         folkCNT = 0;
         integerSpeedCNT = 0;
+        islandTimesCNT = 0;
 
         if(file1.intVal == -1)//×ó »·µº
         {

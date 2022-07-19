@@ -168,7 +168,7 @@ extern int flagsee;
 extern int TWhere;
 extern uint8_t afterRampFlag;
 extern uint8_t folkCNT;
-
+extern uint8_t islandTimesCNT;
 typedef struct {
     int x;
     int y;

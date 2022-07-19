@@ -103,6 +103,7 @@ uint8_t car_stop = 0;
 int flagSee = 0;
 uint8_t afterRampFlag = 0;
 uint8_t folkCNT = 0;
+uint8_t islandTimesCNT = 0;
 //road my_road[CAMERA_H];
 //uint8_t IMG_zebra[36][CAMERA_W];
 //uint8_t zebraFlag;
@@ -2178,7 +2179,7 @@ void judge_type_road() {
 
     if(state == stateFolkRoadIn  || state == stateStart )
     {
-        if((rampTimes == 0 && islandTimes == 2 && integerSpeedCNT >= 150000) || (rampTimes == 0 && folkTimes == 3 && integerSpeedCNT >= 150000))
+        if((rampTimes == 0 && islandTimesCNT == 2 && integerSpeedCNT >= 150000) || (rampTimes == 0 && folkTimes == 3 && integerSpeedCNT >= 150000))
         {
             rampwayOn();
 
@@ -6100,6 +6101,10 @@ void island_final() {
                 flagIT = islandWhere * state;
                 state = stateStart;
                 islandWhere = 0;
+                if(islandTimesCNT < 2)
+                {
+                    islandTimesCNT += 1; //110结束 彻底出环岛后次数加一 与islandTimes不一样
+                }
             }
         }
         else if (islandWhere == LEFT) {
@@ -6108,6 +6113,10 @@ void island_final() {
                 flagIT = islandWhere * state;
                 state = stateStart;
                 islandWhere = 0;
+                if(islandTimesCNT < 2)
+                {
+                    islandTimesCNT += 1;
+                }
             }
         }
     }
@@ -9543,7 +9552,7 @@ void folkTimesCNT()
 
         else if(folkTimes == 2)
         {
-            if(integerSpeedAver >= 6000 && integerSpeedCNT > 140000)
+            if(integerSpeedAver >= 6000 && integerSpeedCNT > 140000 && islandTimesCNT == 2)
             {
                 folkCNT = 3;
 
