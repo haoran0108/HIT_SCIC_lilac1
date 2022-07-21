@@ -8991,7 +8991,7 @@ void straight_define()
 
         }
 
-        else if(folkTimes == 1 && speedUpPhase == 1)
+        else if(folkOutTimes == 1 && speedUpPhase == 1)
         {
             straightFlag = 1;
             speedUpPhase = 2;
@@ -9019,7 +9019,7 @@ void straight_define()
 
         else if(speedUpPhase == 2)
         {
-            if(folkOutTimes == 2)
+            if(folkTimes == 2)
             {
                 straightFlag = 0;
             }

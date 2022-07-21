@@ -926,7 +926,7 @@ void CTRL_motorDiffer()
             fixDiff = islandDiff.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
@@ -941,7 +941,7 @@ void CTRL_motorDiffer()
             fixDiff = tcrossDiff.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
@@ -956,7 +956,7 @@ void CTRL_motorDiffer()
             fixDiff = folkDiff1.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
@@ -971,7 +971,7 @@ void CTRL_motorDiffer()
             fixDiff = folkDiff2.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
@@ -986,7 +986,7 @@ void CTRL_motorDiffer()
             fixDiff = curveDiff.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
@@ -1044,7 +1044,7 @@ void CTRL_motorDiffer()
             fixDiff = islandDiff.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
@@ -1059,7 +1059,7 @@ void CTRL_motorDiffer()
             fixDiff = tcrossDiff.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
@@ -1074,7 +1074,7 @@ void CTRL_motorDiffer()
             fixDiff = folkDiff1.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
@@ -1089,7 +1089,7 @@ void CTRL_motorDiffer()
             fixDiff = folkDiff2.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
@@ -1104,7 +1104,7 @@ void CTRL_motorDiffer()
             fixDiff = curveDiff.floatVal;
             if(straightFlag == 1)
             {
-                fixDiff -= 0.2;
+//                fixDiff -= 0.2;
             }
             speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
@@ -1758,7 +1758,7 @@ void speedDetermine()
 //            present_speed = present_speed;
         }
 
-        if(state == stateTIn || state == stateTOut)
+        if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut)
         {
             if(present_speed > 95)
             {
