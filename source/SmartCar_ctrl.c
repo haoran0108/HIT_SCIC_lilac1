@@ -22,6 +22,7 @@ int sumErrorRT = 0, sumErrorLF = 0;
 error currentErrorL = {1, 1, 1}, currentErrorR = {1, 1, 1};
 uint32 pwmFix;
 uint32 servoPwm;
+int32 servoDiffPwm;
 uint32 servoGyroPwm;
 uint32 motorPwm;
 int32 expectL, expectR;//预期速度
@@ -419,7 +420,13 @@ void CTRL_fuzzyPID()
 //    realVision = foresee();
 //    servoError.currentError = 92 - mid_line[presentVision.intVal];
     uint8_t myMidLine;
+    int32 myDiffLine;
     myMidLine = aver_mid_line_foresee();
+//    if(present_vision != curveDiffLine.intVal)
+//    {
+//        myDiffLine = myMidLine - mid_line[curveDiffLine.intVal];
+//
+//    }
 
     if(lastMyMidLine == 0)
     {
@@ -448,53 +455,29 @@ void CTRL_fuzzyPID()
     else servoError.currentError = 93 - myMidLine;
 
 
+
 //    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
-
-//    if(state == laststate)
-//    {
-//        if(abs(servoError.delta) > 6 && abs(servoError.delta) <= 12)
-//        {
-//            servoError.currentError = servoError.currentError * 0.7 + servoError.lastError * 0.3;
-//        }
-//
-//        else if(abs(servoError.delta) > 12)
-//        {
-//            servoError.currentError = servoError.lastError;
-//        }
-//
-//    }
 
     test_varible[12] = myMidLine;
 
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
 //    test_varible[14] = fuzzyKP;
 
-    if(state == stateCrossIn)
-    {
-        if((servoError.lastError <= 8 && servoError.delta >= 5) || (servoError.lastError >= -8 && servoError.delta <= -5))
-        {
-
-        }
-
-        else servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
-
-    }
-    else
-    {
-        servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
-
-    }
-
-    if(state == stateTIn)
-    {
-        servoPwm += pwmFix;
-    }
-
-//    else if(state == stateIslandCircle)
+//    if(state == stateCrossIn)
 //    {
-//        servoPwm += pwmFix;
-
+//        if((servoError.lastError <= 8 && servoError.delta >= 5) || (servoError.lastError >= -8 && servoError.delta <= -5))
+//        {
+//
+//        }
+//
+//        else servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
+//
+//    }
+//    else
+//    {
+    servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
+//    servoDiffPwm = servoPwm + fuzzyKP * myDiffLine;
 //    }
 
     if(servoPwm > servoMax)
@@ -882,12 +865,21 @@ void CTRL_motorDiffer()
 
     double delta, FabsDelta;
     int32 speedDelta;
-    delta = (double)(servoMidValue - servoPwm);
+//    if(state == stateTIn)
+//    {
+//        delta = (double)(servoMidValue - servoDiffPwm);
+//    }
+//    else
+//    {
+        delta = (double)(servoMidValue - servoPwm);
+
+//    }
     FabsDelta = fabs(delta);
     FabsDelta = FabsDelta / 100;
 
     /*内轮减速*/
     float k;
+    float fixDiff;
     if(delta > 0)
     {
 //        k = 0.9459 - 0.2679 * FabsDelta * FabsDelta - 0.1511 * FabsDelta;
@@ -931,7 +923,12 @@ void CTRL_motorDiffer()
 //        }
         if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut)
         {
-            speedDelta = (int32)((expectL - expectR) * islandDiff.floatVal);
+            fixDiff = islandDiff.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectR = expectL - speedDelta;
@@ -941,7 +938,12 @@ void CTRL_motorDiffer()
 
         else if(state == stateTIn || state == stateTOut)
         {
-            speedDelta = (int32)((expectL - expectR) * tcrossDiff.floatVal);
+            fixDiff = tcrossDiff.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectR = expectL - speedDelta;
@@ -951,7 +953,12 @@ void CTRL_motorDiffer()
 
         else if(state == stateFolkRoadIn || folkTimes == 1)
         {
-            speedDelta = (int32)((expectL - expectR) * folkDiff1.floatVal);
+            fixDiff = folkDiff1.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectR = expectL - speedDelta;
@@ -961,7 +968,12 @@ void CTRL_motorDiffer()
 
         else if(state == stateFolkRoadIn || folkTimes == 3)
         {
-            speedDelta = (int32)((expectL - expectR) * folkDiff2.floatVal);
+            fixDiff = folkDiff2.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectR = expectL - speedDelta;
@@ -971,7 +983,12 @@ void CTRL_motorDiffer()
 
         else
         {
-            speedDelta = (int32)((expectL - expectR) * curveDiff.floatVal);
+            fixDiff = curveDiff.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectL - expectR) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectR = expectL - speedDelta;
@@ -1024,7 +1041,12 @@ void CTRL_motorDiffer()
 
         if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut)
         {
-            speedDelta = (int32)((expectR - expectL) * islandDiff.floatVal);
+            fixDiff = islandDiff.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectL = expectR - speedDelta;
@@ -1034,7 +1056,12 @@ void CTRL_motorDiffer()
 
         else if(state == stateTIn || state == stateTOut)
         {
-            speedDelta = (int32)((expectR - expectL) * tcrossDiff.floatVal);
+            fixDiff = tcrossDiff.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectL = expectR - speedDelta;
@@ -1044,7 +1071,12 @@ void CTRL_motorDiffer()
 
         else if(state == stateFolkRoadIn || folkTimes == 1)
         {
-            speedDelta = (int32)((expectR - expectL) * folkDiff1.floatVal);
+            fixDiff = folkDiff1.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectL = expectR - speedDelta;
@@ -1054,7 +1086,12 @@ void CTRL_motorDiffer()
 
         else if(state == stateFolkRoadIn || folkTimes == 3)
         {
-            speedDelta = (int32)((expectR - expectL) * folkDiff2.floatVal);
+            fixDiff = folkDiff2.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectL = expectR - speedDelta;
@@ -1064,7 +1101,12 @@ void CTRL_motorDiffer()
 
         else
         {
-            speedDelta = (int32)((expectR - expectL) * curveDiff.floatVal);
+            fixDiff = curveDiff.floatVal;
+            if(straightFlag == 1)
+            {
+                fixDiff -= 0.2;
+            }
+            speedDelta = (int32)((expectR - expectL) * fixDiff);
             if(speedDelta >= 0)
             {
                 expectL = expectR - speedDelta;
@@ -1412,7 +1454,7 @@ void CTRL_ServoPID_Determine()
         fuzzy_D = Folk_DS.floatVal;
     }
 
-    else if(straightPD.intVal == 1 && (state == stateTIslandIn || state == stateIslandIng))
+    else if(straightPD.intVal == 1 && straightFlag == 1)
     {
         fuzzy_PB = straight_KP.floatVal;
         fuzzy_PM = straight_KP.floatVal;
@@ -1555,11 +1597,11 @@ void motorParamDefine()
             motorLFKI = fastLFKP.intVal;
         }
 
-        else if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateTIn || state == stateTOut)
-        {
-            motorLFKP = islandKP.intVal;
-            motorLFKI = islandKI.intVal;
-        }
+//        else if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateTIn || state == stateTOut)
+//        {
+//            motorLFKP = islandKP.intVal;
+//            motorLFKI = islandKI.intVal;
+//        }
         else
         {
             if(errorML.currentError >= 0)
@@ -1671,6 +1713,11 @@ void speedDetermine()
     {
         present_speed = presentSpeed.intVal;
         present_vision = presentVision.intVal;
+
+        if(speedUpPhase == 1 && straightFlag == 1)
+        {
+            present_vision -= 4;
+        }
     }
 
     else if(parkStart != 0)
@@ -1710,8 +1757,17 @@ void speedDetermine()
             present_speed = presentSpeed.intVal;
 //            present_speed = present_speed;
         }
+
+        if(state == stateTIn || state == stateTOut)
+        {
+            if(present_speed > 95)
+            {
+                present_speed = 95;
+            }
+        }
 //        GPIO_Set(P22, 0, 0);
     }
+
 
 //    if(carParkTimes == 2)
 //    {

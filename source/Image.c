@@ -104,7 +104,9 @@ int flagSee = 0;
 uint8_t afterRampFlag = 0;
 uint8_t folkCNT = 0;
 uint8_t islandTimesCNT = 0;
+uint8_t islandFinalTimes = 0;
 uint8_t folkOutTimes = 0;
+uint8_t speedUpPhase = 0; //省赛记忆加速
 //road my_road[CAMERA_H];
 //uint8_t IMG_zebra[36][CAMERA_W];
 //uint8_t zebraFlag;
@@ -4651,9 +4653,9 @@ void T_or_island() {
 
     int sumD = 0;
     int sumU = 0;
-    for (int i = NEAR_LINE; i >= 100; i--) {
+    for (int i = NEAR_LINE; i >= 90; i--) {
     //  //////printf("%d=%d", i, right_line[i] - left_line[i]);
-        if (right_line[i] - left_line[i] >= 28) {
+        if (right_line[i] - left_line[i] <= 35) {
         //  //////printf(",%d", i);
             sumD++;
         }
@@ -4674,7 +4676,7 @@ void T_or_island() {
 
     }
 
-    if (sumD > 5 && sumL>=2) {
+    if (sumD > 4 && sumL>=2) {
         //如果上方没有赛道，我们认为是十字回环
         if (my_road[35].white_num == 0 && wayIT == -1) {
             state = stateTIn;
@@ -6049,6 +6051,7 @@ void island_straight() {
 
     if (flag == 1) {
         state = stateIslandFinal;
+        islandFinalTimes += 1;
     }
 }
 
@@ -7059,7 +7062,7 @@ void cross_T_out_over() {
                 int start = ymax;
                 int sumC = 0;
                 for (int i = start; i >= start - 20; i--) {
-                    if (right_line[i] > right_line[i + 1] + 1 || right_line[i] < right_line[i + 1] - 5) {
+                    if (right_line[i] > right_line[i + 1] + 1 || right_line[i] < right_line[i + 1] - 6) {
                         sumC++;
 
                     }
@@ -7069,7 +7072,7 @@ void cross_T_out_over() {
                 }
 
                 if (fabs(calculate_slope_uint(start - 20, start - 5, right_line) - calculate_slope_uint(start - 12, start - 1, right_line)) < 0.3
-                    && calculate_slope_uint(start - 13, start, right_line) < 2.5
+                    && calculate_slope_uint(start - 13, start, right_line) < 3
                     && calculate_slope_uint(start - 13, start, right_line) >= 0
                     && flag2 == 0) {
                     if (fabs(calculate_slope_uint(start - 11, start - 1, left_line) - calculate_slope_uint(start - 11, start - 1, right_line)) < 0.2) {
@@ -7091,7 +7094,7 @@ void cross_T_out_over() {
                             }
                         }
                         //  //////printf("lk=%f\n", calculate_slope_uint(start - 13, start, left_line));
-                        if (sumR >= 12 && calculate_slope_uint(start - 13, start, right_line) > 0.5 && calculate_slope_uint(start - 13, start, right_line) < 3) {
+                        if (sumR >= 9 && calculate_slope_uint(start - 13, start, right_line) > 0 && calculate_slope_uint(start - 13, start, right_line) < 3) {
                             flagIT = state * TWhere;
                             state = stateTIslandIn;
                             TIslandWhere=-1*TWhere;
@@ -7703,7 +7706,7 @@ void folk_road_out() {
     //printf("dv=%f,dv=%f\n", linear_judgement(85, 100, left_line), linear_judgement(96, 110, right_line));
     if (1) {
         if (FolkRoadWhere == RIGHT) {
-            if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(95, 110, right_line)) < 0.25
+            if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(95, 110, right_line)) < 0.3
                 && calculate_slope_uint(85, 100, left_line) > -1.2 && calculate_slope_uint(95, 110, right_line) > -1.2
                 && linear_judgement(85, 100, left_line) < 100 && linear_judgement(96, 110, right_line) < 100
                 && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 32 || (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] <= 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] < -2))
@@ -7713,8 +7716,8 @@ void folk_road_out() {
             }
         }
         else if (FolkRoadWhere == LEFT) {
-            if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(95, 110, left_line)) < 0.25
-                && calculate_slope_uint(85, 100, right_line) < 0.9 && calculate_slope_uint(95, 110, left_line) < 0.9
+            if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(95, 110, left_line)) < 0.3
+                && calculate_slope_uint(85, 100, right_line) < 1.2 && calculate_slope_uint(95, 110, left_line) < 1.2
                 && linear_judgement(85, 100, right_line) < 100 && linear_judgement(96, 110, left_line) < 100
                 && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 32|| (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] > 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] >= -2))
                 ) {
@@ -8763,7 +8766,9 @@ void carPark_main()
         leftPark = 0;
         rightPark = 1;
 //        searchParkLine();
+        carpark_stop();
         design_carpark_turn();
+
     }
     else if(carParkTimes == 2 && file1.intVal == -1)
     {
@@ -8970,25 +8975,79 @@ void straight_define()
 //    {
 //
 //    }
+
+    /*省赛赛道先不用*/
     int vision = present_vision;
-    if(straightFlag == 0 && straight_variance(95, 50, 8) == 2 && midMaxColumn(95, 50, 2) == 1)
+    if(straightFlag == 0)
     {
-        straightFlag = 1;
+        if(tCrossTimes == 1 && (state == stateStart || state == stateParkIn) && speedUpPhase == 0)
+        {
+            if(state != stateTOut && integerSpeedAver >= 500)
+            {
+                straightFlag = 0;
+                speedUpPhase = 1;
+
+            }
+
+        }
+
+        else if(folkTimes == 1 && speedUpPhase == 1)
+        {
+            straightFlag = 1;
+            speedUpPhase = 2;
+        }
+
+        else if(islandFinalTimes == 1 && straight_variance(92, 70, 10) == 2 && speedUpPhase == 2)
+        {
+            straightFlag = 0;
+            speedUpPhase = 3;
+        }
+
     }
+
+
 
     else if(straightFlag == 1)
     {
-        if(straight_variance(95, 60, 8) == 2 && midMaxColumn(95, 60, 2) == 1)
+        if(speedUpPhase == 1)
         {
-            straightFlag = 1;
+            if(integerSpeedAver >= 8000 && midMaxColumn(95, 75, 4) == 0)
+            {
+                straightFlag = 0;
+            }
         }
 
-        else
+        else if(speedUpPhase == 2)
         {
-            straightFlag = 0;
+            if(folkOutTimes == 2)
+            {
+                straightFlag = 0;
+            }
         }
+
+        else if(speedUpPhase == 3)
+        {
+            if(state == stateTIn)
+            {
+                straightFlag = 0;
+            }
+        }
+//        if(straight_variance(95, 60, 8) == 2 && midMaxColumn(95, 60, 2) == 1)
+//        {
+//            straightFlag = 1;
+//        }
+//
+//        else
+//        {
+//            straightFlag = 0;
+//        }
     }
 
+//    /*省赛记忆加速*/
+//    if(tCross == 1 && (state == stateStart || state == stateParkIn))
+//    {
+//        if(straight_variance(95, 60, 8) ==  2 && )
+//    }
 
 //    if(state == 120 && carParkTimes < 2)
 //    {
@@ -9605,7 +9664,7 @@ void folkTimesCNT()
 
         else if(folkTimes == 1 && folkOutTimes == 1)
         {
-            if(integerSpeedAver >= 10000 && integerSpeedCNT >= 38000)
+            if(integerSpeedAver >= 9000 && integerSpeedCNT >= 37000)
             {
                 folkCNT = 2;
 

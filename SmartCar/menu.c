@@ -12,6 +12,7 @@
 node_t file1;
 node_t file2, file3;
 node_t curveDiff, islandDiff, tcrossDiff, folkDiff1, folkDiff2;
+node_t curveDiffLine;
 node_t PD, CrossPD, CrossCircle, IslandPD, FolkPD, straightPD;
 node_t motorPD;
 node_t motor1, currentMotor, islandMotor, strMotor;
@@ -115,8 +116,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     curveDiff = MENU_fileInit(curveDiff, 1, 1.0, "curve", 2, datafloat, NULL, &islandDiff, &file3, NULL);
     islandDiff = MENU_fileInit(islandDiff, 1, 1.1, "island", 3, datafloat, &curveDiff, &tcrossDiff, NULL, NULL);
     tcrossDiff = MENU_fileInit(tcrossDiff, 1, 1.1, "tcross", 4, datafloat, &islandDiff, &folkDiff1, NULL, NULL);
-    folkDiff1 = MENU_fileInit(folkDiff1, 1, 1, "folk1", 5, datafloat, &tcrossDiff, &folkDiff2, NULL, NULL);
-    folkDiff2 = MENU_fileInit(folkDiff2, 1, 1, "folk2", 6, datafloat, &folkDiff1, NULL, NULL, NULL);
+    folkDiff1 = MENU_fileInit(folkDiff1, 1, 0.8, "folk1", 5, datafloat, &tcrossDiff, &folkDiff2, NULL, NULL);
+    folkDiff2 = MENU_fileInit(folkDiff2, 1, 0.8, "folk2", 6, datafloat, &folkDiff1, &curveDiffLine, NULL, NULL);
+    curveDiffLine = MENU_fileInit(curveDiffLine, 85, 1, "crvLine", 7, dataint, &folkDiff2, NULL, NULL, NULL);
 
 
     PD = MENU_fileInit(PD, 1, 0, "PD", 3, none, &Threshold, &param, NULL, &IslandPD);
@@ -168,16 +170,16 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     parkCount = MENU_fileInit(parkCount, 60, 1.0, "parkCount", 2, dataint, NULL, &startGyro, &carPark, NULL);
     startGyro = MENU_fileInit(startGyro, 30, 1.0, "st-gyro", 3, dataint, &parkCount, &endGyro, NULL, NULL);
     endGyro = MENU_fileInit(endGyro, 65, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
-    search_line = MENU_fileInit(search_line, 77, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
+    search_line = MENU_fileInit(search_line, 80, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
     parkDelay = MENU_fileInit(parkDelay, 5, 1.0, "delay", 6, dataint, &search_line, &stopLine, NULL, NULL);
     stopLine = MENU_fileInit(stopLine, 78, 1.0, "stopLine", 7, dataint, &parkDelay, &paramBottom, NULL, NULL);
 
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkDelay, NULL, NULL, NULL);
 
     ramp = MENU_fileInit(ramp, 1, 1.0, "ramp", 5, none, &carPark, &folkWay, NULL, &rampCount);
-    rampCount = MENU_fileInit(rampCount, 100, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
-    rampDistance = MENU_fileInit(rampDistance, 50, 1.0, "distance", 3, dataint, &rampCount, &rampSpeed, NULL, NULL);
-    rampSpeed = MENU_fileInit(rampSpeed, 50, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampMax, NULL, NULL);
+    rampCount = MENU_fileInit(rampCount, 80, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
+    rampDistance = MENU_fileInit(rampDistance, 40, 1.0, "distance", 3, dataint, &rampCount, &rampSpeed, NULL, NULL);
+    rampSpeed = MENU_fileInit(rampSpeed, 60, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampMax, NULL, NULL);
     rampMax = MENU_fileInit(rampMax, 60, 1.0, "Max", 5, dataint, &rampSpeed, &rampMin, NULL, NULL);
     rampMin = MENU_fileInit(rampMin, 15, 1.0, "Min", 6, dataint, &rampMax, &rampBottom, NULL, NULL);
 
@@ -185,8 +187,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 
     folkWay = MENU_fileInit(folkWay, 1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);//1-left   -1-right
-    folkParam1 = MENU_fileInit(folkParam1, 18, 1.0, "width", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
-    folkParam2 = MENU_fileInit(folkParam2, 25, -0.1, "k", 3, datafloat, &folkParam1, NULL, NULL, NULL);
+    folkParam1 = MENU_fileInit(folkParam1, 14, 1.0, "width", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
+    folkParam2 = MENU_fileInit(folkParam2, 25, 0, "k", 3, datafloat, &folkParam1, NULL, NULL, NULL);
 //    folkParam3 = MENU_fileInit(folkParam3, 95, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
 //    folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkBottom, NULL, NULL);
 //    folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);
@@ -274,9 +276,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 3, none, NULL, &gear1, NULL, NULL);
     currentRTKP = MENU_fileInit(currentRTKP, 3, 3.6, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentMotor, NULL);
-    currentRTKI = MENU_fileInit(currentRTKI, 2, 4, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
+    currentRTKI = MENU_fileInit(currentRTKI, 2, 4.2, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
     currentLFKP = MENU_fileInit(currentLFKP, 3, 3.6, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
-    currentLFKI = MENU_fileInit(currentLFKI, 2, 4, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
+    currentLFKI = MENU_fileInit(currentLFKI, 2, 4.2, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
 //    currentKD = MENU_fileInit(currentKD, 2, 3.0, "motorKD", 4, datafloat, &currentRTKI, &expectC, NULL, NULL);
     expectC = MENU_fileInit(expectC, 2200, 9.5, "expect", 6, dataint, &currentLFKI, NULL, NULL, NULL);
 
@@ -301,7 +303,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     fuzzyPB = MENU_fileInit(fuzzyPB, 1, 3.6, "fuzzyPB", 5, datafloat, &presentVision, &fuzzyPM, NULL, NULL);
     fuzzyPM = MENU_fileInit(fuzzyPM, 1, 3.3, "fuzzyPM", 6, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
     fuzzyPS = MENU_fileInit(fuzzyPS, 1, 2.4, "fuzzyPS", 7, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
-    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 1.8, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
+    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 1.6, "fuzzyZO", 2, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
     fuzzyNS = MENU_fileInit(fuzzyNS, 1, 2.4, "fuzzyNS", 3, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
     fuzzyNM = MENU_fileInit(fuzzyNM, 1, 3.3, "fuzzyNM", 4, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
     fuzzyNB = MENU_fileInit(fuzzyNB, 1, 3.6, "fuzzyNB", 5, datafloat, &fuzzyNM, &presentServoD, NULL, NULL);
@@ -322,9 +324,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     display1 = MENU_fileInit(display1, 1, 133.03, "testTimes", 2, dataint, NULL, &display2, &display, NULL);
     display2 = MENU_fileInit(display2, 25, 1, "speedUp", 3, datafloat, &display1, &display3, NULL, NULL);
 
-    LFKP = MENU_fileInit(LFKP, 30, 3.8, "KP", 2, dataint, NULL, &LFKI, &motor1, NULL);
-    LFKI = MENU_fileInit(LFKI, 16, 1.5, "KI-P", 3, dataint, &LFKP, &RTKP, NULL, NULL);
-    RTKP = MENU_fileInit(RTKP, 12, 3.8, "KI-N", 4, dataint, &LFKI, &RTKI, NULL, NULL);
+    LFKP = MENU_fileInit(LFKP, 36, 3.8, "KP", 2, dataint, NULL, &LFKI, &motor1, NULL);
+    LFKI = MENU_fileInit(LFKI, 12, 1.5, "KI-P", 3, dataint, &LFKP, &RTKP, NULL, NULL);
+    RTKP = MENU_fileInit(RTKP, 8, 3.8, "KI-N", 4, dataint, &LFKI, &RTKI, NULL, NULL);
     RTKI = MENU_fileInit(RTKI, 25, 1.5, "stopKP", 5, dataint, &RTKP, &fastLFKP, NULL, NULL);
     fastLFKP = MENU_fileInit(fastLFKP, 10, 133.03, "stopKI", 6, dataint, &RTKI, &fastLFKI, NULL, NULL);
     fastLFKI = MENU_fileInit(fastLFKI, 15, 133.03, "motorNB", 7, dataint, &fastLFKP, &fastRTKP, NULL, NULL);

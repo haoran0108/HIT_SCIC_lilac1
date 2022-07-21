@@ -170,6 +170,9 @@ extern uint8_t afterRampFlag;
 extern uint8_t folkCNT;
 extern uint8_t islandTimesCNT;
 extern uint8_t folkOutTimes;
+extern uint8_t speedUpPhase;
+extern uint8_t islandFinalTimes;
+
 typedef struct {
     int x;
     int y;

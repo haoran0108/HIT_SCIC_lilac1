@@ -89,26 +89,6 @@ void SW_readSwitch()
         flagStopCount1 = 0;
         flagStop1 = 0;
         memoryFlag = 0;
-        memoryState[0] = 0;
-        memoryState[1] = 0;
-        memoryState[2] = 0;
-        memoryState[3] = 0;
-        memoryState[4] = 0;
-        memoryState[5] = 0;
-        memoryState[6] = 0;
-        memoryState[7] = 0;
-        memoryState[8] = 0;
-        memoryState[9] = 0;
-        memoryState[10] = 0;
-        memoryState[11] = 0;
-        memoryState[12] = 0;
-        memoryState[13] = 0;
-        memoryState[14] = 0;
-        memoryState[15] = 0;
-        memoryState[16] = 0;
-        memoryState[17] = 0;
-        memoryState[18] = 0;
-        memoryState[19] = 0;
 
         folkTimes = 0;
         tCrossTimes = 0;
@@ -135,6 +115,8 @@ void SW_readSwitch()
         folkOutTimes = 0;
         integerSpeedL = 0;
         integerSpeedR = 0;
+        speedUpPhase = 0;
+        islandFinalTimes = 0;
         if(file1.intVal == -1)//×ó »·µº
         {
             wayIT = 1;
