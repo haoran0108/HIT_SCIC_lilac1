@@ -5759,7 +5759,7 @@ void island_out() {
         //   //////printf("y=%d,x=%d\n", yMax, xMax);
             // //////printf("xMax=%d,y=%d\n", xMax,yMax);d
             if (left_line[yMax - 15] != MISS && (calculate_slope_uint(yMax - 18, yMax - 1, left_line) * calculate_slope_uint(yMax + 2, yMax + 18, left_line) < 0 || left_line[yMax] - left_line[yMax - 3] > 6)) {
-                if (xMax < xmax - dxRight && yMax >= 40 && yMax <= 110) {
+                if ((xMax < xmax - dxRight && yMax >= 40 && yMax <= 100) || (xMax < xmax - dxRight - 5 && yMax >= 100 && yMax <= 110)) {
                 state = stateIslandOut;
                 }
             }
@@ -5807,8 +5807,8 @@ void island_out() {
                 xmin = 95;
             }
         //  //////printf("y=%d\n", yMin);
-            if (left_line[yMin - 15]!=MISS) {
-                if (xMin > xmin + dxLeft && yMin >= 40 && yMin <= 110 && (calculate_slope_uint(yMin - 18, yMin - 1, right_line) * calculate_slope_uint(yMin + 2, yMin + 18, right_line) < 0 || right_line[yMin] - right_line[yMin - 3] < -6)) {
+            if (left_line[yMin - 15]!=MISS && (calculate_slope_uint(yMin - 18, yMin - 1, right_line) * calculate_slope_uint(yMin + 2, yMin + 18, right_line) < 0 || right_line[yMin] - right_line[yMin - 3] < -6)) {
+                if ((xMin > xmin + dxLeft && yMin >= 40 && yMin <= 100 )|| (xMin > xmin + dxLeft + 5 && yMin >= 100 && yMin <= 110)) {
                     state = stateIslandOut;
                 }
             }
@@ -6974,7 +6974,7 @@ void cross_T_out_over() {
     for (int i = 105; i >= 85; i--) {
         if (my_road[i].white_num != 0) {
             if (right_line[i] - left_line[i] > 50) {
-            //  //////printf(">=%d\n", i);
+            //  printf(">=%d\n", i);
                 sumM++;
             }
         }
@@ -6985,7 +6985,7 @@ void cross_T_out_over() {
     if (sumM > 4) {
         flag = 1;
     }
-    ////////printf("flag=%d\n", flag);
+    //printf("flag=%d\n", flag);
     if (flag == 0) {
 
         if (TWhere == LEFT) {
@@ -6999,7 +6999,7 @@ void cross_T_out_over() {
             }
 
 
-        //  //////printf("ym=%d\n", ymin);
+        //  printf("ym=%d\n", ymin);
             if (ymin >= 105) {
                 int start = ymin;
                 int sumC = 0;
@@ -7012,7 +7012,7 @@ void cross_T_out_over() {
                 if (sumC >= 3) {
                     flag2 = 1;
                 }
-                ////////printf("%f,%f,%f,%f,%f\n", calculate_slope_uint(start - 15, start - 7, left_line), calculate_slope_uint(start - 7, start - 1, left_line), calculate_slope_uint(start - 13, start, left_line), calculate_slope_uint(start - 10, start - 1, right_line), calculate_slope_uint(start - 11, start - 1, left_line));
+                //printf("%f,%f,%f,%f,%f\n", calculate_slope_uint(start - 15, start - 7, left_line), calculate_slope_uint(start - 7, start - 1, left_line), calculate_slope_uint(start - 13, start, left_line), calculate_slope_uint(start - 10, start - 1, right_line), calculate_slope_uint(start - 11, start - 1, left_line));
                 if (fabs(calculate_slope_uint(start - 20, start - 5, left_line) - calculate_slope_uint(start - 13, start - 1, left_line)) < 0.25
                     && calculate_slope_uint(start - 13, start, left_line) > -2.5 && calculate_slope_uint(start - 13, start, left_line) <= 0
                     && flag2 == 0) {
@@ -7020,6 +7020,7 @@ void cross_T_out_over() {
                         flagIT = state * TWhere;
                         state = 0;
                         TWhere = 0;
+
                     }
                     else {
                         //出来内直道过短，看到的是边界
@@ -7034,11 +7035,12 @@ void cross_T_out_over() {
                                 break;
                             }
                         }
-                    //  //////printf("lk=%f\n", calculate_slope_uint(start - 13, start, left_line));
-                        if (sumR >= 15 && calculate_slope_uint(start - 13, start, left_line) < -1 && calculate_slope_uint(start - 13, start, left_line) > -3) {
+                        //printf("lk=%f\n", calculate_slope_uint(start - 13, start, left_line));
+                        if (sumR >= 15 && calculate_slope_uint(start - 13, start, left_line) < -1 && calculate_slope_uint(start - 13, start, left_line) > -2.3) {
                             flagIT = state * TWhere;
                             state = 0;
                             TWhere = 0;
+
                         }
 
                     }
@@ -7048,7 +7050,7 @@ void cross_T_out_over() {
 
         }
         else if (TWhere == RIGHT) {
-            ////////printf("k=%f\n", calculate_slope_uint(90, 105, right_line));
+
             int flag2 = 0;
 
             int ymax = NEAR_LINE;
@@ -7058,11 +7060,14 @@ void cross_T_out_over() {
                 }
 
             }
-            if (ymax >= 110) {
+
+            if (ymax >= 105){
+
                 int start = ymax;
+                //printf("st=%d\n", start);
                 int sumC = 0;
                 for (int i = start; i >= start - 20; i--) {
-                    if (right_line[i] > right_line[i + 1] + 1 || right_line[i] < right_line[i + 1] - 6) {
+                    if (right_line[i] > right_line[i + 1] + 1 || right_line[i] < right_line[i + 1] - 5) {
                         sumC++;
 
                     }
@@ -7071,14 +7076,18 @@ void cross_T_out_over() {
                     flag2 = 1;
                 }
 
-                if (fabs(calculate_slope_uint(start - 20, start - 5, right_line) - calculate_slope_uint(start - 12, start - 1, right_line)) < 0.3
-                    && calculate_slope_uint(start - 13, start, right_line) < 3
+                if (fabs(calculate_slope_uint(start - 20, start - 5, right_line) - calculate_slope_uint(start - 12, start - 1, right_line)) < 0.25
+                    && calculate_slope_uint(start - 13, start, right_line) < 2.5
                     && calculate_slope_uint(start - 13, start, right_line) >= 0
                     && flag2 == 0) {
-                    if (fabs(calculate_slope_uint(start - 11, start - 1, left_line) - calculate_slope_uint(start - 11, start - 1, right_line)) < 0.2) {
+                    //printf("dv=%f\n", fabs(calculate_slope_uint(start - 7, start + 5, left_line) - calculate_slope_uint(start - 11, start - 1, right_line)));
+                    if (fabs(calculate_slope_uint(start - 7, start + 5, left_line) - calculate_slope_uint(start - 11, start - 1, right_line)) < 0.35) {
+                        //printf("1");
                         flagIT = state * TWhere;
-                        state = stateTIslandIn;
-                        TIslandWhere=-1*TWhere;
+                        state = 30;
+                        TWhere = 0;
+                        TIslandWhere = LEFT;
+
                     }
                     else {
                         //出来内直道过短，看到的是边界
@@ -7093,11 +7102,15 @@ void cross_T_out_over() {
                                 break;
                             }
                         }
-                        //  //////printf("lk=%f\n", calculate_slope_uint(start - 13, start, left_line));
-                        if (sumR >= 9 && calculate_slope_uint(start - 13, start, right_line) > 0 && calculate_slope_uint(start - 13, start, right_line) < 3) {
+                        //printf("sumR=%d\n", sumR);
+                        //printf("lk=%f\n", calculate_slope_uint(start - 13, start, right_line));
+                        if (sumR >= 10 && calculate_slope_uint(start - 13, start, right_line) > 0.5 && calculate_slope_uint(start - 13, start, right_line) < 3) {
+                            //printf("2");
                             flagIT = state * TWhere;
-                            state = stateTIslandIn;
-                            TIslandWhere=-1*TWhere;
+                            state = 30;
+                            TWhere = 0;
+                            TIslandWhere = LEFT;
+
                         }
 
                     }
@@ -7633,18 +7646,18 @@ void design_folk_road() {
         }
 
     }
-
-    for (int i = NEAR_LINE - 1; i >= FAR_LINE; i--)
-    {
-        if (my_road[i].white_num >= 2 && my_road[i - 1].white_num >= 2)
-        {
-            int flag = 0;
-            for (int j = 1; j <= my_road[i].white_num; j++)
-            {
-                //if(my_road[i].connected[j].width > 10&& my_road[i-1].connected[j].width > 10)
-            }
-        }
-    }
+//
+//    for (int i = NEAR_LINE - 1; i >= FAR_LINE; i--)
+//    {
+//        if (my_road[i].white_num >= 2 && my_road[i - 1].white_num >= 2)
+//        {
+//            int flag = 0;
+//            for (int j = 1; j <= my_road[i].white_num; j++)
+//            {
+//                //if(my_road[i].connected[j].width > 10&& my_road[i-1].connected[j].width > 10)
+//            }
+//        }
+//    }
     int a;
     if (FolkRoadWhere == RIGHT) {
         for (int i = NEAR_LINE - 1; i >= 20; i--) {
@@ -7659,15 +7672,15 @@ void design_folk_road() {
                 left_line[i] = left_line[i + 1];
             }
         }
-        for (int i = NEAR_LINE; i >= 20; i--) {
-            if (right_line[i] - right_line[i - 1] > 5 && right_line[i] - right_line[i - 2] > 5)
-            {
-                right_line[i] = right_side[i];
-                right_line[i - 1] = right_side[i - 1];
-                left_line[i] = right_line[i] - width;
-                left_line[i - 1] = right_line[i - 1] - width;
-            }
-        }
+//        for (int i = NEAR_LINE; i >= 20; i--) {
+//            if (right_line[i] - right_line[i - 1] > 5 && right_line[i] - right_line[i - 2] > 5)
+//            {
+//                right_line[i] = right_side[i];
+//                right_line[i - 1] = right_side[i - 1];
+//                left_line[i] = right_line[i] - width;
+//                left_line[i - 1] = right_line[i - 1] - width;
+//            }
+//        }
     }
     else if (FolkRoadWhere == LEFT) {
         for (int i = NEAR_LINE; i >= 20; i--) {
@@ -7682,15 +7695,15 @@ void design_folk_road() {
                 right_line[i] = right_line[i + 1];
             }
         }
-        for (int i = NEAR_LINE; i >= 20; i--) {
-            if (left_line[i - 1] - left_line[i] > 5 && left_line[i - 2] - left_line[i] > 5)
-            {
-                left_line[i] = left_side[i];
-                left_line[i - 1] = left_side[i - 1];
-                right_line[i] = left_line[i] + width;
-                right_line[i - 1] = left_line[i - 1] + width;
-            }
-        }
+//        for (int i = NEAR_LINE; i >= 20; i--) {
+//            if (left_line[i - 1] - left_line[i] > 5 && left_line[i - 2] - left_line[i] > 5)
+//            {
+//                left_line[i] = left_side[i];
+//                left_line[i - 1] = left_side[i - 1];
+//                right_line[i] = left_line[i] + width;
+//                right_line[i - 1] = left_line[i - 1] + width;
+//            }
+//        }
 
     }
 
@@ -8301,12 +8314,12 @@ void searchParkLine()
 void carpark_stop() {
 
     int roof_line = NEAR_LINE;
-    for (int i = NEAR_LINE; i >= 80; i--) {
+    for (int i = NEAR_LINE; i >= 70; i--) {
         if (my_road[i - 1].white_num == 0 && my_road[i].white_num != 0) {
             roof_line = i;
             break;
         }
-        if (i == 80) {
+        if (i == 70) {
             return;
         }
     }
@@ -8577,8 +8590,8 @@ void carPark_main()
 
             else if(file1.intVal == 0)
             {
-                leftPark = 1;
-                rightPark = 0;
+                leftPark = 0;
+                rightPark = 1;
                 carpark_in();
 
             }
@@ -8719,7 +8732,7 @@ void carPark_main()
     //    test_varible[14] = carParkTimes;
 
 
-    if (state == stateParkIn)
+    if (state == stateParkIn && carParkTimes < 2)
     {
 //        CTRL_encoderCount();
         if(carParkDelay <= parkDelay.intVal)
@@ -8732,17 +8745,17 @@ void carPark_main()
 //            carpark_out();
 //
 //        }
-        if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == 1 && integerSpeedAver > 2000)
+        if(carParkDelay > parkDelay.intVal && direction == 1 && integerSpeedAver > 2000)
         {
             carpark_out();
 
         }
-        else if(carParkDelay > parkDelay.intVal-3 && carParkTimes < 2 && direction == -1 && integerSpeedAver > 100)
+        else if(carParkDelay > parkDelay.intVal-3 && direction == -1 && integerSpeedAver > 100)
         {
             carpark_out();
 
         }
-        else if(carParkDelay > parkDelay.intVal && carParkTimes < 2 && direction == 0 && integerSpeedAver > 500)
+        else if(carParkDelay > parkDelay.intVal && direction == 0 && integerSpeedAver > 500)
         {
             carpark_out();
 
