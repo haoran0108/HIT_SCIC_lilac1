@@ -93,7 +93,7 @@ extern uint8_t lastMyMidLine;
 extern int32 integerSpeedL, integerSpeedR;
 extern int integerSpeedAver;
 extern int32 integerSpeedCNT;
-
+extern int softPreSpeed;
 struct error
 {
     double delta;
@@ -193,6 +193,8 @@ int16_t CTRL_speedGetRight();
 void CTRL_encoderCount();
 
 void speedUP_define();
+void CTRL_softSpeedUp();
+
 int foresee();
 void CTRL_lowpassFilter();//低通滤波
 void CTRL_currentAverageFilter();//电流环平均滑动滤波

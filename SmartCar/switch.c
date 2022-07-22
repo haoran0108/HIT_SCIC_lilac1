@@ -117,6 +117,9 @@ void SW_readSwitch()
         integerSpeedR = 0;
         speedUpPhase = 0;
         islandFinalTimes = 0;
+
+        FolkRoadWhere = folkWay.intVal;
+
         if(file1.intVal == -1)//×ó »·µº
         {
             wayIT = 1;

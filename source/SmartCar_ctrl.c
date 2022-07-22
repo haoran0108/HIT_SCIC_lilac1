@@ -66,6 +66,7 @@ int islandPwmMax, islandPwmMin;
 int32 motorPwmMax, motorPwmMin;
 int integerSpeedAver;
 int32 integerSpeedCNT;
+int softPreSpeed;
 void CTRL_gyroInit()
 {
     inv_imuGyroyQuene = INV_DataQueueInit(CTRL_IMU_QUENE_SIZE);
@@ -2095,4 +2096,22 @@ void CTRL_encoderCount()
     integerSpeedAver = (integerSpeedR - integerSpeedL) / 2;
 
 //    return integerSpeedAver;
+}
+
+
+void CTRL_softSpeedUp()
+{
+    int straightSpeed;
+
+    if(straightFlag == 1)
+    {
+//    int pre_speed = present_speed;
+        straightSpeed = (int)(presentSpeed.intVal * display2.floatVal);
+        if(straightSpeed > softPreSpeed)
+        {
+            softPreSpeed += 2;
+
+        }
+
+    }
 }

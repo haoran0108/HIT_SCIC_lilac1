@@ -35,7 +35,6 @@ uint8_t thresholdDown;
 uint8_t midDownDistance = 0;
 uint8_t midTimes = 0;
 
-
 int FolkRoadWhere = RIGHT;
 int islandWhere;
 int TWhere;
@@ -1949,7 +1948,7 @@ void judge_type_road() {
                 }
                 else if(file1.intVal == -1)
                 {
-                    if(islandTimes <= 2)
+                    if(islandTimes <= 2 && folkOutTimes >= 2)
                     {
                         T_island_in_start();
 
@@ -2188,13 +2187,25 @@ void judge_type_road() {
 
 
 
-    if(state == stateFolkRoadIn  || state == stateStart )
+    if(state == stateFolkRoadIn  || state == stateStart)
     {
-        if(rampTimes == 0 && folkTimes == 3 && integerSpeedCNT >= 150000)
+        if(rampTimes == 0)
         {
-            rampwayOn();
+
+            if(FolkRoadWhere == RIGHT && folkOutTimes == 3 && integerSpeedCNT >= 150000)
+            {
+                rampwayOn();
+
+            }
+            else if(FolkRoadWhere == LEFT && folkOutTimes == 1)
+            {
+                rampwayOn();
+
+            }
 
         }
+
+
 //        if(rampJudgeCount >= 200)
 //        {
 //            rampwayOn();
@@ -8581,7 +8592,7 @@ void carPark_main()
                 leftPark = 0;
                 rightPark = 1;
 
-                if(rampTimes >= 1)
+                if(folkOutTimes >= 4)
                 {
                     carpark_in();
 
@@ -9008,6 +9019,7 @@ void straight_define()
         {
             straightFlag = 1;
             speedUpPhase = 2;
+            softPreSpeed = present_speed;
         }
 
         else if(islandFinalTimes == 1 && straight_variance(92, 70, 10) == 2 && speedUpPhase == 2)
