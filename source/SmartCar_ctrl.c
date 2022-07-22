@@ -1715,7 +1715,7 @@ void speedDetermine()
         present_speed = presentSpeed.intVal;
         present_vision = presentVision.intVal;
 
-        if(speedUpPhase == 1 && straightFlag == 1)
+        if(straightFlag == 1)
         {
             present_vision -= 4;
         }

@@ -106,6 +106,8 @@ uint8_t islandTimesCNT = 0;
 uint8_t islandFinalTimes = 0;
 uint8_t folkOutTimes = 0;
 uint8_t speedUpPhase = 0; //省赛记忆加速
+uint8_t flag_straight = 0;
+
 //road my_road[CAMERA_H];
 //uint8_t IMG_zebra[36][CAMERA_W];
 //uint8_t zebraFlag;
@@ -9737,6 +9739,35 @@ void folkTimesCNT()
 //
 //    }
 }
+
+
+////////////////////////////////////////////
+//功能：直道加速
+//输入：
+//输出：
+//备注：
+///////////////////////////////////////////
+void accelerate() {
+
+    if (linear_judgement(50, 70, left_line) <= 15
+        && linear_judgement(50, 70, right_line) <= 15//前方赛道预警，快到弯道也不能加速
+        && linear_judgement(75, 95, left_line) <= 15
+        && linear_judgement(75, 95, right_line) <= 15// 前瞻附近赛道是否是直道
+        && fabs(calculate_slope_uint(75, 95, left_line)) < 0.3
+        && fabs(calculate_slope_uint(75, 95, right_line)) < 0.3//太歪的直道也不敢加速
+        && fabs(calculate_slope_uint(75, 95, left_line) - calculate_slope_uint(75, 95, right_line))<0.35//保证赛道平行
+        ) {
+        flag_straight = 1;
+    }
+    else {
+        flag_straight = 0;
+    }
+
+
+
+    //printf("accelaerate = %d\n", flag_straight);
+}
+
 
 
 // 以下是废案，没有成功的代码，以防万一需要使用的内容

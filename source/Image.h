@@ -335,7 +335,7 @@ uint8_t mid_aver();//加权平均
 int8 valid_row_direction();
 uint8_t aver_mid_line_foresee();//前瞻
 void folkTimesCNT();
-
+void accelerate();
 //废案
 void cross_T_in_start();
 void design_cross_T_in();
