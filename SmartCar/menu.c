@@ -110,7 +110,7 @@ node_t MENU_fileInit(node_t file, int16 valuei, float valuef, char name[10],uint
 void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 {
     //利用函数fileInit()初始化文件参数
-    file1 = MENU_fileInit(file1, 0, 1.0, "GEAR", 2, dataint, NULL, &file2, NULL, &Threshold);
+    file1 = MENU_fileInit(file1, -1, 1.0, "GEAR", 2, dataint, NULL, &file2, NULL, &Threshold);
     file2 = MENU_fileInit(file2, 1, 1.0, "PRESENT", 3, none, &file1, &file3, NULL, &presentSpeed);
     file3 = MENU_fileInit(file3, 1, 1.0, "chasu", 4, none, &file2, &display, NULL, &curveDiff);
     curveDiff = MENU_fileInit(curveDiff, 1, 1.0, "curve", 2, datafloat, NULL, &islandDiff, &file3, NULL);
@@ -159,7 +159,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     cross_circle_param1 = MENU_fileInit(cross_circle_param1, 90, 1.0, "vision", 2, dataint, NULL, &cross_circle_param2, &cross_circle, NULL);
     cross_circle_param2 = MENU_fileInit(cross_circle_param2, 0, 1.0, "rightX", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
     cross_circle_param3 = MENU_fileInit(cross_circle_param3, 0, 1.0, "leftX", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
-    cross_circle_param4 = MENU_fileInit(cross_circle_param4, 85, 1.0, "outwidth", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
+    cross_circle_param4 = MENU_fileInit(cross_circle_param4, 16, 1.0, "outwidth", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
     cross_circle_param5 = MENU_fileInit(cross_circle_param5, 55, 0.2, "kfix", 6, datafloat, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
     cross_circle_param6 = MENU_fileInit(cross_circle_param6, 30, 1.0, "turnwidth", 7, dataint, &cross_circle_param5, &cross_circle_param7, NULL, NULL);
     cross_circle_param7 = MENU_fileInit(cross_circle_param7, 55, 0, "rowKP", 2, datafloat, &cross_circle_param6, &cross_circle_param8, NULL, NULL);
@@ -186,7 +186,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     rampBottom = MENU_fileInit(rampBottom, 50, 1.0, "Rbottom", 7, none, &rampMin, NULL, NULL, NULL);
 
 
-    folkWay = MENU_fileInit(folkWay, -1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);//1-left   -1-right
+    folkWay = MENU_fileInit(folkWay, 1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);//1-left   -1-right
     folkParam1 = MENU_fileInit(folkParam1, 14, 1.0, "width", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
     folkParam2 = MENU_fileInit(folkParam2, 25, 0, "k", 3, datafloat, &folkParam1, NULL, NULL, NULL);
 //    folkParam3 = MENU_fileInit(folkParam3, 95, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);

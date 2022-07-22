@@ -187,7 +187,7 @@ void CTRL_speedLoopPID()
     speedL = CTRL_speedGetLeft();
     speedR = CTRL_speedGetRight();
     CTRL_lowpassFilter();
-    test_varible[15] = integerSpeedAver;
+//    test_varible[15] = integerSpeedAver;
     test_varible[9] = expectL;
     test_varible[10] = expectR;
 
@@ -697,19 +697,19 @@ void CTRL_MotorPwmXianfu()
 
     else if(state == stateRampway)
     {
-        motorPwmMax = 4000;
+        motorPwmMax = 5000;
         motorPwmMin = -2000;
     }
 
     else if(afterRampFlag == 1)
     {
-        motorPwmMax = 7000;
+        motorPwmMax = 8000;
         motorPwmMin = -3000;
     }
     else
     {
-        motorPwmMax = 8000;
-        motorPwmMin = -3000;
+        motorPwmMax = 9000;
+        motorPwmMin = -4000;
     }
 }
 
@@ -1723,7 +1723,7 @@ void speedDetermine()
 
     else if(parkStart != 0)
     {
-        present_speed = 80;
+        present_speed = 85;
 //        present_vision = 60;
     }
 
@@ -1739,7 +1739,8 @@ void speedDetermine()
 
     if(straightFlag == 1)
     {
-        present_speed = present_speed * display2.floatVal;
+//        present_speed = present_speed * display2.floatVal;
+        CTRL_softSpeedUp();
     }
     else if(straightFlag == 0)
     {
@@ -2110,7 +2111,7 @@ void CTRL_softSpeedUp()
         if(straightSpeed > softPreSpeed)
         {
             softPreSpeed += 2;
-
+            present_speed = softPreSpeed;
         }
 
     }
