@@ -110,7 +110,7 @@ node_t MENU_fileInit(node_t file, int16 valuei, float valuef, char name[10],uint
 void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 {
     //利用函数fileInit()初始化文件参数
-    file1 = MENU_fileInit(file1, -1, 1.0, "GEAR", 2, dataint, NULL, &file2, NULL, &Threshold);
+    file1 = MENU_fileInit(file1, 1, 1.0, "GEAR", 2, dataint, NULL, &file2, NULL, &Threshold);
     file2 = MENU_fileInit(file2, 1, 1.0, "PRESENT", 3, none, &file1, &file3, NULL, &presentSpeed);
     file3 = MENU_fileInit(file3, 1, 1.0, "chasu", 4, none, &file2, &display, NULL, &curveDiff);
     curveDiff = MENU_fileInit(curveDiff, 1, 1.0, "curve", 2, datafloat, NULL, &islandDiff, &file3, NULL);
@@ -186,7 +186,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     rampBottom = MENU_fileInit(rampBottom, 50, 1.0, "Rbottom", 7, none, &rampMin, NULL, NULL, NULL);
 
 
-    folkWay = MENU_fileInit(folkWay, 1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);//1-left   -1-right
+    folkWay = MENU_fileInit(folkWay, -1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);//1-left   -1-right
     folkParam1 = MENU_fileInit(folkParam1, 14, 1.0, "width", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
     folkParam2 = MENU_fileInit(folkParam2, 25, 0, "k", 3, datafloat, &folkParam1, NULL, NULL, NULL);
 //    folkParam3 = MENU_fileInit(folkParam3, 95, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
