@@ -1739,8 +1739,8 @@ void speedDetermine()
 
     if(straightFlag == 1)
     {
-//        present_speed = present_speed * display2.floatVal;
-        CTRL_softSpeedUp();
+        present_speed = present_speed * display2.floatVal;
+//        CTRL_softSpeedUp();
     }
     else if(straightFlag == 0)
     {
@@ -2102,17 +2102,17 @@ void CTRL_encoderCount()
 
 void CTRL_softSpeedUp()
 {
-    int straightSpeed;
-
-    if(straightFlag == 1)
-    {
-//    int pre_speed = present_speed;
-        straightSpeed = (int)(presentSpeed.intVal * display2.floatVal);
-        if(straightSpeed > softPreSpeed)
-        {
-            softPreSpeed += 2;
-            present_speed = softPreSpeed;
-        }
-
-    }
+//    int straightSpeed;
+//
+//    if(straightFlag == 1)
+//    {
+////    int pre_speed = present_speed;
+//        straightSpeed = (int)(presentSpeed.intVal * display2.floatVal);
+//        if(straightSpeed > softPreSpeed)
+//        {
+//            softPreSpeed += 2;
+//            present_speed = softPreSpeed;
+//        }
+//
+//    }
 }

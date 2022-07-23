@@ -1896,7 +1896,7 @@ void image_main()
 //备注：初判断应该会出现很多混淆，之后会进行类似元素的单独判断
 ///////////////////////////////////////////
 void judge_type_road() {
-//    state=100;
+//    state=20;
 //    islandWhere=RIGHT;
     leftUpJumpPoint = 119;
     leftDownJumpPoint = 119;
@@ -5791,7 +5791,7 @@ void island_out() {
         //   //////printf("y=%d,x=%d\n", yMax, xMax);
             // //////printf("xMax=%d,y=%d\n", xMax,yMax);d
             if (left_line[yMax - 15] != MISS && (calculate_slope_uint(yMax - 18, yMax - 1, left_line) * calculate_slope_uint(yMax + 2, yMax + 18, left_line) < 0 || left_line[yMax] - left_line[yMax - 3] > 6)) {
-                if ((xMax < xmax - dxRight && yMax >= 40 && yMax <= 100) || (xMax < xmax - dxRight - 5 && yMax >= 100 && yMax <= 110)) {
+                if ((xMax < xmax - dxRight && yMax >= 40 && yMax <= 100) || (xMax < xmax - dxRight + 5 && yMax >= 100 && yMax <= 110)) {
                 state = stateIslandOut;
                 }
             }
@@ -5840,7 +5840,7 @@ void island_out() {
             }
         //  //////printf("y=%d\n", yMin);
             if (left_line[yMin - 15]!=MISS && (calculate_slope_uint(yMin - 18, yMin - 1, right_line) * calculate_slope_uint(yMin + 2, yMin + 18, right_line) < 0 || right_line[yMin] - right_line[yMin - 3] < -6)) {
-                if ((xMin > xmin + dxLeft && yMin >= 40 && yMin <= 100 )|| (xMin > xmin + dxLeft + 5 && yMin >= 100 && yMin <= 110)) {
+                if ((xMin > xmin + dxLeft && yMin >= 40 && yMin <= 100 )|| (xMin > xmin + dxLeft - 5 && yMin >= 100 && yMin <= 110)) {
                     state = stateIslandOut;
                 }
             }
@@ -6185,9 +6185,10 @@ void island_final() {
             sumU++;
         }
     }
-    if (sumD > 4 && sumU > 6) {
+    if (sumD > 2 && sumU > 6 && sumD < 10) {
         if (islandWhere == RIGHT) {
             if (fabs(calculate_slope_uint(80, 100, left_line) - calculate_slope_uint(80, 100, right_line)) < 0.25
+                    &&linear_judgement(80,100,right_line) <= 50
                     && calculate_slope_uint(85, 105, left_line) > -0.7) {
                 flagIT = islandWhere * state;
                 state = stateStart;
@@ -6200,7 +6201,8 @@ void island_final() {
         }
         else if (islandWhere == LEFT) {
             if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(85, 100, right_line)) < 0.25
-                    && calculate_slope_uint(85, 105, right_line) < 0.7) {
+                    && calculate_slope_uint(85, 105, right_line) < 0.7
+                    &&linear_judgement(80,100,left_line) <= 50) {
                 flagIT = islandWhere * state;
                 state = stateStart;
                 islandWhere = 0;
@@ -6208,6 +6210,21 @@ void island_final() {
                 {
                     islandTimesCNT += 1;
                 }
+            }
+        }
+    }else{
+        if(linear_judgement(100,NEAR_LINE,left_line) <= 10 &&
+               linear_judgement(100,NEAR_LINE,right_line) <= 10 &&
+               fabs(calculate_slope_uint(100,NEAR_LINE,left_line)) < 0.2
+          &&  fabs(calculate_slope_uint(100,NEAR_LINE,right_line)) < 0.2
+          && fabs(calculate_slope_uint(100,NEAR_LINE,right_line) - calculate_slope_uint(100,NEAR_LINE,left_line)) < 0.3
+        ){
+            flagIT = islandWhere * state;
+            state = stateStart;
+            islandWhere = 0;
+            if(islandTimesCNT < 2)
+            {
+                islandTimesCNT += 1;
             }
         }
     }
@@ -7677,8 +7694,8 @@ void design_folk_road() {
     j_left[NEAR_LINE] = j_continue[NEAR_LINE];
     j_right[NEAR_LINE] = j_continue[NEAR_LINE];
     for (int i = NEAR_LINE - 1; i >= FAR_LINE; i--) {
-        j_left[NEAR_LINE] = j_continue[NEAR_LINE];
-        j_right[NEAR_LINE] = j_continue[NEAR_LINE];
+        j_left[i] = j_continue[i];
+        j_right[i] = j_continue[i];
         for (int j = 1; j <= my_road[i].white_num; j++) {
             if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_left[i + 1]].left) <= abs(my_road[i].connected[j_left[i]].left - my_road[i + 1].connected[j_left[i + 1]].left)
                 && my_road[i].connected[j].width > 15) {
@@ -7765,9 +7782,9 @@ void folk_road_out() {
     if (1) {
         if (FolkRoadWhere == RIGHT) {
             if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(95, 110, right_line)) < 0.3
-                && calculate_slope_uint(85, 100, left_line) > -1.2 && calculate_slope_uint(95, 110, right_line) > -1.2
+                && calculate_slope_uint(85, 100, left_line) > -1.5 && calculate_slope_uint(95, 110, right_line) > -1.5
                 && linear_judgement(85, 100, left_line) < 100 && linear_judgement(96, 110, right_line) < 100
-                && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 32 || (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] <= 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] < -2))
+                && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 30 || (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] <= 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] < -2))
                 ) {
                 state = 0;
                 folkOutTimes += 1;
@@ -7775,9 +7792,9 @@ void folk_road_out() {
         }
         else if (FolkRoadWhere == LEFT) {
             if (fabs(calculate_slope_uint(85, 100, right_line) - calculate_slope_uint(95, 110, left_line)) < 0.3
-                && calculate_slope_uint(85, 100, right_line) < 1.2 && calculate_slope_uint(95, 110, left_line) < 1.2
+                && calculate_slope_uint(85, 100, right_line) < 1.5 && calculate_slope_uint(95, 110, left_line) < 1.5
                 && linear_judgement(85, 100, right_line) < 100 && linear_judgement(96, 110, left_line) < 100
-                && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 32|| (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] > 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] >= -2))
+                && (right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 30|| (left_line[NEAR_LINE - 2] - left_side[NEAR_LINE - 2] > 2 && right_line[NEAR_LINE - 2] -right_side[NEAR_LINE - 2] >= -2))
                 ) {
                 state = 0;
                 folkOutTimes += 1;
