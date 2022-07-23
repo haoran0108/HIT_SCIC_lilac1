@@ -5273,19 +5273,19 @@ void design_island_turn() {
 
 
             //            test_varible[3] = upPoint;
-            if (lastUpPoint == 0) {
-                lastUpPoint = upPoint;
-            }
-            else {
-                if (upPoint < lastUpPoint - 15 && lastUpPoint != 119) {
-
-                    upPoint = lastUpPoint;
-
-                }else if(upPoint != 119){
-                    lastUpPoint = upPoint;
-                }
-            //                //  //////printf("up2=%d\n", upPoint);
-            }
+//            if (lastUpPoint == 0) {
+//                lastUpPoint = upPoint;
+//            }
+//            else {
+//                if (upPoint < lastUpPoint - 15 && lastUpPoint != 119) {
+//
+//                    upPoint = lastUpPoint;
+//
+//                }else if(upPoint != 119){
+//                    lastUpPoint = upPoint;
+//                }
+//            //                //  //////printf("up2=%d\n", upPoint);
+//            }
 
             if (upPoint <= 95 && upPoint > 60) {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].right - my_road[107].connected[j_mid[107]].left) / (upPoint - 107);
@@ -5423,19 +5423,19 @@ void design_island_turn() {
                     break;
                 }
             }
-            if (lastUpPoint == 0) {
-                lastUpPoint = upPoint;
-            }
-            else {
-                if (upPoint < lastUpPoint - 15 && lastUpPoint != 119) {
-
-                    upPoint = lastUpPoint;
-
-                }else if(upPoint != 119){
-                    lastUpPoint = upPoint;
-                }
-                //            //  //////printf("up2=%d\n", upPoint);
-            }
+//            if (lastUpPoint == 0) {
+//                lastUpPoint = upPoint;
+//            }
+//            else {
+//                if (upPoint < lastUpPoint - 15 && lastUpPoint != 119) {
+//
+//                    upPoint = lastUpPoint;
+//
+//                }else if(upPoint != 119){
+//                    lastUpPoint = upPoint;
+//                }
+//                //            //  //////printf("up2=%d\n", upPoint);
+//            }
 //                //printf("up=%d\n", upPoint);
             if (upPoint <= 95 && upPoint > 60 )  {
                 double k = (double)(my_road[upPoint].connected[j_mid[upPoint]].left - my_road[107].connected[j_mid[107]].right) / (upPoint - 107);
