@@ -695,21 +695,21 @@ void CTRL_MotorPwmXianfu()
         motorPwmMin = -8000;
     }
 
-    else if(state == stateRampway)
-    {
-        motorPwmMax = 5000;
-        motorPwmMin = -2000;
-    }
-
-    else if(afterRampFlag == 1)
-    {
-        motorPwmMax = 8000;
-        motorPwmMin = -3000;
-    }
+//    else if(state == stateRampway)
+//    {
+//        motorPwmMax = 9000;
+//        motorPwmMin = -2000;
+//    }
+//
+//    else if(afterRampFlag == 1)
+//    {
+//        motorPwmMax = 8000;
+//        motorPwmMin = -3000;
+//    }
     else
     {
-        motorPwmMax = 9000;
-        motorPwmMin = -4000;
+        motorPwmMax = 9999;
+        motorPwmMin = -7000;
     }
 }
 
@@ -1717,7 +1717,7 @@ void speedDetermine()
 
         if(straightFlag == 1)
         {
-            present_vision -= 4;
+//            present_vision -= 4;
         }
     }
 

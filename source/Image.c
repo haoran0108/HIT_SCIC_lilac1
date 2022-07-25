@@ -5054,7 +5054,7 @@ void design_island_ing() {
 
             for (int i = 110; i >= 50; i--) {
 
-                right_line[i] = leftRoad[i] + 24;//xMin - leftRoad[yMin] - 20;
+                right_line[i] = leftRoad[i] + 26;//xMin - leftRoad[yMin] - 20;
                 left_line[i] = leftRoad[i];
             }
         }
@@ -5087,7 +5087,7 @@ void design_island_ing() {
             double k = calculate_slope(80, 100, rightRoad);
 
             for (int i = 110; i >= 50; i--) {
-                left_line[i] = rightRoad[i] - 24;//+ xMin - rightRoad[yMin] ;
+                left_line[i] = rightRoad[i] - 26;//+ xMin - rightRoad[yMin] ;
                 right_line[i] = rightRoad[i];
             }
         }
@@ -5662,7 +5662,7 @@ void island_circle() {
 
 
     }
-    if (my_road[75].white_num == 0 ) {
+    if (my_road[70].white_num == 0 ) {
         state = stateIslandCircle;
         lastUpPoint=0;
     }
@@ -6175,7 +6175,7 @@ void island_final() {
 
     int sumD = 0;
     for (int i = NEAR_LINE; i >= 100; i--) {
-        if (right_line[i] - left_line[i] > 31) {
+        if (right_line[i] - left_line[i] > 27) {
             sumD++;
         }
     }
@@ -6185,11 +6185,11 @@ void island_final() {
             sumU++;
         }
     }
-    if (sumD > 2 && sumU > 6 && sumD < 10) {
+    if (sumD > 2 && sumU > 6 && sumD < 13) {
         if (islandWhere == RIGHT) {
             if (fabs(calculate_slope_uint(80, 100, left_line) - calculate_slope_uint(80, 100, right_line)) < 0.25
                     &&linear_judgement(80,100,right_line) <= 50
-                    && calculate_slope_uint(85, 105, left_line) > -0.7) {
+                    && calculate_slope_uint(85, 105, left_line) > -0.85) {
                 flagIT = islandWhere * state;
                 state = stateStart;
                 islandWhere = 0;
@@ -6201,7 +6201,7 @@ void island_final() {
         }
         else if (islandWhere == LEFT) {
             if (fabs(calculate_slope_uint(85, 100, left_line) - calculate_slope_uint(85, 100, right_line)) < 0.25
-                    && calculate_slope_uint(85, 105, right_line) < 0.7
+                    && calculate_slope_uint(85, 105, right_line) < 0.85
                     &&linear_judgement(80,100,left_line) <= 50) {
                 flagIT = islandWhere * state;
                 state = stateStart;
@@ -6215,8 +6215,8 @@ void island_final() {
     }else{
         if(linear_judgement(100,NEAR_LINE,left_line) <= 10 &&
                linear_judgement(100,NEAR_LINE,right_line) <= 10 &&
-               fabs(calculate_slope_uint(100,NEAR_LINE,left_line)) < 0.2
-          &&  fabs(calculate_slope_uint(100,NEAR_LINE,right_line)) < 0.2
+               fabs(calculate_slope_uint(100,NEAR_LINE,left_line)) < 0.5
+          &&  fabs(calculate_slope_uint(100,NEAR_LINE,right_line)) < 0.5
           && fabs(calculate_slope_uint(100,NEAR_LINE,right_line) - calculate_slope_uint(100,NEAR_LINE,left_line)) < 0.3
         ){
             flagIT = islandWhere * state;
