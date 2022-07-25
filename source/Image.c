@@ -6053,7 +6053,7 @@ void island_straight() {
 //            test_varible[5] = calculate_slope_uint(80, 100, left_line);
 //
 //            test_varible[6] = linear_judgement(70, 90, left_line);
-            if (calculate_slope_uint(50, 70, left_line) > -1 && calculate_slope_uint(80, 100, left_line) > -1
+            if (calculate_slope_uint(50, 70, left_line) > -0.7 && calculate_slope_uint(80, 100, left_line) > -0.7
                 && calculate_slope_uint(50, 70, left_line) <= 0 && calculate_slope_uint(80, 100, left_line) <= 0
                 && linear_judgement(70, 90, left_line) < 100 ) {
                 flag = 1;
@@ -6068,7 +6068,7 @@ void island_straight() {
         else if (islandWhere == LEFT) {
 
 
-            if (calculate_slope_uint(50, 70, right_line) < 1 && calculate_slope_uint(80, 100, right_line) < 1
+            if (calculate_slope_uint(50, 70, right_line) < 0.7 && calculate_slope_uint(80, 100, right_line) < 0.7
                 && calculate_slope_uint(50, 70, right_line) >= 0 && calculate_slope_uint(80, 100, right_line) >= 0
                 && linear_judgement(70, 90, right_line) < 100) {
                 flag = 1;
@@ -7885,7 +7885,7 @@ void carpark_in()
             int start = 110;
             downPoint = 110;
 
-            while (start >= 60 && my_road[start].connected[j_right[start]].right <= my_road[110].connected[j_right[110]].right + 10
+            while (start >= 45 && my_road[start].connected[j_right[start]].right <= my_road[110].connected[j_right[110]].right + 10
                 && my_road[start].connected[j_right[start]].right < right_side[start] - 1) {
                 if (my_road[start].connected[j_right[start]].right <= my_road[downPoint].connected[j_right[downPoint]].right) {
                     downPoint = start;
@@ -7900,7 +7900,7 @@ void carpark_in()
                     break;
                 }
             }
-            if (downPoint < 110 && upPoint <= 110 && upPoint >= 50 && downPoint > 60
+            if (downPoint < 110 && upPoint <= 110 && upPoint > 45 && downPoint > 60
                 && fabs(calculate_slope_struct(downPoint + 1, downPoint + 15, j_right, RIGHT) - calculate_slope_struct(upPoint - 15, upPoint - 1, j_left, RIGHT)) < 0.25
                 && fabs(calculate_slope_struct(downPoint + 1, downPoint + 15, j_left, LEFT) - calculate_slope_struct(upPoint - 15, upPoint - 1, j_left, LEFT)) < 0.25) {
                 flag = 1;
@@ -8001,7 +8001,7 @@ void carpark_in()
         else {
             int start = 110;
             downPoint = 110;
-            while (start >= 60 && my_road[start].connected[j_left[start]].left >= my_road[110].connected[j_left[110]].left - 10
+            while (start >= 45 && my_road[start].connected[j_left[start]].left >= my_road[110].connected[j_left[110]].left - 10
                 && my_road[start].connected[j_left[start]].left > left_side[start] + 1) {
                 if (my_road[start].connected[j_left[start]].left >= my_road[downPoint].connected[j_left[downPoint]].left) {
                     downPoint = start;
@@ -8016,7 +8016,7 @@ void carpark_in()
                 }
 
             }
-            if (downPoint < 110 && upPoint <= 110 && upPoint >= 50 && downPoint > 60
+            if (downPoint < 110 && upPoint <= 110 && upPoint > 45 && downPoint > 60
                 && fabs(calculate_slope_struct(downPoint + 1, downPoint + 15, j_right, RIGHT) - calculate_slope_struct(upPoint - 15, upPoint - 1, j_right, RIGHT)) < 0.25
                 && fabs(calculate_slope_struct(downPoint + 1, downPoint + 15, j_left, LEFT) - calculate_slope_struct(upPoint - 15, upPoint - 1, j_right, LEFT)) < 0.25
                 ) {
