@@ -120,6 +120,10 @@
 #define stateParkIn 120 //车库
 #define stateRampway 130//坡道
 /////////////////////////////
+#define white_straight 43 //正视直道的格数
+#define lim_white_straight 55 //斜直道最大像素点数
+
+
 
 extern uint8_t IMG[CAMERA_H][CAMERA_W];//二值化后图像数组
 extern uint8_t IMG_distor[CAMERA_H][CAMERA_W];
@@ -220,7 +224,7 @@ typedef struct {
 
 extern road my_road[CAMERA_H];//赛道
 
-void CCD();
+
 void head_clear(void);
 void OTSU();
 void part_OUST();
@@ -232,7 +236,6 @@ void find_all_connect();
 void find_road();
 uint8_t find_continue(uint8_t i_start, uint8_t j_start);
 void ordinary_two_line(void);
-int strenghen_contrast_ratio(int oldThre,int threA, int threNewA, int threB, int threNewB);
 void image_main();
 void get_mid_line(void);
 void IPM_map();
@@ -241,16 +244,25 @@ void my_memset(uint8_t* ptr, uint8_t num, uint8_t size);
 void transform(int wayThre);
 void transform_sd(int wayThre);
 void orinary_two_line_history();
-
-void protection();
+void adapt_threshold();
+uint8_t mid_aver();
+int ZHAO_THRE();
 void image_Preprocess(void);
-
-//道路规划
-void judge_type_road();
+int image_GetOtsuThre(void);
+void image_GetHistGram(uint16_t* ptrHistGram, uint8_t startLine, uint8_t endLine);
+void Entropy();
 int My_Max(signed int i, signed int j);
 int My_Min(signed int i, signed int j);
-void ZHAO_THRE();
+
 void roof();
+int strenghen_contrast_ratio(int oldThre, int threA, int threNewA, int threB, int threNewB);
+void XueSong();
+int IMAGE_ThreConfig();
+void Set_thre(int Foreshold, int Backshold, int ThreLine);
+void protection();
+//道路规划
+void judge_type_road();
+
 //数据处理函数
 double calculate_slope(int start, int end, int side[CAMERA_H]);
 double calculate_slope_uint(int start, int end, uint8_t side[CAMERA_H]);
@@ -259,8 +271,7 @@ double calculate_slope_struct(int start, int end, uint8_t j_mid[CAMERA_H], int t
 double variance(int yStart, int yEnd, int side[CAMERA_H]);
 double correlation_coefficient(int start, int end, int side[CAMERA_W]);
 double linear_judgement(int start, int end, uint8_t side[CAMERA_H]);
-double linear_judgement_struct(int start, int end, uint8_t j[CAMERA_H],int direction);
-
+double linear_judgement_struct(int start, int end, uint8_t j[CAMERA_H], int direction);
 //十字
 void cross_in();
 void design_cross_ing();
@@ -271,7 +282,7 @@ void cross_over();
 void T_island_in_start();
 void design_T_island_in();
 void T_or_island();
-void island_radius();
+void straightT_or_island();
 //环岛
 void design_island_ing();
 void island_turn();
@@ -283,63 +294,34 @@ void design_island_out();
 void island_straight();
 void design_island_straight();
 void island_final();
-void straightT_or_island();
+void island_radius();
+int param_island(int state);
+int memory_IT();
 //三叉
 void folk_road_in();
 void design_folk_road();
 void folk_road_out();
-void small_s_road();
-void s_road_filter();
 
 //T字口
 
 void cross_T_in_over();
+void design_cross_T_circle();
 void cross_T_out_start();
 void design_cross_T_out();
 void cross_T_out_over();
-void design_cross_T_circle();
+
 //上下坡
 
 //入库
 void carpark_in();
 void carpark_out();
 void design_carpark();
-void searchParkLine();
-void carPark_main();
-void carpark_stop();
-void design_carpark_turn();
-int sign_carPark_in();
-
-
 //停车
 
 //上下坡
-void rampwayOn();
-void rampwayDown();
-
-//直道
-int straight_variance(int istart, int iend,float varThreshold);
-int midMaxColumn(int istart, int iend, int param);
-void straight_define();
 
 //滤波
 void mid_line_filter();
-void big_mid_line_filter();
-void filter_two_line(void);
 
-//奇怪的函数
-void roadMemory();
-uint8_t valid_row();//弯道有效行
-void TcircleFix();
-uint8_t mid_aver();//加权平均
-int8 valid_row_direction();
-uint8_t aver_mid_line_foresee();//前瞻
-void folkTimesCNT();
-void accelerate();
-//废案
-void cross_T_in_start();
-void design_cross_T_in();
-void island_start();
-void design_island_start();
 
 #endif //
