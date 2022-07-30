@@ -1799,7 +1799,7 @@ void judge_type_road() {
 
     //Ê®×Ö
     if (state == stateStart && flagChange == 0) {
-//        cross_in();
+        cross_in();
         if (my_road[40].white_num != 0)
             folk_road_in();
 //            folkTimesCNT();
