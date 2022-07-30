@@ -36,7 +36,7 @@ double my_sin;//圆形前瞻
 int flagCircleForsee = 1;
 
 float fuzzy_PB = 3.2, fuzzy_PM = 3.0, fuzzy_PS = 2.9, fuzzy_ZO = 2.7, fuzzy_NS = 2.9, fuzzy_NM = 3.0, fuzzy_NB = 3.2, fuzzy_D = 6.6;
-
+float bigKd, midKd, smallKd, zeroKd;
 /*陀螺仪相关*/
 float deltaGyro[10] = {0}, currentGyro = 0, directionAngle = 0, lastGyro = 0;
 float lastRampGyro = 0, rampGyro = 0, rampGyroMax = 0;
@@ -308,6 +308,56 @@ void CTRL_servoPID()
 
 }
 
+float CTRL_KdFuzzyMemberShip(int midError)
+{
+    float membership[2] = {1, 0};
+    float servoKD = 0;
+    float fuzzyWidth = 10;
+    int myAbsError;
+    myAbsError = abs(midError);
+
+    if(myAbsError >= KD_PB)
+    {
+        servoKD = bigKd;
+    }
+    else if(myAbsError > KD_PM && myAbsError < KD_PB)
+    {
+        membership[0] = fabs((myAbsError - KD_PM) / fuzzyWidth);
+        membership[1] = fabs((myAbsError - KD_PB) / fuzzyWidth);
+
+        servoKD = bigKd * membership[0] + midKd * membership[1];
+
+    }
+
+    else if(myAbsError == KD_PM)
+    {
+        servoKD = midKd;
+    }
+    else if(myAbsError > KD_PS && myAbsError < KD_PM)
+    {
+        membership[0] = fabs((myAbsError - KD_PS) / fuzzyWidth);
+        membership[1] = fabs((myAbsError - KD_PM) / fuzzyWidth);
+
+        servoKD = midKd * membership[0] + smallKd * membership[1];
+    }
+    else if(myAbsError == KD_PS)
+    {
+        servoKD = smallKd;
+    }
+    else if(myAbsError > KD_ZO && myAbsError < KD_PS)
+    {
+        membership[0] = fabs((myAbsError - KD_ZO) / fuzzyWidth);
+        membership[1] = fabs((myAbsError - KD_PS) / fuzzyWidth);
+
+        servoKD = smallKd * membership[0] + zeroKd * membership[1];
+    }
+    else if(myAbsError == KD_ZO)
+    {
+        servoKD = zeroKd;
+    }
+    return servoKD;
+}
+
 float CTRL_FuzzyMemberShip(int midError)
 {
     float membership[2] = {1, 0};
@@ -408,26 +458,11 @@ float CTRL_FuzzyMemberShip(int midError)
 
 void CTRL_fuzzyPID()
 {
-    float fuzzyKP = 1;
-//    if(memoryFlag == 1)
-//    {
-//        present_vision = memoryVision1.intVal;
-//    }
-//    else if(memoryFlag == 0)
-//    {
-//        present_vision = presentVision.intVal;
-//    }
-//    int realVision;
-//    realVision = foresee();
-//    servoError.currentError = 92 - mid_line[presentVision.intVal];
+    float fuzzyKP = 1, fuzzyKD = 1;
     uint8_t myMidLine;
     int32 myDiffLine;
     myMidLine = aver_mid_line_foresee();
-//    if(present_vision != curveDiffLine.intVal)
-//    {
-//        myDiffLine = myMidLine - mid_line[curveDiffLine.intVal];
-//
-//    }
+
 
     if(lastMyMidLine == 0)
     {
@@ -455,31 +490,14 @@ void CTRL_fuzzyPID()
     }
     else servoError.currentError = 93 - myMidLine;
 
-
-
-//    servoError.currentError = 94 - mid_line[realVision];
     servoError.delta = servoError.currentError - servoError.lastError;
 
     test_varible[12] = myMidLine;
 
     fuzzyKP = CTRL_FuzzyMemberShip(servoError.currentError);
-//    test_varible[14] = fuzzyKP;
+    fuzzyKD = CTRL_KdFuzzyMemberShip(servoError.currentError);
 
-//    if(state == stateCrossIn)
-//    {
-//        if((servoError.lastError <= 8 && servoError.delta >= 5) || (servoError.lastError >= -8 && servoError.delta <= -5))
-//        {
-//
-//        }
-//
-//        else servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
-//
-//    }
-//    else
-//    {
-    servoPwm = (uint32)(servoMidValue + fuzzy_D * servoError.delta + fuzzyKP * servoError.currentError);
-//    servoDiffPwm = servoPwm + fuzzyKP * myDiffLine;
-//    }
+    servoPwm = (uint32)(servoMidValue + fuzzyKD * servoError.delta + fuzzyKP * servoError.currentError);
 
     if(servoPwm > servoMax)
         servoPwm = servoMax;
@@ -708,7 +726,7 @@ void CTRL_MotorPwmXianfu()
 //    }
     else
     {
-        motorPwmMax = 9999;
+        motorPwmMax = 9900;
         motorPwmMin = -7000;
     }
 }
@@ -1354,6 +1372,9 @@ void CTRL_CircleForsee(int radius)
 
 }
 
+
+
+
 void CTRL_ServoPID_Determine()
 {
 
@@ -1369,7 +1390,10 @@ void CTRL_ServoPID_Determine()
             fuzzy_NS = circle_PB.floatVal;
             fuzzy_NM = circle_PB.floatVal;
             fuzzy_NB = circle_PB.floatVal;
-            fuzzy_D = circle_DS.floatVal;
+            bigKd = circle_DS.floatVal;
+            midKd = circle_DS.floatVal;
+            smallKd = circle_DS.floatVal;
+            zeroKd = circle_DS.floatVal;
         }
 
         else if(TWhere == RIGHT)
@@ -1381,7 +1405,10 @@ void CTRL_ServoPID_Determine()
             fuzzy_NS = circle_PM.floatVal;
             fuzzy_NM = circle_PM.floatVal;
             fuzzy_NB = circle_PM.floatVal;
-            fuzzy_D = circle_DS.floatVal;
+            bigKd = circle_DS.floatVal;
+            midKd = circle_DS.floatVal;
+            smallKd = circle_DS.floatVal;
+            zeroKd = circle_DS.floatVal;
         }
 
 //        fuzzy_Dbig = circle_DB.floatVal;
@@ -1397,7 +1424,10 @@ void CTRL_ServoPID_Determine()
         fuzzy_NS = circle_NS.floatVal;
         fuzzy_NM = circle_NM.floatVal;
         fuzzy_NB = circle_NB.floatVal;
-        fuzzy_D = circle_DS.floatVal;
+        bigKd = circle_DS.floatVal;
+        midKd = circle_DS.floatVal;
+        smallKd = circle_DS.floatVal;
+        zeroKd = circle_DS.floatVal;
     }
 
 
@@ -1412,7 +1442,10 @@ void CTRL_ServoPID_Determine()
             fuzzy_NS = Island_PS.floatVal;
             fuzzy_NM = Island_PS.floatVal;
             fuzzy_NB = Island_PS.floatVal;
-            fuzzy_D = Island_DS.floatVal;
+            bigKd = Island_DS.floatVal;
+            midKd = Island_DS.floatVal;
+            smallKd = Island_DS.floatVal;
+            zeroKd = Island_DS.floatVal;
         }
 
         else if(IslandRadius >= 60 && IslandRadius <= 70)
@@ -1424,7 +1457,10 @@ void CTRL_ServoPID_Determine()
             fuzzy_NS = Island_PM.floatVal;
             fuzzy_NM = Island_PM.floatVal;
             fuzzy_NB = Island_PM.floatVal;
-            fuzzy_D = Island_DS.floatVal;
+            bigKd = Island_DS.floatVal;
+            midKd = Island_DS.floatVal;
+            smallKd = Island_DS.floatVal;
+            zeroKd = Island_DS.floatVal;
         }
 
         else if(IslandRadius > 70 && IslandRadius <= 100)
@@ -1436,7 +1472,10 @@ void CTRL_ServoPID_Determine()
             fuzzy_NS = Island_PB.floatVal;
             fuzzy_NM = Island_PB.floatVal;
             fuzzy_NB = Island_PB.floatVal;
-            fuzzy_D = Island_DS.floatVal;
+            bigKd = Island_DS.floatVal;
+            midKd = Island_DS.floatVal;
+            smallKd = Island_DS.floatVal;
+            zeroKd = Island_DS.floatVal;
         }
 
 //        fuzzy_Dbig = Island_DB.floatVal;
@@ -1452,7 +1491,10 @@ void CTRL_ServoPID_Determine()
         fuzzy_NS = Folk_NS.floatVal;
         fuzzy_NM = Folk_NM.floatVal;
         fuzzy_NB = Folk_NB.floatVal;
-        fuzzy_D = Folk_DS.floatVal;
+        bigKd = Folk_DS.floatVal;
+        midKd = Folk_DS.floatVal;
+        smallKd = Folk_DS.floatVal;
+        zeroKd = Folk_DS.floatVal;
     }
 
     else if(straightPD.intVal == 1 && straightFlag == 1)
@@ -1465,6 +1507,10 @@ void CTRL_ServoPID_Determine()
         fuzzy_NM = straight_KP.floatVal;
         fuzzy_NB = straight_KP.floatVal;
         fuzzy_D = straight_KD.floatVal;
+        bigKd = straight_KD.floatVal;
+        midKd = straight_KD.floatVal;
+        smallKd = straight_KD.floatVal;
+        zeroKd = straight_KD.floatVal;
     }
 
     else
@@ -1476,7 +1522,10 @@ void CTRL_ServoPID_Determine()
         fuzzy_NS = fuzzyNS.floatVal;
         fuzzy_NM = fuzzyNM.floatVal;
         fuzzy_NB = fuzzyNB.floatVal;
-        fuzzy_D = presentServoD.floatVal;
+        bigKd = KdBig.floatVal;
+        midKd = KdMid.floatVal;
+        smallKd = KdSmall.floatVal;
+        zeroKd = KdZero.floatVal;
     //        fuzzy_Dbig = presentServoD.floatVal;
 
     }
@@ -1762,9 +1811,9 @@ void speedDetermine()
 
         if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut)
         {
-            if(present_speed > 95)
+            if(present_speed > curveDiffLine.intVal)
             {
-                present_speed = 95;
+                present_speed = curveDiffLine.intVal;
             }
         }
 //        GPIO_Set(P22, 0, 0);

@@ -40,6 +40,11 @@
 #define NM -20
 #define NB -30
 
+#define KD_PB 30
+#define KD_PM 20
+#define KD_PS 10
+#define KD_ZO 0
+
 /*速度环模糊pid*/
 #define speedPB 30
 #define speedPM 20
@@ -135,6 +140,8 @@ void CTRL_gyroLoopPID();
 
 /*模糊PID*/
 float CTRL_FuzzyMemberShip(int midError);
+float CTRL_KdFuzzyMemberShip(int midError);
+
 void CTRL_fuzzyPID();
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      电机控制
