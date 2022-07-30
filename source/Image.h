@@ -76,7 +76,7 @@
 #define CAMERA_H  120                            //图片高度
 #define CAMERA_W  188                            //图片宽度
 #define FAR_LINE 1//图像处理上边界
-#define NEAR_LINE 113//图像处理下边界
+#define NEAR_LINE 110//图像处理下边界
 #define LEFT_SIDE 0//图像处理左边界
 #define RIGHT_SIDE 187//图像处理右边界
 #define MISS 255
@@ -246,7 +246,7 @@ void transform_sd(int wayThre);
 void orinary_two_line_history();
 void adapt_threshold();
 uint8_t mid_aver();
-int ZHAO_THRE();
+void ZHAO_THRE();
 void image_Preprocess(void);
 int image_GetOtsuThre(void);
 void image_GetHistGram(uint16_t* ptrHistGram, uint8_t startLine, uint8_t endLine);
@@ -316,12 +316,23 @@ void cross_T_out_over();
 void carpark_in();
 void carpark_out();
 void design_carpark();
+void carPark_main();
+void carpark_stop();
+void design_carpark_turn();
+int sign_carPark_in();
+
+
 //停车
 
 //上下坡
-
+void rampwayOn();
+void rampwayDown();
 //滤波
 void mid_line_filter();
+void folkTimesCNT();
+void straight_define();
+uint8_t valid_row();
+
 
 
 #endif //

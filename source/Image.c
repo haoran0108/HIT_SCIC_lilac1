@@ -107,6 +107,8 @@ uint8_t islandFinalTimes = 0;
 uint8_t folkOutTimes = 0;
 uint8_t speedUpPhase = 0; //省赛记忆加速
 uint8_t flag_straight = 0;
+//int tCrossStatus;
+
 
 uint8_t count_num_IT = 1; // 数环岛回环个数
 uint8_t num_island = 1;   // 赛道上环岛个数 + 1
@@ -452,7 +454,7 @@ void image_Preprocess(void)
     float image_histPorprotion[256];
     uint8_t ThreMax = maxThre, ThreMin = minThre/*, threMiddle = 255*/;
     float image_threUpFix = part_klow1.floatVal, image_threDownFix = part_khigh1.floatVal/*, image_threMiddleFix = 1.0*/;
-    uint8_t startLine = 0,endLine=86;
+    uint8_t startLine = 2,endLine=86;
     float* ptrhistPorprotion = &image_histPorprotion[0];
         uint16_t* ptrHistGramCy = image_histGram;
         uint8_t* fullBufferCy = fullBuffer;
@@ -1765,7 +1767,7 @@ void image_main()
         if (mid_line[i] != MISS)
             IMG[i][mid_line[i]] = green;
 
-    IMG[74][mid_line[74]] = purple;
+   // IMG[74][mid_line[74]] = purple;
 }
 
 ////////////////////////////////////////////
@@ -1797,13 +1799,13 @@ void judge_type_road() {
 
     //十字
     if (state == stateStart && flagChange == 0) {
-        cross_in();
+//        cross_in();
         if (my_road[40].white_num != 0)
             folk_road_in();
-            folkTimesCNT();
+//            folkTimesCNT();
             test_varible[6] = folkCNT;
 
-        T_island_in_start();
+//        T_island_in_start();
         if (lastState != state) {
             flagChange = 1;
         }
@@ -2088,7 +2090,7 @@ void judge_type_road() {
 //        test_varible[14] = straightFlag;
     }
 
-    roadMemory();
+//    roadMemory();
 //    if(sRoadFlag == 0)
 //    {
 //        small_s_road();
@@ -6379,7 +6381,6 @@ void cross_T_out_start() {
     //}
 }
 
-int tCrossStatus;
 ////////////////////////////////////////////
 //功能：出T字口补线
 //输入：
@@ -7131,6 +7132,7 @@ void folk_road_in() {
                     }
                     //printf("flag=%d", flag1);
                     if (flag1 == 1 && top >= 20 && minR >= 40 && minL >= 40
+                            && top <=NEAR_LINE && minR <= NEAR_LINE && minL <= NEAR_LINE
                         ) {
 
                         int leftRoad[CAMERA_H];
@@ -7145,13 +7147,13 @@ void folk_road_in() {
                         }
                         double k = calculate_slope(min + 2, NEAR_LINE - 1, mid);
 
-                        for (int i = minL; i >= 10; i--) {
+                        for (int i = minL; i >= 5; i--) {
                             leftRoad[i] = k * (i - minL) + left_line[minL];
-                             IMG[i][leftRoad[i]] = purple;
+                             //IMG[i][leftRoad[i]] = purple;
                         }
-                        for (int i = minR; i >= 10; i--) {
+                        for (int i = minR; i >= 5; i--) {
                             rightRoad[i] = k * (i - minR) + right_line[minR];
-                            IMG[i][rightRoad[i]] = purple;
+                            //IMG[i][rightRoad[i]] = purple;
                         }
 
                         //两直线内几乎没有赛道
@@ -7376,12 +7378,12 @@ void design_folk_road() {
     uint8_t j_left[CAMERA_H];
     uint8_t j_right[CAMERA_H];
     double k_delta = -0.2;
-    int width = 27;
+    int width = 40;
     j_left[NEAR_LINE] = j_continue[NEAR_LINE];
     j_right[NEAR_LINE] = j_continue[NEAR_LINE];
     for (int i = NEAR_LINE - 1; i >= FAR_LINE; i--) {
-        j_left[NEAR_LINE] = j_continue[NEAR_LINE];
-        j_right[NEAR_LINE] = j_continue[NEAR_LINE];
+        j_left[i] = j_continue[i];
+        j_right[i] = j_continue[i];
         for (int j = 1; j <= my_road[i].white_num; j++) {
             if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_left[i + 1]].left) <= abs(my_road[i].connected[j_left[i]].left - my_road[i + 1].connected[j_left[i + 1]].left)
                 && my_road[i].connected[j].width > 15) {
@@ -7588,7 +7590,7 @@ void protection() {
         pmap = pmap + 40;
         for (int j = 40; j < 148; j++)
         {
-            if (*(pmap) < 120)
+            if (*(pmap) < presentTHRE.intVal)
             {
                 count1++;
             }
@@ -7598,33 +7600,11 @@ void protection() {
         pmap = pmap + 40;
     }
     ////printf("count1=%d  ", count1);
-    /*if (count1 >= 108 * 8) //printf("1111");
-    else //printf("0000");*/
-}
-
-////////////////////////////////////////////
-//功能：中线平滑滤波
-//输入：
-//输出：
-//备注：
-///////////////////////////////////////////
-void mid_line_filter() {
-
-    for (int i = NEAR_LINE - 2; i > 3; i--)
-    {
-        if (abs(mid_line[i] - mid_line[i + 1]) > 20)
-        {
-            mid_line[i] = mid_line[i + 1];
-        }
-        else
-        {
-            mid_line[i] = (mid_line[i - 2] + mid_line[i - 1] + mid_line[i] + mid_line[i + 1] + mid_line[i + 2]) / 5;
-        }
-    }
-    mid_line[0] = mid_line[1] = mid_line[2] = mid_line[3];
-
+    if (count1 >= 108 * 8) stopFlag = 1;
 
 }
+
+
 
 ///////////////////////////////////////////
 //功能：车库识别
@@ -8065,7 +8045,6 @@ int sign_carPark_in() {
 
 }
 
-int flagSee = 0;
 ////////////////////////////////////////////
 //功能：开始入库的标志
 //输入：
@@ -8234,7 +8213,6 @@ void design_carpark_turn() {
 
 }
 
-uint8_t car_stop = 0;
 ///////////////////////////////////////////
 //功能：车库停车
 //输入：
@@ -8519,14 +8497,14 @@ void carPark_main()
     {
         leftPark = 0;
         rightPark = 1;
-        searchParkLine();
+//        searchParkLine();
 
     }
     else if(carParkTimes == 2 && file1.intVal == -2)
     {
         leftPark = 1;
         rightPark = 0;
-        searchParkLine();
+//        searchParkLine();
 
     }
 }
@@ -8981,7 +8959,8 @@ void s_road_filter()
     }
 }
 
-void mid_line_filter() {
+void mid_line_filter()
+{
 
     for (int i = NEAR_LINE - 4; i > 3; i--)
     {
