@@ -1121,7 +1121,7 @@ void IPM_map(void)
 {
     double fix[CAMERA_H];
     uint8_t line_up = 30;
-    uint8_t line_down = 100;
+    uint8_t line_down = 90;
     double fix_up = 1.2;
     double fix_down = 0.9;
     for (int i = 0; i < 120; i++) {
@@ -7186,7 +7186,7 @@ void folk_road_in() {
                         }
                     }
                     ////printf("flag=%d", flag1);
-                    if (flag1 == 1 && top >= 20 && minR >= 40 && minL >= 40
+                    if (flag1 == 1 && top >= 30 && minR >= 40 && minL >= 40
                         ) {
                         int mid[CAMERA_H];
                         int min = minR;
@@ -7386,7 +7386,7 @@ void folk_road_in() {
                     && ((fabs(calculate_slope_struct(minL - 14, minL - 1, j_left, LEFT) - calculate_slope_struct(top - 14, top - 1, j_left, RIGHT)) < 0.6))
                     && fabs(calculate_slope_struct(minL + 1, minL + 14, j_left, LEFT) - calculate_slope_struct(top - 14, top - 1, j_left, RIGHT)) > 1
                     && 0 <= calculate_slope_struct(top - 14, top - 1, j_left, RIGHT) && calculate_slope_struct(top - 14, top - 1, j_left, RIGHT) <= 1.5
-                    && top >= 25 && minR >= 50 && minL >= 40
+                    && top >= 40 && minR >= 50 && minL >= 50
                     && top < minL && minL < minR
                     && sumRD <= 7
                     ) {
