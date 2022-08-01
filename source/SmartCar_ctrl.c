@@ -981,7 +981,7 @@ void CTRL_motorDiffer()
 //            fixDiff = curveDiff.floatVal;
             if(servoError.currentError <= 0 && servoError.currentError >= -10)
             {
-                fixDiff = 0.05 * servoError.currentError + 0.6;
+                fixDiff = 0.03 * servoError.currentError + 0.8;
             }
             else if(servoError.currentError < -10 && servoError.currentError >= -30)
             {
@@ -1113,7 +1113,7 @@ void CTRL_motorDiffer()
 //            fixDiff = curveDiff.floatVal;
             if(servoError.currentError >= 0 && servoError.currentError <= 10)
             {
-                fixDiff = 0.05 * servoError.currentError + 0.6;
+                fixDiff = 0.03 * servoError.currentError + 0.8;
             }
             else if(servoError.currentError > 10 && servoError.currentError <= 30)
             {
