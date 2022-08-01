@@ -1996,8 +1996,8 @@ void judge_type_road() {
         design_island_turn();
     }
     if (state == stateIslandCircle) {
-        design_island_circle();
-        roof();
+//        design_island_circle();
+//        roof();
     }
     if (state == stateIslandOut) {
         design_island_out();
@@ -4973,7 +4973,7 @@ void island_turn() {
             int upPoint = 119;
             for (int i = 10; i <= 100; i++) {
                 if (my_road[i].connected[j_mid[i]].width < 55 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
-                    && my_road[i - 1].connected[j_mid[i - 1]].width < 40 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
+                    && my_road[i - 1].connected[j_mid[i - 1]].width < 55 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -6
                     && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 3
                     && linear_judgement_struct(i - 13, i - 1, j_mid, -LEFT) < 10
@@ -8075,10 +8075,10 @@ void protection() {
     int count1 = 0;
     uint8_t* pmap;
     pmap = fullBuffer + 75 * 188;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 20; i++)
     {
-        pmap = pmap + 40;
-        for (int j = 40; j < 148; j++)
+        pmap = pmap + 50;
+        for (int j = 50; j < 138; j++)
         {
             if (*(pmap) < presentTHRE.intVal)
             {
@@ -8087,10 +8087,10 @@ void protection() {
             pmap++;
             //////////printf("%d  ", *(pmap));
         }
-        pmap = pmap + 40;
+        pmap = pmap + 50;
     }
     //////////printf("count1=%d  ", count1);
-    if (count1 >= 108 * 8) stopFlag = 1;
+    if (count1 >= 88 * 12) stopFlag = 1;
 
 }
 
