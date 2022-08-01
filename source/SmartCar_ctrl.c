@@ -688,7 +688,7 @@ void CTRL_servoMain()
 ////            }
 //        }
     }
-    CTRL_islandPwmCount();
+//    CTRL_islandPwmCount();
     CTRL_rampPwmxianfu();
 //    CTRL_carParkPwmxianfu();
 
@@ -981,15 +981,15 @@ void CTRL_motorDiffer()
 //            fixDiff = curveDiff.floatVal;
             if(servoError.currentError <= 0 && servoError.currentError >= -10)
             {
-                fixDiff = 0.04 * servoError.currentError + 0.6;
+                fixDiff = 0.05 * servoError.currentError + 0.6;
             }
             else if(servoError.currentError < -10 && servoError.currentError >= -30)
             {
-                fixDiff = 0.005 * servoError.currentError + 0.95;
+                fixDiff = -0.005 * servoError.currentError + 1.15;
             }
             else if(servoError.currentError < -30)
             {
-                fixDiff = 1.1;
+                fixDiff = 1;
             }
             else fixDiff = 1;
 
@@ -1113,15 +1113,15 @@ void CTRL_motorDiffer()
 //            fixDiff = curveDiff.floatVal;
             if(servoError.currentError >= 0 && servoError.currentError <= 10)
             {
-                fixDiff = 0.04 * servoError.currentError + 0.6;
+                fixDiff = 0.05 * servoError.currentError + 0.6;
             }
             else if(servoError.currentError > 10 && servoError.currentError <= 30)
             {
-                fixDiff = 0.005 * servoError.currentError + 0.95;
+                fixDiff = -0.005 * servoError.currentError + 1.15;
             }
             else if(servoError.currentError > 30)
             {
-                fixDiff = 1.1;
+                fixDiff = 1;
             }
             else fixDiff = 1;
             if(straightFlag == 1)

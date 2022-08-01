@@ -1189,10 +1189,10 @@ void IPM_map(void)
 void head_clear(void)
 {
     uint8_t* my_map;
-    for (int i = 85; i >= 79; i--)
+    for (int i = 113; i >= 110; i--)
     {
         my_map = &IMG[i][0];
-        for (int j = 62; j <= 112; j++)
+        for (int j = 80; j <= 110; j++)
         {
             *(my_map + j) = white;
         }
@@ -1727,7 +1727,7 @@ void image_main()
     //THRE(wayThreshold);
     IPM_map();
     //decide_miss();
-    //head_clear();
+//    head_clear();
    // transform(wayThreshold);
 
 
@@ -1777,8 +1777,8 @@ void image_main()
 //备注：初判断应该会出现很多混淆，之后会进行类似元素的单独判断
 ///////////////////////////////////////////
 void judge_type_road() {
-    state = 90;
-    islandWhere = LEFT;
+//    state = 90;
+//    islandWhere = LEFT;
     leftUpJumpPoint = 119;
     leftDownJumpPoint = 119;
     rightUpJumpPoint = 119;
@@ -1805,7 +1805,7 @@ void judge_type_road() {
         if (my_road[40].white_num != 0)
             folk_road_in();
 //            folkTimesCNT();
-            test_varible[6] = folkCNT;
+//            test_varible[6] = folkCNT;
 
         T_island_in_start();
         if (lastState != state) {
@@ -4511,12 +4511,7 @@ void island_radius() {
 
 }
 
-////////////////////////////////////////////
-//功能：进T字路口或者环岛
-//输入：
-//输出：
-//备注：way == -1回环 way == 1 环岛
-///////////////////////////////////////////
+
 ////////////////////////////////////////////
 //功能：进T字路口或者环岛
 //输入：
@@ -4990,8 +4985,16 @@ void island_turn() {
             ////////printf("上拐点：up=%d\n", upPoint);
             if (fabs(calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, LEFT) - calculate_slope_struct(upPoint - 14, upPoint - 1, j_mid, RIGHT)) < 0.2) {
                 int up = 20;
-                if (IslandRadius == 70) {
-                    up = 66;
+                if(IslandRadius == 70){
+                    up = 61;
+                }
+                else if(IslandRadius == 50)
+                {
+                    up = 44;
+                }
+                else if(IslandRadius == 100)
+                {
+                    up = 62;
                 }
                 if (up + ctrl_upPoint <= upPoint && upPoint <= 100) {
                     state = stateIslandTurn;
@@ -5034,8 +5037,16 @@ void island_turn() {
             ////////printf("上拐点：up=%d\n", upPoint);
             if (1) {
                 int up = 20;
-                if (IslandRadius == 70) {
-                    up = 66;
+                if(IslandRadius == 70){
+                    up = 61;
+                }
+                else if(IslandRadius == 50)
+                {
+                    up = 44;
+                }
+                else if(IslandRadius == 100)
+                {
+                    up = 62;
                 }
                 if (up + ctrl_upPoint<= upPoint && upPoint < 100) {
                     state = stateIslandTurn;
@@ -5174,7 +5185,7 @@ void design_island_turn() {
                 if (k < -3) k = -3;
                 if (IslandRadius == 50)
                 {
-                    k = k - 0.2;
+                    k = k - 0.5;
                 }
                 else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
@@ -5228,7 +5239,7 @@ void design_island_turn() {
                     if (k2 < -5) k2 = -5;
                     if (IslandRadius == 50)
                     {
-                        k2 = k2 - 0.2;
+                        k2 = k2 - 0.5;
                     }
                     else if (IslandRadius >= 60 && IslandRadius <= 70)
                     {
@@ -5380,7 +5391,7 @@ void design_island_turn() {
                 if (k > 3) k = 3;
                 if (IslandRadius == 50)
                 {
-                    k = k + 0.2;
+                    k = k + 0.5;
                 }
                 else if (IslandRadius >= 60 && IslandRadius <= 70)
                 {
@@ -5441,7 +5452,7 @@ void design_island_turn() {
                     if (k2 > 5) k2 = 5;
                     if (IslandRadius == 50)
                     {
-                        k2 = k2 + 0.2;
+                        k2 = k2 + 0.5;
                     }
                     else if (IslandRadius >= 60 && IslandRadius <= 70)
                     {
@@ -5480,6 +5491,8 @@ void design_island_turn() {
     }
 
 }
+
+
 ////////////////////////////////////////////
 //功能：环岛弯道
 //输入：
@@ -5503,7 +5516,7 @@ void island_circle() {
         }
         if (1) {
             int upPoint = 119;
-            for (int i = 110; i >= 50; i++) {
+            for (int i = 110; i >= 50; i--) {
                 if (my_road[i].connected[j_mid[i]].width < 65 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 65 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
                     && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 4) {
@@ -5512,7 +5525,7 @@ void island_circle() {
                 }
             }
 
-            if (95 <= upPoint && upPoint <= NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].left < 94) {
+            if (90 <= upPoint && upPoint <= NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].left < 94) {
                 state = stateIslandCircle;
 
             }
@@ -5539,14 +5552,14 @@ void island_circle() {
         if (1) {
             int upPoint = 119;
             for (int i = 110; i >= 50; i--) {
-                if (my_road[i].connected[j_mid[i]].width < 65 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
-                    && my_road[i - 1].connected[j_mid[i - 1]].width < 65 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
-                    && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -4) {
+                if (abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 4
+                    && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 2].connected[j_mid[i - 2]].right) <= 6
+                    && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -6
+                    && my_road[i].connected[j_mid[i]].right - my_road[i + 2].connected[j_mid[i + 2]].right < -6) {
                     upPoint = i;
                     break;
                 }
             }
-
             if (90 <= upPoint && upPoint <= NEAR_LINE && my_road[upPoint].connected[j_mid[upPoint]].right > 94) {
                 state = stateIslandCircle;
             }
@@ -5615,8 +5628,7 @@ void roof(void)
 //备注：
 ///////////////////////////////////////////
 void island_out() {
-    int ctrl_dxMax=islandParam4.intVal;
-    int ctrl_dxMin=islandParam3.intVal;
+    int dx = 0;
     if (1) {
         if (islandWhere == RIGHT) {
 
@@ -5625,7 +5637,7 @@ void island_out() {
             int start = NEAR_LINE;
             while (start >= 50 && left_line[start] >= left_line[NEAR_LINE] - 10) {
                 if (my_road[start - 1].white_num != 0) {
-                    if (left_line[start] >= xMax - 1) {
+                    if (left_line[start] >= xMax - 1 && left_line[start] > left_side[start] + 1) {
                         xMax = left_line[start];
                         yMax = start;
                     }
@@ -5648,10 +5660,9 @@ void island_out() {
             {
                 xmax = 96;
             }
-            ////////printf("y=%d,x=%d\n", yMax, xMax);
-            // ////////printf("xMax=%d,y=%d\n", xMax,yMax);d
-            if (left_line[yMax - 15] != MISS && (calculate_slope_uint(yMax - 18, yMax - 1, left_line) * calculate_slope_uint(yMax + 2, yMax + 18, left_line) < 0 || left_line[yMax] - left_line[yMax - 3] > 6)) {
-                if (xMax < (xmax - ctrl_dxMax)  && yMax >= 40 && yMax <= 110) {
+            // printf("xMax=%d,y=%d\n", xMax,yMax);d
+            if (left_line[yMax - 15] != MISS && (calculate_slope_uint(yMax - 18, yMax - 1, left_line) <=0 &&  calculate_slope_uint(yMax + 2, yMax + 18, left_line) > 0 || left_line[yMax] - left_line[yMax - 3] > 6)) {
+                if (((xMax < xmax && yMax >= 40 && yMax < 95) || (xMax < xmax + 5 && yMax >= 95 && yMax < 109))) {
                     state = stateIslandOut;
                 }
             }
@@ -5659,11 +5670,11 @@ void island_out() {
         }
         else if (islandWhere == LEFT) {
             int xMin = 188;
-            int yMin = 100;
+            int yMin = 109;
             int start = NEAR_LINE;
             while (start >= 50 && right_line[start] <= right_line[NEAR_LINE] + 10) {
                 if (my_road[start - 1].white_num != 0) {
-                    if (right_line[start] <= xMin + 1) {
+                    if (right_line[start] <= xMin + 1 && right_line[start] < right_side[start] - 1) {
                         xMin = right_line[start];
                         yMin = start;
                     }
@@ -5673,7 +5684,7 @@ void island_out() {
                 }
                 start--;
             }
-            //  ////////printf("yMin=%d,xMin=%d\n", yMin, xMin);
+            //  printf("yMin=%d,xMin=%d\n", yMin, xMin);
                 /*for (int i = NEAR_LINE; i >= 20; i--) {
                     if (my_road[i - 1].white_num != 0) {
                         if (right_line[i] <= xMin) {
@@ -5698,9 +5709,8 @@ void island_out() {
             {
                 xmin = 95;
             }
-            //  ////////printf("y=%d\n", yMin);
             if (left_line[yMin - 15] != MISS) {
-                if (xMin > (xmin + ctrl_dxMin) && yMin >= 40 && yMin <= 110 && (calculate_slope_uint(yMin - 18, yMin - 1, right_line) * calculate_slope_uint(yMin + 2, yMin + 18, right_line) < 0 || right_line[yMin] - right_line[yMin - 3] < -6)) {
+                if (((xMin > xmin && yMin >= 40 && yMin < 95)  || (xMin > xmin - 5 && yMin >= 95&& yMin < 109))&& (calculate_slope_uint(yMin - 18, yMin - 1, right_line) < 0 &&  calculate_slope_uint(yMin + 2, yMin + 18, right_line) >= 0 || right_line[yMin] - right_line[yMin - 3] < -6)) {
                     state = stateIslandOut;
                 }
             }
@@ -5716,49 +5726,77 @@ void island_out() {
 ///////////////////////////////////////////
 void design_island_circle() {
     int i = NEAR_LINE;
-    int ctrl_distance = 45;
-    if(islandWhere == RIGHT){
-        uint8_t j_mid[CAMERA_H];
-        j_mid[NEAR_LINE] = j_continue[NEAR_LINE];
-        for (int i = NEAR_LINE - 1; i >= 2; i--) {
-            j_mid[i] = j_continue[i];
-            for (int j = 1; j <= my_road[i].white_num; j++) {
-                if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_mid[i + 1]].right) <= abs(my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right)
-                        && my_road[i].connected[j].width > 20) {
-                    j_mid[i] = j;
+    int distance = 50;
 
-                }
-
-            }
-            left_line[i]=my_road[i].connected[j_mid[i]].left;
-            right_line[i]=my_road[i].connected[j_mid[i]].right;
-        }
-    }else if(islandWhere == LEFT){
+    if (islandWhere == LEFT) {
         uint8_t j_mid[CAMERA_H];
         j_mid[NEAR_LINE] = j_continue[NEAR_LINE];
         for (int i = NEAR_LINE - 1; i >= 2; i--) {
             j_mid[i] = j_continue[i];
             for (int j = 1; j <= my_road[i].white_num; j++) {
                 if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_mid[i + 1]].left) < abs(my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left)
-                        && my_road[i].connected[j].width > 20) {
+                    && my_road[i].connected[j].width > 20) {
                     j_mid[i] = j;
 
                 }
 
             }
-            left_line[i]=my_road[i].connected[j_mid[i]].left;
-            right_line[i]=my_road[i].connected[j_mid[i]].right;
+            if (my_road[i].connected[j_mid[i]].left <= my_road[i + 1].connected[j_mid[i + 1]].right && my_road[i].connected[j_mid[i]].right >= my_road[i + 1].connected[j_mid[i + 1]].left && left_line[i+1] != MISS && right_line[i + 1]!=MISS
+                && my_road[i].connected[j_mid[i]].width > 30
+                ){
+                left_line[i] = my_road[i].connected[j_mid[i]].left;
+                right_line[i] = my_road[i].connected[j_mid[i]].right;
+            }
+            else {
+                left_line[i] = MISS;
+                right_line[i] = MISS;
+            }
+
         }
     }
+    else if (islandWhere == RIGHT) {
+        uint8_t j_mid[CAMERA_H];
+        j_mid[NEAR_LINE] = j_continue[NEAR_LINE];
+        for (int i = NEAR_LINE - 1; i >= 2; i--) {
+            j_mid[i] = j_continue[i];
+            for (int j = 1; j <= my_road[i].white_num; j++) {
+                if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_mid[i + 1]].right) < abs(my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right)
+                    && my_road[i].connected[j].width > 20) {
+                    j_mid[i] = j;
 
-    while (i >= 1 && left_line[i] != MISS) {
+                }
+
+            }
+            if (my_road[i].connected[j_mid[i]].left <= my_road[i+1].connected[j_mid[i+1]].right && my_road[i].connected[j_mid[i]].right >= my_road[i + 1].connected[j_mid[i + 1]].left && left_line[i + 1] != MISS && right_line[i + 1] != MISS
+                && my_road[i].connected[j_mid[i]].width > 30
+                ) {
+                left_line[i] = my_road[i].connected[j_mid[i]].left;
+                right_line[i] = my_road[i].connected[j_mid[i]].right;
+            }
+            else {
+                left_line[i] = MISS;
+                right_line[i] = MISS;
+            }
+
+        }
+    }
+    int a=0;
+    while (i >= 1 && left_line[i] != MISS && right_line[i] != MISS) {
         if (islandWhere == LEFT) {
-            left_line[i] = right_line[i] - ctrl_distance;
-            //            right_line[i] -= distance;
+            a= right_line[i] - distance;
+            if(a<=left_side[i]){
+                left_line[i]=left_side[i];
+            }else{
+                left_line[i]=a;
+            }
         }
         else if (islandWhere == RIGHT) {
-            right_line[i] = left_line[i] + ctrl_distance;
-            //            right_line[i] -= distance;
+            a = left_line[i] + distance;
+            if(a>=right_side[i]){
+                right_line[i]=right_side[i];
+            }else{
+                right_line[i]=a;
+            }
         }
         i--;
     }
@@ -5775,9 +5813,19 @@ void design_island_out() {
     double dk = islandParam5.floatVal;
     if (islandWhere == RIGHT) {
         int up = 10;
-        if (IslandRadius == 70) {
+        if(IslandRadius == 70){
             up = 5;
         }
+        else if(IslandRadius == 50)
+        {
+            up = 8;
+        }
+        else if(IslandRadius == 100)
+        {
+            up = 3;
+        }
+
+
         int xMax = 0;
         int yMax = NEAR_LINE;
         int start = NEAR_LINE;
@@ -5832,9 +5880,19 @@ void design_island_out() {
     }
     else if (islandWhere == LEFT) {
         int up = 10;
-        if (IslandRadius == 70) {
+        if(IslandRadius == 70){
             up = 5;
         }
+        else if(IslandRadius == 50)
+        {
+            up = 8;
+        }
+        else if(IslandRadius == 100)
+        {
+            up = 3;
+        }
+
+
         int xMin = 188;
         int yMin = 110;
         int start = 110;
@@ -5898,13 +5956,13 @@ void island_straight() {
     if (my_road[30].white_num != 0) {
         if (islandWhere == RIGHT) {
             //////////printf("jl=%f\n", linear_judgement(70, 90, left_line));
-            if (calculate_slope_uint(50, 70, left_line) > -1.1 && calculate_slope_uint(80, 100, left_line) > -1.1
+            if (calculate_slope_uint(50, 70, left_line) > -0.9 && calculate_slope_uint(80, 100, left_line) > -0.9
                 && calculate_slope_uint(50, 70, left_line) <= 0 && calculate_slope_uint(80, 100, left_line) <= 0
-                && linear_judgement(70, 90, left_line) < 400) {
+                && linear_judgement(70, 90, left_line) < 200) {
                 flag = 1;
             }
 
-            if (fabs(calculate_slope_uint(50, 70, left_line) - calculate_slope_uint(80, 100, left_line)) > 0.2
+            if (fabs(calculate_slope_uint(50, 70, left_line) - calculate_slope_uint(80, 100, left_line)) > 0.3
                 ) {
                 flag = 0;
             }
@@ -5913,12 +5971,12 @@ void island_straight() {
         else if (islandWhere == LEFT) {
 
 
-            if (calculate_slope_uint(50, 70, right_line) < 1.1 && calculate_slope_uint(80, 100, right_line) < 1.1
+            if (calculate_slope_uint(50, 70, right_line) < 0.9 && calculate_slope_uint(80, 100, right_line) < 0.9
                 && calculate_slope_uint(50, 70, right_line) >= -0.1 && calculate_slope_uint(80, 100, right_line) >= -0.1
-                && linear_judgement(70, 90, right_line) < 400) {
+                && linear_judgement(70, 90, right_line) < 200) {
                 flag = 1;
             }
-            if (fabs(calculate_slope_uint(50, 70, right_line) - calculate_slope_uint(80, 100, right_line)) > 0.2
+            if (fabs(calculate_slope_uint(50, 70, right_line) - calculate_slope_uint(80, 100, right_line)) > 0.3
                 ) {
                 flag = 0;
             }
@@ -9115,7 +9173,7 @@ void mid_line_filter()
     for (int i = NEAR_LINE - 4; i > 3; i--)
     {
         if (left_line[i] != MISS && my_road[i].white_num != 0) {
-            if (abs(mid_line[i] - mid_line[i + 1]) > 20)
+            if (abs(mid_line[i] - mid_line[i + 1]) > 20 && state != stateIslandCircle)
             {
                 mid_line[i] = mid_line[i + 1];
             }
@@ -9400,9 +9458,11 @@ void TcircleFix()
 uint8_t aver_mid_line_foresee()
 {
     uint8_t averageMidLine;
-    float vision1 = mid_line[present_vision], vision2 = mid_line[present_vision - 1], vision3 = mid_line[present_vision + 1];
+    float vision1 = mid_line[present_vision], vision2 = mid_line[present_vision - 5], vision3 = mid_line[present_vision - 10], vision4 = mid_line[present_vision + 5],vision5 = mid_line[present_vision + 10];
+    float vision6 = mid_line[present_vision - 1],vision7 = mid_line[present_vision + 1];
+    averageMidLine = (uint8_t)(vision1 * 0.4 + vision2 * 0.2 + vision3 * 0.1 + vision4 * 0.2 + vision5 * 0.1);
+//    averageMidLine = (uint8_t)(vision1 * 0.6 + vision6 * 0.2 + vision7 * 0.2);
 
-    averageMidLine = (uint8_t)(vision1 * 0.6 + vision2 * 0.2 + vision3 * 0.2);
     return averageMidLine;
 }
 
