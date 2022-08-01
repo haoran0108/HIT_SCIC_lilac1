@@ -5637,7 +5637,17 @@ void island_out() {
             }
 
             int xmax = 120;
-
+            if(IslandRadius == 70){
+                xmax = 108;
+            }
+            else if(IslandRadius == 50)
+            {
+                xmax = 98;
+            }
+            else if(IslandRadius == 100)
+            {
+                xmax = 96;
+            }
             ////////printf("y=%d,x=%d\n", yMax, xMax);
             // ////////printf("xMax=%d,y=%d\n", xMax,yMax);d
             if (left_line[yMax - 15] != MISS && (calculate_slope_uint(yMax - 18, yMax - 1, left_line) * calculate_slope_uint(yMax + 2, yMax + 18, left_line) < 0 || left_line[yMax] - left_line[yMax - 3] > 6)) {
@@ -5677,7 +5687,15 @@ void island_out() {
                 }*/
 
             int xmin = 80;
-            if (IslandRadius == 70) {
+            if(IslandRadius == 70){
+                xmin = 90;
+            }
+            else if(IslandRadius == 50)
+            {
+                xmin = 94;
+            }
+            else if(IslandRadius == 100)
+            {
                 xmin = 95;
             }
             //  ////////printf("y=%d\n", yMin);
