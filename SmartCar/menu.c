@@ -304,14 +304,14 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     KdFuzzy = MENU_fileInit(KdFuzzy, 1, 3.5, "Kd", 5, none, &KpFuzzy, &speedLow, NULL, &KdBig);
 
 
-    KdBig = MENU_fileInit(KdBig, 1, 3, "KdBIG", 2, datafloat, NULL, &KdMid, &KdFuzzy, NULL);
-    KdMid = MENU_fileInit(KdMid, 1, 2.8, "KdMID", 3, datafloat, &KdBig, &KdSmall, NULL, NULL);
-    KdSmall = MENU_fileInit(KdSmall, 1, 2.4, "KdSMALL", 4, datafloat, &KdMid, &KdZero, NULL, NULL);
-    KdZero = MENU_fileInit(KdZero, 1, 2.2, "KdZO", 5, datafloat, &KdSmall, NULL, NULL, NULL);
+    KdBig = MENU_fileInit(KdBig, 1, 2.5, "KdBIG", 2, datafloat, NULL, &KdMid, &KdFuzzy, NULL);
+    KdMid = MENU_fileInit(KdMid, 1, 2.5, "KdMID", 3, datafloat, &KdBig, &KdSmall, NULL, NULL);
+    KdSmall = MENU_fileInit(KdSmall, 1, 2.6, "KdSMALL", 4, datafloat, &KdMid, &KdZero, NULL, NULL);
+    KdZero = MENU_fileInit(KdZero, 1, 2.8, "KdZO", 5, datafloat, &KdSmall, NULL, NULL, NULL);
 
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
-    presentSpeed = MENU_fileInit(presentSpeed, 90, 1.1, "speed", 2, dataint, NULL, &presentVision, &file2, NULL);
-    presentVision = MENU_fileInit(presentVision, 78, 3.3, "VISION", 3, dataint, &presentSpeed, &KpFuzzy, NULL, NULL);
+    presentSpeed = MENU_fileInit(presentSpeed, 95, 1.1, "speed", 2, dataint, NULL, &presentVision, &file2, NULL);
+    presentVision = MENU_fileInit(presentVision, 76, 3.3, "VISION", 3, dataint, &presentSpeed, &KpFuzzy, NULL, NULL);
     fuzzyPB = MENU_fileInit(fuzzyPB, 1, 2.2, "fuzzyPB", 2, datafloat, NULL, &fuzzyPM, &KpFuzzy, NULL);
     fuzzyPM = MENU_fileInit(fuzzyPM, 1, 2, "fuzzyPM", 3, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
     fuzzyPS = MENU_fileInit(fuzzyPS, 1, 1.9, "fuzzyPS", 4, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);

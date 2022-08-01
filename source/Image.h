@@ -177,7 +177,7 @@ extern uint8_t folkOutTimes;
 extern uint8_t speedUpPhase;
 extern uint8_t islandFinalTimes;
 extern int FolkRoadWhere;
-
+extern uint8_t count_num_IT;
 typedef struct {
     int x;
     int y;

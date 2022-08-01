@@ -915,31 +915,7 @@ void CTRL_motorDiffer()
             expectR = (int32)(present_speed * k);
         }
 
-//        if(straightFlag == 1)
-//        {
-//            expectL = (int32)(present_speed * display6.floatVal);
-//            expectR = (int32)(present_speed * display6.floatVal * k);
-//            GPIO_Set(P22, 0, 1);
-//        }
-//        else if(straightFlag == 0)
-//        {
-//            if(state == 20 || state == 50)
-//            {
-//                expectL = (int32)(present_speed * display7.floatVal);
-//                expectR = (int32)(present_speed * display7.floatVal * k);
-//            }
-//            else if(state == 130)
-//            {
-//                expectL = rampSpeed.intVal;
-//                expectR = rampSpeed.intVal;
-//            }
-//            else
-//            {
-//                expectL = (int32)(present_speed);
-//                expectR = (int32)(present_speed * k);
-//            }
-//            GPIO_Set(P22, 0, 0);
-//        }
+
         if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut)
         {
             fixDiff = islandDiff.floatVal;
@@ -1002,7 +978,21 @@ void CTRL_motorDiffer()
 
         else
         {
-            fixDiff = curveDiff.floatVal;
+//            fixDiff = curveDiff.floatVal;
+            if(servoError.currentError <= 0 && servoError.currentError >= -10)
+            {
+                fixDiff = 0.04 * servoError.currentError + 0.6;
+            }
+            else if(servoError.currentError < -10 && servoError.currentError >= -30)
+            {
+                fixDiff = 0.005 * servoError.currentError + 0.95;
+            }
+            else if(servoError.currentError < -30)
+            {
+                fixDiff = 1.1;
+            }
+            else fixDiff = 1;
+
             if(straightFlag == 1)
             {
 //                fixDiff -= 0.2;
@@ -1120,7 +1110,20 @@ void CTRL_motorDiffer()
 
         else
         {
-            fixDiff = curveDiff.floatVal;
+//            fixDiff = curveDiff.floatVal;
+            if(servoError.currentError >= 0 && servoError.currentError <= 10)
+            {
+                fixDiff = 0.04 * servoError.currentError + 0.6;
+            }
+            else if(servoError.currentError > 10 && servoError.currentError <= 30)
+            {
+                fixDiff = 0.005 * servoError.currentError + 0.95;
+            }
+            else if(servoError.currentError > 30)
+            {
+                fixDiff = 1.1;
+            }
+            else fixDiff = 1;
             if(straightFlag == 1)
             {
 //                fixDiff -= 0.2;

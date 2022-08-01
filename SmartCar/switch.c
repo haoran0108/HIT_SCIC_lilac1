@@ -119,21 +119,8 @@ void SW_readSwitch()
         islandFinalTimes = 0;
 
         FolkRoadWhere = folkWay.intVal;
+        count_num_IT = 0;
 
-        if(file1.intVal == -1)//×ó »·µº
-        {
-            wayIT = 1;
-        }
-
-        else if(file1.intVal == 0)
-        {
-            wayIT = 1;
-        }
-
-        else if(file1.intVal == 1)
-        {
-            wayIT = -1;
-        }
     }
     else
     {
