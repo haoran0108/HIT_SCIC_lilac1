@@ -154,7 +154,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     islandParam3 = MENU_fileInit(islandParam3, 0, 0.35, "xleft", 6, dataint, &islandParam2, &islandParam4, NULL, NULL);
     islandParam4 = MENU_fileInit(islandParam4, 0, 0.35, "xright", 7, dataint, &islandParam3, &islandParam5, NULL, NULL);
     islandParam5 = MENU_fileInit(islandParam5, 64, 0, "dk-out", 2, datafloat, &islandParam4, &islandParam6, NULL, NULL);
-    islandParam6 = MENU_fileInit(islandParam6, 80, 0, "radius", 3, dataint, &islandParam5, &islandBottom, NULL, NULL);
+    islandParam6 = MENU_fileInit(islandParam6, 50, 0, "radius", 3, dataint, &islandParam5, &islandBottom, NULL, NULL);
     islandBottom = MENU_fileInit(islandBottom, 1, 0.35, "bottom", 4, none, &islandParam6, NULL, NULL, NULL);
 
 

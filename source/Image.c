@@ -4991,7 +4991,7 @@ void island_turn() {
                 }
                 else if(IslandRadius == 80)
                 {
-                    up = 33;
+                    up = 20;
                 }
                 else if(IslandRadius == 50)
                 {
@@ -5047,7 +5047,7 @@ void island_turn() {
                 }
                 else if(IslandRadius == 80)
                 {
-                    up = 33;
+                    up = 20;
                 }
                 else if(IslandRadius == 50)
                 {
@@ -5243,6 +5243,8 @@ void design_island_turn() {
                 if (upPoint != 119) last_rightupPoint = upPoint;
 
             }
+            test_varible[14]=upPoint;
+
             /*
             for (int i = 105; i >= 30; i--) {
                 if (
@@ -5402,7 +5404,7 @@ void design_island_turn() {
 
                     for (int i = NEAR_LINE - 1; i > upPoint; i--)
                     {
-                        left_line[i] = (k - ctrl_dkRight) * (i - upPoint) + my_road[107].connected[j_mid[107]].left;
+                        left_line[i] = (k - ctrl_dkRight) * (i - 107) + my_road[107].connected[j_mid[107]].left;
                     }
 
                 }
@@ -5420,6 +5422,8 @@ void design_island_turn() {
                         if(flagt==1) left_line[i] = 187;
                     }
                 }
+                test_varible[15]=count1;
+
             }
         }
 
@@ -5950,7 +5954,7 @@ void island_out() {
                 xmax = 96;
             }
             // printf("xMax=%d,y=%d\n", xMax,yMax);d
-            if (left_line[yMax - 15] != MISS && (calculate_slope_uint(yMax - 18, yMax - 1, left_line) <=0 &&  calculate_slope_uint(yMax + 2, yMax + 18, left_line) > 0 || left_line[yMax] - left_line[yMax - 3] > 6)) {
+            if (left_line[yMax - 15] != MISS && (calculate_slope_uint(yMax - 18, yMax - 1, left_line) <=0 &&  calculate_slope_uint(yMax + 2, yMax + 18, left_line) >= 0 || left_line[yMax] - left_line[yMax - 3] > 6)) {
                 if (((xMax < xmax - ctrl_xmax && yMax > 40 && yMax < 95) || (xMax < xmax + 5 && yMax >= 95 && yMax < 109))) {
                     state = stateIslandOut;
                 }
@@ -6073,26 +6077,41 @@ void design_island_circle() {
 
         }
     }
-    int a=0;
-    while (i >= 1 && left_line[i] != MISS && right_line[i] != MISS) {
-        if (islandWhere == LEFT) {
-            a= right_line[i] - distance;
-            if(a<=left_side[i]){
-                left_line[i]=left_side[i];
-            }else{
-                left_line[i]=a;
-            }
-        }
-        else if (islandWhere == RIGHT) {
-            a = left_line[i] + distance;
-            if(a>=right_side[i]){
-                right_line[i]=right_side[i];
-            }else{
-                right_line[i]=a;
-            }
-        }
-        i--;
-    }
+//    if (islandWhere == LEFT) {
+//        for(int i=100;i>= 40;i--){
+//            if(right_line[i] > right_line[i + 1]  && my_road[i].white_num!=0 ){
+//                right_line[i] = right_line[i + 1];
+//            }
+//        }
+//     }
+//    else if (islandWhere == RIGHT) {
+//        for(int i=100;i>= 40;i--){
+//            if(left_line[i] < left_line[i + 1]  && my_road[i].white_num!=0){
+//                left_line[i] = left_line[i + 1];
+//            }
+//        }
+//    }
+
+//    int a=0;
+//    while (i >= 1 && left_line[i] != MISS && right_line[i] != MISS) {
+//        if (islandWhere == LEFT) {
+//            a= right_line[i] - distance;
+//            if(a<=left_side[i]){
+//                left_line[i]=left_side[i];
+//            }else{
+//                left_line[i]=a;
+//            }
+//        }
+//        else if (islandWhere == RIGHT) {
+//            a = left_line[i] + distance;
+//            if(a>=right_side[i]){
+//                right_line[i]=right_side[i];
+//            }else{
+//                right_line[i]=a;
+//            }
+//        }
+//        i--;
+//    }
 
 }
 
