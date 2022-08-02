@@ -5954,7 +5954,7 @@ void island_out() {
                 xmax = 96;
             }
             // printf("xMax=%d,y=%d\n", xMax,yMax);d
-            if (left_line[yMax - 15] != MISS && (calculate_slope_uint(yMax - 18, yMax - 1, left_line) <=0 &&  calculate_slope_uint(yMax + 2, yMax + 18, left_line) >= 0 || left_line[yMax] - left_line[yMax - 3] > 6)) {
+            if (left_line[yMax - 15] != MISS && ((calculate_slope_uint(yMax - 18, yMax - 1, left_line) > 0 &&  calculate_slope_uint(yMax + 2, yMax + 18, left_line) <= 0 )|| left_line[yMax] - left_line[yMax - 3] > 6)) {
                 if (((xMax < xmax - ctrl_xmax && yMax > 40 && yMax < 95) || (xMax < xmax + 5 && yMax >= 95 && yMax < 109))) {
                     state = stateIslandOut;
                 }
@@ -6007,7 +6007,7 @@ void island_out() {
                 xmin = 95;
             }
             if (left_line[yMin - 15] != MISS) {
-                if (((xMin > xmin + ctrl_xmin && yMin > 40 && yMin < 95)  || (xMin > xmin - 5 && yMin >= 95&& yMin < 109))&& (calculate_slope_uint(yMin - 18, yMin - 1, right_line) < 0 &&  calculate_slope_uint(yMin + 2, yMin + 18, right_line) >= 0 || right_line[yMin] - right_line[yMin - 3] < -6)) {
+                if (((xMin > xmin + ctrl_xmin && yMin > 40 && yMin < 95)  || (xMin > xmin - 5 && yMin >= 95&& yMin < 109))&& ((calculate_slope_uint(yMin - 18, yMin - 1, right_line) < 0 &&  calculate_slope_uint(yMin + 2, yMin + 18, right_line) >= 0 )|| right_line[yMin] - right_line[yMin - 3] < -6)) {
                     state = stateIslandOut;
                 }
             }
