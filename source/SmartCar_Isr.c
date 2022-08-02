@@ -43,7 +43,7 @@ IFX_INTERRUPT(dma_ch5_isr, 0, ERU_DMA_INT_PRIO)
 //        uint64 tim1 = 0, tim2 = 0;
         if(GPIO_Read(P13, 2) || GPIO_Read(P11, 3)){
 
-            if(parkStart == 0)
+            if(parkStart == 0 || parkStart == 3)
             {
 //                tim1 = Systick_Get(STM0)/100000;
                 image_main();

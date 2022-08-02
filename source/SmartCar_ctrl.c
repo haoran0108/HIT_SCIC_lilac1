@@ -646,7 +646,7 @@ void CTRL_servoMain()
 
             }
         }
-        else if(parkStart == 0)
+        else if(parkStart == 0 || parkStart == 3)
         {
             CTRL_ServoPID_Determine();
 
