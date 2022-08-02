@@ -1008,7 +1008,7 @@ void CTRL_motorDiffer()
     }
     else if(delta < 0)
     {
-        k = 0.9927 - 0.4257 * FabsDelta;
+        k = 1 - 0.477 * FabsDelta;
 
         if(state == 50 && tCrossStatus == 1 && TWhere == RIGHT)
         {
