@@ -468,7 +468,7 @@ void CTRL_fuzzyPID()
     {
         lastMyMidLine = myMidLine;
     }
-    if(state == laststate)
+    if(state == lastState)
     {
         if(abs(myMidLine - lastMyMidLine) >= 40)
         {
@@ -902,7 +902,7 @@ void CTRL_motorDiffer()
     if(delta > 0)
     {
 //        k = 0.9459 - 0.2679 * FabsDelta * FabsDelta - 0.1511 * FabsDelta;
-        k = 0.9997 - 0.4404 * FabsDelta;
+        k = 0.9997 - 0.4604 * FabsDelta;
         if(state == 50 && tCrossStatus == 1 && TWhere == LEFT)
         {
             expectL = (int32)(present_speed);
@@ -1834,10 +1834,10 @@ void CTRL_RoadTest()
 {
     if(file1.intVal == 0)
     {
-        if(laststate != 0 && state == 0)
+        if(lastState != 0 && state == 0)
         {
             testStateTimes += 1;
-            laststate = 0;
+            lastState = 0;
 
         }
         if(testStateTimes == display1.intVal)
@@ -2146,6 +2146,10 @@ void CTRL_encoderCount()
 //        integerSpeedAver = 0;
 //    }
 
+    if(integerSpeedR == 0 && integerSpeedL == 0)
+    {
+        integerSpeedAver = 0;
+    }
     integerSpeedAver = (integerSpeedR - integerSpeedL) / 2;
 
 //    return integerSpeedAver;

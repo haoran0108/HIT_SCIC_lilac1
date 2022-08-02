@@ -121,6 +121,8 @@ void SW_readSwitch()
         FolkRoadWhere = folkWay.intVal;
         count_num_IT = 0;
 
+        lastState = 0;
+
     }
     else
     {

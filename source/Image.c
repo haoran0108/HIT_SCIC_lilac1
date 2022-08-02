@@ -74,7 +74,7 @@ int parkJudgeCount = 0;
 int rampWayCount = 0;
 int rampJudgeCount=199;
 int lastTwoState=0;
-int laststate = 0;
+//int laststate = 0;
 uint8_t memoryFlag = 0;
 uint16_t memoryState[20] = {0};
 float p_last = 0;
@@ -110,6 +110,7 @@ uint8_t flag_straight = 0;
 //int tCrossStatus;
 int last_leftupPoint = 0;
 int last_rightupPoint = 0;
+int lastState = 0;
 
 uint8_t count_num_IT = 1; // 数环岛回环个数
 int num_island = -1;   // 赛道上环岛个数
@@ -1784,18 +1785,17 @@ void judge_type_road() {
     leftDownJumpPoint = 119;
     rightUpJumpPoint = 119;
     rightDownJumpPoint = 119;
-    int lastState = state;
     int flagChange = 0;
 
-
-    if(state != laststate)
+    if(state != lastState)
     {
-        laststate = state;
+        lastState = state;
         integerSpeedCNT += (integerSpeedR - integerSpeedL) / 2;
 //        test_varible[14] = integerSpeedCNT;
         integerSpeedL = 0;
         integerSpeedR = 0;
     }
+
     CTRL_encoderCount();
 
 //    CCD();
@@ -2014,31 +2014,16 @@ void judge_type_road() {
     }
 
 
+    test_varible[4] = integerSpeedAver;
 
-    if(state == stateFolkRoadIn  || state == stateStart)
+    if(state == stateStart)
     {
-        if(rampTimes == 0)
+        if(integerSpeedAver > 3000)
         {
-
-            if(FolkRoadWhere == RIGHT && folkOutTimes == 3 && integerSpeedCNT >= 150000)
-            {
-                rampwayOn();
-
-            }
-            else if(FolkRoadWhere == LEFT && folkOutTimes == 1)
-            {
-                rampwayOn();
-
-            }
+            rampwayOn();
 
         }
 
-
-//        if(rampJudgeCount >= 200)
-//        {
-//            rampwayOn();
-//
-//        }
         lastTwoState = 0;
         rampWayCount = 0;
         //        lastRampGyro = 0;
@@ -2055,7 +2040,7 @@ void judge_type_road() {
         if(rampWayCount > rampCount.intVal)
         {
 
-            state = 0;
+//            state = 0;
 //            afterRampFlag = 1;
             rampWayCount=0;
         }
@@ -4023,7 +4008,7 @@ void T_island_in_start() {
 
                 ////printf("上端窄赛道突变点=%d\n", upPoint);
                 ////printf("左端赛道线性=%f\n", linear_judgement(40, 90, left_road));
-                if (upPoint < downPoint && linear_judgement(30, 90, left_road) <= 60
+                if (upPoint < downPoint && linear_judgement(30, 90, left_road) <= 60 && linear_judgement_struct(downPoint - 10,downPoint+5,j_mid,RIGHT) > 18
                         && fabs(calculate_slope_struct(30,50,j_mid,LEFT) - calculate_slope_struct(60,80,j_mid,LEFT)) < 0.3) {
                     int sumU = 0;
                     for (int i = upPoint; i >= upPoint - 30 && i >= 0; i--) {
@@ -4161,7 +4146,7 @@ void T_island_in_start() {
                 ////printf("右端赛道线性=%f\n", linear_judgement(40, 90, right_road));
                 //////printf("u=%d,d=%d\n", upPoint, downPoint);
                 //根据找到的点，确定周围环岛点
-                if (upPoint < downPoint && linear_judgement(30, 90, right_road) <= 60
+                if (upPoint < downPoint && linear_judgement(30, 90, right_road) <= 60 && linear_judgement_struct(downPoint - 10,downPoint+5,j_mid,-RIGHT) > 18
                         && fabs(calculate_slope_struct(30,50,j_mid,RIGHT) - calculate_slope_struct(60,80,j_mid,RIGHT)) < 0.3) {
                     int sumU = 0;
                     for (int i = upPoint; i >= upPoint - 30 && i >= 0; i--) {
@@ -9157,27 +9142,72 @@ void carPark_main()
 //    }
 //}
 
+
+///////////////////////////////////////////
+//功能：上坡道
+//输入：
+//输出：
+//备注：
+///////////////////////////////////////////
 void rampwayOn()
 {
-    int rampFlag = 0;
-    if(TFMINI_Distance <= rampDistance.intVal && TFMINI_Distance != 0)
+//    int TFmini_distance;
+    //printf("\n入坡道:\n");
+    CTRL_rampGyroUpdate();
+//    test_varible[5] = inv_accl[2];
+    if(TFMINI_Distance <= rampDistance.intVal && TFMINI_Distance != 0 && inv_accl[2] > 9.75)
     {
-//        for(int i = 80;i <= 100; i++)
-//        {
-//            if(mid_line[i] > 106 || mid_line[i] < 80)
-//            {
-                rampFlag = 1;
-//            }
+        if(my_road[10].white_num != 0){
+            int count_dsidth = 0;
+            for (int i = 100; i > 20; i--) {
+                int up_width = right_line[i - 10] - left_line[i - 10];
+                int width = right_line[i] - left_line[i];
+                if (up_width - width > 3) {
+                    count_dsidth++;
+                }
+            //printf("第%d组：差%d,至今有多少%d\n", i,- width + up_width, count_dsidth);
 
-//        }
+            }
 
-        if(rampFlag == 1)
-        {
-            state = stateRampway;
-            rampTimes += 1;
+            if (count_dsidth >= 32) {
+                int start = 90;
+            //printf("线性：%f,%f,平行%f", linear_judgement(start - 15, start, left_line), linear_judgement(start - 15, start, right_line), fabs(calculate_slope_uint(start - 15, start, left_line) - calculate_slope_uint(start - 15, start, right_line)));
+                if(linear_judgement(start - 15,start,left_line) < 10 && linear_judgement(start - 15, start, right_line) < 10
+                //&& fabs(calculate_slope_uint(start - 15, start, left_line) - calculate_slope_uint(start - 15, start, right_line)) > 0.2
+                ){
+                    state = stateRampway;
+                }
+
+            }
+
         }
     }
+
+
+
+
 }
+//void rampwayOn()
+//{
+//    int rampFlag = 0;
+//    if(TFMINI_Distance <= rampDistance.intVal && TFMINI_Distance != 0)
+//    {
+////        for(int i = 80;i <= 100; i++)
+////        {
+////            if(mid_line[i] > 106 || mid_line[i] < 80)
+////            {
+//                rampFlag = 1;
+////            }
+//
+////        }
+//
+//        if(rampFlag == 1)
+//        {
+//            state = stateRampway;
+//            rampTimes += 1;
+//        }
+//    }
+//}
 
 void rampwayDown()
 {
@@ -9865,20 +9895,17 @@ uint8_t aver_mid_line_foresee()
         }
         visionAver1 = visionCNT1 / 5;
 
-        test_varible[4] = visionAver1;
         for(int j = present_vision; j > present_vision - 5; j--)
         {
             visionCNT2 += mid_line[j];
         }
         visionAver2 = visionCNT2 / 5;
-        test_varible[5] = visionAver2;
 
         for(int k = present_vision - 5; k > present_vision - 10; k--)
         {
             visionCNT3 += mid_line[k];
         }
         visionAver3 = visionCNT3 / 5;
-        test_varible[6] = visionAver3;
 
         averageMidLine = (uint8_t)(visionAver3 * 0.3 + visionAver2 * 0.6 + visionAver1 * 0.1);
     }
