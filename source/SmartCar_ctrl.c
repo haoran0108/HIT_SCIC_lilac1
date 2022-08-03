@@ -1766,7 +1766,7 @@ void speedDetermine()
     {
         present_speed = presentSpeed.intVal;
         present_vision = presentVision.intVal;
-
+        CTRL_dynamicVision();
     }
 
     else if(parkStart != 0)
@@ -2173,4 +2173,24 @@ void CTRL_softSpeedUp()
 //        }
 //
 //    }
+}
+
+
+void CTRL_dynamicVision()
+{
+    float averSpeedRatio;
+    float averExpectSpeed;
+    averExpectSpeed = (float)((expectL + expectR)) / 2;
+    averSpeedRatio = averExpectSpeed / presentSpeed.intVal;
+
+    if(averSpeedRatio - 1 < -1e-5)
+    {
+        present_vision += averSpeedRatio * slowVision.floatVal;
+    }
+
+    else if(averSpeedRatio - 1 > 1e-5)
+    {
+        present_vision -= averSpeedRatio * fastVision.floatVal;
+
+    }
 }

@@ -52,6 +52,7 @@ extern uint32 rightSpeed;
 extern node_t presentSpeed, presentTHRE, presentVision;
 extern node_t fuzzyPB, fuzzyPM, fuzzyPS, fuzzyZO, fuzzyNS, fuzzyNM, fuzzyNB, presentServoD;
 extern node_t KdBig, KdMid, KdSmall, KdZero;
+extern node_t slowVision, fastVision;
 extern node_t speedLow;
 extern node_t presentMotorP, presentMotorI;
 extern node_t gap;

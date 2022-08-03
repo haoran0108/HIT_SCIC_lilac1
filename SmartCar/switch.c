@@ -124,7 +124,10 @@ void SW_readSwitch()
         lastState = 0;
         longStrFlag = 0;
         shortStrFlag = 0;
+        carparkflag = 0;
     }
+
+    //开始发车
     else
     {
         if(delayFlag == 0)

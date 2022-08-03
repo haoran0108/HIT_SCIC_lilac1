@@ -180,7 +180,7 @@ extern int FolkRoadWhere;
 extern uint8_t count_num_IT;
 extern int lastState;
 extern uint8_t longStrFlag, shortStrFlag;
-
+extern uint8_t carparkflag;
 typedef struct {
     int x;
     int y;

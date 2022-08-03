@@ -36,6 +36,7 @@ node_t presentSpeed, presentTHRE, presentVision, fuzzyPB, fuzzyPM, fuzzyPS, fuzz
 node_t kpbottom;
 node_t KpFuzzy, KdFuzzy;
 node_t KdBig, KdMid, KdSmall, KdZero;
+node_t vision, slowVision, fastVision;
 node_t gap;//差速要乘的倍数
 //node_t midLineKP, gyroKP, gyroKD;
 node_t speedLow;
@@ -116,8 +117,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     file1 = MENU_fileInit(file1, 0, 1.0, "GEAR", 2, dataint, NULL, &file2, NULL, &PD);
     file2 = MENU_fileInit(file2, 1, 1.0, "PRESENT", 3, none, &file1, &file3, NULL, &presentSpeed);
     file3 = MENU_fileInit(file3, 1, 1.0, "chasu", 4, none, &file2, &display, NULL, &curveDiff);
-    curveDiff = MENU_fileInit(curveDiff, 1, 1.0, "curve", 2, datafloat, NULL, &islandDiff, &file3, NULL);
-    islandDiff = MENU_fileInit(islandDiff, 1, 1, "island", 3, datafloat, &curveDiff, &tcrossDiff, NULL, NULL);
+    curveDiff = MENU_fileInit(curveDiff, 1, 1.1, "curve", 2, datafloat, NULL, &islandDiff, &file3, NULL);
+    islandDiff = MENU_fileInit(islandDiff, 1, 1.15, "island", 3, datafloat, &curveDiff, &tcrossDiff, NULL, NULL);
     tcrossDiff = MENU_fileInit(tcrossDiff, 1, 1, "tcross", 4, datafloat, &islandDiff, &folkDiff1, NULL, NULL);
     folkDiff1 = MENU_fileInit(folkDiff1, 1, 0.9, "folk1", 5, datafloat, &tcrossDiff, &folkDiff2, NULL, NULL);
     folkDiff2 = MENU_fileInit(folkDiff2, 1, 0.9, "folk2", 6, datafloat, &folkDiff1, &curveDiffLine, NULL, NULL);
@@ -300,22 +301,24 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 //    expTime = MENU_fileInit(expTime, 300, 1.0, "exptime", 5, dataint, &partOTSU, NULL, NULL, NULL);
 
-    KpFuzzy = MENU_fileInit(KpFuzzy, 1, 3.5, "Kp", 4, none, &presentVision, &KdFuzzy, NULL, &fuzzyPB);
+    vision = MENU_fileInit(vision, 76, 3.3, "VISION", 3, none, &presentSpeed, &KpFuzzy, NULL, &presentVision);
+    KpFuzzy = MENU_fileInit(KpFuzzy, 1, 3.5, "Kp", 4, none, &vision, &KdFuzzy, NULL, &fuzzyPB);
     KdFuzzy = MENU_fileInit(KdFuzzy, 1, 3.5, "Kd", 5, none, &KpFuzzy, &speedLow, NULL, &KdBig);
 
-
-    KdBig = MENU_fileInit(KdBig, 1, 2, "KdBIG", 2, datafloat, NULL, &KdMid, &KdFuzzy, NULL);
-    KdMid = MENU_fileInit(KdMid, 1, 2.2, "KdMID", 3, datafloat, &KdBig, &KdSmall, NULL, NULL);
-    KdSmall = MENU_fileInit(KdSmall, 1, 2.4, "KdSMALL", 4, datafloat, &KdMid, &KdZero, NULL, NULL);
-    KdZero = MENU_fileInit(KdZero, 1, 2.6, "KdZO", 5, datafloat, &KdSmall, NULL, NULL, NULL);
+    KdBig = MENU_fileInit(KdBig, 1, 1, "KdBIG", 2, datafloat, NULL, &KdMid, &KdFuzzy, NULL);
+    KdMid = MENU_fileInit(KdMid, 1, 1.2, "KdMID", 3, datafloat, &KdBig, &KdSmall, NULL, NULL);
+    KdSmall = MENU_fileInit(KdSmall, 1, 1.4, "KdSMALL", 4, datafloat, &KdMid, &KdZero, NULL, NULL);
+    KdZero = MENU_fileInit(KdZero, 1, 1.6, "KdZO", 5, datafloat, &KdSmall, NULL, NULL, NULL);
 
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
-    presentSpeed = MENU_fileInit(presentSpeed, 95, 1.1, "speed", 2, dataint, NULL, &presentVision, &file2, NULL);
-    presentVision = MENU_fileInit(presentVision, 76, 3.3, "VISION", 3, dataint, &presentSpeed, &KpFuzzy, NULL, NULL);
+    presentSpeed = MENU_fileInit(presentSpeed, 95, 1.1, "speed", 2, dataint, NULL, &vision, &file2, NULL);
+    presentVision = MENU_fileInit(presentVision, 76, 3.3, "VISION", 2, dataint, NULL, &slowVision, &vision, NULL);
+    slowVision = MENU_fileInit(slowVision, 76, 3, "slowV", 3, datafloat, &presentVision, &fastVision, NULL, NULL);
+    fastVision = MENU_fileInit(fastVision, 76, 2, "fastV", 4, datafloat, &slowVision, NULL, NULL, NULL);
     fuzzyPB = MENU_fileInit(fuzzyPB, 1, 2, "fuzzyPB", 2, datafloat, NULL, &fuzzyPM, &KpFuzzy, NULL);
     fuzzyPM = MENU_fileInit(fuzzyPM, 1, 1.8, "fuzzyPM", 3, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
     fuzzyPS = MENU_fileInit(fuzzyPS, 1, 1.6, "fuzzyPS", 4, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
-    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 1.3, "fuzzyZO", 5, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
+    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 1.7, "fuzzyZO", 5, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
     fuzzyNS = MENU_fileInit(fuzzyNS, 1, 1.6, "fuzzyNS", 6, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
     fuzzyNM = MENU_fileInit(fuzzyNM, 1, 1.8, "fuzzyNM", 7, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
     fuzzyNB = MENU_fileInit(fuzzyNB, 1, 2, "fuzzyNB", 2, datafloat, &fuzzyNM, &kpbottom, NULL, NULL);

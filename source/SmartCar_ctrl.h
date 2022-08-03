@@ -209,7 +209,7 @@ void CTRL_gyroAverageFilter();
 void CTRL_RoadTest();
 void speedDetermine();
 void CTRL_speedDecision(int32 speedHigh, int32 speedLow);
-void CTRL_visionDecision();
+void CTRL_dynamicVision();
 
 void motorParamDefine();
 void CTRL_ServoPID_Determine();
