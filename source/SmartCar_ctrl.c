@@ -468,7 +468,7 @@ void CTRL_fuzzyPID()
     {
         lastMyMidLine = myMidLine;
     }
-    if(state == lastState)
+    if(state == lastState && state != 120)
     {
         if(abs(myMidLine - lastMyMidLine) >= 40)
         {
@@ -833,7 +833,7 @@ void CTRL_motor()
 void CTRL_motorMain()
 {
 //    CTRL_gyroUpdate();
-    if(stopFlag == 0 && flagStop == 0 && testFlag == 1 && duzhuanFlag == 0)//flagStop=1为车库停车，stopFlag=1为出赛道停车,testFlag=1为赛道测试
+    if(stopFlag == 0 && car_stop == 0 && testFlag == 1 && duzhuanFlag == 0)//flagStop=1为车库停车，stopFlag=1为出赛道停车,testFlag=1为赛道测试
     {
         CTRL_CarParkStart();
 
@@ -846,9 +846,9 @@ void CTRL_motorMain()
         CTRL_RoadTest();
 
     }
-    else if(flagStop == 1)
+    else if(car_stop == 1)
     {
-        carpark_stop();
+//        carpark_stop();
         CTRL_CarParkStop();
 //        test_varible[14] = car_stop;
 
@@ -1301,22 +1301,15 @@ void CTRL_CarParkStop()
     myValid = valid_row();
     test_varible[8] = myValid;
 
-    if(flagStop == 1)
+    if(1)
     {
 //        if(currentGyro > endGyro.intVal || currentGyro < (-endGyro.intVal) || myValid > 94 || flagStop1 == 1)
 //       if(myValid > 92 || flagStop1 == 1)
         if(car_stop == 1)
        {
 
-//            flagStop1 = 1;
-//            if(flagStop1 == 1)
-//            {
-//                flagStopCount1 += 1;
-//            }
-//            if(myValid > 92)
-//            {
-                expectL = 0;
-                expectR = 0;
+            expectL = 0;
+            expectR = 0;
 //            }
 
 //            currentGyro = 80;
@@ -1325,16 +1318,7 @@ void CTRL_CarParkStop()
 //        else if(myValid <= 92)
         else if(car_stop == 0)
         {
-//            if(present_speed > 2)
-//            {
-//                if(parkSlowDownCount % 2 == 0)
-//                {
-//                    present_speed = present_speed - 1;
 //
-//                }
-//
-//            }
-//            else present_speed = 0;
             CTRL_motorDiffer();
 
 //            present_speed = 70;
@@ -2185,7 +2169,7 @@ void CTRL_dynamicVision()
 
     if(averSpeedRatio - 1 < -1e-5)
     {
-        present_vision += averSpeedRatio * slowVision.floatVal;
+        present_vision += (1 - averSpeedRatio) * slowVision.floatVal;
     }
 
     else if(averSpeedRatio - 1 > 1e-5)
