@@ -1767,10 +1767,6 @@ void speedDetermine()
         present_speed = presentSpeed.intVal;
         present_vision = presentVision.intVal;
 
-        if(straightFlag == 1)
-        {
-//            present_vision -= 4;
-        }
     }
 
     else if(parkStart != 0)
@@ -1789,12 +1785,18 @@ void speedDetermine()
         present_vision = cross_circle_param1.intVal;
     }
 
-    if(straightFlag == 1)
+    if(longStrFlag == 1 && shortStrFlag == 0)
     {
         present_speed = present_speed * display2.floatVal;
 //        CTRL_softSpeedUp();
     }
-    else if(straightFlag == 0)
+    else if(longStrFlag == 0 && shortStrFlag == 1)
+    {
+        uint8_t highSpeed;
+        highSpeed = present_speed * display2.floatVal;
+        CTRL_speedDecision(highSpeed, presentSpeed.intVal);
+    }
+    else if(longStrFlag == 0 && shortStrFlag == 0)
     {
         if(state == 50 && tCrossStatus == 1)
         {
@@ -1812,13 +1814,13 @@ void speedDetermine()
 //            present_speed = present_speed;
         }
 
-        if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut)
-        {
-            if(present_speed > curveDiffLine.intVal)
-            {
-                present_speed = curveDiffLine.intVal;
-            }
-        }
+//        if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut)
+//        {
+//            if(present_speed > curveDiffLine.intVal)
+//            {
+//                present_speed = curveDiffLine.intVal;
+//            }
+//        }
 //        GPIO_Set(P22, 0, 0);
     }
 

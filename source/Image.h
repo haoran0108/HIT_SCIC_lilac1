@@ -179,6 +179,8 @@ extern uint8_t islandFinalTimes;
 extern int FolkRoadWhere;
 extern uint8_t count_num_IT;
 extern int lastState;
+extern uint8_t longStrFlag, shortStrFlag;
+
 typedef struct {
     int x;
     int y;
@@ -246,7 +248,7 @@ void transform(int wayThre);
 void transform_sd(int wayThre);
 void orinary_two_line_history();
 void adapt_threshold();
-uint8_t mid_aver();
+uint8_t mid_aver(int way);
 void ZHAO_THRE();
 void image_Preprocess(void);
 int image_GetOtsuThre(void);
@@ -273,6 +275,10 @@ double variance(int yStart, int yEnd, int side[CAMERA_H]);
 double correlation_coefficient(int start, int end, int side[CAMERA_W]);
 double linear_judgement(int start, int end, uint8_t side[CAMERA_H]);
 double linear_judgement_struct(int start, int end, uint8_t j[CAMERA_H], int direction);
+
+int midMaxColumn(int istart, int iend, int param, int leftMid, int rightMid);
+int straight_delta(int istart, int iend, int deltaThre);
+
 //Ê®×Ö
 void cross_in();
 void design_cross_ing();

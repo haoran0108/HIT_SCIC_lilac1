@@ -150,7 +150,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     islandout_up = MENU_fileInit(islandout_up, 0, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
     design_island_k = MENU_fileInit(design_island_k, 1, 0, "left-dk", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
     islandParam1 = MENU_fileInit(islandParam1, 1, 0, "right-dk", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
-    islandParam2 = MENU_fileInit(islandParam2, 68, 1.8, "vision", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
+    islandParam2 = MENU_fileInit(islandParam2, 70, 1.8, "vision", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
     islandParam3 = MENU_fileInit(islandParam3, 0, 0.35, "xleft", 6, dataint, &islandParam2, &islandParam4, NULL, NULL);
     islandParam4 = MENU_fileInit(islandParam4, 0, 0.35, "xright", 7, dataint, &islandParam3, &islandParam5, NULL, NULL);
     islandParam5 = MENU_fileInit(islandParam5, 64, 0, "dk-out", 2, datafloat, &islandParam4, &islandParam6, NULL, NULL);
@@ -190,7 +190,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 
     folkWay = MENU_fileInit(folkWay, -1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);//1-left   -1-right
-    folkParam1 = MENU_fileInit(folkParam1, 16, 1.0, "width", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
+    folkParam1 = MENU_fileInit(folkParam1, 40, 1.0, "width", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
     folkParam2 = MENU_fileInit(folkParam2, 25, 0, "k", 3, datafloat, &folkParam1, NULL, NULL, NULL);
 //    folkParam3 = MENU_fileInit(folkParam3, 95, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
 //    folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkBottom, NULL, NULL);
@@ -222,14 +222,14 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     circle_DS = MENU_fileInit(circle_DS, 1, 4.1, "D-SMALL", 3, datafloat, &circle_NB, NULL, NULL, NULL);
 //    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
 
-    Island_PB = MENU_fileInit(Island_PB, 1, 1.4, "BIG-I", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
+    Island_PB = MENU_fileInit(Island_PB, 1, 1.1, "BIG-I", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
     Island_PM = MENU_fileInit(Island_PM, 1, 1.6, "MID-I", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
     Island_PS = MENU_fileInit(Island_PS, 1, 1.8, "SMALL-I", 4, datafloat, &Island_PM, &Island_DS, NULL, NULL);
 //    Island_ZO = MENU_fileInit(Island_ZO, 1, 2.8, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
 //    Island_NS = MENU_fileInit(Island_NS, 1, 3, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
 //    Island_NM = MENU_fileInit(Island_NM, 1, 3.3, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
 //    Island_NB = MENU_fileInit(Island_NB, 1, 3.7, "IslandNB", 3, datafloat, &Island_PB, &Island_DS, NULL, NULL);
-    Island_DS = MENU_fileInit(Island_DS, 1, 2.9, "D-SMALL", 5, datafloat, &Island_PS, NULL, NULL, NULL);
+    Island_DS = MENU_fileInit(Island_DS, 1, 2.7, "D-SMALL", 5, datafloat, &Island_PS, NULL, NULL, NULL);
 //    Island_DB = MENU_fileInit(Island_DB, 1, 0.5, "D-BIG", 4, datafloat, &Island_DS, NULL, NULL, NULL);
 
     Folk_PB = MENU_fileInit(Folk_PB, 1, 3.6, "FolkPB", 2, datafloat, NULL, &Folk_PM, &FolkPD, NULL);
@@ -278,10 +278,10 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    g3_Data7 = MENU_fileInit(g3_Data7, 119, 1.1, "motor-I", 2, datafloat, &g3_Data6, &preGear3, NULL, NULL);
 
     currentK = MENU_fileInit(currentK, 1, 1.0, "currentK", 3, none, NULL, &gear1, NULL, NULL);
-    currentRTKP = MENU_fileInit(currentRTKP, 3, 3.8, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentMotor, NULL);
-    currentRTKI = MENU_fileInit(currentRTKI, 2, 4.3, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
-    currentLFKP = MENU_fileInit(currentLFKP, 3, 3.8, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
-    currentLFKI = MENU_fileInit(currentLFKI, 2, 4.3, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
+    currentRTKP = MENU_fileInit(currentRTKP, 3, 3.6, "curRTKP", 2, datafloat, NULL, &currentRTKI, &currentMotor, NULL);
+    currentRTKI = MENU_fileInit(currentRTKI, 2, 4.2, "curRTKI", 3, datafloat, &currentRTKP, &currentLFKP, NULL, NULL);
+    currentLFKP = MENU_fileInit(currentLFKP, 3, 3.6, "curLFKP", 4, datafloat, &currentRTKI, &currentLFKI, &currentK, NULL);
+    currentLFKI = MENU_fileInit(currentLFKI, 2, 4.2, "curLFKI", 5, datafloat, &currentLFKP, &expectC, NULL, NULL);
 //    currentKD = MENU_fileInit(currentKD, 2, 3.0, "motorKD", 4, datafloat, &currentRTKI, &expectC, NULL, NULL);
     expectC = MENU_fileInit(expectC, 2200, 9.5, "expect", 6, dataint, &currentLFKI, NULL, NULL, NULL);
 
@@ -304,21 +304,21 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     KdFuzzy = MENU_fileInit(KdFuzzy, 1, 3.5, "Kd", 5, none, &KpFuzzy, &speedLow, NULL, &KdBig);
 
 
-    KdBig = MENU_fileInit(KdBig, 1, 2.5, "KdBIG", 2, datafloat, NULL, &KdMid, &KdFuzzy, NULL);
-    KdMid = MENU_fileInit(KdMid, 1, 2.5, "KdMID", 3, datafloat, &KdBig, &KdSmall, NULL, NULL);
-    KdSmall = MENU_fileInit(KdSmall, 1, 2.6, "KdSMALL", 4, datafloat, &KdMid, &KdZero, NULL, NULL);
-    KdZero = MENU_fileInit(KdZero, 1, 2.8, "KdZO", 5, datafloat, &KdSmall, NULL, NULL, NULL);
+    KdBig = MENU_fileInit(KdBig, 1, 2, "KdBIG", 2, datafloat, NULL, &KdMid, &KdFuzzy, NULL);
+    KdMid = MENU_fileInit(KdMid, 1, 2.2, "KdMID", 3, datafloat, &KdBig, &KdSmall, NULL, NULL);
+    KdSmall = MENU_fileInit(KdSmall, 1, 2.4, "KdSMALL", 4, datafloat, &KdMid, &KdZero, NULL, NULL);
+    KdZero = MENU_fileInit(KdZero, 1, 2.6, "KdZO", 5, datafloat, &KdSmall, NULL, NULL, NULL);
 
     /* 当下的电机pwm值（speedL/R）和摄像头前瞻vision */
     presentSpeed = MENU_fileInit(presentSpeed, 95, 1.1, "speed", 2, dataint, NULL, &presentVision, &file2, NULL);
     presentVision = MENU_fileInit(presentVision, 76, 3.3, "VISION", 3, dataint, &presentSpeed, &KpFuzzy, NULL, NULL);
-    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 2.2, "fuzzyPB", 2, datafloat, NULL, &fuzzyPM, &KpFuzzy, NULL);
-    fuzzyPM = MENU_fileInit(fuzzyPM, 1, 2, "fuzzyPM", 3, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
-    fuzzyPS = MENU_fileInit(fuzzyPS, 1, 1.9, "fuzzyPS", 4, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
-    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 1.8, "fuzzyZO", 5, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
-    fuzzyNS = MENU_fileInit(fuzzyNS, 1, 1.9, "fuzzyNS", 6, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
-    fuzzyNM = MENU_fileInit(fuzzyNM, 1, 2.0, "fuzzyNM", 7, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
-    fuzzyNB = MENU_fileInit(fuzzyNB, 1, 2.2, "fuzzyNB", 2, datafloat, &fuzzyNM, &kpbottom, NULL, NULL);
+    fuzzyPB = MENU_fileInit(fuzzyPB, 1, 2, "fuzzyPB", 2, datafloat, NULL, &fuzzyPM, &KpFuzzy, NULL);
+    fuzzyPM = MENU_fileInit(fuzzyPM, 1, 1.8, "fuzzyPM", 3, datafloat, &fuzzyPB, &fuzzyPS, NULL, NULL);
+    fuzzyPS = MENU_fileInit(fuzzyPS, 1, 1.6, "fuzzyPS", 4, datafloat, &fuzzyPM, &fuzzyZO, NULL, NULL);
+    fuzzyZO = MENU_fileInit(fuzzyZO, 1, 1.3, "fuzzyZO", 5, datafloat, &fuzzyPS, &fuzzyNS, NULL, NULL);
+    fuzzyNS = MENU_fileInit(fuzzyNS, 1, 1.6, "fuzzyNS", 6, datafloat, &fuzzyZO, &fuzzyNM, NULL, NULL);
+    fuzzyNM = MENU_fileInit(fuzzyNM, 1, 1.8, "fuzzyNM", 7, datafloat, &fuzzyNS, &fuzzyNB, NULL, NULL);
+    fuzzyNB = MENU_fileInit(fuzzyNB, 1, 2, "fuzzyNB", 2, datafloat, &fuzzyNM, &kpbottom, NULL, NULL);
     kpbottom = MENU_fileInit(kpbottom, 1, 3.5, "bottom", 3, none, &fuzzyNB, NULL, NULL, NULL);
 
 //    presentServoD = MENU_fileInit(presentServoD, 1, 4.1, "preServoD", 6, datafloat, &fuzzyNB, &gap, NULL, NULL);
@@ -913,7 +913,7 @@ void MENU_showIMG()
 
         else if(wayThre.intVal == 3)
         {
-            SmartCar_OLED_P6x8Str(100, 0, "origin");
+            SmartCar_OLED_P6x8Str(100, 0, "org");
 
             SmartCar_OLED_Printf6x8(110, 1, "%d", threOriginal);
 

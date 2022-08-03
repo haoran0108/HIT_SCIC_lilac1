@@ -122,7 +122,8 @@ void SW_readSwitch()
         count_num_IT = 0;
 
         lastState = 0;
-
+        longStrFlag = 0;
+        shortStrFlag = 0;
     }
     else
     {
