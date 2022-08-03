@@ -3412,10 +3412,10 @@ void design_cross_ing() {
         int sum_right_miss = 0;
         int sum_left_miss = 0;
         for (int i = NEAR_LINE; i >= 90; i--) {
-            if (right_line[i] >= right_side[i] - 1) {
+            if (right_line[i] >= right_side[i] - 2) {
                 sum_right_miss++;
             }
-            if (left_line[i] <= left_side[i] + 1) {
+            if (left_line[i] <= left_side[i] + 2) {
                 sum_left_miss++;
             }
         }
@@ -3497,13 +3497,13 @@ void design_cross_ing() {
             }
         }
         //printf("topL=%d,topR=%d\n", topL, topR);
-        if (direction == RIGHT && leftDownJumpPoint > 90 && leftDownJumpPoint <= NEAR_LINE) {
+        if (miss_direction == RIGHT && leftDownJumpPoint > 90 && leftDownJumpPoint <= NEAR_LINE) {
             for (int i = NEAR_LINE - 1; i >= 2; i--) {
                 j_mid[i] = j_midR[i];
             //  IMG[i][(my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right) / 2] = purple;
             }
         }
-        else if (direction == LEFT && rightDownJumpPoint > 90 && rightDownJumpPoint <= NEAR_LINE) {
+        else if (miss_direction == LEFT && rightDownJumpPoint > 90 && rightDownJumpPoint <= NEAR_LINE) {
             for (int i = NEAR_LINE - 1; i >= 2; i--) {
                 j_mid[i] = j_midL[i];
             //  IMG[i][(my_road[i].connected[j_mid[i]].left + my_road[i].connected[j_mid[i]].right) / 2] = purple;
@@ -3643,7 +3643,6 @@ void design_cross_ing() {
 
     }
 }
-
 ////////////////////////////////////////////
 //功能：出十字
 //输入：
