@@ -461,14 +461,22 @@ void CTRL_fuzzyPID()
     float fuzzyKP = 1, fuzzyKD = 1;
     uint8_t myMidLine;
     int32 myDiffLine;
-    myMidLine = aver_mid_line_foresee();
+    if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
+    {
+        myMidLine = IT_averMidLine_foresee();
+    }
+    else
+    {
+        myMidLine = aver_mid_line_foresee();
+
+    }
 
 
     if(lastMyMidLine == 0)
     {
         lastMyMidLine = myMidLine;
     }
-    if(state == lastState && state != 120)
+    if(state == lastState && state != 120 && state != 50)
     {
         if(abs(myMidLine - lastMyMidLine) >= 50)
         {
@@ -1430,10 +1438,10 @@ void CTRL_ServoPID_Determine()
             fuzzy_NS = Island_PB.floatVal;
             fuzzy_NM = Island_PB.floatVal;
             fuzzy_NB = Island_PB.floatVal;
-            bigKd = Island_DS.floatVal;
-            midKd = Island_DS.floatVal;
-            smallKd = Island_DS.floatVal;
-            zeroKd = Island_DS.floatVal;
+            bigKd = Island_DB.floatVal;
+            midKd = Island_DB.floatVal;
+            smallKd = Island_DB.floatVal;
+            zeroKd = Island_DB.floatVal;
         }
 
 //        fuzzy_Dbig = Island_DB.floatVal;

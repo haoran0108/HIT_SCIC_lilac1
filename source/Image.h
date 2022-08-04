@@ -181,6 +181,9 @@ extern uint8_t count_num_IT;
 extern int lastState;
 extern uint8_t longStrFlag, shortStrFlag;
 extern uint8_t carparkflag;
+
+extern int num_island;   // 赛道上环岛个数
+extern int num_first_T;  // 第一个回环前环岛数
 typedef struct {
     int x;
     int y;
@@ -339,6 +342,9 @@ void mid_line_filter();
 void folkTimesCNT();
 void straight_define();
 uint8_t valid_row();
+
+uint8_t aver_mid_line_foresee();
+uint8_t IT_averMidLine_foresee();
 
 
 

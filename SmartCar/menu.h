@@ -88,6 +88,7 @@ extern node_t curveDiff, islandDiff, tcrossDiff, folkDiff1, folkDiff2;
 extern node_t curveDiffLine;
 
 extern node_t islandKP, islandKI;
+extern node_t islandNum, firstT;
 
 extern node_t startWay;
 //-------------------------------------------------------------------------------------------------------------------
