@@ -54,9 +54,9 @@
 #define speedNB 20
 
 /*¶æ»ú*/
-#define servoMidValue 757
-#define servoMin 677
-#define servoMax 837
+#define servoMidValue 754
+#define servoMin 674
+#define servoMax 834
 
 #define servoParkMax 798
 #define servoParkMin 718

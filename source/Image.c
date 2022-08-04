@@ -115,8 +115,8 @@ int lastState = 0;
 
 uint8_t carparkflag = 0;
 uint8_t count_num_IT = 1; // 数环岛回环个数
-int num_island = -1;   // 赛道上环岛个数
-int num_first_T = 0;  // 第一个回环前环岛数
+int num_island = 2;   // 赛道上环岛个数
+int num_first_T = 2;  // 第一个回环前环岛数
 const uint8_t left_side[CHANGED_H] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,5,5,8,8,10,10,12,14,14,16,18,18,19,21,21,23,24,25,25,27,28,29,31,32,33,34,35,37,38,39,40,42,42,44,45,46,47,49,50,51,52,53,55,55,57,58,59,60,62,63,64,65,66,67,69,70 };
 const uint8_t right_side[CHANGED_H] = { 187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,187,184,184,182,182,179,179,177,177,175,173,173,171,169,169,168,166,166,164,163,162,162,160,159,158,156,155,154,153,152,150,149,148,147,145,145,143,142,141,140,138,137,136,135,134,132,132,130,129,128,127,125,124,123,122,121,120,118,117 };
 const uint8_t i_fix[CHANGED_H] = { 0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,5,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,9,9,9,9,10,10,10,11,11,11,12,12,13,13,13,14,14,15,15,15,16,16,17,17,18,18,19,19,20,21,21,22,23,23,24,25,25,26,27,28,28,29,30,31,32,33,34,35,36,38,39,40,41,43,44,46,47,49,51,53,55,57,59,61,64,66,69,72,75,79,83,87,91,96,101,106,112,119 };
@@ -6610,6 +6610,7 @@ void design_cross_T_circle() {
 ///////////////////////////////////////////
 void cross_T_out_start() {
     ////////printf("出回环开始：\n");
+    int ctrl_xmax = cross_circle_param2.intVal,ctrl_xmin=cross_circle_param3.intVal;
     if (TWhere == RIGHT) {
         int xMax = 0;
         int yMax = 100;
@@ -6619,7 +6620,7 @@ void cross_T_out_start() {
             if (my_road[70].white_num != 0) {
                 int leftDownPoint = 119;
                 int rightDownPoint = 119;
-                for (int i = NEAR_LINE - 1; i >= 60; i--) {
+                for (int i = NEAR_LINE - 1; i >= 50; i--) {
                     if (my_road[i - 2].white_num != 0) {
 
                         if (left_line[i - 1] - left_line[i] < -4 && left_line[i - 2] - left_line[i] < -4
@@ -6636,7 +6637,7 @@ void cross_T_out_start() {
                         break;
                     }
                 }
-                for (int i = NEAR_LINE - 1; i >= 60; i--) {
+                for (int i = NEAR_LINE - 1; i >= 50; i--) {
                     if (my_road[i - 2].white_num != 0) {
                         if (right_line[i - 1] - right_line[i] > 4 && right_line[i - 2] - right_line[i] > 4
                             && abs(right_line[i + 1] - right_line[i]) <= 2 && abs(right_line[i + 2] - right_line[i]) <= 2
@@ -6661,7 +6662,7 @@ void cross_T_out_start() {
                     yMax = leftDownPoint;
                     xMax = left_line[leftDownPoint];
 
-                    if (yMax < 100 && yMax >= 85) {
+                    if (yMax < 100 && yMax >= 70) {
                         state = stateTOut;
                     }
                 }
@@ -6706,7 +6707,7 @@ void cross_T_out_start() {
                     ////////printf("极值点状况：%f\n", calculate_slope_uint(yMax - 18, yMax - 1, left_line) * calculate_slope_uint(yMax + 2, yMax + 18, left_line));
                     ////////printf("跳变点上方赛道宽度：%d\n", right_line[change - 2] - left_line[change - 2]);
                     if (calculate_slope_uint(yMax - 18, yMax - 1, left_line) * calculate_slope_uint(yMax + 2, yMax + 18, left_line) <= 0) {
-                        if (xMax < 94 && yMax >= 50 && yMax <= 110
+                        if (xMax-ctrl_xmax < 94 && yMax >= 50 && yMax <= 110
                             && change >= yMax && change <= NEAR_LINE && right_line[change - 2] - left_line[change - 2] > 45) {
                             state = stateTOut;
                         }
@@ -6727,7 +6728,7 @@ void cross_T_out_start() {
             if (my_road[70].white_num != 0) {
                 int leftDownPoint = 119;
                 int rightDownPoint = 119;
-                for (int i = NEAR_LINE - 1; i >= 60; i--) {
+                for (int i = NEAR_LINE - 1; i >= 50; i--) {
                     if (my_road[i - 2].white_num != 0) {
 
                         if (left_line[i - 1] - left_line[i] < -4 && left_line[i - 2] - left_line[i] < -4
@@ -6744,7 +6745,7 @@ void cross_T_out_start() {
                         break;
                     }
                 }
-                for (int i = NEAR_LINE - 1; i >= 60; i--) {
+                for (int i = NEAR_LINE - 1; i >= 50; i--) {
                     if (my_road[i - 2].white_num != 0) {
                         if (right_line[i - 1] - right_line[i] > 4 && right_line[i - 2] - right_line[i] < -4
                             && abs(right_line[i + 1] - right_line[i]) <= 2 && abs(right_line[i + 2] - right_line[i]) <= 2
@@ -6769,7 +6770,7 @@ void cross_T_out_start() {
                     yMin = rightDownPoint;
                     xMin = right_line[leftDownPoint];
 
-                    if (yMin < 100 && yMin >= 85) {
+                    if (yMin < 100 && yMin >= 75) {
                         state = stateTOut;
                     }
                 }
@@ -6803,8 +6804,8 @@ void cross_T_out_start() {
                 }
                 //  ////////printf("x=%d,y=%d\n", xMin, yMin);
                 if (calculate_slope_uint(yMin - 18, yMin - 1, right_line) * calculate_slope_uint(yMin + 2, yMin + 18, right_line) < 0) {
-                    if (xMin >= 94 && yMin >= 80 && yMin <= 110
-                        && right_line[change - 2] - left_line[change - 2] > 25) {
+                    if (xMin + ctrl_xmin>= 94 && yMin >= 60 && yMin <= 110
+                        && right_line[change - 2] - left_line[change - 2] > 45) {
                         state = stateTOut;
                     }
                 }
@@ -6888,8 +6889,8 @@ void cross_T_out_start() {
 //备注：
 ///////////////////////////////////////////
 void design_cross_T_out() {
-    double dk = -0;
-    int width = 45;
+    double dk = cross_circle_param5.floatVal;
+    int width = cross_circle_param4.intVal;
     if (TWhere == RIGHT) {
 
         for (int i = NEAR_LINE - 1; i >= 2 && left_line[i] != MISS; i--) {
@@ -8100,7 +8101,7 @@ void design_carpark()
 void protection() {
     int count1 = 0;
     uint8_t* pmap;
-    pmap = fullBuffer + 75 * 188;
+    pmap = fullBuffer + 65 * 188;
     for (int i = 0; i < 20; i++)
     {
         pmap = pmap + 50;
@@ -8116,7 +8117,7 @@ void protection() {
         pmap = pmap + 50;
     }
     //////////printf("count1=%d  ", count1);
-    if (count1 >= 88 * 15) stopFlag = 1;
+    if (count1 >= 88 * 16) stopFlag = 1;
 
 }
 
@@ -8253,8 +8254,7 @@ void carpark_in()
 
             }
 //            printf("park:%f,%d\n", aveBlack, sumB_max);
-            if ((aveBlack >= 3 && sumB_max >= 2) || (aveBlack < 3 && aveBlack >= 2.5 && sumB_max >= 3) || (aveBlack >= 2 && aveBlack < 2.5 && sumB_max >= 4)) {
-                state = stateParkIn;
+            if ((aveBlack >= 4 && sumB_max >= 4) || (aveBlack < 4 && aveBlack >= 3 && sumB_max >= 5) || (aveBlack >= 2 && aveBlack < 3 && sumB_max >= 6)) {                state = stateParkIn;
                 carParkDelay = 0;
                 carParkTimes += 1;
 
@@ -8374,8 +8374,7 @@ void carpark_in()
             }
 
             //printf("park:%f,%d\n",aveBlack, sumB_max);
-            if ((aveBlack >= 3 && sumB_max >= 2) || (aveBlack < 3 && aveBlack >= 2.5 && sumB_max >= 3) || (aveBlack >= 2 && aveBlack < 2.5 && sumB_max >= 4)) {
-                state = stateParkIn;
+            if ((aveBlack >= 4 && sumB_max >= 4) || (aveBlack < 4 && aveBlack >= 3 && sumB_max >= 5) || (aveBlack >= 2 && aveBlack < 3 && sumB_max >= 6)) {                state = stateParkIn;
                 carParkDelay = 0;
                 carParkTimes += 1;
 

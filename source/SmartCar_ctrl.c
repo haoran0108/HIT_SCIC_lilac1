@@ -899,7 +899,7 @@ void CTRL_motorDiffer()
     /*内轮减速*/
     float k;
     float fixDiff;
-    if(delta > 0)
+    if(delta > 0) //右转
     {
 //        k = 0.9459 - 0.2679 * FabsDelta * FabsDelta - 0.1511 * FabsDelta;
         k = 0.9997 - 0.4604 * FabsDelta;
@@ -978,20 +978,20 @@ void CTRL_motorDiffer()
 
         else
         {
-//            fixDiff = curveDiff.floatVal;
-            if(servoError.currentError <= 0 && servoError.currentError >= -10)
-            {
-                fixDiff = 0.03 * servoError.currentError + 0.8;
-            }
-            else if(servoError.currentError < -10 && servoError.currentError >= -30)
-            {
-                fixDiff = -0.005 * servoError.currentError + 1.15;
-            }
-            else if(servoError.currentError < -30)
-            {
-                fixDiff = 1;
-            }
-            else fixDiff = 1;
+            fixDiff = curveDiffLine.floatVal;
+//            if(servoError.currentError <= 0 && servoError.currentError >= -10)
+//            {
+//                fixDiff = 0.03 * servoError.currentError + 0.8;
+//            }
+//            else if(servoError.currentError < -10 && servoError.currentError >= -30)
+//            {
+//                fixDiff = -0.005 * servoError.currentError + 1.15;
+//            }
+//            else if(servoError.currentError < -30)
+//            {
+//                fixDiff = 1;
+//            }
+//            else fixDiff = 1;
 
             if(straightFlag == 1)
             {
@@ -1006,7 +1006,7 @@ void CTRL_motorDiffer()
         }
 
     }
-    else if(delta < 0)
+    else if(delta < 0) //左转
     {
         k = 1 - 0.477 * FabsDelta;
 
@@ -1110,20 +1110,20 @@ void CTRL_motorDiffer()
 
         else
         {
-//            fixDiff = curveDiff.floatVal;
-            if(servoError.currentError >= 0 && servoError.currentError <= 10)
-            {
-                fixDiff = 0.03 * servoError.currentError + 0.8;
-            }
-            else if(servoError.currentError > 10 && servoError.currentError <= 30)
-            {
-                fixDiff = -0.005 * servoError.currentError + 1.15;
-            }
-            else if(servoError.currentError > 30)
-            {
-                fixDiff = 1;
-            }
-            else fixDiff = 1;
+            fixDiff = curveDiff.floatVal;
+//            if(servoError.currentError >= 0 && servoError.currentError <= 10)
+//            {
+//                fixDiff = 0.03 * servoError.currentError + 0.8;
+//            }
+//            else if(servoError.currentError > 10 && servoError.currentError <= 30)
+//            {
+//                fixDiff = -0.005 * servoError.currentError + 1.15;
+//            }
+//            else if(servoError.currentError > 30)
+//            {
+//                fixDiff = 1;
+//            }
+//            else fixDiff = 1;
             if(straightFlag == 1)
             {
 //                fixDiff -= 0.2;

@@ -56,7 +56,6 @@ IFX_INTERRUPT(dma_ch5_isr, 0, ERU_DMA_INT_PRIO)
             CTRL_servoMain();
 
         }
-
         mt9v034_finish_flag = 0;
 
     }

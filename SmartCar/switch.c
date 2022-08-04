@@ -119,7 +119,7 @@ void SW_readSwitch()
         islandFinalTimes = 0;
 
         FolkRoadWhere = folkWay.intVal;
-        count_num_IT = 0;
+        count_num_IT = 1;
 
         lastState = 0;
         longStrFlag = 0;
