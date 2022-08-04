@@ -186,7 +186,7 @@ void CTRL_speedLoopPID()
 
     speedL = CTRL_speedGetLeft();
     speedR = CTRL_speedGetRight();
-    CTRL_lowpassFilter();
+//    CTRL_lowpassFilter();
 //    test_varible[15] = integerSpeedAver;
     test_varible[9] = expectL;
     test_varible[10] = expectR;
@@ -470,7 +470,7 @@ void CTRL_fuzzyPID()
     }
     if(state == lastState && state != 120)
     {
-        if(abs(myMidLine - lastMyMidLine) >= 40)
+        if(abs(myMidLine - lastMyMidLine) >= 50)
         {
             myMidLine = lastMyMidLine;
 //            test_varible[15] = 1;
@@ -653,40 +653,7 @@ void CTRL_servoMain()
             CTRL_fuzzyPID();
 
         }
-//        else if(parkStart == 0 && flagStop == 0)
-//        {
-//                CTRL_ServoPID_Determine();
 //
-//                CTRL_fuzzyPID();
-////
-//        }
-//        else if(flagStop == 1 && leftPark == 0 && rightPark == 1)
-//        {
-//
-////            if(flagStop1 == 0)
-////            {
-////                servoPwm = servoMin;//630
-//////
-////            }
-//////
-////            else if(flagStop1 == 1)
-////            {
-////                servoPwm = servoMidValue;
-////            }
-//        }
-//        else if(flagStop == 1 && leftPark == 1 && rightPark == 0)
-//        {
-////            if(flagStop1 == 0)
-////            {
-////                servoPwm = servoMax;//630
-////
-////            }
-//////
-////            else if(flagStop1 == 1)
-////            {
-////                servoPwm = servoMidValue;
-////            }
-//        }
     }
 //    CTRL_islandPwmCount();
     CTRL_rampPwmxianfu();
@@ -726,7 +693,7 @@ void CTRL_MotorPwmXianfu()
 //    }
     else
     {
-        motorPwmMax = 9900;
+        motorPwmMax = 9990;
         motorPwmMin = -7000;
     }
 }
@@ -843,12 +810,16 @@ void CTRL_motorMain()
         CTRL_motorDiffer();
 //        CTRL_visionDecision();
 
-        CTRL_RoadTest();
+        if(file1.intVal == 0)
+        {
+            CTRL_RoadTest();
+
+        }
 
     }
     else if(car_stop == 1)
     {
-//        carpark_stop();
+
         CTRL_CarParkStop();
 //        test_varible[14] = car_stop;
 
@@ -1761,7 +1732,16 @@ void speedDetermine()
 
     if(state == stateTIslandIn || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
     {
-        present_vision = islandParam2.intVal;
+        if(IslandRadius == islandParam6.intVal)
+        {
+            present_vision = islandParam2.intVal;
+
+        }
+        else if(IslandRadius == bigParam8.intVal)
+        {
+            present_vision = bigParam4.intVal;
+
+        }
     }
 
     if(state == stateTIslandIn || state == stateTIn || state == stateTOut)

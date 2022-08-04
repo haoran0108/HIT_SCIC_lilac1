@@ -58,11 +58,11 @@
 #define servoMin 674
 #define servoMax 834
 
-#define servoParkMax 798
-#define servoParkMin 718
+#define servoParkMax 794
+#define servoParkMin 714
 
-#define servoRampMax 798
-#define servoRampMin 718
+#define servoRampMax 794
+#define servoRampMin 714
 
 #define parkStopStraightTime 2
 

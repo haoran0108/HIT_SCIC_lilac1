@@ -47,7 +47,9 @@ node_t image;//显示摄像头图像
 node_t list;
 
 node_t param;
-node_t island,cross_circle, carPark, ramp, folkWay;
+node_t island, cross_circle, carPark, ramp, folkWay;
+node_t bigIsland, smallIsland;
+node_t bigParam1, bigParam2, bigParam3, bigParam4, bigParam5, bigParam6, bigParam7, bigParam8;
 node_t islandout_up, design_island_k, islandParam1, islandParam2, islandParam3, islandParam4, islandParam5, islandParam6, islandBottom;
 node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4, cross_circle_param5, cross_circle_param6, cross_circle_param7, cross_circle_param8, ccBottom;
 node_t parkCount, startGyro, endGyro, search_line, parkDelay, stopLine;
@@ -147,8 +149,21 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     islandKI = MENU_fileInit(islandKI, 30, 1.0, "islandKI", 3, dataint, &islandKP, NULL, NULL, NULL);
 
 
-    island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &islandout_up);
-    islandout_up = MENU_fileInit(islandout_up, 0, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &island, NULL);
+    island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &smallIsland);
+
+    smallIsland = MENU_fileInit(smallIsland, 2, 1.0, "small", 2, dataint, NULL, &bigIsland, &island, &islandout_up);
+    bigIsland = MENU_fileInit(bigIsland, 1, 1.0, "big", 3, dataint, &smallIsland, NULL, NULL, &bigParam1);
+
+    bigParam1 = MENU_fileInit(bigParam1, 0, 1.0, "upPoint", 2, dataint, NULL, &bigParam2, &bigIsland, NULL);
+    bigParam2 = MENU_fileInit(bigParam2, 0, 0, "left-dk", 3, datafloat, &bigParam1, &bigParam3, NULL, NULL);
+    bigParam3 = MENU_fileInit(bigParam3, 0, 0, "right-dk", 4, datafloat, &bigParam2, &bigParam4, NULL, NULL);
+    bigParam4 = MENU_fileInit(bigParam4, 68, 0, "vision", 5, dataint, &bigParam3, &bigParam5, NULL, NULL);
+    bigParam5 = MENU_fileInit(bigParam5, 0, 0, "xleft", 6, dataint, &bigParam4, &bigParam6, NULL, NULL);
+    bigParam6 = MENU_fileInit(bigParam6, 0, 0, "xright", 7, dataint, &bigParam5, &bigParam7, NULL, NULL);
+    bigParam7 = MENU_fileInit(bigParam7, 0, 0, "dk-out", 2, datafloat, &bigParam6, &bigParam8, NULL, NULL);
+    bigParam8 = MENU_fileInit(bigParam8, 80, 0, "radius", 3, dataint, &bigParam7, NULL, NULL, NULL);
+
+    islandout_up = MENU_fileInit(islandout_up, 0, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &smallIsland, NULL);
     design_island_k = MENU_fileInit(design_island_k, 1, 0, "left-dk", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
     islandParam1 = MENU_fileInit(islandParam1, 1, 0, "right-dk", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
     islandParam2 = MENU_fileInit(islandParam2, 79, 1.8, "vision", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
