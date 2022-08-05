@@ -153,9 +153,9 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     island = MENU_fileInit(island, 1, 1.0, "island", 2, none, NULL, &cross_circle, &param, &smallIsland);
 
     smallIsland = MENU_fileInit(smallIsland, 2, 1.0, "small", 2, dataint, NULL, &bigIsland, &island, &islandout_up);
-    bigIsland = MENU_fileInit(bigIsland, 2, 1.0, "big", 3, dataint, &smallIsland, &islandNum, NULL, &bigParam1);
+    bigIsland = MENU_fileInit(bigIsland, 1, 1.0, "big", 3, dataint, &smallIsland, &islandNum, NULL, &bigParam1);
     islandNum = MENU_fileInit(islandNum, 2, 1.0, "islandNum", 4, dataint, &bigIsland, &firstT, NULL, NULL);
-    firstT = MENU_fileInit(firstT, 1, 1.0, "firstT", 5, dataint, &islandNum, NULL, NULL, NULL);
+    firstT = MENU_fileInit(firstT, 2, 1.0, "firstT", 5, dataint, &islandNum, NULL, NULL, NULL);
 
 
     bigParam1 = MENU_fileInit(bigParam1, 0, 1.0, "upPoint", 2, dataint, NULL, &bigParam2, &bigIsland, NULL);
