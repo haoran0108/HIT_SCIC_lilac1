@@ -461,6 +461,7 @@ void CTRL_fuzzyPID()
     float fuzzyKP = 1, fuzzyKD = 1;
     uint8_t myMidLine;
     int32 myDiffLine;
+    float midLineDelta;
     if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
     {
         myMidLine = IT_averMidLine_foresee();
@@ -478,7 +479,8 @@ void CTRL_fuzzyPID()
     }
     if(state == lastState && state != 120 && state != 50)
     {
-        if(abs(myMidLine - lastMyMidLine) >= 50)
+
+        if(fabs((float)myMidLine - (float)lastMyMidLine) >= 50)
         {
             myMidLine = lastMyMidLine;
 //            test_varible[15] = 1;

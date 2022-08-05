@@ -20,6 +20,7 @@
 #include "math.h"
 #include "SmartCar_ADC.h"
 #include"SmartCar_TFMINI.h"
+#include <math.h>
 
 #define PWM_MAX 9900
 #define PWM_MAX_N -9900

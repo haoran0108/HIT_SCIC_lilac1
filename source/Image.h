@@ -181,7 +181,7 @@ extern uint8_t count_num_IT;
 extern int lastState;
 extern uint8_t longStrFlag, shortStrFlag;
 extern uint8_t carparkflag;
-
+extern int stage_cross_t_circle;
 extern int num_island;   // 赛道上环岛个数
 extern int num_first_T;  // 第一个回环前环岛数
 typedef struct {

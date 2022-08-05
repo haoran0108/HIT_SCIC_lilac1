@@ -120,7 +120,7 @@ void SW_readSwitch()
 
         FolkRoadWhere = folkWay.intVal;
         count_num_IT = 1;
-
+        stage_cross_t_circle = 0;
         lastState = 0;
         longStrFlag = 0;
         shortStrFlag = 0;
