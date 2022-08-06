@@ -184,6 +184,7 @@ extern uint8_t carparkflag;
 extern int stage_cross_t_circle;
 extern int num_island;   // 赛道上环岛个数
 extern int num_first_T;  // 第一个回环前环岛数
+extern int32 testVarible;
 typedef struct {
     int x;
     int y;

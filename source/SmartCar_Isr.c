@@ -45,6 +45,8 @@ IFX_INTERRUPT(dma_ch5_isr, 0, ERU_DMA_INT_PRIO)
 
             if(parkStart == 0 || parkStart == 3)
             {
+                testVarible += 1;
+//                test_varible[2] = 1;
 //                tim1 = Systick_Get(STM0)/100000;
                 image_main();
 //                tim2 = Systick_Get(STM1)/100000;

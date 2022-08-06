@@ -125,6 +125,7 @@ void SW_readSwitch()
         longStrFlag = 0;
         shortStrFlag = 0;
         carparkflag = 0;
+        testVarible = 0;
 
         num_island = islandNum.intVal;   // 赛道上环岛个数 只跑回环=0 只有环岛=-1
         num_first_T = firstT.intVal;  // 第一个回环前环岛数 只跑回环=0

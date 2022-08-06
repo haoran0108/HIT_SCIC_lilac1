@@ -188,8 +188,8 @@ void CTRL_speedLoopPID()
     speedR = CTRL_speedGetRight();
 //    CTRL_lowpassFilter();
 //    test_varible[15] = integerSpeedAver;
-    test_varible[9] = expectL;
-    test_varible[10] = expectR;
+//    test_varible[9] = expectL;
+//    test_varible[10] = expectR;
 
     errorML.currentError = expectL + speedL;//È¡Æ«²î
     errorMR.currentError = expectR - speedR;//È¡Æ«²î
@@ -462,45 +462,49 @@ void CTRL_fuzzyPID()
     uint8_t myMidLine;
     int32 myDiffLine;
     float midLineDelta;
-    if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
-    {
-        myMidLine = IT_averMidLine_foresee();
-    }
-    else
-    {
+//    if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
+//    {
+//        myMidLine = IT_averMidLine_foresee();
+//    }
+//    else
+//    {
         myMidLine = aver_mid_line_foresee();
+        test_varible[14] = 15;
 
-    }
+//    }
 
 
-    if(lastMyMidLine == 0)
-    {
-        lastMyMidLine = myMidLine;
-    }
-    if(state == lastState && state != 120 && state != 50)
-    {
+//    if(lastMyMidLine == 0)
+//    {
+//        lastMyMidLine = myMidLine;
+//    }
+//    if(state == lastState && state != 120 && state != 50)
+//    {
+//
+//        if(fabs((float)myMidLine - (float)lastMyMidLine) >= 50)
+//        {
+//            myMidLine = lastMyMidLine;
+////            test_varible[15] = 1;
+//        }
+//        else
+//        {
+//            lastMyMidLine = myMidLine;
+////            test_varible[15] = 0;
+//        }
+//
+//    }else lastMyMidLine = myMidLine;
 
-        if(fabs((float)myMidLine - (float)lastMyMidLine) >= 50)
-        {
-            myMidLine = lastMyMidLine;
-//            test_varible[15] = 1;
-        }
-        else
-        {
-            lastMyMidLine = myMidLine;
-//            test_varible[15] = 0;
-        }
+//    if(state == stateRampway)
+//    {
+//        servoError.currentError = 93 - mid_line[present_vision+5];
+//
+//    }
+//    else servoError.currentError = 93 - myMidLine;
+//    servoError.currentError = 93 - myMidLine;
 
-    }else lastMyMidLine = myMidLine;
+        servoError.currentError = 93 - mid_line[presentVision.intVal];
 
-    if(state == stateRampway)
-    {
-        servoError.currentError = 93 - mid_line[present_vision+5];
-
-    }
-    else servoError.currentError = 93 - myMidLine;
-
-    servoError.delta = servoError.currentError - servoError.lastError;
+        servoError.delta = servoError.currentError - servoError.lastError;
 
     test_varible[12] = myMidLine;
 
@@ -597,29 +601,37 @@ void CTRL_motorPID()
     speedR = CTRL_speedGetRight();
 //    speedL = speedL / 8;
 
-    CTRL_lowpassFilter();
+//    CTRL_lowpassFilter();
 
 
 
     errorML.currentError = expectL + speedL;//È¡Æ«²î
     errorMR.currentError = expectR - speedR;//È¡Æ«²î
-    motorLFKI = CTRL_fuzzySpeedKp(errorML.currentError);
-    motorRTKI = CTRL_fuzzySpeedKp(errorMR.currentError);
+//    motorLFKI = CTRL_fuzzySpeedKp(errorML.currentError);
+//    motorRTKI = CTRL_fuzzySpeedKp(errorMR.currentError);
 
     errorML.delta = errorML.currentError - errorML.lastError;
-    mySpeedL = (int32)(mySpeedL + motorLFKI * errorML.currentError + fastRTKP.intVal * errorML.delta);
+    mySpeedL = (int32)(mySpeedL + motorLFKI * errorML.currentError + motorLFKP * errorML.delta);
     errorML.lastError = errorML.currentError;//¸üÐÂÉÏÒ»´ÎÎó²î
 
     errorMR.delta = errorMR.currentError - errorMR.lastError;
-    mySpeedR = (int32)(mySpeedR + motorRTKI * errorMR.currentError + fastRTKP.intVal * errorMR.delta);
+    mySpeedR = (int32)(mySpeedR + motorLFKI * errorMR.currentError + motorLFKP * errorMR.delta);
     errorMR.lastError = errorMR.currentError;//¸üÐÂÉÏÒ»´ÎÎó²î
 
-    lastSpeedL = speedL;
-    lastSpeedR = speedR;
+//    lastSpeedL = speedL;
+//    lastSpeedR = speedR;
 //    test_varible[9] = expectL;
 //    test_varible[10] = expectR;
-    test_varible[0] = speedL;
+    test_varible[0] = -speedL;
     test_varible[1] = speedR;
+    test_varible[2] = mySpeedL;
+    test_varible[3] = mySpeedR;
+    test_varible[4] = expectL;
+    test_varible[5] = expectR;
+//    test_varible[6] = expectR;
+//    test_varible[7] = expectR;
+//    test_varible[8] = expectR;
+//    test_varible[9] = expectR;
 
 
 }
@@ -658,9 +670,13 @@ void CTRL_servoMain()
         }
         else if(parkStart == 0 || parkStart == 3)
         {
+
             CTRL_ServoPID_Determine();
+//            test_varible[8] = testVarible;
 
             CTRL_fuzzyPID();
+//            test_varible[9] = testVarible;
+
 
         }
 //
@@ -754,8 +770,8 @@ void CTRL_motor()
 //    }
 
 
-    test_varible[2] = mySpeedL;
-    test_varible[3] = mySpeedR;
+//    test_varible[2] = mySpeedL;
+//    test_varible[3] = mySpeedR;
 
     if(mySpeedL >= 0 && mySpeedR >= 0)
     {
@@ -1537,7 +1553,7 @@ int16_t CTRL_speedGetRight()//×óÂÖ±àÂëÆ÷1 Òý½Å20.3ºÍ20.0¶ÔÓ¦T6   ÓÒÂÖ±àÂëÆ÷2 Òý½
 {
     int16_t ctrl_speedR = 0;
     ctrl_speedR = SmartCar_Encoder_Get(GPT12_T5);
-    integerSpeedR += ctrl_speedR;
+//    integerSpeedR += ctrl_speedR;
     SmartCar_Encoder_Clear(GPT12_T5);
     return ctrl_speedR;
 }
@@ -1546,7 +1562,7 @@ int16_t CTRL_speedGetLeft()//×óÂÖ±àÂëÆ÷1 Òý½Å20.3ºÍ20.0¶ÔÓ¦T6   ÓÒÂÖ±àÂëÆ÷2 Òý½Å
 {
     int16_t ctrl_speedL = 0;
     ctrl_speedL = SmartCar_Encoder_Get(GPT12_T6);
-    integerSpeedL += ctrl_speedL;
+//    integerSpeedL += ctrl_speedL;
     SmartCar_Encoder_Clear(GPT12_T6);
     return ctrl_speedL;
 }
@@ -1609,31 +1625,31 @@ void motorParamDefine()
 {
     if(delayFlag == 1)
     {
-        if(car_stop == 1)
-        {
-            motorLFKP = RTKI.intVal;
-            motorLFKI = fastLFKP.intVal;
-        }
-
-//        else if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateTIn || state == stateTOut)
+//        if(car_stop == 1)
 //        {
-//            motorLFKP = islandKP.intVal;
-//            motorLFKI = islandKI.intVal;
+//            motorLFKP = RTKI.intVal;
+//            motorLFKI = fastLFKP.intVal;
 //        }
-        else
-        {
-            if(errorML.currentError >= 0)
-            {
+//
+////        else if(state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateTIn || state == stateTOut)
+////        {
+////            motorLFKP = islandKP.intVal;
+////            motorLFKI = islandKI.intVal;
+////        }
+//        else
+//        {
+//            if(errorML.currentError >= 0)
+//            {
                 motorLFKP = LFKP.intVal;
                 motorLFKI = LFKI.intVal;
-            }
-
-            else if(errorML.currentError < 0)
-            {
-                motorLFKP = LFKP.intVal;
-                motorLFKI = RTKP.intVal;
-            }
-        }
+//            }
+//
+//            else if(errorML.currentError < 0)
+//            {
+//                motorLFKP = LFKP.intVal;
+//                motorLFKI = RTKP.intVal;
+//            }
+//        }
 
         currentKP_R = currentRTKP.floatVal;
         currentKI_R = currentRTKI.floatVal;

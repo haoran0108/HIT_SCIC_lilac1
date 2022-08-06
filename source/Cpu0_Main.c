@@ -134,6 +134,7 @@ int core0_main(void)
         SW_readSwitch();//发车键
         power = ADC_Get(ADC_1, ADC1_CH5_A21, ADC_12BIT);
         voltage = 3.3 * 3 * power / 4096;
+        test_varible[15] = voltage;
 //        SmartCar_ImgUpload(fullBuffer,120,188);//传图像给电脑，和uart一起用
 //
     }

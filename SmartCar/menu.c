@@ -357,7 +357,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
 
     display = MENU_fileInit(display, 1, 1.0, "motor", 5, none, &file3, &fileSave, NULL, &display1);
-    display1 = MENU_fileInit(display1, 1, 133.03, "testTimes", 2, dataint, NULL, &display2, &display, NULL);
+    display1 = MENU_fileInit(display1, 9, 133.03, "testTimes", 2, dataint, NULL, &display2, &display, NULL);
     display2 = MENU_fileInit(display2, 25, 1, "speedUp", 3, datafloat, &display1, &display3, NULL, NULL);
 
     LFKP = MENU_fileInit(LFKP, 32, 3.8, "KP", 2, dataint, NULL, &LFKI, &motor1, NULL);
