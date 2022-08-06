@@ -459,7 +459,7 @@ void image_Preprocess(void)
     float image_histPorprotion[256];
     uint8_t ThreMax = maxThre, ThreMin = minThre/*, threMiddle = 255*/;
     float image_threUpFix = part_klow1.floatVal, image_threDownFix = part_khigh1.floatVal/*, image_threMiddleFix = 1.0*/;
-    uint8_t startLine = 2,endLine=86;
+    uint8_t startLine = 2,endLine = 86;
     float* ptrhistPorprotion = &image_histPorprotion[0];
         uint16_t* ptrHistGramCy = image_histGram;
         uint8_t* fullBufferCy = fullBuffer;
@@ -511,21 +511,24 @@ void image_Preprocess(void)
         ptrHistPorprotion = &image_histPorprotion[minValue];
         for (uint16_t i = minValue; i <= maxValue; i++, ptrHistPorprotion++)
         {
-            //±³¾°
-            backPorprotion += (*ptrHistPorprotion);
-            tmpBackAverage += (i * (*ptrHistPorprotion));
-            backAverage = tmpBackAverage / backPorprotion;
-            //Ç°¾°
-            forePorprotion -= (*ptrHistPorprotion);
-            tmpForeAverage -= (i * (*ptrHistPorprotion));
-            foreAverage = tmpForeAverage / forePorprotion;
-            //
-            tmpVariance = backPorprotion * forePorprotion * (backAverage - foreAverage) * (backAverage - foreAverage);
-            if (tmpVariance > maxVariance)
-            {
-                maxVariance = tmpVariance;
-                thresholdOrigin = i;
+            if(backPorprotion != 0 && forePorprotion != 0){
+                //±³¾°
+                backPorprotion += (*ptrHistPorprotion);
+                tmpBackAverage += (i * (*ptrHistPorprotion));
+                backAverage = tmpBackAverage / backPorprotion;
+                //Ç°¾°
+                forePorprotion -= (*ptrHistPorprotion);
+                tmpForeAverage -= (i * (*ptrHistPorprotion));
+                foreAverage = tmpForeAverage / forePorprotion;
+                //
+                tmpVariance = backPorprotion * forePorprotion * (backAverage - foreAverage) * (backAverage - foreAverage);
+                if (tmpVariance > maxVariance)
+                {
+                    maxVariance = tmpVariance;
+                    thresholdOrigin = i;
+                }
             }
+
         }
     threOriginal = thresholdOrigin;
 
