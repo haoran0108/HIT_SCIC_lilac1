@@ -462,16 +462,16 @@ void CTRL_fuzzyPID()
     uint8_t myMidLine;
     int32 myDiffLine;
     float midLineDelta;
-//    if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
-//    {
-//        myMidLine = IT_averMidLine_foresee();
-//    }
-//    else
-//    {
+    if(state == stateTIn || state == stateTOut || state == stateIslandIng || state == stateIslandTurn || state == stateIslandCircle || state == stateIslandOut || state == stateIslandFinal)
+    {
+        myMidLine = IT_averMidLine_foresee();
+    }
+    else
+    {
         myMidLine = aver_mid_line_foresee();
         test_varible[14] = 15;
 
-//    }
+    }
 
 
 //    if(lastMyMidLine == 0)
@@ -494,17 +494,16 @@ void CTRL_fuzzyPID()
 //
 //    }else lastMyMidLine = myMidLine;
 
-//    if(state == stateRampway)
-//    {
-//        servoError.currentError = 93 - mid_line[present_vision+5];
-//
-//    }
-//    else servoError.currentError = 93 - myMidLine;
+    if(state == stateRampway)
+    {
+        servoError.currentError = 93 - mid_line[present_vision+5];
+
+    }
+    else servoError.currentError = 93 - myMidLine;
 //    servoError.currentError = 93 - myMidLine;
 
-        servoError.currentError = 93 - mid_line[presentVision.intVal];
 
-        servoError.delta = servoError.currentError - servoError.lastError;
+    servoError.delta = servoError.currentError - servoError.lastError;
 
     test_varible[12] = myMidLine;
 

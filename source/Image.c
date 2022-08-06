@@ -1926,7 +1926,7 @@ void judge_type_road() {
 
     }
 
-    carPark_main();
+   // carPark_main();
 
     if (lastState == 30 && state == 70) {
         islandTimes++;
@@ -5802,10 +5802,13 @@ void island_circle() {
         }
         if (1) {
             int upPoint = 119;
-            for (int i = 110; i >= 50; i--) {
+            for (int i = 108; i >= 50; i--) {
                 if (my_road[i].connected[j_mid[i]].width < 65 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
                     && my_road[i - 1].connected[j_mid[i - 1]].width < 65 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
-                    && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 4) {
+                    && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 6
+                    && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 6
+                    && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left) <= 6
+                    && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 2].connected[j_mid[i - 2]].left) <= 6) {
                     upPoint = i;
                     break;
                 }
@@ -5839,7 +5842,7 @@ void island_circle() {
 
         if (1) {
             int upPoint = 119;
-            for (int i = 110; i >= 50; i--) {
+            for (int i = 108; i >= 50; i--) {
                 if (abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 4
                     && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 2].connected[j_mid[i - 2]].right) <= 6
                     && my_road[i].connected[j_mid[i]].right - my_road[i + 1].connected[j_mid[i + 1]].right < -6
@@ -9757,7 +9760,7 @@ uint8_t IT_averMidLine_foresee()
 
 uint8_t aver_mid_line_foresee()
 {
-    int way = 1;
+    int way = 3;
     uint8_t averageMidLine;
     float vision1 = mid_line[present_vision], vision2 = mid_line[present_vision - 5], vision3 = mid_line[present_vision - 10], vision4 = mid_line[present_vision + 5],vision5 = mid_line[present_vision + 10];
     float vision6 = mid_line[present_vision - 1],vision7 = mid_line[present_vision + 1];
