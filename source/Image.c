@@ -1801,8 +1801,8 @@ void image_main()
 //备注：初判断应该会出现很多混淆，之后会进行类似元素的单独判断
 ///////////////////////////////////////////
 void judge_type_road() {
-    state = 50;
-    TWhere = LEFT;
+//    state = 50;
+//    TWhere = LEFT;
     leftUpJumpPoint = 119;
     leftDownJumpPoint = 119;
     rightUpJumpPoint = 119;
