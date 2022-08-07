@@ -92,7 +92,6 @@ int core0_main(void)
     SmartCar_MT9V034_Init();//摄像头初始化，没连摄像头时不能初始化，不然oled就停留在队标页面
 
 //    SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,1152000,3);
-//    SmartCar_Uart_Init(IfxAsclin3_TX_P15_6_OUT,IfxAsclin3_RXA_P15_7_IN,921600,3);
 
     Delay_ms(STM0, 1000);
     SmartCar_OLED_Fill(0);
@@ -118,18 +117,10 @@ int core0_main(void)
     MENU_namePrintf(tempFile);
 
 //    GPIO_Set(P22, 0, 1);
-    char transport_num = 16;
 
 
     while(TRUE)
     {
-//        test_varible[2] = *(fullBuffer + 19 * 188 + 93);
-//        test_varible[3] = *(fullBuffer + 18 * 188 + 93);
-//        test_varible[4] = *(fullBuffer + 17 * 188 + 93);
-//        test_varible[5] = *(fullBuffer + 16 * 188 + 93);
-//        test_varible[14] = *(fullBuffer + 15 * 188 + 93);
-//        test_varible[15] = *(fullBuffer + 14 * 188 + 93);
-//        SmartCar_VarUpload(test_varible, transport_num);
 
         SmartCar_OLED_Printf6x8(110, 0, "%d", onPower);
         if (!GPIO_Read(P11, 2) || !GPIO_Read(P11, 9) || !GPIO_Read(P11, 10) ||
