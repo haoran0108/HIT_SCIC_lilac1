@@ -42,7 +42,7 @@ float deltaGyro[10] = {0}, currentGyro = 0, directionAngle = 0, lastGyro = 0;
 float lastRampGyro = 0, rampGyro = 0, rampGyroMax = 0;
 float deltaAcc = 0, currentAcc = 0;
 float averageSpeed = 0;
-float position = 0; positionX = 0, positionY = 0;
+float position = 0;
 float expectGyro = 0;
 float gyroK = 20;
 float dx = 0, dy = 0;
@@ -469,7 +469,6 @@ void CTRL_fuzzyPID()
     else
     {
         myMidLine = aver_mid_line_foresee();
-        test_varible[14] = 15;
 
     }
 
@@ -623,10 +622,10 @@ void CTRL_motorPID()
 //    test_varible[10] = expectR;
     test_varible[0] = -speedL;
     test_varible[1] = speedR;
-    test_varible[2] = mySpeedL;
-    test_varible[3] = mySpeedR;
-    test_varible[4] = expectL;
-    test_varible[5] = expectR;
+//    test_varible[2] = mySpeedL;
+//    test_varible[3] = mySpeedR;
+//    test_varible[4] = expectL;
+//    test_varible[5] = expectR;
 //    test_varible[6] = expectR;
 //    test_varible[7] = expectR;
 //    test_varible[8] = expectR;

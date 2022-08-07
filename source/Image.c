@@ -1711,7 +1711,6 @@ void image_main()
     threshold = presentTHRE.intVal;
     int wayThreshold = wayThre.intVal;
     protection();
-    test_varible[14] = 1;
 //    strenghen_contrast_ratio();
 //    uint64 tim1 = 0, tim2 = 0;
 
@@ -1730,7 +1729,6 @@ void image_main()
     case 5:iteration();
         break;
     }
-//    test_varible[3] = testVarible;
 
 //    tim2 = Systick_Get(STM0)/100000;
 //    test_varible[14] = (float)(tim1);
@@ -1792,7 +1790,6 @@ void image_main()
     for (int i = NEAR_LINE; i >= FAR_LINE; i--)
         if (mid_line[i] != MISS)
             IMG[i][mid_line[i]] = green;
-    test_varible[14] = 12;
 
    // IMG[74][mid_line[74]] = purple;
 }
@@ -1827,7 +1824,7 @@ void judge_type_road() {
 
     //Ê®×Ö
     if (state == stateStart && flagChange == 0) {
-        cross_in();
+//        cross_in();
         if (my_road[40].white_num != 0)
             folk_road_in();
 //            folkTimesCNT();
@@ -5186,7 +5183,7 @@ void design_island_turn() {
                         int count = 0;
                         for (int j = 109; j >= 89; j--)
                         {
-                            if (right_line[j] = right_side[j]) count++;
+                            if (right_line[j] == right_side[j]) count++;
                         }
                         if (count > 10)
                         {
@@ -5535,7 +5532,7 @@ void design_island_turn() {
                         int count = 0;
                         for (int j = 109; j >= 89; j--)
                         {
-                            if (left_line[j] = left_side[j]) count++;
+                            if (left_line[j] == left_side[j]) count++;
                         }
                         if (count > 10)
                         {
@@ -7961,16 +7958,17 @@ void folk_road_out() {
         if (FolkRoadWhere == RIGHT) {
             int jumpPoint = 119;
             for (int i = NEAR_LINE - 2; i >= 50; i--) {
-                if (left_line[i] - left_line[i + 1] > 5 && left_line[i] - left_line[i + 2] > 5 && fabs(left_line[i] - left_line[i - 1]) < 4 && fabs(left_line[i] - left_line[i - 2]) < 5) {
+                if (left_line[i] - left_line[i + 1] > 5 && left_line[i] - left_line[i + 2] > 5 && fabs(left_line[i] - left_line[i - 1]) < 4 && fabs(left_line[i] - left_line[i - 2]) < 5
+                        && fabs(calculate_slope_uint(i - 15, i - 2, left_line) - calculate_slope_uint(i - 15, i - 2, right_line)) < 0.5
+                        && calculate_slope_uint(i - 15, i - 2, left_line) > -1.5 && calculate_slope_uint(i - 15, i - 2, right_line) > -1.5
+                        && linear_judgement(i - 15, i - 2, left_line) < 20 && linear_judgement(i - 15, i - 2, right_line) < 20
+                ) {
                     jumpPoint = i;
                     break;
                 }
             }
 
             if (jumpPoint >= 90 && jumpPoint <= NEAR_LINE
-                && fabs(calculate_slope_uint(jumpPoint - 15, jumpPoint - 2, left_line) - calculate_slope_uint(jumpPoint - 15, jumpPoint - 2, right_line)) < 0.5
-                && calculate_slope_uint(jumpPoint - 15, jumpPoint - 2, left_line) > -1.5 && calculate_slope_uint(jumpPoint - 15, jumpPoint - 2, right_line) > -1.5
-                && linear_judgement(jumpPoint - 15, jumpPoint - 2, left_line) < 20 && linear_judgement(jumpPoint - 15, jumpPoint - 2, right_line) < 20
                 && right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 45
 
                 ) {
@@ -7980,16 +7978,17 @@ void folk_road_out() {
         else if (FolkRoadWhere == LEFT) {
             int jumpPoint = 119;
             for (int i = NEAR_LINE - 2; i >= 50; i--) {
-                if (right_line[i] - right_line[i + 1] < -5 && right_line[i] - right_line[i + 2] < -5 && fabs(right_line[i] - right_line[i - 1]) < 4 && fabs(right_line[i] - right_line[i - 2]) < 5) {
+                if (right_line[i] - right_line[i + 1] < -5 && right_line[i] - right_line[i + 2] < -5 && fabs(right_line[i] - right_line[i - 1]) < 4 && fabs(right_line[i] - right_line[i - 2]) < 5
+                        && fabs(calculate_slope_uint(i - 15, i - 2, right_line) - calculate_slope_uint(i - 15, i - 2, left_line)) < 0.5
+                        && calculate_slope_uint(i - 15, i - 2, right_line) < 1.5 && calculate_slope_uint(i - 15, i - 2, left_line) < 1.5
+                        && linear_judgement(i - 15, i - 2, right_line) < 20 && linear_judgement(i - 15, i - 2, left_line) < 20
+                ) {
                     jumpPoint = i;
                     break;
                 }
             }
             if (jumpPoint >= 90 && jumpPoint <= NEAR_LINE
-                && fabs(calculate_slope_uint(jumpPoint - 15, jumpPoint - 2, right_line) - calculate_slope_uint(jumpPoint - 11, jumpPoint + 3, left_line)) < 0.5
-                && calculate_slope_uint(jumpPoint - 15, jumpPoint - 2, right_line) < 1.5 && calculate_slope_uint(jumpPoint - 11, jumpPoint + 3, left_line) < 1.5
-                && linear_judgement(jumpPoint - 15, jumpPoint - 2, right_line) < 20 && linear_judgement(jumpPoint - 11, jumpPoint + 3, left_line) < 20
-                && right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 45
+               && right_line[NEAR_LINE - 2] - left_line[NEAR_LINE - 2] > 45
                 ) {
                 state = 0;
             }

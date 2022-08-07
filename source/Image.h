@@ -82,7 +82,6 @@
 #define MISS 255
 #define white_num_MAX 12//每行最多允许白条数
 
-#define white_straight 37 //正视直道的格数
 #define LEFT 1
 #define RIGHT -1
 #define UP 2
