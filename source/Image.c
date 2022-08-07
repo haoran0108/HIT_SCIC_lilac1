@@ -513,7 +513,7 @@ void image_Preprocess(void)
         ptrHistPorprotion = &image_histPorprotion[minValue];
         for (uint16_t i = minValue; i <= maxValue; i++, ptrHistPorprotion++)
         {
-            if(backPorprotion != 0 && forePorprotion != 0){
+
                 //±³¾°
                 backPorprotion += (*ptrHistPorprotion);
                 tmpBackAverage += (i * (*ptrHistPorprotion));
@@ -529,7 +529,7 @@ void image_Preprocess(void)
                     maxVariance = tmpVariance;
                     thresholdOrigin = i;
                 }
-            }
+
 
         }
     threOriginal = thresholdOrigin;
@@ -537,7 +537,7 @@ void image_Preprocess(void)
 
     if (threOriginal > ThreMax)threOriginal = ThreMax;
     if (threOriginal < ThreMin)threOriginal = ThreMin;
-    thresholdUp = threOriginal * image_threUpFix, thresholdDown = threOriginal * image_threDownFix/*, threMiddle = threOriginal * image_threMiddleFix*/;
+  //  thresholdUp = threOriginal * image_threUpFix, thresholdDown = threOriginal * image_threDownFix/*, threMiddle = threOriginal * image_threMiddleFix*/;
 
     //////////////////////////printf("ThreUp:%d\n", threUp);
     //////////////////////////printf("ThreDown:%d\n", threDown);
@@ -8287,7 +8287,7 @@ void carpark_in()
                 }
 
             }
-            if (black_num >= 4)
+            if (black_num >= 5)
             {
                 state = stateParkIn;
             }
@@ -8413,7 +8413,7 @@ void carpark_in()
                     }
 
                 }
-                if (black_num >= 4)
+                if (black_num >= 5)
                 {
                     state = stateParkIn;
                 }
