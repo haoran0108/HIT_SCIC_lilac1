@@ -1551,7 +1551,7 @@ int16_t CTRL_speedGetRight()//×óÂÖ±àÂëÆ÷1 Òı½Å20.3ºÍ20.0¶ÔÓ¦T6   ÓÒÂÖ±àÂëÆ÷2 Òı½
 {
     int16_t ctrl_speedR = 0;
     ctrl_speedR = SmartCar_Encoder_Get(GPT12_T5);
-//    integerSpeedR += ctrl_speedR;
+    integerSpeedR += ctrl_speedR;
     SmartCar_Encoder_Clear(GPT12_T5);
     return ctrl_speedR;
 }
@@ -1560,7 +1560,7 @@ int16_t CTRL_speedGetLeft()//×óÂÖ±àÂëÆ÷1 Òı½Å20.3ºÍ20.0¶ÔÓ¦T6   ÓÒÂÖ±àÂëÆ÷2 Òı½Å
 {
     int16_t ctrl_speedL = 0;
     ctrl_speedL = SmartCar_Encoder_Get(GPT12_T6);
-//    integerSpeedL += ctrl_speedL;
+    integerSpeedL += ctrl_speedL;
     SmartCar_Encoder_Clear(GPT12_T6);
     return ctrl_speedL;
 }
