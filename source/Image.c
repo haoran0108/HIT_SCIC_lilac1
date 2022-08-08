@@ -2079,11 +2079,10 @@ void judge_type_road() {
     if(state == stateStart)
     {
 
-        if(integerSpeedAver > 5000)
-        {
-            rampwayOn();
 
-        }
+        rampwayOn();
+
+
 
 
         lastTwoState = 0;
