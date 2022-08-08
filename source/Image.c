@@ -2079,7 +2079,11 @@ void judge_type_road() {
     if(state == stateStart)
     {
 
-        rampwayOn();
+        if(integerSpeedAver > 5000)
+        {
+            rampwayOn();
+
+        }
 
 
         lastTwoState = 0;
@@ -8990,7 +8994,7 @@ void carPark_main()
 
             }
 
-            if(parkJudgeCount > 200 && rampTimes >= 1)
+            if(parkJudgeCount > 200)
             {
                 leftPark = 0;
                 rightPark = 1;
@@ -9002,29 +9006,18 @@ void carPark_main()
                 leftPark = 1;
                 rightPark = 0;
             }
-    //            if(folkTimes < 4)
-    //            {
-    //                leftPark = 1;
-    //                rightPark = 0;
-    //            }
-    //
-    //            else if(folkTimes >= 4)
-    //            {
-    //                state = 0;
-    //                leftPark = 0;
-    //                rightPark = 1;
-    //            }
+
         }
 
         else if(carParkTimes == 1 && file1.intVal == -1)
         {
-            if(parkJudgeCount <= 22)
+            if(parkJudgeCount <= 202)
             {
                 parkJudgeCount += 1;
 
             }
 
-            if(parkJudgeCount > 20 && tCrossTimes >= 2)
+            if(parkJudgeCount > 200)
             {
                 leftPark = 1;
                 rightPark = 0;
@@ -9052,28 +9045,6 @@ void carPark_main()
         }
 
 
-        else if(carParkTimes == 1 && file1.intVal == 2)
-        {
-            if(parkJudgeCount <= 202)
-            {
-                parkJudgeCount += 1;
-
-            }
-            leftPark = 0;
-            rightPark = 1;
-        }
-        else if(carParkTimes == 1 && file1.intVal == -2)
-        {
-            if(parkJudgeCount <= 202)
-            {
-                parkJudgeCount += 1;
-
-            }
-            leftPark = 1;
-            rightPark = 0;
-        }
-
-
     }
 
 
@@ -9095,12 +9066,12 @@ void carPark_main()
             carpark_out();
 
         }
-        else if(carParkDelay > parkDelay.intVal && direction == -1 && integerSpeedAver > 800)
+        else if(carParkDelay > parkDelay.intVal && direction == -1 && integerSpeedAver > 2000)
         {
             carpark_out();
 
         }
-        else if(carParkDelay > parkDelay.intVal && direction == 0 && integerSpeedAver > 500)
+        else if(carParkDelay > parkDelay.intVal && direction == 0 && integerSpeedAver > 2000)
         {
 //            carpark_out();
 
@@ -9110,19 +9081,15 @@ void carPark_main()
 //        {
 //            state = 0;
 //        }
-//        design_carpark();
-        carpark_stop();
+        design_carpark();
+//        carpark_stop();
 
-        design_carpark_turn();
+//        design_carpark_turn();
     }
 
     if(carParkTimes == 2 && file1.intVal == 1)
     {
-        if(flagStop == 1)
-        {
-            parkSlowDownCount += 1;
 
-        }
         leftPark = 0;
         rightPark = 1;
 //        searchParkLine();
@@ -9132,11 +9099,7 @@ void carPark_main()
     }
     else if(carParkTimes == 2 && file1.intVal == -1)
     {
-        if(flagStop == 1)
-        {
-            parkSlowDownCount += 1;
 
-        }
         leftPark = 1;
         rightPark = 0;
 //        searchParkLine();
@@ -9155,20 +9118,7 @@ void carPark_main()
 ////        searchParkLine();
 //        design_carpark_turn();
     }
-    else if(carParkTimes == 2 && file1.intVal == 2)
-    {
-        leftPark = 0;
-        rightPark = 1;
-//        searchParkLine();
 
-    }
-    else if(carParkTimes == 2 && file1.intVal == -2)
-    {
-        leftPark = 1;
-        rightPark = 0;
-//        searchParkLine();
-
-    }
 }
 
 //void rampwayOn()
