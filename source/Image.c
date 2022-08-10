@@ -7816,7 +7816,7 @@ void folk_road_in() {
             ////printf("左下:minl=%d,右下;minR=%d\n", minL, minR);
 
             if (minL < NEAR_LINE - 2 && minR < NEAR_LINE - 2
-                    && my_road[minL].connected[j_left[minL]].left >= left_side[minL] + 10 && my_road[minR].connected[j_right[minR]].right <= right_side[minR] - 10
+                    && my_road[minL].connected[j_left[minL]].left >= left_side[minL] + 4 && my_road[minR].connected[j_right[minR]].right <= right_side[minR] - 4
                 ) {
 
                 //先保证两个角找的是准的
@@ -7979,7 +7979,7 @@ void folk_road_in() {
                     && fabs(calculate_slope_struct(minR - 14, minR - 1, j_right, RIGHT) - calculate_slope_struct(top - 14, top - 1, j_right, LEFT)) < 0.6
                     && fabs(calculate_slope_struct(minR + 1, minR + 14, j_right, RIGHT) - calculate_slope_struct(top - 14, top - 1, j_right, LEFT)) > 1
                     && 0 >= calculate_slope_struct(top - 14, top - 1, j_right, LEFT) && calculate_slope_struct(top - 14, top - 1, j_right, LEFT) >= -1.5
-                    && top >= 20 && minL >= 40 && minR >= 40
+                    && top >= 20 && minL >= 30 && minR >= 30
                     && my_road[top].connected[j_right[top]].left > 45
                     && top < minR && minR < minL
                     && sumLD <= 7
@@ -8068,7 +8068,7 @@ void folk_road_in() {
                     && ((fabs(calculate_slope_struct(minL - 14, minL - 1, j_left, LEFT) - calculate_slope_struct(top - 14, top - 1, j_left, RIGHT)) < 0.6))
                     && fabs(calculate_slope_struct(minL + 1, minL + 14, j_left, LEFT) - calculate_slope_struct(top - 14, top - 1, j_left, RIGHT)) > 1
                     && 0 <= calculate_slope_struct(top - 14, top - 1, j_left, RIGHT) && calculate_slope_struct(top - 14, top - 1, j_left, RIGHT) <= 1.5
-                    && top >= 20 && minR >= 40 && minL >= 40
+                    && top >= 20 && minR >= 30 && minL >= 30
                     && my_road[top].connected[j_left[top]].right < 130
                     && top < minL && minL < minR
                     && sumRD <= 7
