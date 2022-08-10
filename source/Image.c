@@ -1813,7 +1813,7 @@ void judge_type_road() {
     rightDownJumpPoint = 119;
     int flagChange = 0;
 
-    if(state != lastState)
+    if(state != lastState || (state == 0 && lastState != 0))
     {
         lastState = state;
         integerSpeedCNT += (integerSpeedR - integerSpeedL) / 2;
@@ -2075,7 +2075,7 @@ void judge_type_road() {
     }
 
 
-//    test_varible[4] = integerSpeedAver;
+    test_varible[4] = integerSpeedAver;
     if(afterRampFlag == 1 && integerSpeedAver > 5000)
     {
         afterRampFlag = 0;
@@ -2108,6 +2108,9 @@ void judge_type_road() {
 
             state = 0;
             afterRampFlag = 1;
+            integerSpeedL = 0;
+            integerSpeedR = 0;
+
             rampWayCount=0;
         }
 
@@ -2120,14 +2123,14 @@ void judge_type_road() {
         rampWayCount = 0;
     }
 
-    if(afterRampFlag == 1)
-    {
-
-        if(integerSpeedAver > 3000)
-        {
-            afterRampFlag = 0;
-        }
-    }
+//    if(afterRampFlag == 1)
+//    {
+//
+//        if(integerSpeedAver > 3000)
+//        {
+//            afterRampFlag = 0;
+//        }
+//    }
 
     if(state != stateRampway && state != stateParkIn){
 //        TcircleFix();
@@ -7951,6 +7954,8 @@ void folk_road_in() {
                         && my_road[i].connected[j_right[i]].left - my_road[i + 3].connected[j_right[i + 3]].left > 10
                         && abs(my_road[i].connected[j_right[i]].left - my_road[i - 2].connected[j_right[i - 2]].left) <= 6
                         && my_road[i].connected[j_right[i]].width < 65
+                        && my_road[i - 5].white_num != 0
+
                         ) {
                         top = i;
                         break;
@@ -8041,6 +8046,8 @@ void folk_road_in() {
                         && my_road[i].connected[j_left[i]].right - my_road[i + 3].connected[j_left[i + 3]].right < -8
                         && abs(my_road[i].connected[j_left[i]].right - my_road[i - 2].connected[j_left[i - 2]].right) <= 6
                         && my_road[i].connected[j_left[i]].width < 65
+                        && my_road[i - 5].white_num != 0
+
                         ) {
                         top = i;
                         break;
@@ -9552,6 +9559,8 @@ void rampwayDown()
     {
         state = 0;
         afterRampFlag = 1;
+        integerSpeedL = 0;
+        integerSpeedR = 0;
         rampJudgeCount = 0;
 
 //        GPIO_Set(P22, 0, 0);
@@ -9654,7 +9663,7 @@ void straight_define()
     test_varible[2] = calculate_two_point_slope(90, mid_line[90], 10, mid_line[10]);
 //    test_varible[6] = calculate_two_point_slope(90, mid_line[90], 30, mid_line[30]);
    // test_varible[3] = straight_variance(90, 10);
-    test_varible[4] = straight_variance(90, 40);
+//    test_varible[4] = straight_variance(90, 40);
 
     test_varible[5] = straight_delta(90, 20, 49);
 

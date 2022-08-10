@@ -83,7 +83,6 @@ void CTRL_gyroUpdate()
 
     deltaAcc = inv_accl[0];//2¸©Ñö 1×óÓÒ·´×ª 0×óÓÒ×ª
 
-
 }
 
 void CTRL_directionAngleGet()
