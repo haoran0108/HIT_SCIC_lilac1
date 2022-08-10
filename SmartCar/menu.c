@@ -161,7 +161,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     bigParam1 = MENU_fileInit(bigParam1, 0, 1.0, "upPoint", 2, dataint, NULL, &bigParam2, &bigIsland, NULL);
     bigParam2 = MENU_fileInit(bigParam2, 0, 0, "left-dk", 3, datafloat, &bigParam1, &bigParam3, NULL, NULL);
     bigParam3 = MENU_fileInit(bigParam3, 0, 0, "right-dk", 4, datafloat, &bigParam2, &bigParam4, NULL, NULL);
-    bigParam4 = MENU_fileInit(bigParam4, 68, 0, "vision", 5, dataint, &bigParam3, &bigParam5, NULL, NULL);
+    bigParam4 = MENU_fileInit(bigParam4, 71, 0, "vision", 5, dataint, &bigParam3, &bigParam5, NULL, NULL);
     bigParam5 = MENU_fileInit(bigParam5, 0, 0, "xleft", 6, dataint, &bigParam4, &bigParam6, NULL, NULL);
     bigParam6 = MENU_fileInit(bigParam6, 0, 0, "xright", 7, dataint, &bigParam5, &bigParam7, NULL, NULL);
     bigParam7 = MENU_fileInit(bigParam7, 0, 0, "dk-out", 2, datafloat, &bigParam6, &bigParam8, NULL, NULL);
@@ -170,7 +170,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     islandout_up = MENU_fileInit(islandout_up, 0, 1.0, "upPoint", 2, dataint, NULL, &design_island_k, &smallIsland, NULL);
     design_island_k = MENU_fileInit(design_island_k, 1, 0, "left-dk", 3, datafloat, &islandout_up, &islandParam1, NULL, NULL);
     islandParam1 = MENU_fileInit(islandParam1, 1, 0, "right-dk", 4, datafloat, &design_island_k, &islandParam2, NULL, NULL);
-    islandParam2 = MENU_fileInit(islandParam2, 76, 1.8, "vision", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
+    islandParam2 = MENU_fileInit(islandParam2, 80, 1.8, "vision", 5, dataint, &islandParam1, &islandParam3, NULL, NULL);
     islandParam3 = MENU_fileInit(islandParam3, 0, 0.35, "xleft", 6, dataint, &islandParam2, &islandParam4, NULL, NULL);
     islandParam4 = MENU_fileInit(islandParam4, 0, 0.35, "xright", 7, dataint, &islandParam3, &islandParam5, NULL, NULL);
     islandParam5 = MENU_fileInit(islandParam5, 64, 0, "dk-out", 2, datafloat, &islandParam4, &islandParam6, NULL, NULL);
@@ -183,8 +183,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     cross_circle_param2 = MENU_fileInit(cross_circle_param2, 0, 1.0, "rightX", 3, dataint, &cross_circle_param1, &cross_circle_param3, NULL, NULL);
     cross_circle_param3 = MENU_fileInit(cross_circle_param3, 0, 1.0, "leftX", 4, dataint, &cross_circle_param2, &cross_circle_param4, NULL, NULL);
     cross_circle_param4 = MENU_fileInit(cross_circle_param4, 40, 1.0, "outwidth", 5, dataint, &cross_circle_param3, &cross_circle_param5, NULL, NULL);
-    cross_circle_param5 = MENU_fileInit(cross_circle_param5, 0, 0.1, "leftK", 6, datafloat, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
-    cross_circle_param6 = MENU_fileInit(cross_circle_param6, 0, 0.1, "rightK", 7, datafloat, &cross_circle_param5, &cross_circle_param7, NULL, NULL);
+    cross_circle_param5 = MENU_fileInit(cross_circle_param5, 0, 0.05, "leftK", 6, datafloat, &cross_circle_param4, &cross_circle_param6, NULL, NULL);
+    cross_circle_param6 = MENU_fileInit(cross_circle_param6, 0, 0.05, "rightK", 7, datafloat, &cross_circle_param5, &cross_circle_param7, NULL, NULL);
     cross_circle_param7 = MENU_fileInit(cross_circle_param7, 55, 0, "rowKP", 2, datafloat, &cross_circle_param6, &cross_circle_param8, NULL, NULL);
     cross_circle_param8 = MENU_fileInit(cross_circle_param8, 82, 1.0, "tgt-row", 3, dataint, &cross_circle_param7, &ccBottom, NULL, NULL);
     ccBottom = MENU_fileInit(ccBottom, 55, 1.0, "bottom", 4, none, &cross_circle_param8, NULL, NULL, NULL);
@@ -200,7 +200,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkDelay, NULL, NULL, NULL);
 
     ramp = MENU_fileInit(ramp, 1, 1.0, "ramp", 5, none, &carPark, &folkWay, NULL, &rampCount);
-    rampCount = MENU_fileInit(rampCount, 80, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
+    rampCount = MENU_fileInit(rampCount, 200, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
     rampDistance = MENU_fileInit(rampDistance, 60, 1.0, "distance", 3, dataint, &rampCount, &rampSpeed, NULL, NULL);
     rampSpeed = MENU_fileInit(rampSpeed, 55, 1.0, "rampSpeed", 4, dataint, &rampDistance, &rampMax, NULL, NULL);
     rampMax = MENU_fileInit(rampMax, 60, 1.0, "Max", 5, dataint, &rampSpeed, &rampMin, NULL, NULL);
@@ -211,8 +211,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     folkWay = MENU_fileInit(folkWay, -1, 1.0, "folk", 6, dataint, &ramp, NULL, NULL, &folkParam1);//1-left   -1-right
     folkParam1 = MENU_fileInit(folkParam1, 40, 1.0, "width", 2, dataint, NULL, &folkParam2, &folkWay, NULL);
-    folkParam2 = MENU_fileInit(folkParam2, 25, 0, "k", 3, datafloat, &folkParam1, NULL, NULL, NULL);
-//    folkParam3 = MENU_fileInit(folkParam3, 95, 1.0, "param3", 4, dataint, &folkParam2, &folkParam4, NULL, NULL);
+    folkParam2 = MENU_fileInit(folkParam2, 25, 0, "k", 3, datafloat, &folkParam1, &folkParam3, NULL, NULL);
+    folkParam3 = MENU_fileInit(folkParam3, 2, 1.0, "up-move", 4, dataint, &folkParam2, NULL, NULL, NULL);
 //    folkParam4 = MENU_fileInit(folkParam4, 1, 1.0, "param4", 5, dataint, &folkParam3, &folkBottom, NULL, NULL);
 //    folkParam5 = MENU_fileInit(folkParam5, 1, 1.0, "param5", 6, dataint, &folkParam4, &folkParam6, NULL, NULL);
 //    folkParam6 = MENU_fileInit(folkParam6, 1, 1.0, "param6", 7, dataint, &folkParam5, &folkParam7, NULL, NULL);
@@ -232,14 +232,14 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
 //    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
 
-    circle_PB = MENU_fileInit(circle_PB, 1, 2.2, "circleL", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
-    circle_PM = MENU_fileInit(circle_PM, 1, 2.2, "circleR", 3, datafloat, &circle_PB, &circle_DS, NULL, NULL);
+    circle_PB = MENU_fileInit(circle_PB, 1, 2.0, "circleL", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
+    circle_PM = MENU_fileInit(circle_PM, 1, 2.0, "circleR", 3, datafloat, &circle_PB, &circle_DS, NULL, NULL);
 //    circle_PS = MENU_fileInit(circle_PS, 1, 2.8, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
 //    circle_ZO = MENU_fileInit(circle_ZO, 1, 2.7, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
 //    circle_NS = MENU_fileInit(circle_NS, 1, 2.8, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
 //    circle_NM = MENU_fileInit(circle_NM, 1, 3, "circleNM", 7, datafloat, &circle_NS, &circle_NB, NULL, NULL);
 //    circle_NB = MENU_fileInit(circle_NB, 1, 3.2, "circleNB", 2, datafloat, &circle_NM, &circle_DS, NULL, NULL);
-    circle_DS = MENU_fileInit(circle_DS, 1, 5.1, "D-SMALL", 4, datafloat, &circle_PM, NULL, NULL, NULL);
+    circle_DS = MENU_fileInit(circle_DS, 1, 5.4, "D-SMALL", 4, datafloat, &circle_PM, NULL, NULL, NULL);
 //    circle_DB = MENU_fileInit(circle_DB, 1, 0.5, "D-BIG", 4, datafloat, &circle_DS, NULL, NULL, NULL);
 
     Island_PB = MENU_fileInit(Island_PB, 1, 1.2, "BIG-I", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
@@ -249,7 +249,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    Island_NS = MENU_fileInit(Island_NS, 1, 3, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
 //    Island_NM = MENU_fileInit(Island_NM, 1, 3.3, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
 //    Island_NB = MENU_fileInit(Island_NB, 1, 3.7, "IslandNB", 3, datafloat, &Island_PB, &Island_DS, NULL, NULL);
-    Island_DS = MENU_fileInit(Island_DS, 1, 4.8, "D-SMALL", 5, datafloat, &Island_PS, &Island_DB, NULL, NULL);
+    Island_DS = MENU_fileInit(Island_DS, 1, 5.1, "D-SMALL", 5, datafloat, &Island_PS, &Island_DB, NULL, NULL);
     Island_DB = MENU_fileInit(Island_DB, 1, 3, "D-BIG", 6, datafloat, &Island_DS, NULL, NULL, NULL);
 
     Folk_PB = MENU_fileInit(Folk_PB, 1, 3.6, "FolkPB", 2, datafloat, NULL, &Folk_PM, &FolkPD, NULL);
@@ -940,6 +940,9 @@ void MENU_showIMG()
             SmartCar_OLED_Printf6x8(110, 1, "%d", threOriginal);
 
         }
+        SmartCar_OLED_Printf6x8(100, 2, "%d", longStrFlag);
+        SmartCar_OLED_Printf6x8(110, 2, "%d", shortStrFlag);
+
         SmartCar_OLED_Printf6x8(110, 4, "%d", mid_line[present_vision]);
 
 //        SmartCar_OLED_P6x8Str(100, 6, "state");

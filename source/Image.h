@@ -185,7 +185,7 @@ extern int num_island;   // 赛道上环岛个数
 extern int num_first_T;  // 第一个回环前环岛数
 extern int32 testVarible;
 extern int stage_cross_t_out;
-
+extern uint8_t stage_cross_t_over;
 typedef struct {
     int x;
     int y;
@@ -283,6 +283,8 @@ double linear_judgement_struct(int start, int end, uint8_t j[CAMERA_H], int dire
 
 int midMaxColumn(int istart, int iend, int param, int leftMid, int rightMid);
 int straight_delta(int istart, int iend, int deltaThre);
+float straight_variance(int istart, int iend);
+int maxWhiteLine(int istart, int iend, int yleft, int yright); //最长白列
 
 //十字
 void cross_in();
