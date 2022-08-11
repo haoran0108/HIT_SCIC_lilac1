@@ -4003,17 +4003,23 @@ void T_island_in_start() {
         sumDR += right_line[i] - right_line[i - 1];
         aveDL = (double)sumDL / (NEAR_LINE - i);
         aveDR = (double)sumDR / (NEAR_LINE - i);
-        if (right_line[i] - right_line[i - 1] < aveDL - 3 && right_line[i] - right_line[i - 2] < aveDL - 3
+        if (right_line[i] - right_line[i - 1] < aveDR - 3 && right_line[i] - right_line[i - 2] < aveDR - 3
             && abs(left_line[i - 1] - left_line[i] )<= 2 && abs(left_line[i - 2] - left_line[i]) <= 2) {
             TIslandWhere = RIGHT;
+
+
             break;
         }
-        if (left_line[i] - left_line[i - 1] > aveDL + 3 && left_line[i] - left_line[i - 2] > aveDR + 3
+        if (left_line[i] - left_line[i - 1] > aveDL + 3 && left_line[i] - left_line[i - 2] > aveDL + 3
             && abs(right_line[i - 1] - right_line[i]) <= 2 && abs(right_line[i - 2] - right_line[i]) <= 2) {
             TIslandWhere = LEFT;
+            test_varible[3] = i;
+
             break;
         }
     }
+
+
 
     if (TIslandWhere == RIGHT) {
         //左侧是直道
@@ -4056,6 +4062,7 @@ void T_island_in_start() {
             while (num >= 20 && my_road[num].connected[j_mid[num]].right <= right_side[num] - 1
                 && abs(my_road[num - 1].connected[j_mid[num - 1]].right - my_road[num].connected[j_mid[num]].right) <= 4
                 && abs(my_road[num + 1].connected[j_mid[num + 1]].right - my_road[num].connected[j_mid[num]].right) <= 4
+
                 ) {
                 if (my_road[num].connected[j_mid[num]].right <= my_road[downPoint].connected[j_mid[downPoint]].right
                     && linear_judgement_struct(num, num + 10, j_mid, RIGHT) < 10
@@ -4066,6 +4073,8 @@ void T_island_in_start() {
                 num--;
             }
         }
+        test_varible[2] = calculate_slope_struct(80, 95, j_mid, LEFT) ;
+        test_varible[3] = downPoint;
         //由于T路的特征，不一定都是直线，另一边绝对不能是边界，不然与十字说不清
         double kl1;
         double kl2;
@@ -4103,7 +4112,7 @@ void T_island_in_start() {
 
 
             if (fabs(calculate_slope_struct(downPoint - 7, downPoint + 7, j_mid, LEFT) - calculate_slope_struct(downPoint + 1, downPoint + 15, j_mid, RIGHT)) < 0.5
-                && downPoint < NEAR_LINE - 2 && 40 <= downPoint && linear_judgement_struct(downPoint - 5, downPoint + 5, j_mid, RIGHT) > 15
+                && downPoint < NEAR_LINE - 2 && 40 <= downPoint && linear_judgement_struct(downPoint - 5, downPoint + 5, j_mid, RIGHT) > 25
                 && downPoint<=NEAR_LINE
                 ) {
                 //寻找上方窄道
@@ -9826,12 +9835,12 @@ void straight_define()
 //    }
 
 
-    test_varible[2] = calculate_two_point_slope(90, mid_line[90], 10, mid_line[10]);
-    test_varible[6] = maxWhiteLine(100, 5, 91, 95);
-  //  test_varible[3] = straight_variance(90, 10);
-    test_varible[4] = straight_variance(90, 40);
-
-    test_varible[5] = straight_delta(90, 20, 49);
+//    test_varible[2] = calculate_two_point_slope(90, mid_line[90], 10, mid_line[10]);
+//    test_varible[6] = maxWhiteLine(100, 5, 91, 95);
+//  //  test_varible[3] = straight_variance(90, 10);
+//    test_varible[4] = straight_variance(90, 40);
+//
+//    test_varible[5] = straight_delta(90, 20, 49);
 
     if(straightFlag == 0)
     {
@@ -9869,13 +9878,14 @@ void straight_define()
 
         else
         {
-            if(calculate_slope_uint(20, 60, left_line) < 0.5 && calculate_slope_uint(20, 60, right_line) < 0.5 && straight_variance(60, 20) < 18)
+            if(calculate_slope_uint(30, 60, left_line) < 0.5 && calculate_slope_uint(30, 60, right_line) < 0.5 && straight_variance(60, 30) < 18)
             {
 
                 straightFlag = 1;
             }
 
-            else {
+            else if(calculate_slope_uint(20, 60, left_line) > 0.6 || calculate_slope_uint(20, 60, right_line) > 0.6 || straight_variance(60, 20) < 15)
+            {
                 straightFlag = 0;
 
             }
@@ -10526,8 +10536,8 @@ void long_straight() {
     }
 
     if (flag_long_straight >= 2) {
-           test_varible[3]=1;
+//           test_varible[3]=1;
     }else if(flag_no_straight >= 2){
-        test_varible[3]=2;
+//        test_varible[3]=2;
     }
 }
