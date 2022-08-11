@@ -940,8 +940,9 @@ void MENU_showIMG()
             SmartCar_OLED_Printf6x8(110, 1, "%d", threOriginal);
 
         }
-        SmartCar_OLED_Printf6x8(100, 2, "%d", longStrFlag);
-        SmartCar_OLED_Printf6x8(110, 2, "%d", shortStrFlag);
+        SmartCar_OLED_Printf6x8(100, 2, "%d", straightFlag);
+//        SmartCar_OLED_Printf6x8(110, 2, "%d", shortStrFlag);
+        SmartCar_OLED_Printf6x8(110, 3, "%d", TFMINI_Distance);
 
         SmartCar_OLED_Printf6x8(110, 4, "%d", mid_line[present_vision]);
 

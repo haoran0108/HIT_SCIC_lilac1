@@ -270,7 +270,7 @@ void Set_thre(int Foreshold, int Backshold, int ThreLine);
 void protection();
 //道路规划
 void judge_type_road();
-
+void long_straight();
 //数据处理函数
 double calculate_slope(int start, int end, int side[CAMERA_H]);
 double calculate_slope_uint(int start, int end, uint8_t side[CAMERA_H]);

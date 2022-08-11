@@ -1772,18 +1772,13 @@ void speedDetermine()
         present_vision = cross_circle_param1.intVal;
     }
 
-    if(longStrFlag == 1 && shortStrFlag == 0)
+    if(straightFlag == 1)
     {
         present_speed = present_speed * display2.floatVal;
 //        CTRL_softSpeedUp();
     }
-    else if(longStrFlag == 0 && shortStrFlag == 1)
-    {
-        uint8_t highSpeed;
-        highSpeed = present_speed * display2.floatVal;
-        CTRL_speedDecision(highSpeed, presentSpeed.intVal);
-    }
-    else if(longStrFlag == 0 && shortStrFlag == 0)
+
+    else if(straightFlag == 0)
     {
         if(state == 50 && tCrossStatus == 1)
         {
