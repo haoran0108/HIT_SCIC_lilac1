@@ -9306,13 +9306,13 @@ void carPark_main()
 
         else if(carParkTimes == 1 && file1.intVal == -1)
         {
-            if(parkJudgeCount <= 202)
+            if(parkJudgeCount <= 102)
             {
                 parkJudgeCount += 1;
 
             }
 
-            if(parkJudgeCount > 200)
+            if(parkJudgeCount > 100)
             {
                 leftPark = 1;
                 rightPark = 0;
@@ -9737,7 +9737,7 @@ void straight_define()
         }
     }
 
-    test_varible[14] = longStrFlag;
+//    test_varible[14] = longStrFlag;
 //    test_varible[15] = shortStrFlag;
 
 //    test_varible[6] = straightFlag;
