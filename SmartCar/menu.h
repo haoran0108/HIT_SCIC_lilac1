@@ -78,7 +78,7 @@ extern node_t smallIsland, bigIsland;
 extern node_t bigParam1, bigParam2, bigParam3, bigParam4, bigParam5, bigParam6, bigParam7, bigParam8;
 extern node_t islandout_up, design_island_k, islandParam1, islandParam2, islandParam3, islandParam4, islandParam5, islandParam6;
 extern node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4, cross_circle_param5, cross_circle_param6, cross_circle_param7, cross_circle_param8;
-extern node_t parkCount, startGyro, endGyro, search_line, parkDelay, stopLine;
+extern node_t parkCount, startGyro, endGyro, search_line, parkDelay, stopLine, parkDk;
 extern node_t rampCount, rampDistance, rampSpeed,rampMax, rampMin;
 extern node_t folkWay;
 extern node_t folkParam1, folkParam2, folkParam3, folkParam4, folkParam5, folkParam6;

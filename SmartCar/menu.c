@@ -52,7 +52,7 @@ node_t bigIsland, smallIsland;
 node_t bigParam1, bigParam2, bigParam3, bigParam4, bigParam5, bigParam6, bigParam7, bigParam8;
 node_t islandout_up, design_island_k, islandParam1, islandParam2, islandParam3, islandParam4, islandParam5, islandParam6, islandBottom;
 node_t cross_circle_param1, cross_circle_param2, cross_circle_param3, cross_circle_param4, cross_circle_param5, cross_circle_param6, cross_circle_param7, cross_circle_param8, ccBottom;
-node_t parkCount, startGyro, endGyro, search_line, parkDelay, stopLine;
+node_t parkCount, startGyro, endGyro, search_line, parkDelay, stopLine, parkDk;
 node_t paramBottom;
 
 node_t raceMemory, memory1, memory2, memory3, memory4, memory5, memory6, memory7, memory8, memory9, memory10, memory11, memory12, memory13, memory14, memory15, memoryBottom;
@@ -195,9 +195,10 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
     endGyro = MENU_fileInit(endGyro, 65, 1.0, "end-gyro", 4, dataint, &startGyro, &search_line, NULL, NULL);
     search_line = MENU_fileInit(search_line, 40, 1.0, "line", 5, dataint, &endGyro, &parkDelay, NULL, NULL);
     parkDelay = MENU_fileInit(parkDelay, 5, 1.0, "delay", 6, dataint, &search_line, &stopLine, NULL, NULL);
-    stopLine = MENU_fileInit(stopLine, 55, 1.0, "stopLine", 7, dataint, &parkDelay, &paramBottom, NULL, NULL);
+    stopLine = MENU_fileInit(stopLine, 55, 1.0, "stopLine", 7, dataint, &parkDelay, &parkDk, NULL, NULL);
+    parkDk = MENU_fileInit(parkDk, 55, 0.2, "dk", 2, datafloat, &stopLine, &paramBottom, NULL, NULL);
 
-    paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 5, none, &parkDelay, NULL, NULL, NULL);
+    paramBottom = MENU_fileInit(paramBottom, 1, 1.0, "bottom", 3, none, &parkDk, NULL, NULL, NULL);
 
     ramp = MENU_fileInit(ramp, 1, 1.0, "ramp", 5, none, &carPark, &folkWay, NULL, &rampCount);
     rampCount = MENU_fileInit(rampCount, 200, 1.0, "rampCount", 2, dataint, NULL, &rampDistance, &ramp, NULL);
