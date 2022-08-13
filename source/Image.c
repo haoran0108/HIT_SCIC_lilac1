@@ -1948,7 +1948,7 @@ void judge_type_road() {
 //            IslandRadius = bigParam8.intVal;
 //
 //        }
-        IslandRadius = 80;
+        IslandRadius = 50;
 //        IslandRadius = islandParam6.intVal;
     }
     else if (islandTimes == 2) {
@@ -1975,7 +1975,7 @@ void judge_type_road() {
 //
 //        }
 //        IslandRadius = islandParam6.intVal;
-        IslandRadius = 80;
+        IslandRadius = 50;
     }
     else if (islandTimes == 4) {
 //        if(smallIsland.intVal == 1 && bigIsland.intVal == 2)
@@ -1988,7 +1988,7 @@ void judge_type_road() {
 //
 //        }
 //        IslandRadius = islandParam6.intVal;
-        IslandRadius = 80;
+        IslandRadius = 50;
 
     }
 
@@ -9614,10 +9614,10 @@ void carPark_main()
 //        {
 //            state = 0;
 //        }
-//        design_carpark();
-        carpark_stop();
+        design_carpark();
+//        carpark_stop();
 
-        design_carpark_turn();
+//        design_carpark_turn();
     }
 
     if(carParkTimes == 2 && file1.intVal == 1)
