@@ -699,8 +699,8 @@ void CTRL_MotorPwmXianfu()
 {
     if(car_stop == 1)
     {
-        motorPwmMax = 100;
-        motorPwmMin = -8000;
+        motorPwmMax = 0;
+        motorPwmMin = -9900;
     }
 
 //    else if(state == stateRampway)
