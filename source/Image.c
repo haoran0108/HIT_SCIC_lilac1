@@ -1988,7 +1988,7 @@ void judge_type_road() {
 //
 //        }
 //        IslandRadius = islandParam6.intVal;
-        IslandRadius = 50;
+        IslandRadius = 80;
 
     }
 
@@ -5254,12 +5254,12 @@ void design_island_turn() {
             j_mid2[i] = j_continue[i];
             for (int j = 1; j <= my_road[i].white_num; j++) {
                 if (abs(my_road[i].connected[j].left - my_road[i + 1].connected[j_mid[i + 1]].left) < abs(my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left)
-                    && my_road[i].connected[j].width > 10) {
+                    && my_road[i].connected[j].width > 15) {
                     j_mid[i] = j;
 
                 }
                 if (abs(my_road[i].connected[j].right - my_road[i + 1].connected[j_mid2[i + 1]].right) < abs(my_road[i].connected[j_mid2[i]].right - my_road[i + 1].connected[j_mid2[i + 1]].right)
-                    && my_road[i].connected[j].width > 10) {
+                    && my_road[i].connected[j].width > 15) {
                     j_mid2[i] = j;
 
                 }
@@ -5280,7 +5280,7 @@ void design_island_turn() {
         else if (way == 2) {
             int upPoint = 119;
             int road_width = 45;
-            int jump = 20;
+            int jump = 10;
             if (last_rightupPoint == 0)
             {
                 for (int i = 105; i >= 10; i--) {
@@ -5289,12 +5289,12 @@ void design_island_turn() {
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].width - road_width) <= 5
                             && abs(my_road[i - 2].connected[j_mid[i - 2]].width - road_width) <= 5
                             && my_road[i + 1].connected[j_mid[i + 1]].width - road_width >= 10)
-                        && j_mid[i] <= 1
-                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 60
-                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 60
+                       // && j_mid[i] <= 1
+                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
+                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
 
-                            && my_road[i + 1].connected[j_mid[i + 1]].right - my_road[i].connected[j_mid[i]].right > 10
-                            && my_road[i + 2].connected[j_mid[i + 2]].right - my_road[i].connected[j_mid[i]].right  > 10
+                            && my_road[i + 1].connected[j_mid[i + 1]].right - my_road[i].connected[j_mid[i]].right > 8
+                            && my_road[i + 2].connected[j_mid[i + 2]].right - my_road[i].connected[j_mid[i]].right  > 8
                             && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 5
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].right - my_road[i - 2].connected[j_mid[i - 2]].right) <= 5)
 
@@ -5318,12 +5318,12 @@ void design_island_turn() {
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].width - road_width) <= 5
                             && abs(my_road[i - 2].connected[j_mid[i - 2]].width - road_width) <= 5
                             && my_road[i + 1].connected[j_mid[i + 1]].width - road_width >= 10)
-                        && j_mid[i] <= 1
-                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 60
-                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 60
+                        //&& j_mid[i] <= 1
+                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
+                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
 
-                            && my_road[i + 1].connected[j_mid[i + 1]].right - my_road[i].connected[j_mid[i]].right > 10
-                            && my_road[i + 2].connected[j_mid[i + 2]].right - my_road[i].connected[j_mid[i]].right  > 10
+                            && my_road[i + 1].connected[j_mid[i + 1]].right - my_road[i].connected[j_mid[i]].right > 8
+                            && my_road[i + 2].connected[j_mid[i + 2]].right - my_road[i].connected[j_mid[i]].right  > 8
                             && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 5
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].right - my_road[i - 2].connected[j_mid[i - 2]].right) <= 5)
 
@@ -5378,8 +5378,10 @@ void design_island_turn() {
                             }
                             //if
                         }
-                    }else upPoint=last_rightupPoint;
+                    }
+
                 }
+                if (upPoint == 119) upPoint =last_rightupPoint ;
                 if (upPoint != 119)last_rightupPoint = upPoint;
             }
             else if (last_rightupPoint > 85)
@@ -5393,12 +5395,12 @@ void design_island_turn() {
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].width - road_width) <= 5
                             && abs(my_road[i - 2].connected[j_mid[i - 2]].width - road_width) <= 5
                             && my_road[i + 1].connected[j_mid[i + 1]].width - road_width >= 10)
-                        && j_mid[i] <= 1
-                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 60
-                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 60
+                       // && j_mid[i] <= 1
+                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
+                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
 
-                            && my_road[i + 1].connected[j_mid[i + 1]].right - my_road[i].connected[j_mid[i]].right > 10
-                            && my_road[i + 2].connected[j_mid[i + 2]].right - my_road[i].connected[j_mid[i]].right  > 10
+                            && my_road[i + 1].connected[j_mid[i + 1]].right - my_road[i].connected[j_mid[i]].right > 8
+                            && my_road[i + 2].connected[j_mid[i + 2]].right - my_road[i].connected[j_mid[i]].right  > 8
                             && abs(my_road[i].connected[j_mid[i]].right - my_road[i - 1].connected[j_mid[i - 1]].right) <= 5
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].right - my_road[i - 2].connected[j_mid[i - 2]].right) <= 5)
 
@@ -5411,8 +5413,8 @@ void design_island_turn() {
                 if (upPoint != 119) last_rightupPoint = upPoint;
 
             }
-//            test_varible[14]=upPoint;
-
+            test_varible[14]=upPoint;
+            test_varible[15]=last_rightupPoint;
             /*
             for (int i = 105; i >= 30; i--) {
                 if (
@@ -5537,7 +5539,7 @@ void design_island_turn() {
                 {
                     right_line[i] = right_line[min_line+2];
                 }
-
+                test_varible[7]=count1;
                 if (count1 >= 15)
                 {
                     for (int i = upPoint; i >= upPoint - count1; i--)
@@ -5639,7 +5641,7 @@ void design_island_turn() {
             //Á¬½Ó¶¥µã
             int upPoint = 119;
             int road_width=45;
-            int jump = 20;
+            int jump = 10;
             if (last_leftupPoint == 0)
             {
                 for (int i = 105; i >= 10; i--) {
@@ -5647,13 +5649,13 @@ void design_island_turn() {
                         (abs(my_road[i].connected[j_mid[i]].width - road_width) <= 5
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].width - road_width) <= 5
                             && abs(my_road[i - 2].connected[j_mid[i - 2]].width - road_width) <= 5
-                            && my_road[i + 1].connected[j_mid[i + 1]].width - road_width >= 10
-                            && j_mid[i] >= 2)
-                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 60
-                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 60
+                            && my_road[i + 1].connected[j_mid[i + 1]].width - road_width >= 10)
+                            //&& j_mid[i] >= 2
+                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
+                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
 
-                            && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 10
-                            && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 10
+                            && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 8
+                            && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 8
                             && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left) <= 5
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].left - my_road[i - 2].connected[j_mid[i - 2]].left) <= 5)
 
@@ -5676,13 +5678,13 @@ void design_island_turn() {
                         (abs(my_road[i].connected[j_mid[i]].width - road_width) <= 5
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].width - road_width) <= 5
                             && abs(my_road[i - 2].connected[j_mid[i - 2]].width - road_width) <= 5
-                            && my_road[i + 1].connected[j_mid[i + 1]].width - road_width >= 10
-                            && j_mid[i] >= 2)
-                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 60
-                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 60
+                            && my_road[i + 1].connected[j_mid[i + 1]].width - road_width >= 10)
+                            //&& j_mid[i] >= 2)
+                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
+                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
 
-                            && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 10
-                            && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 10
+                            && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 8
+                            && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 8
                             && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left) <= 5
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].left - my_road[i - 2].connected[j_mid[i - 2]].left) <= 5)
 
@@ -5737,6 +5739,7 @@ void design_island_turn() {
                         }
                     }else upPoint=last_leftupPoint;
                 }
+                if(upPoint==119) upPoint=last_leftupPoint;
                 if(upPoint !=119)last_leftupPoint = upPoint;
             }
             else if (last_leftupPoint > 85)
@@ -5749,13 +5752,13 @@ void design_island_turn() {
                         (abs(my_road[i].connected[j_mid[i]].width - road_width) <= 5
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].width - road_width) <= 5
                             && abs(my_road[i - 2].connected[j_mid[i - 2]].width - road_width) <= 5
-                            && my_road[i + 1].connected[j_mid[i + 1]].width - road_width >= 10
-                            && j_mid[i] >= 2)
-                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 60
-                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 60
+                            && my_road[i + 1].connected[j_mid[i + 1]].width - road_width >= 10)
+                           // && j_mid[i] >= 2)
+                        || (my_road[i].connected[j_mid[i]].width < 60 && my_road[i + 2].connected[j_mid[i + 2]].width >= 55
+                            && my_road[i - 1].connected[j_mid[i - 1]].width < 60 && my_road[i + 3].connected[j_mid[i + 3]].width >= 55
 
-                            && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 10
-                            && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 10
+                            && my_road[i].connected[j_mid[i]].left - my_road[i + 1].connected[j_mid[i + 1]].left > 8
+                            && my_road[i].connected[j_mid[i]].left - my_road[i + 2].connected[j_mid[i + 2]].left > 8
                             && abs(my_road[i].connected[j_mid[i]].left - my_road[i - 1].connected[j_mid[i - 1]].left) <= 5
                             && abs(my_road[i - 1].connected[j_mid[i - 1]].left - my_road[i - 2].connected[j_mid[i - 2]].left) <= 5)
 
@@ -6141,7 +6144,7 @@ void island_out() {
             }
             else if(IslandRadius == 50)
             {
-                xmax = 106;
+                xmax = 110;
             }
             else if(IslandRadius == 100)
             {
@@ -6194,7 +6197,7 @@ void island_out() {
             }
             else if(IslandRadius == 50)
             {
-                xmin = 84;
+                xmin = 80;
             }
             else if(IslandRadius == 100)
             {
@@ -9958,8 +9961,8 @@ void straight_define()
         }
     }
 
-    test_varible[14] = longStrFlag;
-    test_varible[15] = shortStrFlag;
+//    test_varible[14] = longStrFlag;
+//    test_varible[15] = shortStrFlag;
 
 //    test_varible[6] = straightFlag;
 }

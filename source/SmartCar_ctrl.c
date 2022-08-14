@@ -228,7 +228,7 @@ void CTRL_curLoopPID()
 
     CTRL_currentAverageFilter();
 
-    test_varible[7] = currentLF[0];
+//    test_varible[7] = currentLF[0];
     test_varible[8] = currentRT[0];
 //
 
@@ -872,6 +872,7 @@ void CTRL_motorMain()
 
 
 }
+
 
 void CTRL_motorDiffer()
 {

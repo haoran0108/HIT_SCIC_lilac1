@@ -56,7 +56,7 @@
 
 /*¶æ»ú*/
 #define servoMidValue 699
-#define servoMin 609
+#define servoMin 619
 #define servoMax 779
 
 #define servoParkMax 739

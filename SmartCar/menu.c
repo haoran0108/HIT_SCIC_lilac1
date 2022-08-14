@@ -233,8 +233,8 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 //    Cross_DS = MENU_fileInit(Cross_DS, 1, 0.5, "D-SMALL", 3, datafloat, &Cross_NB, &Cross_DB, NULL, NULL);
 //    Cross_DB = MENU_fileInit(Cross_DB, 1, 0.5, "D-BIG", 4, datafloat, &Cross_DS, NULL, NULL, NULL);
 
-    circle_PB = MENU_fileInit(circle_PB, 1, 2.0, "circleL", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
-    circle_PM = MENU_fileInit(circle_PM, 1, 2.0, "circleR", 3, datafloat, &circle_PB, &circle_DS, NULL, NULL);
+    circle_PB = MENU_fileInit(circle_PB, 1, 2.1, "circleL", 2, datafloat, NULL, &circle_PM, &CrossCircle, NULL);
+    circle_PM = MENU_fileInit(circle_PM, 1, 2.1, "circleR", 3, datafloat, &circle_PB, &circle_DS, NULL, NULL);
 //    circle_PS = MENU_fileInit(circle_PS, 1, 2.8, "circlePS", 4, datafloat, &circle_PM, &circle_ZO, NULL, NULL);
 //    circle_ZO = MENU_fileInit(circle_ZO, 1, 2.7, "circleZO", 5, datafloat, &circle_PS, &circle_NS, NULL, NULL);
 //    circle_NS = MENU_fileInit(circle_NS, 1, 2.8, "circleNS", 6, datafloat, &circle_ZO, &circle_NM, NULL, NULL);
@@ -245,7 +245,7 @@ void MENU_Init()//存取数据时最后一个数据不能操作，待解决
 
     Island_PB = MENU_fileInit(Island_PB, 1, 1.2, "BIG-I", 2, datafloat, NULL, &Island_PM, &IslandPD, NULL);
     Island_PM = MENU_fileInit(Island_PM, 1, 1.6, "MID-I", 3, datafloat, &Island_PB, &Island_PS, NULL, NULL);
-    Island_PS = MENU_fileInit(Island_PS, 1, 1.9, "SMALL-I", 4, datafloat, &Island_PM, &Island_DS, NULL, NULL);
+    Island_PS = MENU_fileInit(Island_PS, 1, 2.1, "SMALL-I", 4, datafloat, &Island_PM, &Island_DS, NULL, NULL);
 //    Island_ZO = MENU_fileInit(Island_ZO, 1, 2.8, "IslandZO", 5, datafloat, &Island_PS, &Island_NS, NULL, NULL);
 //    Island_NS = MENU_fileInit(Island_NS, 1, 3, "IslandNS", 6, datafloat, &Island_ZO, &Island_NM, NULL, NULL);
 //    Island_NM = MENU_fileInit(Island_NM, 1, 3.3, "IslandNM", 7, datafloat, &Island_NS, &Island_NB, NULL, NULL);
